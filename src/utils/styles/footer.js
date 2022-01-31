@@ -1,0 +1,10 @@
+import styled  from 'styled-components';
+
+export const FooterContainer = styled.footer`
+    position: absolute;
+    bottom: 0;
+    padding: 20px 0;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+`;

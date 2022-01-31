@@ -1,0 +1,4 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Sitemap: https://ez-firebase-react-boiler.web.app/sitemap.xml
+Disallow:
