@@ -5,7 +5,7 @@ export const FONTS = {
     ROBOTO_BOLD: "Roboto Bold",
 }
 
-export const COLORS = {
+export const DEFAULT_COLORS = {
     PRIMARY: "dodgerblue",
     SECONDARY: "olive",
     TERTIARY: "tomato",
@@ -15,6 +15,11 @@ export const COLORS = {
     GREY: "grey",
     LIGHT_GREY: "lightgrey",
     BLUE: "navy"
+}
+
+export const BTN_TYPES = {
+    INVERTED: 'inverted',
+    TEXTED: 'texted'
 }
 
 export const NOTIFICATION = {

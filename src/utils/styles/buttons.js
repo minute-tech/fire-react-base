@@ -1,15 +1,18 @@
-import styled  from 'styled-components';
+import styled from 'styled-components';
+import { BTN_TYPES } from '../constants';
 import { BodyFont } from './text';
 
 export const Button = styled.button`
     ${BodyFont}
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;
     margin: 5px;
-    border: transparent solid 2px; 
+    color: ${props => props.type !== BTN_TYPES.INVERTED ? (props.type !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
+    border: ${props => (!props.inverted && props.type === BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]} solid 2px; 
+    background-color: ${props => (props.type !== BTN_TYPES.INVERTED && props.type !== BTN_TYPES.TEXTED) ? props.theme.colors[props.color] : 'transparent'};
     cursor: pointer;
     a {
         text-decoration: none; 
-        color: ${props => props.inverted ? props.margin : '1em 0'};
+        color: ${props => props.type !== BTN_TYPES.INVERTED ? (props.type !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
     }
 
     // Sizing
@@ -19,7 +22,7 @@ export const Button = styled.button`
         font-weight: 600;
     `}
 
-    ${(props) => (props.size === 'md') && `
+    ${(props) => (props.size === 'md' || !props.size) && `
         font-size: 14px;
         padding: 10px 35px;
         font-weight: 700;
@@ -31,89 +34,22 @@ export const Button = styled.button`
         font-weight: 700;
     `}
 
-    // Coloring
-    ${(props) => (props.color === 'primary' && !props.inverted) && `
-        background-color: ${props.theme.colors.primary};
-        color: white;
-    `}
-
-    ${(props) => (props.color === 'secondary' && !props.inverted) && `
-        background-color: ${props.theme.colors.secondary};
-        color: white;
-    `}
-
-    ${(props) => (props.color === 'tertiary' && !props.inverted) && `
-        background-color: ${props.theme.colors.tertiary};
-        color: white;
-    `}
-    
-    ${(props) => (props.color === 'green' && !props.inverted) && `
-        background-color: ${props.theme.colors.tertiary};
-        color: white;
-    `}
-
-    ${(props) => (props.color === 'red' && !props.inverted) && `
-        background-color: ${props.theme.colors.red};
-        color: white;
-    `}
-
-    ${(props) => (props.color === 'yellow' && !props.inverted) && `
-        background-color: ${props.theme.colors.yellow};
-        color: white;
-    `}
-    
-    ${(props) => (props.color === 'blue' && !props.inverted) && `
-        background-color: ${props.theme.colors.blue};
-        color: white;
-        
-    `}
-
-    /* TODO: primary button will work for below, but no other colors, fix this */
-    &:hover {
-        background-color: transparent;
-        color: ${props => props.theme.colors.primary};
-        border: ${props => props.theme.colors.primary} solid 2px;
-        a {
-            color: ${props => props.theme.colors.primary};
-        }
-    }
-
-
-    // TODO: inverted
-
-    // TODO: text to color
-
-    // TODO: black to primary?
-
-
     // Psuedo-classes
-    &:focus {
-        border: none;
-    }
     &:hover {
         text-decoration: none;
         cursor: pointer;
-    }
-`;
-
-// transparent background, text to color
-/* // Text to Primary */
-/* const textToPrimaryBtn = css`
-    border: transparent solid 2px; 
-    color: black;
-    background-color: transparent;
-    a {
-        color: black;
-    }
-    &:hover {
-        background-color: ${props => props.theme.colors.primary};
-        color: white;
-        border: ${props => props.theme.colors.primary} solid 2px;
+        background-color: ${props => (props.type !== BTN_TYPES.INVERTED && props.type !== BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]};
+        color: ${props => (props.type !== BTN_TYPES.INVERTED) ? (props.type !== BTN_TYPES.TEXTED ? props.theme.colors[props.color] : !props.color.includes('light') ? 'white' : 'black') : 'white'};
+        border: ${props => props.theme.colors[props.color]} solid 2px;
         a {
-            color: white;
+            color: ${props => props.type !== BTN_TYPES.INVERTED ? props.theme.colors[props.color] : 'white'};
         }
     }
-`; */
+
+    &:focus {
+        border: none;
+    }
+`;
 
 // Primary //
 // Primary to Inverted

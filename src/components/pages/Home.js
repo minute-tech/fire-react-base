@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Helmet } from 'react-helmet-async';
+import { BTN_TYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons';
 
 import { Wrapper } from '../../utils/styles/misc';
@@ -16,7 +17,9 @@ export default class Home extends Component {
             </Helmet>
             <H1>Home</H1>
             <Body>This is the homepage, customize it as you please, please.</Body>
-            <Button color='primary' size='sm'>Button 1</Button>
+            <Button color='primary' size='lg'>Normal Button</Button>
+            <Button color='secondary' size='md' type={BTN_TYPES.INVERTED}>Inverted Button</Button>
+            <Button color='red' size='sm' type={BTN_TYPES.TEXTED}>Texted Button</Button>
             {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
             <Grid fluid>
                 <Row center="xs">

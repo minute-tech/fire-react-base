@@ -13,7 +13,7 @@ import { H2 } from './utils/styles/text';
 import Footer from './components/misc/Footer';
 import Header from './components/misc/Header';
 
-import { COLORS, FONTS } from './utils/constants';
+import { DEFAULT_COLORS, FONTS } from './utils/constants';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -69,18 +69,18 @@ export default class App extends Component {
                 <HelmetProvider>
                     <ThemeProvider 
                         // Pass any user defined colors below
-                        // i.e.: primary: this.state.user.theme.color || COLORS.PRIMARY
+                        // i.e.: primary: this.state.user.theme.color || DEFAULT_COLORS.PRIMARY
                         theme={{
                             colors: {
-                                primary: COLORS.PRIMARY,
-                                secondary: COLORS.SECONDARY,
-                                tertiary: COLORS.TERTIARY,
-                                red: COLORS.RED,
-                                green: COLORS.GREEN,
-                                yellow: COLORS.YELLOW,
-                                grey: COLORS.GREY,
-                                lightGrey: COLORS.LIGHT_GREY,
-                                blue: COLORS.BLUE
+                                primary: DEFAULT_COLORS.PRIMARY,
+                                secondary: DEFAULT_COLORS.SECONDARY,
+                                tertiary: DEFAULT_COLORS.TERTIARY,
+                                red: DEFAULT_COLORS.RED,
+                                green: DEFAULT_COLORS.GREEN,
+                                yellow: DEFAULT_COLORS.YELLOW,
+                                grey: DEFAULT_COLORS.GREY,
+                                lightGrey: DEFAULT_COLORS.LIGHT_GREY,
+                                blue: DEFAULT_COLORS.BLUE
                             },
                             fonts: {
                                 heading: FONTS.ROBOTO_BOLD,
