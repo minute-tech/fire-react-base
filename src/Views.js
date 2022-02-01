@@ -9,7 +9,7 @@ import Home from './components/pages/Home';
 // import UserRegister from './components/user/auth/UserRegister';
 // import UserDashboard from './components/user/dashboard/UserDashboard';
 // import UserProfile from './components/user/dashboard/UserProfile';
-// import ErrorBoundary from './components/misc/ErrorBoundary';
+import ErrorBoundary from './components/misc/ErrorBoundary';
 // import Page404 from "./components/misc/Page404";
 
 class Views extends Component {
@@ -19,7 +19,7 @@ class Views extends Component {
                     <Route 
                         index 
                         path="/" 
-                        element={<Home />}
+                        element={<ErrorBoundary><Home /></ErrorBoundary>}
                     />
                     {/* TODO: add back errorboundary funcationality */}
 
