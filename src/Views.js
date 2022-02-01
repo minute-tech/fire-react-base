@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { withRouter } from './utils/misc';
 
 // Pages
