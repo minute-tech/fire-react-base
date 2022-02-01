@@ -1,6 +1,6 @@
-# Ez Firebase React Boiler
+# Fire React Base
 
-Ez Firebase React Boiler is a template for creating web apps with Firebase and React.js.
+Fire React Base is a template for creating web apps with Firebase and React.js.
 
 ## Featured NPM libraries:
 * react 

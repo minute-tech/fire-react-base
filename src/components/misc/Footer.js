@@ -15,8 +15,8 @@ export default class Footer extends Component {
         return (
             <FooterContainer>
                 <div style={{marginBottom:"10px"}}>
-                    <ALink href="https://ez-firebase-react-boiler" target="_blank" rel="noopener">
-                        Built with Ez Firebase React Boiler &copy;
+                    <ALink href="https://fire-react-base" target="_blank" rel="noopener">
+                        Built with Fire React Base &copy;
                         {' '}
                         {this.state.year}
                         {' '}

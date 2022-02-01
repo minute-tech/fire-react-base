@@ -6,13 +6,14 @@ export const Button = styled.button`
     ${BodyFont}
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;
     margin: 5px;
-    color: ${props => props.type !== BTN_TYPES.INVERTED ? (props.type !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
-    border: ${props => (!props.inverted && props.type === BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]} solid 2px; 
-    background-color: ${props => (props.type !== BTN_TYPES.INVERTED && props.type !== BTN_TYPES.TEXTED) ? props.theme.colors[props.color] : 'transparent'};
+    color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
+    border: ${props => (!props.inverted && props.btnType === BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]} solid 2px; 
+    border-radius: ${props => !props.rounded ? '0px' : '20px'};
+    background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? props.theme.colors[props.color] : 'transparent'};
     cursor: pointer;
     a {
         text-decoration: none; 
-        color: ${props => props.type !== BTN_TYPES.INVERTED ? (props.type !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
+        color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color]};
     }
 
     // Sizing
@@ -38,11 +39,11 @@ export const Button = styled.button`
     &:hover {
         text-decoration: none;
         cursor: pointer;
-        background-color: ${props => (props.type !== BTN_TYPES.INVERTED && props.type !== BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]};
-        color: ${props => (props.type !== BTN_TYPES.INVERTED) ? (props.type !== BTN_TYPES.TEXTED ? props.theme.colors[props.color] : !props.color.includes('light') ? 'white' : 'black') : 'white'};
+        background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color]};
+        color: ${props => (props.btnType !== BTN_TYPES.INVERTED) ? (props.btnType !== BTN_TYPES.TEXTED ? props.theme.colors[props.color] : !props.color.includes('light') ? 'white' : 'black') : 'white'};
         border: ${props => props.theme.colors[props.color]} solid 2px;
         a {
-            color: ${props => props.type !== BTN_TYPES.INVERTED ? props.theme.colors[props.color] : 'white'};
+            color: ${props => props.btnType !== BTN_TYPES.INVERTED ? props.theme.colors[props.color] : 'white'};
         }
     }
 
