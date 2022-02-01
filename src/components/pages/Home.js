@@ -6,7 +6,7 @@ import { withTheme } from 'styled-components';
 import { BTN_TYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../utils/styles/misc';
-import { Body, H1, H3 } from '../../utils/styles/text';
+import { Body, H1, H3, LLink } from '../../utils/styles/text';
 
 
 class Home extends Component {
@@ -24,7 +24,7 @@ class Home extends Component {
                     <BgMedia
                         alt="hero background" 
                         // Honestly the below snippet somehow works so the little "image not found" icon with the alt tag doesn't pop up in the upper left of the banner bgColor, so don't remove the below til we find a better solution lol
-                        src={"" || "https://firebasestorage.googleapis.com/v0/b/ship-form-template.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3c9c4000-80ef-4ed6-afa1-ed0097040efc"}
+                        src={"https://firebasestorage.googleapis.com/v0/b/fire-react-base.appspot.com/o/public%2Fbackgrounds%2FDSC_0047.JPG?alt=media&token=9e53f2b2-25b7-4b7d-a85c-84ecf97fa1eb" || "https://firebasestorage.googleapis.com/v0/b/ship-form-template.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3c9c4000-80ef-4ed6-afa1-ed0097040efc"}
                         bodyLength={500}
                     />
                 </BgColor>
@@ -37,12 +37,11 @@ class Home extends Component {
                             Fugiat est reprehenderit quis labore aute anim in labore officia non ut aliquip mollit. In laboris amet amet occaecat. Laboris minim culpa cillum veniam adipisicing et deserunt sit.
                         </p>
                     </BgMediaBody>
-                    {/* <HLink to="/#Form"> */}
-                    
+                    <LLink to="/about">
                         <Button color='primary' size='lg'>
                             Call to Action
                         </Button>
-                    {/* </HLink> */}
+                    </LLink>
                 </BgMediaModal>
             </BgMediaContainer>
             <Wrapper>
@@ -51,8 +50,9 @@ class Home extends Component {
                 <Button color='primary' size='lg'>Primary Large Normal Button</Button>
                 <Button color='secondary' size='md' btnType={BTN_TYPES.INVERTED}>Secondary Medium Inverted Button</Button>
                 <Button color='red' size='sm' btnType={BTN_TYPES.TEXTED}>Red Small Texted Button</Button>
-                <Button color='green' size='md' rounded={true}>Rounded Button</Button>
-                <Button color='yellow' size='lg' btnType={BTN_TYPES.INVERTED}>Rounded Inverted Button</Button>
+                <Button color='green' size='md' rounded={true}>Green Rounded Button</Button>
+                <Button color='yellow' size='lg' btnType={BTN_TYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
+                <Button>Default</Button>
                 <Hr />
                 {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
                 <Grid fluid>

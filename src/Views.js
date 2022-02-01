@@ -10,6 +10,7 @@ import Home from './components/pages/Home';
 // import UserDashboard from './components/user/dashboard/UserDashboard';
 // import UserProfile from './components/user/dashboard/UserProfile';
 import ErrorBoundary from './components/misc/ErrorBoundary';
+import About from './components/pages/About';
 // import Page404 from "./components/misc/Page404";
 
 class Views extends Component {
@@ -20,6 +21,11 @@ class Views extends Component {
                         index 
                         path="/" 
                         element={<ErrorBoundary><Home /></ErrorBoundary>}
+                    />
+
+                    <Route 
+                        path="/about" 
+                        element={<ErrorBoundary><About /></ErrorBoundary>}
                     />
                     {/* TODO: add back errorboundary funcationality */}
 

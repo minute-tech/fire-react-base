@@ -279,6 +279,7 @@ export const BgColor = styled.div`
 `;
 
 export const BgMediaModal = styled.div`
+    ${BodyFont}
     text-align: center;
     background-color: rgb(255, 255, 255, 0.95);
     border-radius: 5px;

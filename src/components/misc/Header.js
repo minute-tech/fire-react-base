@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
-import { LogoContainer, NavTitle } from '../../utils/styles/header';
+import { BrandContainer, NavHoverText, NavLinks, NavLLink, NavLogo, NavTitle } from '../../utils/styles/header';
 import { withTheme } from 'styled-components'
 
 class Header extends Component {
   render() {
     return (
         <header>
-            <LogoContainer>
-                <NavTitle>Header</NavTitle>
-            </LogoContainer>
-            <div style={{backgroundColor: this.props.theme.colors.primary, height: "5px"}} />
+            <BrandContainer>
+                <NavLogo size='100px' margin="0" src={require("../../assets/images/logos/logo.png")} />
+                <NavLLink to='/'>
+                    <NavTitle>Header Title</NavTitle>
+                </NavLLink>
+            </BrandContainer>
+            
+            <NavLinks>
+                <NavLLink to='/'><NavHoverText>Home</NavHoverText></NavLLink>
+                <NavLLink to='/about'><NavHoverText>About</NavHoverText></NavLLink>
+            </NavLinks>
+            {/* <div style={{backgroundColor: this.props.theme.colors.primary, height: "5px"}} /> */}
         </header>
     );
   }
