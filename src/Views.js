@@ -11,6 +11,9 @@ import Home from './components/pages/Home';
 // import UserProfile from './components/user/dashboard/UserProfile';
 import ErrorBoundary from './components/misc/ErrorBoundary';
 import About from './components/pages/About';
+import Credits from './components/pages/Credits';
+import PrivacyPolicy from './components/pages/PrivacyPolicy';
+import TermsConditions from './components/pages/TermsConditions';
 // import Page404 from "./components/misc/Page404";
 
 class Views extends Component {
@@ -27,7 +30,21 @@ class Views extends Component {
                         path="/about" 
                         element={<ErrorBoundary><About /></ErrorBoundary>}
                     />
-                    {/* TODO: add back errorboundary funcationality */}
+
+                    <Route 
+                        path="/credits" 
+                        element={<ErrorBoundary><Credits /></ErrorBoundary>}
+                    />
+
+                    <Route 
+                        path="/privacy-policy" 
+                        element={<ErrorBoundary><PrivacyPolicy /></ErrorBoundary>}
+                    />
+
+                    <Route 
+                        path="/terms-conditions" 
+                        element={<ErrorBoundary><TermsConditions /></ErrorBoundary>}
+                    />
 
                     {/* User */}
                     {/* <Route 

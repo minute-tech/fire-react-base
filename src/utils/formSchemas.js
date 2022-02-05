@@ -5,16 +5,16 @@ export const contactFormSchema = yup.object().shape({
       .string()
       .email("Please enter a valid email.")
       .required("Email is required.")      
-      .max(150,"Email must be at most 150 characters long.")
+      .max(150,"Email can be at most 150 characters long.")
       .min(2,"Email must be at least 2 characters long."),
     name: yup
       .string()
       .required("Your name is required.")
-      .max(150,"Name must be at most 150 characters long.")
+      .max(150,"Name can be at most 150 characters long.")
       .min(2,"Name must be at least 2 characters long."),
     message: yup
       .string()
       .required("A message is required.")
-      .max(30000,"Message must be at most 30000 characters long.")
+      .max(30000,"Message can be at most 30000 characters long.")
       .min(10,"Message must be at least 10 characters long."),
 })

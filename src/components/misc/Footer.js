@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FooterContainer } from "../../utils/styles/footer";
-import { LLink, ALink} from "../../utils/styles/text";
+import { LLink, ALink, Body} from "../../utils/styles/text";
 
 export default class Footer extends Component {
     constructor(props) {
@@ -14,19 +14,19 @@ export default class Footer extends Component {
     render() {
         return (
             <FooterContainer>
-                <div style={{marginBottom:"10px"}}>
+                <Body>
                     <ALink href="https://fire-react-base.web.app" target="_blank" rel="noopener">
                         Built with Fire React Base &copy;
                         {' '}
                         {this.state.year}
                         {' '}
                     </ALink>
-                </div>
-                <div>
-                    {/* <LLink to="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</LLink>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <LLink href="/terms-conditions" target="_blank" rel="noopener">Terms &amp; Conditions</LLink>  */}
-                </div>
+                </Body>
+                <Body>
+                    <LLink to="/privacy-policy">Privacy Policy</LLink>&nbsp;||&nbsp;
+                    <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>&nbsp;||&nbsp;
+                    <LLink to="/credits">Credits</LLink>
+                </Body>
             </FooterContainer>
         )
     }
