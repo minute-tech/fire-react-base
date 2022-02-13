@@ -1,16 +1,13 @@
-import { Form, Formik } from 'formik';
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Helmet } from 'react-helmet-async';
 import { withTheme } from 'styled-components';
 
 import { BTN_TYPES } from '../../utils/constants';
-import { contactFormSchema } from '../../utils/formSchemas';
 import { Button } from '../../utils/styles/buttons';
-import { CField, FField } from '../../utils/styles/forms';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../utils/styles/misc';
-import { Body, H1, H3, Label, LLink } from '../../utils/styles/text';
-import FormError from '../misc/FormError';
+import { Body, H1, H3, LLink } from '../../utils/styles/text';
+import ContactForm from '../misc/ContactForm';
 
 
 class Home extends Component {
@@ -26,11 +23,7 @@ class Home extends Component {
             }
         }
     }
-    
-    submitMessage = (values) => {
 
-
-    }
 
     render() {
         return (
@@ -93,112 +86,7 @@ class Home extends Component {
                         </Row>
                     </Grid>
                     <Hr />
-
-                    <H1>Contact Form</H1>
-                    <Formik
-                        initialValues={{
-                            name: "",
-                            email: "",
-                            message: "",
-                            policyAccept: false,
-                        }}
-                        onSubmit={(values, actions) => {
-                            this.setState({ submitting: { message: true } })
-                            this.submitMessage(values);
-                        }}
-                        enableReinitialize={true}
-                        validationSchema={contactFormSchema}
-                    >
-                        {props => (
-                            <Form>
-                                <Grid fluid>
-                                    <Row style={{marginBottom: "8px"}}>
-                                        <Col sm={12} md={6}>
-                                            <Label>Name:</Label>
-                                            <br/>
-                                            <FField
-                                                type="text"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder="John Doe"
-                                                name="name"
-                                                value={props.values.name || ''}
-                                                error={ ((props.errors.name && props.touched.name) || this.state?.errors?.name) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.name}
-                                                formikTouched={props.touched.name}
-                                                stateError={this.state?.errors?.name}
-                                            /> 
-                                        </Col>
-                                        <Col sm={12} md={6}>
-                                            <Label>Email:</Label>&nbsp;
-                                            <br/>
-                                            <FField
-                                                type="text"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder="john_doe@email.com"
-                                                name="email"
-                                                value={props.values.email || ''}
-                                                error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.email}
-                                                formikTouched={props.touched.email}
-                                                stateError={this.state?.errors?.email}
-                                            /> 
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <Label>Message:</Label>&nbsp;
-                                            <br/>
-                                            <FField
-                                                component="textarea"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder="Detail what you want to say here."
-                                                name="message"
-                                                value={props.values.message || ''}
-                                                error={ ((props.errors.message && props.touched.message) || this.state?.errors?.message) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.message}
-                                                formikTouched={props.touched.message}
-                                                stateError={this.state?.errors?.message}
-                                            /> 
-                                        </Col>
-                                    </Row>
-                                    <Hr/>
-                                    <Row center="xs">
-                                        <Col>
-                                            <CField
-                                                type="checkbox"
-                                                name="policyAccept"
-                                            />
-                                            <Body display="inline">
-                                                I accept the&nbsp;
-                                                <LLink to="/privacy-policy">Privacy Policy</LLink> and&nbsp;
-                                                <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>.
-                                            </Body>
-                                        </Col>
-                                    </Row>
-                                    <br/>
-                                    <Row center="xs">
-                                        <Col xs={12}>
-                                            <Button 
-                                                type="submit" 
-                                                disabled={this.state?.submitting?.message}
-                                            >
-                                                Submit
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </Grid>
-                            </Form>
-                        )}
-                    </Formik>
+                    <ContactForm />
                 </Wrapper>
             </>
         );
