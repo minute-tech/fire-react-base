@@ -16,6 +16,7 @@ import Header from './components/misc/Header';
 import { DEFAULT_COLORS, FONTS } from './utils/constants';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
+import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 
 export default class App extends Component {
     constructor(props) {
@@ -102,6 +103,7 @@ export default class App extends Component {
                             <Header />
                             {/* <ReactNotificationStyled /> */}
                             <GlobalStyle /> 
+                            <FirebaseAnalytics />
                             <Views />
                             <Footer />
                         </BrowserRouter>

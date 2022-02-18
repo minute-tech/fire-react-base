@@ -54,7 +54,7 @@ export default class ContactForm extends Component {
                     {props => (
                         <Form>
                             <Grid fluid>
-                                <Row style={{marginBottom: "8px"}}>
+                                <Row>
                                     <Col sm={12} md={6}>
                                         <Label>Name:</Label>
                                         <br/>
