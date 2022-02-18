@@ -1,55 +1,47 @@
 import React, { Component } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import Views from "./Views";
+import { ThemeProvider } from 'styled-components';
+import { BrowserRouter } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
 
 // CSS
 import "./assets/css/App.css";
 import 'react-notifications-component/dist/theme.css'
 
-import { DevAlert, GlobalStyle, Wrapper } from './utils/styles/misc';
-import { H2 } from './utils/styles/text';
-
 // Components
 import Footer from './components/misc/Footer';
 import Header from './components/misc/Header';
-
-import { DEFAULT_COLORS, FONTS } from './utils/constants';
-import { ThemeProvider } from 'styled-components';
-import { BrowserRouter } from 'react-router-dom';
+import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
+import { auth } from './Fire';
+import { DEFAULT_COLORS, FONTS } from './utils/constants';
+import { DevAlert, GlobalStyle, ReactNotificationsStyled, Wrapper } from './utils/styles/misc';
+import { H2 } from './utils/styles/text';
 
 export default class App extends Component {
     constructor(props) {
       super(props)
     
       this.state = {
-         loading: true
+         loading: true,
+         user: ""
       }
     }
 
     componentDidMount(){
-        // fire.auth().onAuthStateChanged((user) => {
-        //   if(user){
-        //     // Listen for user state change
-        //     this.unsubscribeReadOnly = firestore.collection("users").doc(user.uid).collection('readOnly').doc('flags')
-        //         .onSnapshot((doc) => {
-        //             if(doc.exists){
-        //                 this.setState({
-        //                     isSuperUser: doc.data().isSuperUser
-        //                 })
-        //             }
-        //         });
-            
-        //     this.setState({
-        //         user: user,
-        //         loading: false
-        //     });
-        //   } else {
-            this.setState({
-              loading: false
-            });
-        //   }
-        // });
+        const fireAuth = auth;
+        onAuthStateChanged(fireAuth, (user) => {
+            if (user) {
+                this.setState({
+                    user: user,
+                    loading: false
+                });
+            } else {
+                this.setState({
+                    loading: false
+                });
+            }
+        });
     }
     
     // componentWillUnmount(){
@@ -100,11 +92,11 @@ export default class App extends Component {
                                 
                                 </>
                             )}
-                            <Header />
-                            {/* <ReactNotificationStyled /> */}
+                            <ReactNotificationsStyled />
                             <GlobalStyle /> 
+                            <Header user={this.state.user} />
                             <FirebaseAnalytics />
-                            <Views />
+                            <Views user={this.state.user} />
                             <Footer />
                         </BrowserRouter>
                     </ThemeProvider>

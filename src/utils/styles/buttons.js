@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { BTN_TYPES } from '../constants';
 import { BodyFont } from './text';
 
+// ** Do we need to set the type for each button? like ` type="button" `
 export const Button = styled.button`
     ${BodyFont}
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;

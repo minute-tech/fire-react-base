@@ -20,17 +20,22 @@ export default class ContactForm extends Component {
     }
 
     submitMessage = (values, resetForm) => {
-        addDoc(collection(firestore, "messages"), {
-            name: values.name,
-            email: values.email,
-            message: values.message,
-            timestamp: Date.now(),
-        }).then((doc) => {
-            alert("Message submitted successfully.")
-            console.log("doc: ");
-            console.log(doc);
-            resetForm();
-        });
+        if(!values.policyAccept){
+            alert("Please accept our Privacy Policy and Terms & Conditions.")
+        } else {
+            addDoc(collection(firestore, "messages"), {
+                name: values.name,
+                email: values.email,
+                message: values.message,
+                timestamp: Date.now(),
+            }).then((doc) => {
+                alert("Message submitted successfully.")
+                console.log("doc: ");
+                console.log(doc);
+                resetForm();
+            });
+        }
+       
     }
 
     render() {

@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle }  from 'styled-components';
-import ReactNotification from 'react-notifications-component'
+import { ReactNotifications } from 'react-notifications-component'
 import { lighten } from 'polished'
 
 // Importing font into CSS global for use around app
@@ -347,12 +347,11 @@ export const OverflowXAuto = styled.div`
     overflow-x: auto;
 `;
 
-// TODO: this is throwing an error!
-// export const ReactNotificationStyled = styled(props => <ReactNotification {...props} />)`
-// 	div {
-//         ${BodyFont}
-// 	}
-// `
+export const ReactNotificationsStyled = styled(props => <ReactNotifications {...props} />)`
+	div {
+        ${BodyFont}
+	}
+`
 
 export const VerticalAlign = styled.span`
     text-align: center;

@@ -2,240 +2,289 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
 import { store } from 'react-notifications-component';
+import { Link } from 'react-router-dom';
+import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from 'firebase/auth';
 
-import { withRouter } from '../../../utils/misc';
-import { firebase, firestore, fire } from "../../../Fire.js";
+import { firestore, auth, fire } from "../../../Fire.js";
 import { userRegisterSchema } from "../../../utils/formSchemas"
-import { Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
-import { FField } from '../../../utils/styles/forms.js';
-import { H1, Label, LLink, RedText } from '../../../utils/styles/text.js';
-import { MdBlackToInvBtn, MdGreenToInvBtn } from '../../../utils/styles/buttons.js';
+import { Hr, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
+import { CField, FField } from '../../../utils/styles/forms.js';
+import { Body, H1, H2, Label, LLink } from '../../../utils/styles/text.js';
 import { NOTIFICATION } from '../../../utils/constants.js';
+import { Button } from '../../../utils/styles/buttons';
+import { doc, setDoc } from 'firebase/firestore';
+import FormError from '../../misc/FormError.js';
+import { withRouter } from '../../../utils/hocs.js';
 
 class UserRegister extends Component {
-    addUser = (values) => {
-        if (values.confirmPassword === values.password) {
-                store.addNotification({
-                    title: "reCAPTCHA",
-                    message: `Please complete the reCAPTCHA below to continue.`,
-                    type: "success",
-                    ...NOTIFICATION
-                })
-            window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha', {
-                'callback': (response) => {
-                // reCAPTCHA solved, allow Ask.
-                fire.auth().createUserWithEmailAndPassword(values.email, values.password)
-                    .then((userData) => {
-                        // No existing user, now add to Firestore
-                        var currentUser = fire.auth().currentUser;
-                        currentUser.updateProfile({
-                            displayName: (values.firstName + " " + values.lastName)
-                        }).then(() => {
-                            console.log("Successfully added display name to Firebase.");
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            submitting: {
+                registerUser: false
+            }
+        }
+    }
+
+    registerUser = (values) => {        
+        if (values.confirmPassword !== values.password) { 
+            alert("Passwords must match!")
+        } else if(!values.policyAccept){
+            alert("Please accept our Privacy Policy and Terms & Conditions.")
+        } else {
+              // store.addNotification({
+            //     title: "reCAPTCHA",
+            //     message: `Please complete the reCAPTCHA below to continue.`,
+            //     type: "success",
+            //     ...NOTIFICATION
+            // })
+            // 
+            
+            window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
+                'size': 'normal',
+                'callback': async (response) => {
+                    this.setState({ loading: { registerUser: true } });
+                    await createUserWithEmailAndPassword(auth, values.email, values.password)
+                        .then(async (userCredential) => {
+                            // Signed in 
+                            const user = userCredential.user;
+                            console.log("User created: ")
+                            console.log(user)
+
+                            await updateProfile(auth.currentUser, {
+                                displayName: (values.firstName + " " + values.lastName)
+                            }).then(() => {
+                                console.log("Successfully added display name to Firebase.");
+                            }).catch((error) => {
+                                console.error("Error adding your display name to database: ", error);
+                                // store.addNotification({
+                                //     title: "Error",
+                                //     message: `Error adding your display name to database: ${error}`,
+                                //     type: "danger",
+                                //     ...NOTIFICATION
+                                // })
+                            });
+
+                            await setDoc(doc(firestore, "users", user.uid), {
+                                firstName: values.firstName,
+                                lastName: values.lastName,
+                                email: values.email,
+                                phone: values.phone,
+                                timestamp: Date.now(),
+                            }).then((doc) => {
+                                console.log("Successful write of user doc to Firestore: ");
+                                console.log(doc)
+                            }).catch((error) => {
+                                console.error("Error adding document: ", error);
+                                // store.addNotification({
+                                //     title: "Error",
+                                //     message: `Error adding document: ${error}`,
+                                //     type: "danger",
+                                //     ...NOTIFICATION
+                                // })
+                            });
+                            
+                            this.props.navigate("/user/dashboard");
+                            window.recaptchaVerifier.clear();
                         }).catch((error) => {
-                            console.error("Error adding your display name to database: ", error);
-                            store.addNotification({
-                                title: "Error",
-                                message: `Error adding your display name to database: ${error}`,
-                                type: "danger",
-                                ...NOTIFICATION
-                            })
-                            window.recaptchaVerifier.clear()
+                            console.log("Error: " + error.message);
+                            // store.addNotification({
+                            //     title: "Error",
+                            //     message: `Error adding creating account: ${error.message}`,
+                            //     type: "danger",
+                            //     ...NOTIFICATION
+                            // }
+                            window.recaptchaVerifier.clear();
                         });
-
-                        firestore.collection("users").doc(userData.user.uid).set({
-                            firstName: values.firstName,
-                            lastName: values.lastName,
-                            email: values.email,
-                            phone: values.phone,
-                            timestamp: Date.now(),
-                        }, { merge: true }).then(() => {
-                            console.log("Successful write to Firestore.");
-                        }).catch((error) => {
-                            console.error("Error adding document: ", error);
-                            store.addNotification({
-                                title: "Error",
-                                message: `Error adding document: ${error}`,
-                                type: "danger",
-                                ...NOTIFICATION
-                            })
-                            window.recaptchaVerifier.clear()
-                        });
-
-                        this.props.history.push("/user/logging-in"); // This was moved outside the firestore doc set above so the "you must be signed out to view this page" alert doesnt show
-
-                    }).catch((error) => {
-                        var errorCode = error.code;
-                        var errorMessage = error.message;
-                        console.log("Error registering: " + errorCode + ": " + errorMessage)
-                        store.addNotification({
-                            title: "Error",
-                            message: `Error registering: ${errorMessage}`,
-                            type: "danger",
-                            ...NOTIFICATION
-                        })
-                        window.recaptchaVerifier.clear()
-                    });
                 },
                 'expired-callback': () => {
-                    // Response expired. Ask user to solve reCAPTCHA again.
-                    store.addNotification({
-                        title: "Timeout",
-                        message: `Please solve the reCAPTCHA again.`,
-                        type: "danger",
-                        ...NOTIFICATION
-                    })
-                    window.recaptchaVerifier.clear()
+                    alert("Recaptcha failed, try again.")
+                    window.recaptchaVerifier.clear();
                 }
-            })
-            window.recaptchaVerifier.render()
-        } else {
-            store.addNotification({
-                title: "Error",
-                message: `Passwords must match!`,
-                type: "danger",
-                ...NOTIFICATION
-            })
+            }, auth);
+            window.recaptchaVerifier.render(); 
         }
-        
-      }
-    render() {
-        const initialFormState = {
-            firstName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            password: "",
-            confirmPassword: "",
-        };
+    }
 
-        return (
-            <Wrapper>
-                <Link to="/">
-                    <MdBlackToInvBtn type="button">
-                        <i className="fas fa-chevron-left" />
-                        &nbsp; Return home
-                    </MdBlackToInvBtn>
-                </Link>
-                <H1>User Register</H1>
-                <Formik
-                    initialValues={initialFormState}
-                    validationSchema={userRegisterSchema}
-                    onSubmit={(values, actions) => {
-                        this.addUser(values)
-                    }}
-                >
-                    {props => (
-                    <Form>
-                        <Grid fluid>
-                            <Row>
-                                <Col xs={12} sm={6}>
-                                    <Label htmlFor="firstName">First name: </Label>
-                                    <FField
-                                        type="text"
-                                        onChange={props.handleChange}
-                                        name="firstName"
-                                        value={props.values.firstName}
-                                        placeholder="John"
-                                    />  
-                                    {props.errors.firstName && props.touched.firstName ? (
-                                        <RedText>{props.errors.firstName}</RedText>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Col>
-                                <Col xs={12} sm={6}>
-                                    <Label htmlFor="lastName">Last name: </Label>
-                                    <FField
-                                        type="text"
-                                        onChange={props.handleChange}
-                                        name="lastName"
-                                        value={props.values.lastName}
-                                        placeholder="Doe"
-                                    />
-                                    {props.errors.lastName && props.touched.lastName ? (
-                                        <RedText>{props.errors.lastName}</RedText>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs={12}>
-                                    <Label htmlFor="email">Email: </Label>
-                                    <FField
-                                        type="email"
-                                        onChange={props.handleChange}
-                                        name="email"
-                                        value={props.values.email}
-                                        placeholder="john_doe@email.com"
-                                    />
-                                    {props.errors.email && props.touched.email ? (
-                                        <RedText>{props.errors.email}</RedText>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col xs={12} md={6}>
-                                    <Label htmlFor="password">Password: </Label>
-                                    <FField
-                                        type="password"
-                                        onChange={props.handleChange}
-                                        name="password"
-                                        autoComplete={"off"}
-                                        value={props.values.password}
-                                        placeholder="*********************"
-                                    />
-                                    {props.errors.password && props.touched.password ? (
-                                        <RedText>{props.errors.password}</RedText>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Col>
-                                <Col xs={12} md={6}>
-                                    <Label htmlFor="confirmPassword">Confirm password: </Label>
-                                    <FField
-                                        type="password"
-                                        onChange={props.handleChange}
-                                        name="confirmPassword"
-                                        autoComplete={"off"}
-                                        value={props.values.confirmPassword}
-                                        placeholder="*********************"
-                                    />
-                                    {props.errors.confirmPassword && props.touched.confirmPassword ? (
-                                        <RedText>{props.errors.confirmPassword}</RedText>
-                                    ) : (
-                                        ""
-                                    )}
-                                </Col>
-                            </Row>
-                            <Row center="xs">
-                                <Col xs={12}>
-                                    <MdGreenToInvBtn type="submit" disabled={!props.dirty && !props.isSubmitting}>
-                                        Submit
-                                    </MdGreenToInvBtn>
-                                </Col>
-                            </Row>
-                            <Row center="xs">
-                                <Col xs={12}>
-                                    <LLink to="/user/login">
-                                        Already have an account?
-                                    </LLink>
-                                </Col>
-                            </Row>
-                            <Row center="xs">
-                                <Col xs={12}>
-                                    <Recaptcha id="recaptcha" />
-                                </Col>
-                            </Row>
-                        </Grid>
-                    </Form>
-                    )}
-                </Formik>
-            </Wrapper>
-        )
+    render() {
+        if(this.state?.loading?.registerUser){
+            return (
+                <Wrapper>
+                    <H2>Creating your account... <i className="fas fa-spinner fa-spin" /></H2> 
+                </Wrapper>
+            )
+        } else {
+            return (
+                <Wrapper>
+                    <Link to="/">
+                        <Button>
+                            <i className="fas fa-chevron-left" />
+                            &nbsp; Return home
+                        </Button>
+                    </Link>
+                    <H1>User Register</H1>
+                    <Formik
+                        initialValues={{
+                            firstName: "",
+                            lastName: "",
+                            email: "",
+                            phone: "",
+                            password: "",
+                            confirmPassword: "",
+                            policyAccept: false,
+                        }}
+                        onSubmit={(values) => {
+                            this.setState({ submitting: { registerUser: true } })
+                            this.registerUser(values);
+                        }}
+                        enableReinitialize={true}
+                        validationSchema={userRegisterSchema}
+                    >
+                        {props => (
+                        <Form>
+                            <Grid fluid>
+                                <Row>
+                                    <Col sm={12} md={6}>
+                                        <Label>First name:</Label>
+                                        <br/>
+                                        <FField
+                                            type="text"
+                                            required
+                                            onChange={props.handleChange}
+                                            placeholder="Taylor"
+                                            name="firstName"
+                                            value={props.values.firstName || ''}
+                                            error={ ((props.errors.firstName && props.touched.firstName) || this.state?.errors?.firstName) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={props.errors.firstName}
+                                            formikTouched={props.touched.firstName}
+                                            stateError={this.state?.errors?.firstName}
+                                        /> 
+                                    </Col>
+                                    <Col sm={12} md={6}>
+                                        <Label>First name:</Label>
+                                        <br/>
+                                        <FField
+                                            type="text"
+                                            required
+                                            onChange={props.handleChange}
+                                            placeholder="Doe"
+                                            name="lastName"
+                                            value={props.values.lastName || ''}
+                                            error={ ((props.errors.lastName && props.touched.lastName) || this.state?.errors?.lastName) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={props.errors.lastName}
+                                            formikTouched={props.touched.lastName}
+                                            stateError={this.state?.errors?.lastName}
+                                        /> 
+                                    </Col>
+                                   
+                                </Row>
+                                <Row>
+                                    <Col sm={12}>
+                                        <Label>Email:</Label>&nbsp;
+                                        <br/>
+                                        <FField
+                                            type="text"
+                                            required
+                                            onChange={props.handleChange}
+                                            placeholder="john_doe@email.com"
+                                            name="email"
+                                            value={props.values.email || ''}
+                                            error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={props.errors.email}
+                                            formikTouched={props.touched.email}
+                                            stateError={this.state?.errors?.email}
+                                        /> 
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs={12} md={6}>
+                                        <Label>Password: </Label>
+                                        <FField
+                                            type="password"
+                                            required
+                                            onChange={props.handleChange}
+                                            name="password"
+                                            autoComplete={"off"}
+                                            value={props.values.password}
+                                            placeholder="*********************"
+                                            error={ ((props.errors.password && props.touched.password) || this.state?.errors?.password) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={props.errors.password}
+                                            formikTouched={props.touched.password}
+                                            stateError={this.state?.errors?.password}
+                                        /> 
+                                    </Col>
+                                    <Col xs={12} md={6}>
+                                        <Label>Confirm Password: </Label>
+                                        <FField
+                                            type="password"
+                                            required
+                                            onChange={props.handleChange}
+                                            name="confirmPassword"
+                                            autoComplete={"off"}
+                                            value={props.values.confirmPassword}
+                                            placeholder="*********************"
+                                            error={ ((props.errors.confirmPassword && props.touched.confirmPassword) || this.state?.errors?.confirmPassword) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={props.errors.confirmPassword}
+                                            formikTouched={props.touched.confirmPassword}
+                                            stateError={this.state?.errors?.confirmPassword}
+                                        /> 
+                                    </Col>
+                                </Row>
+                                <Hr/>
+                                <Row center="xs">
+                                    <Col>
+                                        <CField
+                                            type="checkbox"
+                                            name="policyAccept"
+                                        />
+                                        <Body display="inline">
+                                            I accept the&nbsp;
+                                            <LLink to="/privacy-policy">Privacy Policy</LLink> and&nbsp;
+                                            <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>.
+                                        </Body>
+                                    </Col>
+                                </Row>
+                                <Row center="xs">
+                                    <Col xs={12}>
+                                        <Button 
+                                            type="submit"
+                                            disabled={this.state?.submitting?.registerUser}
+                                            // id="register-button"
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row center="xs">
+                                    <Col xs={12}>
+                                        <LLink to="/user/login">
+                                            Already have an account?
+                                        </LLink>
+                                    </Col>
+                                </Row>
+                                <Row center="xs">
+                                    <Col xs={12}>
+                                        <Recaptcha id="recaptcha" />
+                                    </Col>
+                                </Row>
+                            </Grid>
+                        </Form>
+                        )}
+                    </Formik>
+                </Wrapper>
+            )
+        }
     }
 }
 

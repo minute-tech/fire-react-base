@@ -1,18 +1,13 @@
 import React, { Component } from 'react'
-import { withRouter } from '../../../utils/misc';
+import { withRouter } from '../../../utils/hocs';
 import { Wrapper } from '../../../utils/styles/misc';
 import { H2 } from '../../../utils/styles/text';
 
 class UserLoggingIn extends Component {
-    constructor(props) {
-        super(props)
-        this.redirectTo = this.redirectTo.bind(this);
-    }
-
     redirectTo(){
         setTimeout(() => {
-            this.props.history.push("/user/dashboard");
-          }, 1500);
+            this.props.navigate("/user/dashboard");
+        }, 1500);
     }
     
     render() {

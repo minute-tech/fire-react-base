@@ -16,6 +16,18 @@ class Header extends Component {
             <NavLinks>
                 <NavLLink to='/'><NavHoverText>Home</NavHoverText></NavLLink>
                 <NavLLink to='/about'><NavHoverText>About</NavHoverText></NavLLink>
+                {!this.props.user && (
+                    <>
+                        <NavLLink to='/user/login'><NavHoverText>Login</NavHoverText></NavLLink>
+                        <NavLLink to='/user/register'><NavHoverText>Register</NavHoverText></NavLLink>
+                    </>
+                )}
+                {this.props.user && (
+                    <>
+                        <NavLLink to='/user/dashboard'><NavHoverText>Dashboard</NavHoverText></NavLLink>
+                    </>
+                )}
+                
             </NavLinks>
             {/* <div style={{backgroundColor: this.props.theme.colors.primary, height: "5px"}} /> */}
         </header>

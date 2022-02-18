@@ -1,34 +1,35 @@
 import React, { Component } from 'react';
 import { store } from 'react-notifications-component';
 
-import { withRouter } from '../../../utils/misc';
-import { fire, firestore } from "../../../Fire.js";
+import { withRouter } from '../../../utils/hocs';
+import { auth } from "../../../Fire.js";
 import { LLink, H1, H3 } from '../../../utils/styles/text.js';
-import { MdBlackToInvBtn, MdBlueToInvBtn, MdGreenToInvBtn, MdInvToRedBtn, MdPrimaryToInvBtn, MdSecondaryToInvBtn, MdYellowToInvBtn } from '../../../utils/styles/buttons.js';
+import { Button } from '../../../utils/styles/buttons.js';
 import { Hr, Wrapper } from '../../../utils/styles/misc.js';
 import { NOTIFICATION } from '../../../utils/constants.js';
+import { signOut } from 'firebase/auth';
 
 class UserDashboard extends Component {
-    signOut = () => {
+    logOut = () => {
         console.log("Signing out...")
-        fire.auth().signOut().then(() => {
+        signOut(auth).then(() => {
             console.log("Sign out successful.");
-            this.props.history.push("/");
+            this.props.navigate("/")
             window.location.reload();
-            store.addNotification({
-                title: "Success",
-                message: `Signed out successfully!`,
-                type: "success",
-                ...NOTIFICATION
-            })
+            // store.addNotification({
+            //     title: "Success",
+            //     message: `Signed out successfully!`,
+            //     type: "success",
+            //     ...NOTIFICATION
+            // })
         }).catch((error) => {
-                console.error("Error signing out: " + error);
-                store.addNotification({
-                    title: "Error",
-                    message: `Error signing out: ${error}`,
-                    type: "danger",
-                    ...NOTIFICATION
-                })
+            console.error("Error signing out: " + error);
+            // store.addNotification({
+            //     title: "Error",
+            //     message: `Error signing out: ${error}`,
+            //     type: "danger",
+            //     ...NOTIFICATION
+            // })
         });
     }
     
@@ -38,14 +39,16 @@ class UserDashboard extends Component {
                 <H1>User Dashboard</H1>
                 <H3>Hi, {this.props.user.displayName}!</H3>
                 <LLink to={`/user/profile`}> 
-                    <MdBlackToInvBtn type="button">
+                    <Button>
                         Edit your profile
-                    </MdBlackToInvBtn>
+                    </Button>
                 </LLink>
                 <Hr/>
-                <MdInvToRedBtn type="button" onClick={()=>this.signOut()}>
+                <Button 
+                    color="red" 
+                    onClick={() => this.logOut()}>
                     Log out
-                </MdInvToRedBtn>
+                </Button>
             </Wrapper>
         )
     }
