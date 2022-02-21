@@ -7,14 +7,14 @@ export const Button = styled.button`
     ${BodyFont}
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;
     margin: 5px;
-    color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : (props.theme.colors[props.color] || props.theme.colors.primary)};
-    border: ${props => (!props.inverted && props.btnType === BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color] || props.theme.colors.primary} solid 2px; 
+    color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : (props?.theme?.colors[props.color] ?? "black")};
+    border: ${props => (!props.inverted && props.btnType === BTN_TYPES.TEXTED) ? 'transparent' : (props?.theme?.colors[props.color] ?? "black")} solid 2px; 
     border-radius: ${props => !props.rounded ? '0px' : '20px'};
-    background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? props.theme.colors[props.color] || props.theme.colors.primary : 'transparent'};
+    background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? (props?.theme?.colors[props.color] ?? "black") : 'transparent'};
     cursor: pointer;
     a {
         text-decoration: none; 
-        color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : props.theme.colors[props.color] || props.theme.colors.primary};
+        color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props.btnType !== BTN_TYPES.TEXTED ? 'white' : 'black') : (props?.theme?.colors[props.color] ?? "black")};
     }
 
     // Sizing
@@ -40,11 +40,11 @@ export const Button = styled.button`
     &:hover {
         text-decoration: none;
         cursor: pointer;
-        background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? 'transparent' : props.theme.colors[props.color] || props.theme.colors.primary};
-        color: ${props => (props.btnType !== BTN_TYPES.INVERTED) ? (props.btnType !== BTN_TYPES.TEXTED ? props.theme.colors[props.color] || props.theme.colors.primary : !props.color.includes('light') ? 'white' : 'black') : 'white'};
-        border: ${props => props.theme.colors[props.color] || props.theme.colors.primary} solid 2px;
+        background-color: ${props => (props.btnType !== BTN_TYPES.INVERTED && props.btnType !== BTN_TYPES.TEXTED) ? 'transparent' : (props?.theme?.colors[props.color] ?? "black")};
+        color: ${props => (props.btnType !== BTN_TYPES.INVERTED) ? (props.btnType !== BTN_TYPES.TEXTED ? (props?.theme?.colors[props.color] ?? "black") : !props.color.includes('light') ? 'white' : 'black') : 'white'};
+        border: ${props => (props?.theme?.colors[props.color] ?? "black")} solid 2px;
         a {
-            color: ${props => props.btnType !== BTN_TYPES.INVERTED ? props.theme.colors[props.color] || props.theme.colors.primary : 'white'};
+            color: ${props => props.btnType !== BTN_TYPES.INVERTED ? (props?.theme?.colors[props.color] ?? "black") : 'white'};
         }
     }
 

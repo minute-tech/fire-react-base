@@ -9,6 +9,7 @@ import { Body, H1, Label, LLink } from '../../utils/styles/text.js';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Button } from '../../utils/styles/buttons.js';
 import { Hr } from '../../utils/styles/misc.js';
+import { toast } from 'react-toastify';
 
 export default class ContactForm extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ export default class ContactForm extends Component {
 
     submitMessage = (values, resetForm) => {
         if(!values.policyAccept){
-            alert("Please accept our Privacy Policy and Terms & Conditions.")
+            toast.warn('Please accept our Privacy Policy and Terms & Conditions.');
         } else {
             addDoc(collection(firestore, "messages"), {
                 name: values.name,
@@ -29,7 +30,7 @@ export default class ContactForm extends Component {
                 message: values.message,
                 timestamp: Date.now(),
             }).then((doc) => {
-                alert("Message submitted successfully.")
+                toast.success('Message submitted successfully, thanks!');
                 console.log("doc: ");
                 console.log(doc);
                 resetForm();

@@ -1,5 +1,4 @@
 import styled, { createGlobalStyle }  from 'styled-components';
-import { ReactNotifications } from 'react-notifications-component'
 import { lighten } from 'polished'
 
 // Importing font into CSS global for use around app
@@ -67,6 +66,18 @@ export const GlobalStyle = createGlobalStyle`
     .ril-next-button, .ril-prev-button {
         background-color: rgba(0, 0, 0, 0.6) !important;
     }
+
+    /* Change notification colors */
+    :root{
+        --toastify-color-light: #fff;
+        --toastify-color-dark: #121212;
+        --toastify-color-info: ${props => props.theme.colors.primary};
+        --toastify-color-success: ${props => props.theme.colors.green};
+        --toastify-color-warning: ${props => props.theme.colors.yellow};
+        --toastify-color-error:${props => props.theme.colors.red};
+        --toastify-font-family: ${props => props.theme?.fonts?.body || 'Arial, Helvetica, sans-serif'} !important;
+    }
+
 `;
 
 // Alignment //
@@ -250,7 +261,7 @@ export const BgMediaContainer = styled.div`
     width: 100%;
     margin-top: -5px;
     overflow: hidden;
-    font-family: ${BodyFont}; // ** if this isnt working, reference back ship-form-template, i did something different with ||
+    ${BodyFont} ; // ** if this isnt working, reference back ship-form-template, i did something different with ||
     position: relative;
 `;
 
@@ -347,12 +358,6 @@ export const OverflowXAuto = styled.div`
     overflow-x: auto;
 `;
 
-export const ReactNotificationsStyled = styled(props => <ReactNotifications {...props} />)`
-	div {
-        ${BodyFont}
-	}
-`
-
 export const VerticalAlign = styled.span`
     text-align: center;
     position: relative;
@@ -370,4 +375,16 @@ export const DevAlert = styled.div`
     font-size: 0.6rem;
     font-family: ${props => props.theme?.fonts?.body || 'Arial'};
     letter-spacing: 2px;
+`
+export const ConfirmCard = styled.div`
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: white;
+    border-radius: 5px;
+    transition: 0.3s;
+    padding: 30px 60px;
+    position: relative;
+    z-index: 10;
+    @media (max-width: 1180px) {
+        padding: 15px 30px;
+    }
 `

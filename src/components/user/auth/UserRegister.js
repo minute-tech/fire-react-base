@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
-import { store } from 'react-notifications-component';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from 'firebase/auth';
 
-import { firestore, auth, fire } from "../../../Fire.js";
+import { firestore, auth } from "../../../Fire.js";
 import { userRegisterSchema } from "../../../utils/formSchemas"
 import { Hr, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
 import { CField, FField } from '../../../utils/styles/forms.js';
 import { Body, H1, H2, Label, LLink } from '../../../utils/styles/text.js';
-import { NOTIFICATION } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/buttons';
 import { doc, setDoc } from 'firebase/firestore';
 import FormError from '../../misc/FormError.js';
@@ -29,17 +28,11 @@ class UserRegister extends Component {
 
     registerUser = (values) => {        
         if (values.confirmPassword !== values.password) { 
-            alert("Passwords must match!")
+            toast.warn("Passwords must match!");
         } else if(!values.policyAccept){
-            alert("Please accept our Privacy Policy and Terms & Conditions.")
+            toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
         } else {
-              // store.addNotification({
-            //     title: "reCAPTCHA",
-            //     message: `Please complete the reCAPTCHA below to continue.`,
-            //     type: "success",
-            //     ...NOTIFICATION
-            // })
-            // 
+            toast.info('Please complete the reCAPTCHA below to continue.');
             
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                 'size': 'normal',
@@ -58,12 +51,7 @@ class UserRegister extends Component {
                                 console.log("Successfully added display name to Firebase.");
                             }).catch((error) => {
                                 console.error("Error adding your display name to database: ", error);
-                                // store.addNotification({
-                                //     title: "Error",
-                                //     message: `Error adding your display name to database: ${error}`,
-                                //     type: "danger",
-                                //     ...NOTIFICATION
-                                // })
+                                toast.error(`Error adding your display name to database: ${error}`);
                             });
 
                             await setDoc(doc(firestore, "users", user.uid), {
@@ -77,30 +65,20 @@ class UserRegister extends Component {
                                 console.log(doc)
                             }).catch((error) => {
                                 console.error("Error adding document: ", error);
-                                // store.addNotification({
-                                //     title: "Error",
-                                //     message: `Error adding document: ${error}`,
-                                //     type: "danger",
-                                //     ...NOTIFICATION
-                                // })
+                                toast.error(`Error setting users doc: ${error}`);
                             });
                             
                             this.props.navigate("/user/dashboard");
                             window.recaptchaVerifier.clear();
                         }).catch((error) => {
                             console.log("Error: " + error.message);
-                            // store.addNotification({
-                            //     title: "Error",
-                            //     message: `Error adding creating account: ${error.message}`,
-                            //     type: "danger",
-                            //     ...NOTIFICATION
-                            // }
+                            toast.error(`Error adding creating account: ${error.message}`);
                             window.recaptchaVerifier.clear();
                         });
                 },
                 'expired-callback': () => {
-                    alert("Recaptcha failed, try again.")
-                    window.recaptchaVerifier.clear();
+                    toast.warn('Please solve the reCAPTCHA again!');
+                    window.recaptchaVerifier.clear()
                 }
             }, auth);
             window.recaptchaVerifier.render(); 
@@ -164,7 +142,7 @@ class UserRegister extends Component {
                                         /> 
                                     </Col>
                                     <Col sm={12} md={6}>
-                                        <Label>First name:</Label>
+                                        <Label>Last name:</Label>
                                         <br/>
                                         <FField
                                             type="text"
@@ -181,10 +159,9 @@ class UserRegister extends Component {
                                             stateError={this.state?.errors?.lastName}
                                         /> 
                                     </Col>
-                                   
                                 </Row>
                                 <Row>
-                                    <Col sm={12}>
+                                    <Col xs={12}>
                                         <Label>Email:</Label>&nbsp;
                                         <br/>
                                         <FField
@@ -260,7 +237,6 @@ class UserRegister extends Component {
                                         <Button 
                                             type="submit"
                                             disabled={this.state?.submitting?.registerUser}
-                                            // id="register-button"
                                         >
                                             Submit
                                         </Button>

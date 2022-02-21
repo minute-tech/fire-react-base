@@ -3,10 +3,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
+ import { ToastContainer } from 'react-toastify';
+
 
 // CSS
 import "./assets/css/App.css";
-import 'react-notifications-component/dist/theme.css'
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // Components
 import Footer from './components/misc/Footer';
@@ -15,7 +18,7 @@ import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 import { auth } from './Fire';
 import { DEFAULT_COLORS, FONTS } from './utils/constants';
-import { DevAlert, GlobalStyle, ReactNotificationsStyled, Wrapper } from './utils/styles/misc';
+import { DevAlert, GlobalStyle, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
 export default class App extends Component {
@@ -43,12 +46,12 @@ export default class App extends Component {
             }
         });
     }
-    
-    // componentWillUnmount(){
-    //     if(this.unsubscribeReadOnly){
-    //         this.unsubscribeReadOnly();
-    //     }
-    // }
+
+    userLogged = () => {
+        this.setState({
+            user: ""
+        });
+    }
 
     render() {
         if(this.state.loading){
@@ -92,11 +95,20 @@ export default class App extends Component {
                                 
                                 </>
                             )}
-                            <ReactNotificationsStyled />
                             <GlobalStyle /> 
                             <Header user={this.state.user} />
+                            <ToastContainer
+                                position="top-center"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                pauseOnHover
+                            />
                             <FirebaseAnalytics />
-                            <Views user={this.state.user} />
+                            <Views user={this.state.user} userLogged={this.userLogged} />
                             <Footer />
                         </BrowserRouter>
                     </ThemeProvider>

@@ -21,5 +21,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
     * Breezy form building
 * yup
     * Form validation
-* react-notifications-component
+* react-toastify
     * Notification alerts
+* react-confirm-alert
+    * Confirmation dialogues

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Helmet } from 'react-helmet-async';
-import { store } from 'react-notifications-component';
+import { toast } from 'react-toastify';
 import { withTheme } from 'styled-components';
 
-import { BTN_TYPES, NOTIFICATION } from '../../utils/constants';
+import { BTN_TYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../utils/styles/text';
@@ -26,12 +26,7 @@ class Home extends Component {
     }
 
     doSomething = () => {
-        store.addNotification({
-            title: "Do something",
-            message: `Something here`,
-            type: "danger",
-            ...NOTIFICATION
-        })
+        toast.info('🦄 Wow so easy!');
     }
 
     
@@ -63,7 +58,7 @@ class Home extends Component {
                             </p>
                         </BgMediaBody>
                         <LLink to="/about">
-                            <Button color='primary' size='lg'>
+                            <Button color='primary' size='lg' onClick={() => this.doSomething()}>
                                 Call to Action
                             </Button>
                         </LLink>
@@ -71,7 +66,7 @@ class Home extends Component {
                 </BgMediaContainer>
                 <Wrapper>
                     <H1>Buttons</H1>
-                    <Button color='primary' size='lg' onClick={() => this.doSomething()}>Primary Large Normal Button</Button>
+                    <Button color='primary' size='lg'>Primary Large Normal Button</Button>
                     <Button color='secondary' size='md' btnType={BTN_TYPES.INVERTED}>Secondary Medium Inverted Button</Button>
                     <Button color='red' size='sm' btnType={BTN_TYPES.TEXTED}>Red Small Texted Button</Button>
                     <Button color='green' size='md' rounded={true}>Green Rounded Button</Button>
