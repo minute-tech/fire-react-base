@@ -9,6 +9,7 @@ import { Button } from '../../../utils/styles/buttons.js';
 import { Hr, Wrapper } from '../../../utils/styles/misc.js';
 import { toast } from 'react-toastify';
 import ConfirmAlert from '../../misc/ConfirmAlert';
+import { withTheme } from 'styled-components';
 
 class UserDashboard extends Component {
     logOut = () => {
@@ -38,12 +39,13 @@ class UserDashboard extends Component {
                 </LLink>
                 <Hr/>
                 <Button 
-                    color="red" 
+                    color={this.props.theme.colors.red}
                     onClick={() =>         
                         confirmAlert({
                             customUI: ({ onClose }) => {
                                 return (
                                     <ConfirmAlert 
+                                        theme={this.props.theme}
                                         onClose={onClose} 
                                         headingText={`Log out?`}
                                         bodyText={`Are you sure you want to log out?`}
@@ -63,4 +65,4 @@ class UserDashboard extends Component {
     }
 }
 
-export default withRouter(UserDashboard)
+export default withRouter(withTheme(UserDashboard))

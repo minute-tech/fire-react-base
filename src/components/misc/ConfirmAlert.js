@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withTheme } from 'styled-components';
+import { BTN_TYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons'
 import { ConfirmCard } from '../../utils/styles/misc';
 import { Body, H1 } from '../../utils/styles/text';
@@ -25,21 +25,23 @@ class ConfirmAlert extends Component {
                     <Body>{this.props.bodyText}</Body>
                     {/* TODO: somehow the theme isnt being passed to button below */}
                     {/* <Button>Test</Button> */}
-                    <button
-                        
+                    <Button
+                        color={this.props.theme.colors.green}
                         onClick={() => this.yesClicked()}
                     >
                         {this.props.yesText}
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                        color={this.props.theme.colors.red}
+                        btnType={BTN_TYPES.INVERTED}
                         onClick={() => this.noClicked()}
                     >
                         {this.props.noText}
-                    </button>
+                    </Button>
                 </div>
             </ConfirmCard>
         )
     }
 }
 
-export default withTheme(ConfirmAlert);
+export default ConfirmAlert;

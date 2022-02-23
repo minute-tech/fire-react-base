@@ -191,7 +191,7 @@ class UserLogin extends Component {
                                 onChange={this.handleChange} 
                                 value={this.state.forgotEmail}
                             />
-                            <Button color="green" type="button" onClick={() => this.sendPasswordReset()}>
+                            <Button color={this.props.theme.colors.green} type="button" onClick={() => this.sendPasswordReset()}>
                                 Send link
                             </Button>
                             <Hr/>

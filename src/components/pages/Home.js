@@ -58,7 +58,7 @@ class Home extends Component {
                             </p>
                         </BgMediaBody>
                         <LLink to="/about">
-                            <Button color='primary' size='lg' onClick={() => this.doSomething()}>
+                            <Button color={this.props.theme.colors.primary} size='lg' onClick={() => this.doSomething()}>
                                 Call to Action
                             </Button>
                         </LLink>
@@ -66,12 +66,12 @@ class Home extends Component {
                 </BgMediaContainer>
                 <Wrapper>
                     <H1>Buttons</H1>
-                    <Button color='primary' size='lg'>Primary Large Normal Button</Button>
-                    <Button color='secondary' size='md' btnType={BTN_TYPES.INVERTED}>Secondary Medium Inverted Button</Button>
-                    <Button color='red' size='sm' btnType={BTN_TYPES.TEXTED}>Red Small Texted Button</Button>
-                    <Button color='green' size='md' rounded={true}>Green Rounded Button</Button>
-                    <Button color='yellow' size='lg' btnType={BTN_TYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
                     <Button>Default</Button>
+                    <Button color={this.props.theme.colors.primary} size='lg'>Primary Large Normal Button</Button>
+                    <Button color={this.props.theme.colors.secondary} size='md' btnType={BTN_TYPES.INVERTED}>Secondary Medium Inverted Button</Button>
+                    <Button color={this.props.theme.colors.red} size='sm' btnType={BTN_TYPES.TEXTED}>Red Small Texted Button</Button>
+                    <Button color={this.props.theme.colors.green} size='md' rounded={true}>Green Rounded Button</Button>
+                    <Button color={this.props.theme.colors.yellow}size='lg' btnType={BTN_TYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
                     <Hr />
                     {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
                     <Grid fluid>
