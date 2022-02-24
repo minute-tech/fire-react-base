@@ -4,7 +4,7 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import { withRouter } from '../../../utils/hocs';
 import { auth } from "../../../Fire.js";
-import { LLink, H1, H3 } from '../../../utils/styles/text.js';
+import { LLink, H1, H3, Body } from '../../../utils/styles/text.js';
 import { Button } from '../../../utils/styles/buttons.js';
 import { Hr, Wrapper } from '../../../utils/styles/misc.js';
 import { toast } from 'react-toastify';
@@ -31,7 +31,7 @@ class UserDashboard extends Component {
         return (
             <Wrapper>
                 <H1>User Dashboard</H1>
-                <H3>Hi, {this.props.user.displayName}!</H3>
+                {this.props.user.displayName && (<H3>Hi, {this.props.user.displayName}!</H3>)}
                 <LLink to={`/user/profile`}> 
                     <Button>
                         Edit your profile
@@ -48,7 +48,7 @@ class UserDashboard extends Component {
                                         theme={this.props.theme}
                                         onClose={onClose} 
                                         headingText={`Log out?`}
-                                        bodyText={`Are you sure you want to log out?`}
+                                        bodyComponent={<Body>Are you sure you want to log out?</Body>}
                                         yesFunc={this.logOut} 
                                         yesText={`Yes`} 
                                         noFunc={function () {}} 

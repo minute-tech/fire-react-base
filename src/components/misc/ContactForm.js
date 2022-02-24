@@ -10,6 +10,7 @@ import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Button } from '../../utils/styles/buttons.js';
 import { Hr } from '../../utils/styles/misc.js';
 import { toast } from 'react-toastify';
+import { PLACEHOLDER } from '../../utils/constants';
 
 export default class ContactForm extends Component {
     constructor(props) {
@@ -68,9 +69,11 @@ export default class ContactForm extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="John Doe"
+                                            placeholder={`${PLACEHOLDER.FIRST_NAME} ${PLACEHOLDER.LAST_NAME}`}
                                             name="name"
                                             value={props.values.name || ''}
+                                            onKeyUp={() => this.setState({ errors: { name: false } })}
+                                            onClick={() => this.setState({ errors: { name: false } })}
                                             error={ ((props.errors.name && props.touched.name) || this.state?.errors?.name) ? 1 : 0 }
                                         />
                                         <FormError
@@ -86,7 +89,9 @@ export default class ContactForm extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="john_doe@email.com"
+                                            placeholder={PLACEHOLDER.EMAIL}
+                                            onKeyUp={() => this.setState({ errors: { email: false } })}
+                                            onClick={() => this.setState({ errors: { email: false } })}
                                             name="email"
                                             value={props.values.email || ''}
                                             error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
@@ -106,7 +111,9 @@ export default class ContactForm extends Component {
                                             component="textarea"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="Detail what you want to say here."
+                                            placeholder={PLACEHOLDER.MESSAGE}
+                                            onKeyUp={() => this.setState({ errors: { message: false } })}
+                                            onClick={() => this.setState({ errors: { message: false } })}
                                             name="message"
                                             value={props.values.message || ''}
                                             error={ ((props.errors.message && props.touched.message) || this.state?.errors?.message) ? 1 : 0 }

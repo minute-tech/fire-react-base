@@ -10,6 +10,7 @@ import { FField } from '../../../utils/styles/forms.js';
 import { H1, Label, RedText, H2, LLink, GreenHoverText, SmText, H3, MdBody, MdText } from '../../../utils/styles/text.js';
 import { Button, MdGreenToInvBtn, MdInvToPrimaryBtn, MdPrimaryToInvBtn } from '../../../utils/styles/buttons.js';
 import FormError from '../../misc/FormError.js';
+import { PLACEHOLDER } from '../../../utils/constants';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -112,9 +113,11 @@ class UserProfile extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="Taylor"
+                                            placeholder={PLACEHOLDER.FIRST_NAME}
                                             name="firstName"
                                             value={props.values.firstName || ''}
+                                            onKeyUp={() => this.setState({ errors: { firstName: false } })}
+                                            onClick={() => this.setState({ errors: { firstName: false } })}
                                             error={ ((props.errors.firstName && props.touched.firstName) || this.state?.errors?.firstName) ? 1 : 0 }
                                         />
                                         <FormError
@@ -130,9 +133,11 @@ class UserProfile extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="Doe"
                                             name="lastName"
+                                            placeholder={PLACEHOLDER.LAST_NAME}
                                             value={props.values.lastName || ''}
+                                            onKeyUp={() => this.setState({ errors: { lastName: false } })}
+                                            onClick={() => this.setState({ errors: { lastName: false } })}
                                             error={ ((props.errors.lastName && props.touched.lastName) || this.state?.errors?.lastName) ? 1 : 0 }
                                         />
                                         <FormError
@@ -150,9 +155,11 @@ class UserProfile extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="john_doe@email.com"
+                                            placeholder={PLACEHOLDER.EMAIL}
                                             name="email"
                                             value={props.values.email || ''}
+                                            onKeyUp={() => this.setState({ errors: { email: false } })}
+                                            onClick={() => this.setState({ errors: { email: false } })}
                                             error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
                                         />
                                         <FormError
@@ -169,9 +176,11 @@ class UserProfile extends Component {
                                         <FField
                                             type="phone"
                                             onChange={props.handleChange}
-                                            placeholder="+1 (123) 456-7890"
+                                            placeholder={PLACEHOLDER.PHONE}
                                             name="phone"
                                             value={props.values.lastName || ''}
+                                            onKeyUp={() => this.setState({ errors: { phone: false } })}
+                                            onClick={() => this.setState({ errors: { phone: false } })}
                                             error={ ((props.errors.phone && props.touched.phone) || this.state?.errors?.phone) ? 1 : 0 }
                                         />
                                         <FormError
@@ -191,11 +200,17 @@ class UserProfile extends Component {
                                         </Button>
                                     </Col>
                                 </Row>
+
+                                <Row center="xs">
+                                    <Col xs={12}>
+                                        <Body size="sm">This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
+                                        <Recaptcha id="recaptcha" />
+                                    </Col>
+                                </Row>
                             </Grid>
                         </Form>
                         )}
                     </Formik>
-                    <Recaptcha id="recaptcha" />
                         
                 </Wrapper>
             )

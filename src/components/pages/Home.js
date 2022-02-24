@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { withTheme } from 'styled-components';
 
-import { BTN_TYPES } from '../../utils/constants';
+import { BTYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../utils/styles/text';
@@ -68,10 +68,10 @@ class Home extends Component {
                     <H1>Buttons</H1>
                     <Button>Default</Button>
                     <Button color={this.props.theme.colors.primary} size='lg'>Primary Large Normal Button</Button>
-                    <Button color={this.props.theme.colors.secondary} size='md' btnType={BTN_TYPES.INVERTED}>Secondary Medium Inverted Button</Button>
-                    <Button color={this.props.theme.colors.red} size='sm' btnType={BTN_TYPES.TEXTED}>Red Small Texted Button</Button>
+                    <Button color={this.props.theme.colors.secondary} size='md' btype={BTYPES.INVERTED}>Secondary Medium Inverted Button</Button>
+                    <Button color={this.props.theme.colors.red} size='sm' btype={BTYPES.TEXTED}>Red Small Texted Button</Button>
                     <Button color={this.props.theme.colors.green} size='md' rounded={true}>Green Rounded Button</Button>
-                    <Button color={this.props.theme.colors.yellow}size='lg' btnType={BTN_TYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
+                    <Button color={this.props.theme.colors.yellow}size='lg' btype={BTYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
                     <Hr />
                     {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
                     <Grid fluid>

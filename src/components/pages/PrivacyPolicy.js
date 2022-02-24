@@ -47,7 +47,7 @@ export default class PrivacyPolicy extends Component {
 
                 <Body>Like any other website, Fire React Base uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</Body>
 
-                <Body>For more general information on cookies, please read <ALink href="https://www.generateprivacypolicy.com/#cookies">the Cookies article on Generate Privacy Policy website</ALink>.</Body>
+                <Body>For more general information on cookies, please read <ALink target="_blank" rel="noopener" href="https://www.generateprivacypolicy.com/#cookies">the Cookies article on Generate Privacy Policy website</ALink>.</Body>
 
 
                 <H2>Advertising Partners Privacy Policies</H2>

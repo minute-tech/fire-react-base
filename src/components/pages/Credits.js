@@ -11,7 +11,7 @@ export default class Credits extends Component {
                 <Ul>
                     <Li>Icons</Li>
                     <Ul>
-                        <Li><ALink href="https://fontawesome.com/" target="_blank">Font Awesome</ALink></Li>
+                        <Li><ALink href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</ALink></Li>
                     </Ul>
                     <Li>Mom &amp; Dad</Li>
                 </Ul>

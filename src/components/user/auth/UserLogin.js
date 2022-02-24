@@ -7,11 +7,13 @@ import { RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword }
 import { withRouter } from '../../../utils/hocs';
 import { auth } from "../../../Fire.js";
 import { signInSchema } from "../../../utils/formSchemas"
-import { Hr, LgContainer, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
-import { Body, H1, Label, LLink, SLink } from '../../../utils/styles/text.js';
+import { CenteredDiv, Hr, LgContainer, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
+import { ALink, Body, H1, Label, LLink, SLink } from '../../../utils/styles/text.js';
 import { FField, Input } from '../../../utils/styles/forms.js';
 import { Button } from '../../../utils/styles/buttons.js';
 import FormError from '../../misc/FormError';
+import { PLACEHOLDER } from '../../../utils/constants';
+import { withTheme } from 'styled-components';
 
 class UserLogin extends Component {
     constructor(props) {
@@ -117,9 +119,11 @@ class UserLogin extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="john_doe@email.com"
+                                            placeholder={PLACEHOLDER.EMAIL}
                                             name="email"
                                             value={props.values.email || ''}
+                                            onKeyUp={() => this.setState({ errors: { email: false } })}
+                                            onClick={() => this.setState({ errors: { email: false } })}
                                             error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
                                         />
                                         <FormError
@@ -139,7 +143,9 @@ class UserLogin extends Component {
                                             name="password"
                                             autoComplete={"off"}
                                             value={props.values.password}
-                                            placeholder="*********************"
+                                            placeholder={PLACEHOLDER.PASSWORD}
+                                            onKeyUp={() => this.setState({ errors: { password: false } })}
+                                            onClick={() => this.setState({ errors: { password: false } })}
                                             error={ ((props.errors.password && props.touched.password) || this.state?.errors?.password) ? 1 : 0 }
                                         />
                                         <FormError
@@ -159,20 +165,21 @@ class UserLogin extends Component {
                                         </Button>
                                     </Col>
                                 </Row>
-                                <Row center="xs">
+                                <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
-                                        <LLink to="/user/register">
+                                        <LLink margin="20px 0" to="/user/register">
                                             Don't have an account?
                                         </LLink>
                                     </Col>
                                 </Row>
-                                <Row center="xs">
+                                <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
                                         <SLink onClick={() => this.toggleForgot()}>Forgot password?</SLink>
                                     </Col>
                                 </Row>
                                 <Row center="xs">
                                     <Col xs={12}>
+                                        <Body size="sm">This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                         <Recaptcha id="recaptcha" />
                                     </Col>
                                 </Row>
@@ -182,12 +189,12 @@ class UserLogin extends Component {
                     </Formik>
 
                     {this.state.forgotExpanded && (
-                        <div>
+                        <CenteredDiv>
                             <Hr/>
                             <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
                             <Input 
                                 type="text"
-                                placeholder="john_doe@email.com" 
+                                placeholder={PLACEHOLDER.EMAIL}
                                 onChange={this.handleChange} 
                                 value={this.state.forgotEmail}
                             />
@@ -195,7 +202,7 @@ class UserLogin extends Component {
                                 Send link
                             </Button>
                             <Hr/>
-                        </div>
+                        </CenteredDiv>
                     )}
                 </LgContainer>
             </Wrapper>
@@ -203,4 +210,4 @@ class UserLogin extends Component {
     }
 }
 
-export default withRouter(UserLogin);
+export default withRouter(withTheme(UserLogin));

@@ -7,13 +7,14 @@ import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from
 
 import { firestore, auth } from "../../../Fire.js";
 import { userRegisterSchema } from "../../../utils/formSchemas"
-import { Hr, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
+import { Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
 import { CField, FField } from '../../../utils/styles/forms.js';
-import { Body, H1, H2, Label, LLink } from '../../../utils/styles/text.js';
+import { ALink, Body, H1, H2, Label, LLink } from '../../../utils/styles/text.js';
 import { Button } from '../../../utils/styles/buttons';
 import { doc, setDoc } from 'firebase/firestore';
 import FormError from '../../misc/FormError.js';
 import { withRouter } from '../../../utils/hocs.js';
+import { PLACEHOLDER } from '../../../utils/constants.js';
 
 class UserRegister extends Component {
     constructor(props) {
@@ -28,12 +29,16 @@ class UserRegister extends Component {
 
     registerUser = (values) => {        
         if (values.confirmPassword !== values.password) { 
-            toast.warn("Passwords must match!");
+            // toast.warn("Passwords must match!");
+            this.setState({ 
+                submitting: { registerUser: false }, 
+                errors: { confirmPassword: "Passwords do not match!" } 
+            })
         } else if(!values.policyAccept){
             toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
+            this.setState({ submitting: { registerUser: false } })
         } else {
             toast.info('Please complete the reCAPTCHA below to continue.');
-            
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                 'size': 'normal',
                 'callback': async (response) => {
@@ -67,9 +72,8 @@ class UserRegister extends Component {
                                 console.error("Error adding document: ", error);
                                 toast.error(`Error setting users doc: ${error}`);
                             });
-                            
-                            this.props.navigate("/user/dashboard");
                             window.recaptchaVerifier.clear();
+                            this.props.navigate("/user/dashboard");
                         }).catch((error) => {
                             console.log("Error: " + error.message);
                             toast.error(`Error adding creating account: ${error.message}`);
@@ -116,7 +120,7 @@ class UserRegister extends Component {
                             this.setState({ submitting: { registerUser: true } })
                             this.registerUser(values);
                         }}
-                        enableReinitialize={true}
+                        enableReinitialize={false}
                         validationSchema={userRegisterSchema}
                     >
                         {props => (
@@ -130,7 +134,7 @@ class UserRegister extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="Taylor"
+                                            placeholder={PLACEHOLDER.FIRST_NAME}
                                             name="firstName"
                                             value={props.values.firstName || ''}
                                             error={ ((props.errors.firstName && props.touched.firstName) || this.state?.errors?.firstName) ? 1 : 0 }
@@ -148,7 +152,7 @@ class UserRegister extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="Doe"
+                                            placeholder={PLACEHOLDER.LAST_NAME}
                                             name="lastName"
                                             value={props.values.lastName || ''}
                                             error={ ((props.errors.lastName && props.touched.lastName) || this.state?.errors?.lastName) ? 1 : 0 }
@@ -168,9 +172,11 @@ class UserRegister extends Component {
                                             type="text"
                                             required
                                             onChange={props.handleChange}
-                                            placeholder="john_doe@email.com"
+                                            placeholder={PLACEHOLDER.EMAIL}
                                             name="email"
                                             value={props.values.email || ''}
+                                            onKeyUp={() => this.setState({ errors: { email: false } })}
+                                            onClick={() => this.setState({ errors: { email: false } })}
                                             error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
                                         />
                                         <FormError
@@ -189,8 +195,10 @@ class UserRegister extends Component {
                                             onChange={props.handleChange}
                                             name="password"
                                             autoComplete={"off"}
+                                            onKeyUp={() => this.setState({ errors: { password: false } })}
+                                            onClick={() => this.setState({ errors: { password: false } })}
                                             value={props.values.password}
-                                            placeholder="*********************"
+                                            placeholder={PLACEHOLDER.PASSWORD}
                                             error={ ((props.errors.password && props.touched.password) || this.state?.errors?.password) ? 1 : 0 }
                                         />
                                         <FormError
@@ -207,8 +215,10 @@ class UserRegister extends Component {
                                             onChange={props.handleChange}
                                             name="confirmPassword"
                                             autoComplete={"off"}
+                                            onKeyUp={() => this.setState({ errors: { confirmPassword: false } })}
+                                            onClick={() => this.setState({ errors: { confirmPassword: false } })}
                                             value={props.values.confirmPassword}
-                                            placeholder="*********************"
+                                            placeholder={PLACEHOLDER.PASSWORD}
                                             error={ ((props.errors.confirmPassword && props.touched.confirmPassword) || this.state?.errors?.confirmPassword) ? 1 : 0 }
                                         />
                                         <FormError
@@ -218,8 +228,7 @@ class UserRegister extends Component {
                                         /> 
                                     </Col>
                                 </Row>
-                                <Hr/>
-                                <Row center="xs">
+                                <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col>
                                         <CField
                                             type="checkbox"
@@ -242,7 +251,7 @@ class UserRegister extends Component {
                                         </Button>
                                     </Col>
                                 </Row>
-                                <Row center="xs">
+                                <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
                                         <LLink to="/user/login">
                                             Already have an account?
@@ -251,6 +260,7 @@ class UserRegister extends Component {
                                 </Row>
                                 <Row center="xs">
                                     <Col xs={12}>
+                                        <Body size="sm">This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                         <Recaptcha id="recaptcha" />
                                     </Col>
                                 </Row>

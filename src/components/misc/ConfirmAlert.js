@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { BTN_TYPES } from '../../utils/constants';
+import { BTYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons'
 import { ConfirmCard } from '../../utils/styles/misc';
-import { Body, H1 } from '../../utils/styles/text';
+import { H2 } from '../../utils/styles/text';
 
 class ConfirmAlert extends Component {
     yesClicked = () => {
@@ -21,10 +21,8 @@ class ConfirmAlert extends Component {
         return (
             <ConfirmCard>
                 <div>
-                    <H1>{this.props.headingText}</H1>
-                    <Body>{this.props.bodyText}</Body>
-                    {/* TODO: somehow the theme isnt being passed to button below */}
-                    {/* <Button>Test</Button> */}
+                    <H2>{this.props.headingText}</H2>
+                    {this.props.bodyComponent}
                     <Button
                         color={this.props.theme.colors.green}
                         onClick={() => this.yesClicked()}
@@ -33,7 +31,7 @@ class ConfirmAlert extends Component {
                     </Button>
                     <Button
                         color={this.props.theme.colors.red}
-                        btnType={BTN_TYPES.INVERTED}
+                        btype={BTYPES.INVERTED}
                         onClick={() => this.noClicked()}
                     >
                         {this.props.noText}

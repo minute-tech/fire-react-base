@@ -101,6 +101,7 @@ export const ALink = styled.a`
     ${BodyFont}
     text-decoration: none;
     transition: color 0.15s linear;
+    margin: ${props => props.margin ? props.margin : '0'};
     &:hover {
         color: ${props => (props.theme?.colors?.yellow || 'gold')};
         text-decoration: none;
@@ -111,6 +112,7 @@ export const LLink = styled(Link)`
     color: ${props => props.color ? props.color : (props.theme?.colors?.blue || 'navy')};
     cursor: pointer;
     ${BodyFont}
+    margin: ${props => props.margin ? props.margin : '0'};
     text-decoration: none;
     transition: color 0.15s linear;
     &:hover {
@@ -137,6 +139,7 @@ export const SLink = styled.span`
     ${BodyFont}
     text-decoration: none;
     transition: color 0.15s linear;
+    margin: ${props => props.margin ? props.margin : '0'};
     &:hover {
         color: ${props => (props.theme?.colors?.yellow ?? 'gold')};
         text-decoration: none;

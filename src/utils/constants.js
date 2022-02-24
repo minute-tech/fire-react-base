@@ -17,7 +17,16 @@ export const DEFAULT_COLORS = {
     BLUE: "navy"
 }
 
-export const BTN_TYPES = {
+export const BTYPES = {
     INVERTED: 'inverted',
     TEXTED: 'texted'
+}
+
+export const PLACEHOLDER = {
+    FIRST_NAME: "Taylor",
+    LAST_NAME: "Doe",
+    EMAIL: "taylor_doe@email.com",
+    PHONE: "+1 (123) 456-7890",
+    MESSAGE: "Detail what you want to say here.",
+    PASSWORD: "*********************"
 }
