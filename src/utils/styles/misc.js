@@ -4,7 +4,7 @@ import { lighten } from 'polished'
 // Importing font into CSS global for use around app
 import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
-import { FONTS } from '../constants';
+import { DEFAULT_THEME } from '../constants';
 import { BodyFont } from './text';
 
 export const GlobalStyle = createGlobalStyle`
@@ -13,15 +13,16 @@ export const GlobalStyle = createGlobalStyle`
         position: relative;
         min-height: 100vh;
         padding-bottom: 5rem;    
+        background-color: ${props => props.theme.colors.background};
     }
 
     @font-face {
-        font-family: ${FONTS.ROBOTO_REGULAR};
+        font-family: ${DEFAULT_THEME.FONTS.ROBOTO_REGULAR};
         src: url(${RobotoRegular}) format('truetype'); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
-        font-family: ${FONTS.ROBOTO_BOLD};
+        font-family: ${DEFAULT_THEME.FONTS.ROBOTO_BOLD};
         src: url(${RobotoBold}) format('truetype'); // truetype/opentype might change based on ttf or otf etc
     }
 
@@ -69,13 +70,37 @@ export const GlobalStyle = createGlobalStyle`
 
     /* Change notification colors */
     :root{
-        --toastify-color-light: #fff;
-        --toastify-color-dark: #121212;
-        --toastify-color-info: ${props => props.theme.colors.primary};
-        --toastify-color-success: ${props => props.theme.colors.green};
-        --toastify-color-warning: ${props => props.theme.colors.yellow};
-        --toastify-color-error:${props => props.theme.colors.red};
-        --toastify-font-family: ${props => props.theme?.fonts?.body || 'Arial, Helvetica, sans-serif'} !important;
+        --toastify-color-dark: ${props => props.theme?.colors?.background ?? 'black'};
+        --toastify-color-light: ${props => props.theme?.colors?.background ?? 'white'};
+        --toastify-color-info: ${props => props?.theme?.colors?.primary};
+        --toastify-color-success: ${props => props?.theme?.colors?.green};
+        --toastify-color-warning: ${props => props?.theme?.colors?.yellow};
+        --toastify-color-error: ${props => props?.theme?.colors?.red};
+        --toastify-color-transparent: rgba(255, 255, 255, 0.7);
+        --toastify-icon-color-info: var(--toastify-color-info);
+        --toastify-icon-color-success: var(--toastify-color-success);
+        --toastify-icon-color-warning: var(--toastify-color-warning);
+        --toastify-icon-color-error: var(--toastify-color-error);
+        --toastify-toast-width: 320px;
+        --toastify-toast-background: #fff;
+        --toastify-toast-min-height: 64px;
+        --toastify-toast-max-height: 800px;
+        --toastify-font-family: ${props => props.theme?.fonts?.body ?? 'Arial, Helvetica, sans-serif'} !important;
+        --toastify-z-index: 9999;
+        --toastify-text-color-dark: ${props => props.theme?.colors?.font?.body ?? 'white'};
+        --toastify-text-color-light: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-text-color-info: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-text-color-success: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-text-color-warning: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-text-color-error: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-spinner-color: #616161;
+        --toastify-spinner-color-empty-area: #e0e0e0;
+        --toastify-color-progress-dark: #bb86fc;
+        --toastify-color-progress-light: linear-gradient( to right, #4cd964, #5ac8fa, #007aff, #34aadc, #5856d6, #ff2d55 );
+        --toastify-color-progress-info: var(--toastify-color-info);
+        --toastify-color-progress-success: var(--toastify-color-success);
+        --toastify-color-progress-warning: var(--toastify-color-warning);
+        --toastify-color-progress-error: var(--toastify-color-error);
     }
 
 `;

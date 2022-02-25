@@ -19,7 +19,7 @@ class UserDashboard extends Component {
             // window.location.reload();
             toast.success(`Signed out successfully!`);
             this.props.navigate("/");
-            this.props.userLogged();
+            this.props.userLoggedOut();
             // onClose()
         }).catch((error) => {
             console.error("Error signing out: " + error);

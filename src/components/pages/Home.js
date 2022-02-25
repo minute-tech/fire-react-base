@@ -25,10 +25,9 @@ class Home extends Component {
         }
     }
 
-    doSomething = () => {
-        toast.info('🦄 Wow so easy!');
+    sendAlert = (alertType) => {
+        toast[alertType]('🦄 Wow so easy to send an alert!');
     }
-
     
     render() {
         return (
@@ -58,7 +57,7 @@ class Home extends Component {
                             </p>
                         </BgMediaBody>
                         <LLink to="/about">
-                            <Button color={this.props.theme.colors.primary} size='lg' onClick={() => this.doSomething()}>
+                            <Button color={this.props.theme.colors.primary} size='lg'>
                                 Call to Action
                             </Button>
                         </LLink>
@@ -67,10 +66,10 @@ class Home extends Component {
                 <Wrapper>
                     <H1>Buttons</H1>
                     <Button>Default</Button>
-                    <Button color={this.props.theme.colors.primary} size='lg'>Primary Large Normal Button</Button>
-                    <Button color={this.props.theme.colors.secondary} size='md' btype={BTYPES.INVERTED}>Secondary Medium Inverted Button</Button>
-                    <Button color={this.props.theme.colors.red} size='sm' btype={BTYPES.TEXTED}>Red Small Texted Button</Button>
-                    <Button color={this.props.theme.colors.green} size='md' rounded={true}>Green Rounded Button</Button>
+                    <Button color={this.props.theme.colors.primary} size='lg' onClick={() => this.sendAlert("info")}>Primary Large Normal Button</Button>
+                    <Button color={this.props.theme.colors.secondary} size='md' btype={BTYPES.INVERTED} onClick={() => this.sendAlert("warn")}>Secondary Medium Inverted Button</Button>
+                    <Button color={this.props.theme.colors.red} size='sm' btype={BTYPES.TEXTED} onClick={() => this.sendAlert("error")}>Red Small Texted Button</Button>
+                    <Button color={this.props.theme.colors.green} size='md' rounded={true} onClick={() => this.sendAlert("success")}>Green Rounded Button</Button>
                     <Button color={this.props.theme.colors.yellow}size='lg' btype={BTYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
                     <Hr />
                     {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}

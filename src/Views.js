@@ -58,7 +58,7 @@ class Views extends Component {
                     
                     {/* isNotMFA={this.props.user?.multiFactor?.enrolledFactors && this.props.user.multiFactor.enrolledFactors.length === 0} */}
                     <Route element={<ErrorBoundary><UserRoutes isUser={this.props.user} /></ErrorBoundary>}>
-                        <Route path="/user/dashboard" element={<ErrorBoundary><UserDashboard user={this.props.user} userLogged={this.props.userLogged}/></ErrorBoundary>}/>
+                        <Route path="/user/dashboard" element={<ErrorBoundary><UserDashboard user={this.props.user} userLoggedOut={this.props.userLoggedOut}/></ErrorBoundary>}/>
                         {/* <Route path="/user/dashboard" element={<ErrorBoundary><UserProfile user={this.props.user}/></ErrorBoundary>}/> */}
                     </Route>
                         
