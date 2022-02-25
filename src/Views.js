@@ -4,11 +4,10 @@ import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 // Pages
 import Home from './components/pages/Home';
 
-import UserLogin from './components/user/auth/UserLogin.js';
-import UserRegister from './components/user/auth/UserRegister';
-// import UserLoggingIn from './components/user/auth/UserLoggingIn';
-import UserDashboard from './components/user/dashboard/UserDashboard';
-// import UserProfile from './components/user/dashboard/UserProfile';
+import Login from './components/user/auth/Login.js';
+import Register from './components/user/auth/Register';
+import Dashboard from './components/user/dashboard/Dashboard';
+// import Profile from './components/user/dashboard/Profile';
 import ErrorBoundary from './components/misc/ErrorBoundary';
 import About from './components/pages/About';
 import Credits from './components/pages/Credits';
@@ -47,21 +46,46 @@ class Views extends Component {
                         element={<ErrorBoundary><TermsConditions /></ErrorBoundary>}
                     />
 
-                    {/* <Route
-                        path="/user/logging-in" 
-                        element={<ErrorBoundary><UserLoggingIn user={this.props.user}/></ErrorBoundary>}
-                    /> */}
-                    <Route element={<ErrorBoundary><VisitorRoutes isUser={this.props.user} /></ErrorBoundary>}>
-                        <Route path="/user/register" element={<ErrorBoundary><UserRegister user={this.props.user}/></ErrorBoundary>}/>
-                        <Route path="/user/login" element={<ErrorBoundary><UserLogin user={this.props.user}/></ErrorBoundary>}/>
+                    <Route element={<ErrorBoundary><VisitorRoutes isUser={this.props.fireUser} /></ErrorBoundary>}>
+                        <Route 
+                            path="/register" 
+                            element={
+                                <ErrorBoundary>
+                                    <Register 
+                                        fireUser={this.props.fireUser}
+                                    />
+                                </ErrorBoundary>
+                            }
+                        />
+                        <Route 
+                            path="/login"
+                            element={
+                                <ErrorBoundary>
+                                    <Login 
+                                        fireUser={this.props.fireUser}
+                                    />
+                                </ErrorBoundary>
+                            }
+                        />
                     </Route>
                     
                     {/* isNotMFA={this.props.user?.multiFactor?.enrolledFactors && this.props.user.multiFactor.enrolledFactors.length === 0} */}
-                    <Route element={<ErrorBoundary><UserRoutes isUser={this.props.user} /></ErrorBoundary>}>
-                        <Route path="/user/dashboard" element={<ErrorBoundary><UserDashboard user={this.props.user} userLoggedOut={this.props.userLoggedOut}/></ErrorBoundary>}/>
-                        {/* <Route path="/user/dashboard" element={<ErrorBoundary><UserProfile user={this.props.user}/></ErrorBoundary>}/> */}
+                    <Route element={<ErrorBoundary><UserRoutes isUser={this.props.fireUser} /></ErrorBoundary>}>
+                        <Route 
+                            path="/dashboard" 
+                            element={
+                                <ErrorBoundary>
+                                    <Dashboard 
+                                        fireUser={this.props.fireUser} 
+                                        user={this.props.user}
+                                        userLoggedOut={this.props.userLoggedOut} 
+                                    />
+                                </ErrorBoundary>
+                            }
+                        />
+                        {/* <Route path="/profile" element={<ErrorBoundary><Profile fireUser={this.props.fireUser}/></ErrorBoundary>}/> */}
                     </Route>
-                        
+                    {/* TODO: fix 404 page */}
                     {/* <Route element={() => <ErrorBoundary><Page404 /></ErrorBoundary>} /> */}
                 </Routes>
         )
@@ -73,7 +97,7 @@ class Views extends Component {
 function VisitorRoutes({ isUser }) {
     let location = useLocation();
     if (isUser) {
-      return <Navigate to="/user/dashboard" state={{ from: location }} />;
+      return <Navigate to="/dashboard" state={{ from: location }} />;
     }
   
     return <Outlet />;
@@ -86,7 +110,7 @@ function UserRoutes({ isUser }) {
       // trying to go to when they were redirected. This allows us to send them
       // along to that page after they login, which is a nicer user experience
       // than dropping them off on the home page.
-      return <Navigate to="/user/login" state={{ from: location }} />;
+      return <Navigate to="/login" state={{ from: location }} />;
     }
   
     return <Outlet />;

@@ -16,15 +16,15 @@ class Header extends Component {
             <NavLinks>
                 <NavLLink to='/'><NavHoverText>Home</NavHoverText></NavLLink>
                 <NavLLink to='/about'><NavHoverText>About</NavHoverText></NavLLink>
-                {!this.props.user && (
+                {!this.props.fireUser && (
                     <>
-                        <NavLLink to='/user/login'><NavHoverText>Login</NavHoverText></NavLLink>
-                        <NavLLink to='/user/register'><NavHoverText>Register</NavHoverText></NavLLink>
+                        <NavLLink to='/login'><NavHoverText>Login</NavHoverText></NavLLink>
+                        <NavLLink to='/register'><NavHoverText>Register</NavHoverText></NavLLink>
                     </>
                 )}
-                {this.props.user && (
+                {this.props.fireUser && (
                     <>
-                        <NavLLink to='/user/dashboard'><NavHoverText>Dashboard</NavHoverText></NavLLink>
+                        <NavLLink to='/dashboard'><NavHoverText>Dashboard</NavHoverText></NavLLink>
                     </>
                 )}
                 

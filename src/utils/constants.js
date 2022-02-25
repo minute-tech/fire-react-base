@@ -19,7 +19,7 @@ export const DEFAULT_THEME = {
         ROBOTO_REGULAR: "Roboto Regular",
         ROBOTO_BOLD: "Roboto Bold",
     },
-    MODES: {
+    SCHEME: {
         LIGHT: {
             VALUE: "light",
             COLORS: {

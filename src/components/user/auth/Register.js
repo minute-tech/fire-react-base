@@ -16,7 +16,7 @@ import FormError from '../../misc/FormError.js';
 import { withRouter } from '../../../utils/hocs.js';
 import { PLACEHOLDER } from '../../../utils/constants.js';
 
-class UserRegister extends Component {
+class Register extends Component {
     constructor(props) {
         super(props)
 
@@ -46,9 +46,9 @@ class UserRegister extends Component {
                     await createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then(async (userCredential) => {
                             // Signed in 
-                            const user = userCredential.user;
+                            const tempUser = userCredential.user;
                             console.log("User created: ")
-                            console.log(user)
+                            console.log(tempUser)
 
                             await updateProfile(auth.currentUser, {
                                 displayName: (values.firstName + " " + values.lastName)
@@ -59,7 +59,7 @@ class UserRegister extends Component {
                                 toast.error(`Error adding your display name to database: ${error}`);
                             });
 
-                            await setDoc(doc(firestore, "users", user.uid), {
+                            await setDoc(doc(firestore, "users", tempUser.uid), {
                                 firstName: values.firstName,
                                 lastName: values.lastName,
                                 email: values.email,
@@ -73,7 +73,7 @@ class UserRegister extends Component {
                                 toast.error(`Error setting users doc: ${error}`);
                             });
                             window.recaptchaVerifier.clear();
-                            this.props.navigate("/user/dashboard");
+                            this.props.navigate("/dashboard");
                         }).catch((error) => {
                             console.log("Error: " + error.message);
                             toast.error(`Error adding creating account: ${error.message}`);
@@ -253,7 +253,7 @@ class UserRegister extends Component {
                                 </Row>
                                 <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
-                                        <LLink to="/user/login">
+                                        <LLink to="/login">
                                             Already have an account?
                                         </LLink>
                                     </Col>
@@ -274,4 +274,4 @@ class UserRegister extends Component {
     }
 }
 
-export default withRouter(UserRegister);
+export default withRouter(Register);

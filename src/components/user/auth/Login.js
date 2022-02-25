@@ -34,10 +34,10 @@ class UserLogin extends Component {
                  signInWithEmailAndPassword(auth, values.email, values.password)
                     .then((userCredential) => {
                         // Signed in 
-                        const user = userCredential.user;
+                        const tempUser = userCredential.user;
                         console.log("Logged in successfully: ")
-                        console.log(user)
-                        this.props.navigate("/user/dashboard");
+                        console.log(tempUser)
+                        this.props.navigate("/dashboard");
                         toast.success(`Logged in successfully!`);
                     }).catch((error) => {
                         const errorCode = error.code;
@@ -167,7 +167,7 @@ class UserLogin extends Component {
                                 </Row>
                                 <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
-                                        <LLink margin="20px 0" to="/user/register">
+                                        <LLink margin="20px 0" to="/register">
                                             Don't have an account?
                                         </LLink>
                                     </Col>

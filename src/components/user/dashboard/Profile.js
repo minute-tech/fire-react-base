@@ -3,48 +3,23 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
 
 import { withRouter } from '../../../utils/misc';
-import { firestore, firebase } from "../../../Fire.js";
 import { updateProfileSchema } from "../../../utils/formSchemas"
 import { Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
 import { FField } from '../../../utils/styles/forms.js';
-import { H1, Label, RedText, H2, LLink, GreenHoverText, SmText, H3, MdBody, MdText } from '../../../utils/styles/text.js';
-import { Button, MdGreenToInvBtn, MdInvToPrimaryBtn, MdPrimaryToInvBtn } from '../../../utils/styles/buttons.js';
+import { H1, Label, H2, LLink, Body, H3 } from '../../../utils/styles/text.js';
+import { Button } from '../../../utils/styles/buttons.js';
 import FormError from '../../misc/FormError.js';
 import { PLACEHOLDER } from '../../../utils/constants';
 
-class UserProfile extends Component {
+class Profile extends Component {
     constructor(props) {
         super(props)
     
         this.state = {
-             user: "",
-             loading: {
+            user: "",
+            loading: {
                 user: true
-             }
-        }
-    }
-
-    componentDidMount(){
-        this.unsubscribeUser = firestore.collection("users").doc(this.props.user.uid)
-            .onSnapshot((doc) => {
-                if(doc.exists){
-                    let docWithMore = Object.assign({}, doc.data());
-                    docWithMore.id = doc.id;
-                    this.setState({
-                        user: docWithMore,
-                        loading: {
-                            user: false
-                        }
-                    })
-                } else {
-                    console.error("User doesn't exist.")
-                }
-            });
-    }
-  
-    componentWillUnmount() {
-        if(this.unsubscribeUser){
-            this.unsubscribeUser();
+            }
         }
     }
 
@@ -82,7 +57,7 @@ class UserProfile extends Component {
         } else {
             return (
                 <Wrapper>
-                    <LLink to={`/user/dashboard`}> 
+                    <LLink to={`/dashboard`}> 
                         <MdInvToPrimaryBtn type="button">
                             <i className="fas fa-chevron-left" />&nbsp; Return to user dashboard
                         </MdInvToPrimaryBtn>
@@ -218,4 +193,4 @@ class UserProfile extends Component {
     }
 }
 
-export default withRouter(UserProfile);
+export default withRouter(Profile);
