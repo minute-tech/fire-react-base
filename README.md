@@ -25,3 +25,5 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
     * Notification alerts
 * react-confirm-alert
     * Confirmation dialogues
+* react-icons
+    * Popular icon usage like font Awesome

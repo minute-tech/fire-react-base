@@ -23,7 +23,7 @@ export const FField = styled(Field)`
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
-    ${props => props.component === 'textarea' && css`
+    ${props => props.component === "textarea" && css`
         height: 150px;
         padding: 15px;
     `}
@@ -47,7 +47,7 @@ export const Input = styled.input`
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
-    ${props => props.component === 'textarea' && css`
+    ${props => props.component === "textarea" && css`
         height: 150px;
         padding: 15px;
     `}

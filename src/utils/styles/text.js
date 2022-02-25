@@ -3,20 +3,20 @@ import { Link } from "react-router-dom";
 // import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
-    font-family: ${props => props.theme?.fonts?.heading || 'Arial, Helvetica, sans-serif'};
+    font-family: ${props => props.theme?.fonts?.heading || "Arial, Helvetica, sans-serif"};
 `;
 
 export const BodyFont = css`
-    font-family: ${props => props.theme?.fonts?.body || 'Arial, Helvetica, sans-serif'};
+    font-family: ${props => props.theme?.fonts?.body || "Arial, Helvetica, sans-serif"};
 `;
 
 // Headings //
 export const H1 = styled.h1`
     font-size: 50px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? 'black')};
+    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
     font-weight: 900;
-    margin: ${props => props.margin ? props.margin : '10px 0'};
+    margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 35px;
     }
@@ -25,8 +25,8 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
     font-size: 40px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? 'black')};
-    margin: ${props => props.margin ? props.margin : '10px 0'};
+    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 25px;
         /* margin-bottom: 15px; */
@@ -36,8 +36,8 @@ export const H2 = styled.h2`
 export const H3 = styled.h3`
     font-size: 30px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? 'black')};
-    margin: ${props => props.margin ? props.margin : '10px 0'};
+    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 20px;
     }
@@ -46,8 +46,8 @@ export const H3 = styled.h3`
 export const H4 = styled.h4`
     font-size: 24px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? 'black')};
-    margin: ${props => props.margin ? props.margin : '10px 0'};
+    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 18px;
     }
@@ -55,9 +55,9 @@ export const H4 = styled.h4`
 
 // Paragraph Body
 export const Body = styled.p`
-    margin: ${props => props.margin ? props.margin : '1em 0'};
-    display: ${props => props.display ? props.display : 'block'};
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? 'black')};
+    margin: ${props => props.margin ? props.margin : "1em 0"};
+    display: ${props => props.display ? props.display : "block"};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? "black")};
     ${BodyFont};
 
     ${(props) => (props.size === 'sm') && `
@@ -100,27 +100,27 @@ export const Body = styled.p`
 
 // Links
 export const ALink = styled.a`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? 'navy')};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")};
     cursor: pointer;
     ${BodyFont}
     text-decoration: none;
     transition: color 0.15s linear;
-    margin: ${props => props.margin ? props.margin : '0'};
+    margin: ${props => props.margin ? props.margin : "0"};
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow || 'gold')};
+        color: ${props => (props.theme?.colors?.yellow || "gold")};
         text-decoration: none;
     }
 `;
 
 export const LLink = styled(Link)`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link || 'navy')};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link || "navy")};
     cursor: pointer;
     ${BodyFont}
-    margin: ${props => props.margin ? props.margin : '0'};
+    margin: ${props => props.margin ? props.margin : "0"};
     text-decoration: none;
     transition: color 0.15s linear;
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow ?? 'gold')};
+        color: ${props => (props.theme?.colors?.yellow ?? "gold")};
         text-decoration: none;
     }
 `;
@@ -138,14 +138,14 @@ export const LLink = styled(Link)`
 // `;
 
 export const SLink = styled.span`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? 'navy')};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")};
     cursor: pointer;
     ${BodyFont}
     text-decoration: none;
     transition: color 0.15s linear;
-    margin: ${props => props.margin ? props.margin : '0'};
+    margin: ${props => props.margin ? props.margin : "0"};
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow ?? 'gold')};
+        color: ${props => (props.theme?.colors?.yellow ?? "gold")};
         text-decoration: none;
     }
 `;
@@ -165,28 +165,28 @@ export const Label = styled.label`
     margin-bottom: 2px;
     display: inline-block;
     ${BodyFont};
-    color: ${props => (props.theme?.colors?.font?.body ?? 'black')};
+    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const ErrorText = styled.div`
-    color: ${props => (props.theme?.colors?.red ?? 'firebrick')};
-    margin: ${props => props.margin ? props.margin : '0px'};
+    color: ${props => (props.theme?.colors?.red ?? "firebrick")};
+    margin: ${props => props.margin ? props.margin : "0px"};
     ${BodyFont}
     font-weight: 900;
 `;
 
 export const Ol = styled.ol`
     ${BodyFont}
-    color: ${props => (props.theme?.colors?.font?.body ?? 'black')};
+    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const Ul = styled.ul`
     ${BodyFont};
     margin: ${props => props.margin ? props.margin : "0px"};
-    color: ${props => (props.theme?.colors?.font?.body ?? 'black')};
+    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const Li = styled.li`
     ${BodyFont}
-    color: ${props => (props.theme?.colors?.font?.body ?? 'black')};
+    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;

@@ -4,17 +4,18 @@ import { Form, Formik } from 'formik';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from 'firebase/auth';
+import { FaChevronLeft } from 'react-icons/fa';
 
 import { firestore, auth } from "../../../Fire.js";
 import { userRegisterSchema } from "../../../utils/formSchemas"
-import { Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
+import { Recaptcha, Spinner, Wrapper } from '../../../utils/styles/misc.js';
 import { CField, FField } from '../../../utils/styles/forms.js';
 import { ALink, Body, H1, H2, Label, LLink } from '../../../utils/styles/text.js';
 import { Button } from '../../../utils/styles/buttons';
 import { doc, setDoc } from 'firebase/firestore';
 import FormError from '../../misc/FormError.js';
 import { withRouter } from '../../../utils/hocs.js';
-import { PLACEHOLDER } from '../../../utils/constants.js';
+import { DEFAULT_THEME, PLACEHOLDER } from '../../../utils/constants.js';
 
 class Register extends Component {
     constructor(props) {
@@ -22,14 +23,14 @@ class Register extends Component {
 
         this.state = {
             submitting: {
-                registerUser: false
+                registerUser: false,
+                loading: false
             }
         }
     }
 
     registerUser = (values) => {        
         if (values.confirmPassword !== values.password) { 
-            // toast.warn("Passwords must match!");
             this.setState({ 
                 submitting: { registerUser: false }, 
                 errors: { confirmPassword: "Passwords do not match!" } 
@@ -38,18 +39,20 @@ class Register extends Component {
             toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
             this.setState({ submitting: { registerUser: false } })
         } else {
-            toast.info('Please complete the reCAPTCHA below to continue.');
+            const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                 'size': 'normal',
                 'callback': async (response) => {
-                    this.setState({ loading: { registerUser: true } });
                     await createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then(async (userCredential) => {
-                            // Signed in 
+                            // Register approved
+                            this.setState({ loading: { registerUser: true } });
+                            
                             const tempUser = userCredential.user;
                             console.log("User created: ")
                             console.log(tempUser)
 
+                            // Set displayName on Firebase auth user object
                             await updateProfile(auth.currentUser, {
                                 displayName: (values.firstName + " " + values.lastName)
                             }).then(() => {
@@ -59,24 +62,40 @@ class Register extends Component {
                                 toast.error(`Error adding your display name to database: ${error}`);
                             });
 
+                            // Create Firestore doc
                             await setDoc(doc(firestore, "users", tempUser.uid), {
                                 firstName: values.firstName,
                                 lastName: values.lastName,
                                 email: values.email,
                                 phone: values.phone,
+                                flags: {
+                                    themeScheme: window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE
+                                },
                                 timestamp: Date.now(),
-                            }).then((doc) => {
-                                console.log("Successful write of user doc to Firestore: ");
-                                console.log(doc)
+                            }).then(() => {
+                                console.log("Successful write of user doc to Firestore.");
                             }).catch((error) => {
                                 console.error("Error adding document: ", error);
                                 toast.error(`Error setting users doc: ${error}`);
                             });
+
+                            // Clean up
+                            toast.dismiss(recaptchaToastId);
                             window.recaptchaVerifier.clear();
                             this.props.navigate("/dashboard");
                         }).catch((error) => {
                             console.log("Error: " + error.message);
-                            toast.error(`Error adding creating account: ${error.message}`);
+                            if(error.code === "auth/email-already-in-use"){
+                                this.setState({ 
+                                    errors: { email: "Email already registered! Try logging in or use another email address." } 
+                                })
+                            } else {
+                                toast.error(`Error adding creating account: ${error.message}`);
+                            }
+                            this.setState({ 
+                                submitting: { registerUser: false }, 
+                            })
+                            toast.dismiss(recaptchaToastId);
                             window.recaptchaVerifier.clear();
                         });
                 },
@@ -93,7 +112,7 @@ class Register extends Component {
         if(this.state?.loading?.registerUser){
             return (
                 <Wrapper>
-                    <H2>Creating your account... <i className="fas fa-spinner fa-spin" /></H2> 
+                    <H2>Creating your account... <Spinner /> </H2> 
                 </Wrapper>
             )
         } else {
@@ -101,7 +120,8 @@ class Register extends Component {
                 <Wrapper>
                     <Link to="/">
                         <Button>
-                            <i className="fas fa-chevron-left" />
+                            
+                        <FaChevronLeft />
                             &nbsp; Return home
                         </Button>
                     </Link>
@@ -137,6 +157,8 @@ class Register extends Component {
                                             placeholder={PLACEHOLDER.FIRST_NAME}
                                             name="firstName"
                                             value={props.values.firstName || ''}
+                                            onKeyUp={() => this.setState({ errors: { firstName: false } })}
+                                            onClick={() => this.setState({ errors: { firstName: false } })}
                                             error={ ((props.errors.firstName && props.touched.firstName) || this.state?.errors?.firstName) ? 1 : 0 }
                                         />
                                         <FormError
@@ -155,6 +177,8 @@ class Register extends Component {
                                             placeholder={PLACEHOLDER.LAST_NAME}
                                             name="lastName"
                                             value={props.values.lastName || ''}
+                                            onKeyUp={() => this.setState({ errors: { lastName: false } })}
+                                            onClick={() => this.setState({ errors: { lastName: false } })}
                                             error={ ((props.errors.lastName && props.touched.lastName) || this.state?.errors?.lastName) ? 1 : 0 }
                                         />
                                         <FormError

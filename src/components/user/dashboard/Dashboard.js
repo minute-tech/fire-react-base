@@ -4,14 +4,15 @@ import { confirmAlert } from 'react-confirm-alert';
 import { doc, updateDoc } from 'firebase/firestore';
 import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
 import { withRouter } from '../../../utils/hocs';
 import { auth, firestore } from "../../../Fire.js";
-import { LLink, H1, H3, Body } from '../../../utils/styles/text.js';
+import { LLink, H1, H3, Body, H2 } from '../../../utils/styles/text.js';
 import { Button } from '../../../utils/styles/buttons.js';
-import { Hr, Wrapper } from '../../../utils/styles/misc.js';
+import { Hr, Spinner, Wrapper } from '../../../utils/styles/misc.js';
 import ConfirmAlert from '../../misc/ConfirmAlert';
-import { DEFAULT_THEME } from '../../../utils/constants';
+import { BTYPES, DEFAULT_THEME } from '../../../utils/constants';
 
 class Dashboard extends Component {
     logOut = () => {
@@ -37,9 +38,8 @@ class Dashboard extends Component {
                 flags: {
                     themeScheme: DEFAULT_THEME.SCHEME.LIGHT.VALUE
                 }
-            }).then((doc) => {
-                console.log("Successful update of user doc to Firestore: ");
-                console.log(doc)
+            }).then(() => {
+                console.log("Successful update of user doc to Firestore.");
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 toast.error(`Error setting users doc: ${error}`);
@@ -51,9 +51,8 @@ class Dashboard extends Component {
                 flags: {
                     themeScheme: DEFAULT_THEME.SCHEME.DARK.VALUE
                 }
-            }).then((doc) => {
-                console.log("Successful update of user doc to Firestore: ");
-                console.log(doc)
+            }).then(() => {
+                console.log("Successful update of user doc to Firestore.");
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 toast.error(`Error setting users doc: ${error}`);
@@ -63,43 +62,61 @@ class Dashboard extends Component {
     
     
     render() {
-        return (
-            <Wrapper>
-                <H1>User Dashboard</H1>
-                {this.props.fireUser.displayName && (<H3>Hi, {this.props.fireUser.displayName}!</H3>)}
-                <LLink to={`/profile`}> 
-                    <Button>
-                        Edit your profile
-                    </Button>
-                </LLink>
-                <Button onClick={() => this.setThemeScheme(this.props.user.flags.themeScheme, this.props.fireUser.uid)}>
-                    Switch to {this.props.user.flags.themeScheme === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.LIGHT.VALUE : DEFAULT_THEME.SCHEME.DARK.VALUE} mode
-                </Button>
-                <Hr/>
-                <Button 
-                    color={this.props.theme.colors.red}
-                    onClick={() =>         
-                        confirmAlert({
-                            customUI: ({ onClose }) => {
-                                return (
-                                    <ConfirmAlert 
-                                        theme={this.props.theme}
-                                        onClose={onClose} 
-                                        headingText={`Log out?`}
-                                        bodyComponent={<Body>Are you sure you want to log out?</Body>}
-                                        yesFunc={this.logOut} 
-                                        yesText={`Yes`} 
-                                        noFunc={function () {}} 
-                                        noText={`No`}   
-                                    />
-                                );
-                            }
-                        })}
+        if(!this.props.user && !this.props.fireUser){
+            return (
+                <Wrapper>
+                    <H2>Loading... <Spinner /> </H2> 
+                </Wrapper>
+            )
+        } else {
+            return (
+                <Wrapper>
+                    <H1>User Dashboard</H1>
+                    {this.props?.fireUser?.displayName && (<H3>Hi, {this.props?.fireUser?.displayName}!</H3>)}
+                    <LLink to={`/profile`}> 
+                        <Button>
+                            Edit your profile
+                        </Button>
+                    </LLink>
+                    <Button 
+                        color={this.props?.user?.flags?.themeScheme === DEFAULT_THEME.SCHEME.DARK.VALUE ? this.props.theme.colors.yellow : 'black'} 
+                        btype={BTYPES.INVERTED}
+                        onClick={() => this.setThemeScheme(this.props?.user?.flags?.themeScheme, this.props?.fireUser?.uid)}
                     >
-                    Log out
-                </Button>
-            </Wrapper>
-        )
+                        Switch to&nbsp;
+                        {
+                            this.props?.user?.flags?.themeScheme === DEFAULT_THEME.SCHEME.DARK.VALUE ? 
+                            <span>{DEFAULT_THEME.SCHEME.LIGHT.VALUE} mode <FaSun /> </span> : 
+                            <span>{DEFAULT_THEME.SCHEME.DARK.VALUE} mode <FaMoon /></span>
+                        }
+                    </Button>
+                    <Hr/>
+                    <Button 
+                        color={this.props.theme.colors.red}
+                        onClick={() =>         
+                            confirmAlert({
+                                customUI: ({ onClose }) => {
+                                    return (
+                                        <ConfirmAlert 
+                                            theme={this.props.theme}
+                                            onClose={onClose} 
+                                            headingText={`Log out?`}
+                                            bodyComponent={<Body>Are you sure you want to log out?</Body>}
+                                            yesFunc={this.logOut} 
+                                            yesText={`Yes`} 
+                                            noFunc={function () {}} 
+                                            noText={`No`}   
+                                        />
+                                    );
+                                }
+                            })}
+                        >
+                        Log out
+                    </Button>
+                </Wrapper>
+            )
+        }
+        
     }
 }
 

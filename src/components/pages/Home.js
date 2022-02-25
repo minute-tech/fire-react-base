@@ -71,6 +71,7 @@ class Home extends Component {
                     <Button color={this.props.theme.colors.red} size='sm' btype={BTYPES.TEXTED} onClick={() => this.sendAlert("error")}>Red Small Texted Button</Button>
                     <Button color={this.props.theme.colors.green} size='md' rounded={true} onClick={() => this.sendAlert("success")}>Green Rounded Button</Button>
                     <Button color={this.props.theme.colors.yellow}size='lg' btype={BTYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
+                    <Button color={this.props.theme.colors.lightGrey} size='sm' btype={BTYPES.TEXTED}>Red Small Texted Button</Button>
                     <Hr />
                     {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
                     <Grid fluid>

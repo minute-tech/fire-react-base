@@ -40,7 +40,7 @@ export const NavLinks = styled.div`
     background-color: ${props => props.theme.colors.primary};
 `;
 
-const activeClassName = 'active'
+const activeClassName = "active";
 export const NavLLink = styled(NavLink)`
     transition: color 0.15s linear, border-bottom 0.15s linear;
     border-bottom: 7px solid transparent;

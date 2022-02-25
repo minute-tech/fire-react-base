@@ -3,6 +3,7 @@ import { Form, Formik } from "formik";
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { toast } from 'react-toastify';
 import { RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { FaChevronLeft } from 'react-icons/fa';
 
 import { withRouter } from '../../../utils/hocs';
 import { auth } from "../../../Fire.js";
@@ -94,7 +95,7 @@ class UserLogin extends Component {
             <Wrapper>
                 <LLink to="/">
                     <Button type="button">
-                        <i className="fas fa-chevron-left" />
+                        <FaChevronLeft />
                         &nbsp; Return home
                     </Button>
                 </LLink>

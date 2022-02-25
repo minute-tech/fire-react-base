@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
+import { FaChevronLeft } from 'react-icons/fa';
 
 import { withRouter } from '../../../utils/misc';
 import { updateProfileSchema } from "../../../utils/formSchemas"
@@ -59,7 +60,7 @@ class Profile extends Component {
                 <Wrapper>
                     <LLink to={`/dashboard`}> 
                         <MdInvToPrimaryBtn type="button">
-                            <i className="fas fa-chevron-left" />&nbsp; Return to user dashboard
+                            <FaChevronLeft />&nbsp; Return to user dashboard
                         </MdInvToPrimaryBtn>
                     </LLink>
                     <H1>User Profile</H1>

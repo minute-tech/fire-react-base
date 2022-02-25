@@ -1,11 +1,13 @@
 import styled, { createGlobalStyle }  from 'styled-components';
 import { lighten } from 'polished'
+import { FaSpinner } from 'react-icons/fa';
 
 // Importing font into CSS global for use around app
 import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { DEFAULT_THEME } from '../constants';
 import { BodyFont } from './text';
+import { keyframes } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -18,12 +20,12 @@ export const GlobalStyle = createGlobalStyle`
 
     @font-face {
         font-family: ${DEFAULT_THEME.FONTS.ROBOTO_REGULAR};
-        src: url(${RobotoRegular}) format('truetype'); // truetype/opentype might change based on ttf or otf etc
+        src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
         font-family: ${DEFAULT_THEME.FONTS.ROBOTO_BOLD};
-        src: url(${RobotoBold}) format('truetype'); // truetype/opentype might change based on ttf or otf etc
+        src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     /* CSS for lightbox */
@@ -70,8 +72,8 @@ export const GlobalStyle = createGlobalStyle`
 
     /* Change notification colors */
     :root{
-        --toastify-color-dark: ${props => props.theme?.colors?.background ?? 'black'};
-        --toastify-color-light: ${props => props.theme?.colors?.background ?? 'white'};
+        --toastify-color-dark: ${props => props.theme?.colors?.background ?? "black"};
+        --toastify-color-light: ${props => props.theme?.colors?.background ?? "white"};
         --toastify-color-info: ${props => props?.theme?.colors?.primary};
         --toastify-color-success: ${props => props?.theme?.colors?.green};
         --toastify-color-warning: ${props => props?.theme?.colors?.yellow};
@@ -85,14 +87,14 @@ export const GlobalStyle = createGlobalStyle`
         --toastify-toast-background: #fff;
         --toastify-toast-min-height: 64px;
         --toastify-toast-max-height: 800px;
-        --toastify-font-family: ${props => props.theme?.fonts?.body ?? 'Arial, Helvetica, sans-serif'} !important;
+        --toastify-font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"} !important;
         --toastify-z-index: 9999;
-        --toastify-text-color-dark: ${props => props.theme?.colors?.font?.body ?? 'white'};
-        --toastify-text-color-light: ${props => props.theme?.colors?.font?.body ?? 'black'};
-        --toastify-text-color-info: ${props => props.theme?.colors?.font?.body ?? 'black'};
-        --toastify-text-color-success: ${props => props.theme?.colors?.font?.body ?? 'black'};
-        --toastify-text-color-warning: ${props => props.theme?.colors?.font?.body ?? 'black'};
-        --toastify-text-color-error: ${props => props.theme?.colors?.font?.body ?? 'black'};
+        --toastify-text-color-dark: ${props => props.theme?.colors?.font?.body ?? "white"};
+        --toastify-text-color-light: ${props => props.theme?.colors?.font?.body ?? "black"};
+        --toastify-text-color-info: ${props => props.theme?.colors?.font?.body ?? "black"};
+        --toastify-text-color-success: ${props => props.theme?.colors?.font?.body ?? "black"};
+        --toastify-text-color-warning: ${props => props.theme?.colors?.font?.body ?? "black"};
+        --toastify-text-color-error: ${props => props.theme?.colors?.font?.body ?? "black"};
         --toastify-spinner-color: #616161;
         --toastify-spinner-color-empty-area: #e0e0e0;
         --toastify-color-progress-dark: #bb86fc;
@@ -103,7 +105,30 @@ export const GlobalStyle = createGlobalStyle`
         --toastify-color-progress-error: var(--toastify-color-error);
     }
 
+    .icon-spin {
+        
+    }
 `;
+
+const spin = keyframes`
+    0% {
+        -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+                transform: rotate(359deg);
+    }
+`
+
+export const Spinner = styled(FaSpinner)`
+    animation-name: ${spin};
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+`;
+
+
+
 
 // Alignment //
 export const Wrapper = styled.div`
@@ -223,13 +248,13 @@ export const LgWidth = styled.div`
 export const ResponsiveImg = styled.img`
     width: 100%;
     height: auto;
-    max-width: ${props => props.size || '100px'};
+    max-width: ${props => props.size || "100px"};
 `;
 
 export const InlineImg = styled.span`
-    font-size: ${props => props.size || '1 em'};
-    display: ${props => props.display || 'inline'};
-    margin: ${props => props.margin || '0'};
+    font-size: ${props => props.size || "1 em"};
+    display: ${props => props.display || "inline"};
+    margin: ${props => props.margin || "0"};
 `;
 
 // Table
@@ -299,7 +324,7 @@ export const BgMedia = styled.img`
     object-fit: cover;
     /* filter: blur(1px); */
     @media (max-width: 1200px), (max-height: 900px) {
-        height: ${props => props.bodyLength > 900 ? `120vh` : `100vh`};
+        height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
 
@@ -310,7 +335,7 @@ export const BgColor = styled.div`
     height: 70vh;
     background-color: ${props => props.bgColor ? props.bgColor : props.theme.colors.primary};
     @media (max-width: 1200px), (max-height: 900px) {
-        height: ${props => props.bodyLength > 900 ? `120vh` : `100vh`};
+        height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
 
@@ -366,7 +391,7 @@ export const MiddleDiv = styled.div`
 `;
 
 export const Hr = styled.div`
-    border-bottom: 2px solid ${props => props.theme?.colors?.primary || 'black'};
+    border-bottom: 2px solid ${props => props.theme?.colors?.primary || "black"};
     margin: ${props => props.margin ? props.margin : "15px 0"};
     width: ${props => props.width ? props.width : "100%"};
     float: ${props => props.selected ? props.selected : "none"};
@@ -393,7 +418,7 @@ export const VerticalAlign = styled.span`
 `;
 
 export const DevAlert = styled.div`
-    background-color: ${props => props.theme?.colors?.red || 'darkred'};
+    background-color: ${props => props.theme?.colors?.red || "darkred"};
     text-align: center;
     padding: 3px 0;
     color: white;
