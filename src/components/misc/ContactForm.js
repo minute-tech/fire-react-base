@@ -134,8 +134,8 @@ export default class ContactForm extends Component {
                                         />
                                         <Body display="inline">
                                             I accept the&nbsp;
-                                            <LLink to="/privacy-policy">Privacy Policy</LLink> and&nbsp;
-                                            <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>.
+                                            <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
+                                            <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
                                         </Body>
                                     </Col>
                                 </Row>

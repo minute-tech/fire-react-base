@@ -7,13 +7,10 @@ export default class Credits extends Component {
         return (
             <Wrapper>
                 <H1>Credits</H1>
-                <Body>Taking a moment to appreciate those who helped make this happen.</Body>
+                <Body>Attributions to those who helped make this website happen.</Body>
                 <Ul>
-                    <Li>Icons</Li>
-                    <Ul>
-                        <Li><ALink href="https://fontawesome.com/" target="_blank" rel="noopener">Font Awesome</ALink></Li>
-                    </Ul>
-                    <Li>Mom &amp; Dad</Li>
+                    <Li>Designed and built by <ALink href="https://camposjames.com/" target="_blank" rel="noopener">Campos James LLC</ALink></Li>
+                    <Li>Support from Mom &amp; Dad</Li>
                 </Ul>
             </Wrapper>
         );
