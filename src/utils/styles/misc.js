@@ -16,6 +16,9 @@ export const GlobalStyle = createGlobalStyle`
         min-height: 100vh;
         padding-bottom: 5rem;    
         background-color: ${props => props.theme.colors.background};
+        @media (max-width: 768px) {
+            padding-bottom: 10rem; 
+        }
     }
 
     @font-face {
