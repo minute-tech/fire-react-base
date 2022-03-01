@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
+import { withRouter } from './utils/hocs';
 // Pages
 import Home from './components/pages/Home';
-
 import Login from './components/user/auth/Login.js';
 import Register from './components/user/auth/Register';
 import Dashboard from './components/user/dashboard/Dashboard';
@@ -13,8 +13,7 @@ import About from './components/pages/About';
 import Credits from './components/pages/Credits';
 import PrivacyPolicy from './components/pages/PrivacyPolicy';
 import TermsConditions from './components/pages/TermsConditions';
-import { withRouter } from './utils/hocs';
-// import Page404 from "./components/misc/Page404";
+import Page404 from './components/misc/Page404';
 
 class Views extends Component {
     render() {
@@ -77,6 +76,7 @@ class Views extends Component {
                                 <ErrorBoundary>
                                     <Dashboard 
                                         fireUser={this.props.fireUser} 
+                                        roFlags={this.props.roFlags}
                                         user={this.props.user}
                                         userLoggedOut={this.props.userLoggedOut} 
                                     />
@@ -85,8 +85,7 @@ class Views extends Component {
                         />
                         {/* <Route path="/profile" element={<ErrorBoundary><Profile fireUser={this.props.fireUser}/></ErrorBoundary>}/> */}
                     </Route>
-                    {/* TODO: fix 404 page */}
-                    {/* <Route element={() => <ErrorBoundary><Page404 /></ErrorBoundary>} /> */}
+                    <Route path="*" element={<ErrorBoundary><Page404 /></ErrorBoundary>} />
                 </Routes>
         )
     }

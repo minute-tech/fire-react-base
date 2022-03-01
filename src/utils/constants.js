@@ -16,8 +16,8 @@ export const PLACEHOLDER = {
 
 export const DEFAULT_THEME = {
     FONTS: {
-        ROBOTO_REGULAR: "Roboto Regular",
-        ROBOTO_BOLD: "Roboto Bold",
+        BODY: "Roboto Regular",
+        HEADING: "Roboto Bold",
     },
     SCHEME: {
         LIGHT: {

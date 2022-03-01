@@ -26,7 +26,7 @@ export const onMessageCreated = functions.firestore
 
             const htmlEmail =
             `
-            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif">
+            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif" color: black;>
                 <div style="text-align: center;">
                         <img 
                             alt="company logo"
@@ -37,9 +37,6 @@ export const onMessageCreated = functions.firestore
                 <h1 style="margin: 20px 0 0 0; text-align: center;">${appName}</h1>
                 <div style="margin: auto; width: 70%; padding: 1%;">
                     <h2>New Website Contact Message!</h2>
-                    <p>
-                        Feel free to reply directly to this email if you have any questions!
-                    </p>
                     <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:#000;" role="separator">&#8202;</div>
                     <h3>Message Details:</h3>
                     <p><b>Name</b>: ${newValues.name}</p>
@@ -50,6 +47,9 @@ export const onMessageCreated = functions.firestore
                         ${newValues.message}
                     </p>
                     <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:#000;" role="separator" >&#8202;</div>
+                    <p>
+                        You can reply directly to this email to continue the email thread with the user who sent the message.
+                    </p>
                     <p>
                         Feel free to reach out to <a href="mailto:doug@camposjames.com">doug@camposjames.com</a> if you have any questions!
                     </p>

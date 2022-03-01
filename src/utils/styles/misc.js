@@ -22,12 +22,12 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.ROBOTO_REGULAR};
+        font-family: ${DEFAULT_THEME.FONTS.BODY || "Arial, Helvetica, sans-serif"} ;
         src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.ROBOTO_BOLD};
+        font-family: ${DEFAULT_THEME.FONTS.HEADING || "Arial, Helvetica, sans-serif"};
         src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
@@ -106,10 +106,6 @@ export const GlobalStyle = createGlobalStyle`
         --toastify-color-progress-success: var(--toastify-color-success);
         --toastify-color-progress-warning: var(--toastify-color-warning);
         --toastify-color-progress-error: var(--toastify-color-error);
-    }
-
-    .icon-spin {
-        
     }
 `;
 

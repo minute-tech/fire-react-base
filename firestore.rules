@@ -1,20 +1,74 @@
 rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
-        // No one can update, delete, read, or list but everyone can create
-        match /messages/{messageId} {
-            allow update, delete, read, list: if false;
-            allow create: if true;
+        // Sites collection // 
+        match /sites/{siteId} {
+            function isAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true
+                )
+            }
+
+            function isSuperAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isSuperAdmin == true
+                )
+            }
+            
+            // Anyone can read or list site docs (default doc data is "public" data)
+            allow read, list: if true;
+            // Only admins or super admins can create and update
+            allow create, update: if isAdmin();
+            // Only super admins can delete it
+            allow delete: if isSuperAdmin();
         }
 
-        // No one can delete, only true user can update, read, or list, and anyone can create
+        // Users collection // 
         match /users/{userId} {
             function isTrueUser() {
                 return userId == request.auth.uid;
             }
-            
-            allow delete: if false;
-            allow update, read, list: if isTrueUser();
+
+            function isAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
+                )
+            }
+
+            function isSuperAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isSuperAdmin == true 
+                )
+            }
+
+            // Anyone can create a user
+            allow create: if true;
+            // Only that user or an admin can update, list, or read their profile data
+            allow read, list, update: if isTrueUser() || isAdmin();
+            // Super admins can delete a user
+            allow delete: if isSuperAdmin();
+
+            match /uploads/{document=**} {
+                // Only that signed in admin user can create, update, read, delete, or list upload documents
+                allow create, update, read, list, delete: if isAdmin();
+            }
+
+            match /readOnly/{document=**} {
+                // Only Super Admins can edit these documents, anyone can read
+                allow create, update, list, delete: if isSuperAdmin();
+                allow read: if true;
+            }
+
+            match /newAdmins/{document=**} {
+                // Only Super Admins can write and read these documents
+                allow read, create, update, list, delete: if isSuperAdmin();
+            }
+        }
+
+        // Contact Messages //
+        match /messages/{messageId} {
+            // No one can update, delete, read, or list but everyone can create
+            allow update, delete, read, list: if false;
             allow create: if true;
         }
     }

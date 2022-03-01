@@ -20,12 +20,16 @@ import { DEFAULT_THEME } from './utils/constants';
 import { DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { IconContext } from 'react-icons';
 
 export default class App extends Component {
     constructor(props) {
       super(props)
         this.state = {
-            loading: true,
+            loading: {
+                roFlags: true,
+                user: true
+            },
             fireUser: "",
             theme: {},
         }
@@ -44,7 +48,9 @@ export default class App extends Component {
                         this.setState({
                             fireUser: fireUser,
                             user: userData,
-                            loading: false,
+                            loading: {
+                                user: false
+                            },
                             theme: {
                                 value: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE,
                                 colors: {
@@ -65,17 +71,32 @@ export default class App extends Component {
                                     background: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BACKGROUND : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BACKGROUND,
                                 },
                                 fonts: {
-                                    heading: DEFAULT_THEME.FONTS.ROBOTO_BOLD,
-                                    body: DEFAULT_THEME.FONTS.ROBOTO_REGULAR
+                                    heading: DEFAULT_THEME.FONTS.HEADING,
+                                    body: DEFAULT_THEME.FONTS.BODY
                                 },
                             }
+                        });
+                    }
+                });
+
+                // For seeing if admin
+                this.unsubROFlags = onSnapshot(doc(firestore, "users", fireUser.uid,"readOnly", "flags"), (roFlagsDoc) => {
+                    if(roFlagsDoc.exists){
+                        this.setState({
+                            roFlags: roFlagsDoc.data(),
+                            loading: {
+                                roFlags: false
+                            },
                         });
                     }
                 });
             } else {
                 // No user signed in, just pull their OS scheme preference
                 this.setState({
-                    loading: false,
+                    loading: {
+                        user: false,
+                        roFlags: false
+                    },
                     theme: {
                         value: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE,
                         colors: {
@@ -96,8 +117,8 @@ export default class App extends Component {
                             background: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BACKGROUND : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BACKGROUND,
                         },
                         fonts: {
-                            heading: DEFAULT_THEME.FONTS.ROBOTO_BOLD,
-                            body: DEFAULT_THEME.FONTS.ROBOTO_REGULAR
+                            heading: DEFAULT_THEME.FONTS.HEADING,
+                            body: DEFAULT_THEME.FONTS.BODY
                         },
                     }
                 });
@@ -114,6 +135,10 @@ export default class App extends Component {
         if(this.unsubUser){
             this.unsubUser();
         }
+
+        if(this.unsubROFlags){
+            this.unsubROFlags();
+        }
     }
 
     userLoggedOut = () => {
@@ -123,12 +148,13 @@ export default class App extends Component {
 
         this.setState({
             fireUser: "",
-            user: ""
+            user: "",
+            roFlags: "",
         });
     }
 
     render() {
-        if(this.state.loading){
+        if(this.state.loading.user && this.state.loading.roFlags){
             return (
                 <Wrapper>
                     <H2>Loading... <Spinner /> </H2> 
@@ -137,40 +163,43 @@ export default class App extends Component {
         } else {
             return (
                 <HelmetProvider>
-                    <ThemeProvider theme={this.state.theme}>
-                        <BrowserRouter>
-                            { !this.state.loading && (
-                                <>
-                                {process.env.NODE_ENV === 'development' && (
-                                    <DevAlert>
-                                        LOCAL SERVER
-                                    </DevAlert>
+                    <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
+                        <ThemeProvider theme={this.state.theme}>
+                            <BrowserRouter>
+                                { !this.state.loading && (
+                                    <>
+                                    {process.env.NODE_ENV === 'development' && (
+                                        <DevAlert>
+                                            LOCAL SERVER
+                                        </DevAlert>
+                                    )}
+                                    
+                                    </>
                                 )}
-                                
-                                </>
-                            )}
-                            <GlobalStyle /> 
-                            <Header fireUser={this.state.fireUser} />
-                            <ToastContainer
-                                position="top-center"
-                                autoClose={4000}
-                                hideProgressBar={false}
-                                newestOnTop={false}
-                                theme={this.state.theme.value}
-                                closeOnClick
-                                rtl={false}
-                                pauseOnFocusLoss
-                                pauseOnHover
-                            />
-                            <FirebaseAnalytics />
-                            <Views 
-                                fireUser={this.state.fireUser} 
-                                user={this.state.user} 
-                                userLoggedOut={this.userLoggedOut} 
-                            />
-                            <Footer />
-                        </BrowserRouter>
-                    </ThemeProvider>
+                                <GlobalStyle /> 
+                                <Header fireUser={this.state.fireUser} />
+                                <ToastContainer
+                                    position="top-center"
+                                    autoClose={4000}
+                                    hideProgressBar={false}
+                                    newestOnTop={false}
+                                    theme={this.state.theme.value}
+                                    closeOnClick
+                                    rtl={false}
+                                    pauseOnFocusLoss
+                                    pauseOnHover
+                                />
+                                <FirebaseAnalytics />
+                                <Views 
+                                    fireUser={this.state.fireUser} 
+                                    user={this.state.user} 
+                                    roFlags={this.state.roFlags}
+                                    userLoggedOut={this.userLoggedOut} 
+                                />
+                                <Footer />
+                            </BrowserRouter>
+                        </ThemeProvider>
+                    </IconContext.Provider>
                 </HelmetProvider>
             );
         }

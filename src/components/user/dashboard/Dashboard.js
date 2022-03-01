@@ -4,7 +4,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import { doc, updateDoc } from 'firebase/firestore';
 import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun, FaCog } from 'react-icons/fa';
 
 import { withRouter } from '../../../utils/hocs';
 import { auth, firestore } from "../../../Fire.js";
@@ -62,7 +62,7 @@ class Dashboard extends Component {
     
     
     render() {
-        if(!this.props.user && !this.props.fireUser){
+        if(!this.props.user && !this.props.fireUser && !this.props.roFlags){
             return (
                 <Wrapper>
                     <H2>Loading... <Spinner /> </H2> 
@@ -91,6 +91,13 @@ class Dashboard extends Component {
                         }
                     </Button>
                     <Hr/>
+                    {this.props?.roFlags?.isAdmin && (
+                        <LLink to={`/admin/dashboard`}> 
+                            <Button>
+                                Admin Dashboard <FaCog /> 
+                            </Button>
+                        </LLink>
+                    )}
                     <Button 
                         color={this.props.theme.colors.red}
                         onClick={() =>         
