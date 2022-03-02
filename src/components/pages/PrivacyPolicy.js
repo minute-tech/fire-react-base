@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Wrapper } from '../../utils/styles/misc';
 import { ALink, Body, H1, H2, Li, Ul } from '../../utils/styles/text';
 
-// TODO: Generate via: https://www.privacypolicygenerator.info/
+// TODO: Generated via: https://www.privacypolicygenerator.info/
 
 export default class PrivacyPolicy extends Component {
     render() {

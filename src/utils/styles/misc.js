@@ -124,6 +124,9 @@ export const Spinner = styled(FaSpinner)`
     animation-name: ${spin};
     animation-duration: 3s;
     animation-iteration-count: infinite;
+    transform-origin: center;
+    padding: 0 !important;
+    animation-timing-function: ease-in-out;
 `;
 
 
@@ -377,7 +380,7 @@ export const BgMediaBody = styled.div`
 `;
 
 // Misc Misc //
-export const CenteredDiv = styled.div`
+export const Centered = styled.div`
     width: 100%;
     margin: auto;
     text-align: center;

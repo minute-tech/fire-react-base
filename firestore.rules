@@ -67,8 +67,13 @@ service cloud.firestore {
 
         // Contact Messages //
         match /messages/{messageId} {
+            function isAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
+                )
+            }
             // No one can update, delete, read, or list but everyone can create
-            allow update, delete, read, list: if false;
+            allow update, delete, read, list: if isAdmin();
             allow create: if true;
         }
     }

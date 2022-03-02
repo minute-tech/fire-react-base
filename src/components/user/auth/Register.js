@@ -22,22 +22,20 @@ class Register extends Component {
         super(props)
 
         this.state = {
-            submitting: {
-                registerUser: false,
-                loading: false
-            }
+            submittingRegisterUser: false,
         }
     }
 
     registerUser = (values) => {        
+        let termsToastId = "";
         if (values.confirmPassword !== values.password) { 
             this.setState({ 
-                submitting: { registerUser: false }, 
+                submittingRegisterUser: false, 
                 errors: { confirmPassword: "Passwords do not match!" } 
             })
         } else if(!values.policyAccept){
-            toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
-            this.setState({ submitting: { registerUser: false } })
+            termsToastId = toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
+            this.setState({ submittingRegisterUser: false })
         } else {
             const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
@@ -46,7 +44,7 @@ class Register extends Component {
                     await createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then(async (userCredential) => {
                             // Register approved
-                            this.setState({ loading: { registerUser: true } });
+                            this.setState({ loadingRegisterUser: true });
                             
                             const tempUser = userCredential.user;
                             console.log("User created: ")
@@ -93,9 +91,12 @@ class Register extends Component {
                                 toast.error(`Error adding creating account: ${error.message}`);
                             }
                             this.setState({ 
-                                submitting: { registerUser: false }, 
+                                submittingRegisterUser: false, 
                             })
                             toast.dismiss(recaptchaToastId);
+                            if(termsToastId){
+                                toast.dismiss(termsToastId);
+                            }
                             window.recaptchaVerifier.clear();
                         });
                 },
@@ -109,7 +110,7 @@ class Register extends Component {
     }
 
     render() {
-        if(this.state?.loading?.registerUser){
+        if(this.state.loadingRegisterUser){
             return (
                 <Wrapper>
                     <H2>Creating your account... <Spinner /> </H2> 
@@ -125,7 +126,7 @@ class Register extends Component {
                             &nbsp; Return home
                         </Button>
                     </Link>
-                    <H1>User Register</H1>
+                    <H1>Register</H1>
                     <Formik
                         initialValues={{
                             firstName: "",
@@ -137,7 +138,7 @@ class Register extends Component {
                             policyAccept: false,
                         }}
                         onSubmit={(values) => {
-                            this.setState({ submitting: { registerUser: true } })
+                            this.setState({ submittingRegisterUser: true })
                             this.registerUser(values);
                         }}
                         enableReinitialize={false}
@@ -269,7 +270,7 @@ class Register extends Component {
                                     <Col xs={12}>
                                         <Button 
                                             type="submit"
-                                            disabled={this.state?.submitting?.registerUser}
+                                            disabled={this.state.submittingRegisterUser}
                                         >
                                             Submit
                                         </Button>

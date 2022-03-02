@@ -8,7 +8,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import { withRouter } from '../../../utils/hocs';
 import { auth } from "../../../Fire.js";
 import { signInSchema } from "../../../utils/formSchemas"
-import { CenteredDiv, Hr, LgContainer, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
+import { Centered, Hr, LgContainer, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
 import { ALink, Body, H1, Label, LLink, SLink } from '../../../utils/styles/text.js';
 import { FField, Input } from '../../../utils/styles/forms.js';
 import { Button } from '../../../utils/styles/buttons.js';
@@ -30,7 +30,7 @@ class UserLogin extends Component {
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
             'size': 'normal',
             'callback': async (response) => {
-                this.setState({ loading: { loginUser: true } });
+                this.setState({ submittingLoginUser: true });
                  // reCAPTCHA solved, allow signIn.
                  signInWithEmailAndPassword(auth, values.email, values.password)
                     .then((userCredential) => {
@@ -100,12 +100,12 @@ class UserLogin extends Component {
                     </Button>
                 </LLink>
                 <LgContainer>
-                    <H1>User Login</H1>
+                    <H1>Login</H1>
                     <Formik
                         initialValues={{email: "", password: ""}}
                         validationSchema={signInSchema}
                         onSubmit={(values, actions) => {
-                            this.setState({ submitting: { loginUser: true } })
+                            this.setState({ submittingLoginUser: true })
                             this.loginUser(values);
                         }}
                     >
@@ -160,7 +160,7 @@ class UserLogin extends Component {
                                     <Col xs={12}>
                                         <Button 
                                             type="submit"
-                                            disabled={this.state?.submitting?.loginUser}
+                                            disabled={this.state.submittingLoginUser}
                                         >
                                             Log in
                                         </Button>
@@ -190,7 +190,7 @@ class UserLogin extends Component {
                     </Formik>
 
                     {this.state.forgotExpanded && (
-                        <CenteredDiv>
+                        <Centered>
                             <Hr/>
                             <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
                             <Input 
@@ -203,7 +203,7 @@ class UserLogin extends Component {
                                 Send link
                             </Button>
                             <Hr/>
-                        </CenteredDiv>
+                        </Centered>
                     )}
                 </LgContainer>
             </Wrapper>

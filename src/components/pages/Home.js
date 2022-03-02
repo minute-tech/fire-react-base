@@ -12,19 +12,6 @@ import ContactForm from '../misc/ContactForm';
 
 
 class Home extends Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            loading: {
-                message: true
-            },
-            errors: {
-                message: ""
-            }
-        }
-    }
-
     sendAlert = (alertType) => {
         toast[alertType]('🦄 Wow so easy to send an alert!');
     }
@@ -73,7 +60,6 @@ class Home extends Component {
                     <Button color={this.props.theme.colors.yellow}size='lg' btype={BTYPES.INVERTED}>Yellow Rounded Inverted Button</Button>
                     <Button color={this.props.theme.colors.lightGrey} size='sm' btype={BTYPES.TEXTED}>Red Small Texted Button</Button>
                     <Hr />
-                    {/* TODO: Add the BgMedia section from the ship-form-template here in misc styles */}
                     <Grid fluid>
                         <Row center="xs">
                             <Col xs={12} sm={3}>

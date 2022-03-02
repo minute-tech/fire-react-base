@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../utils/styles/buttons';
-import { CenteredDiv, Hr, Wrapper } from '../../utils/styles/misc';
+import { Centered, Hr, Wrapper } from '../../utils/styles/misc';
 import { Body, H2, LLink } from '../../utils/styles/text';
 
 class ErrorBoundary extends React.Component {
@@ -35,9 +35,9 @@ class ErrorBoundary extends React.Component {
                     {this.state.error && this.state.error.toString()}
                 </Body>
                 <Hr/>
-                <CenteredDiv margin="25px 0">
+                <Centered margin="25px 0">
                     <LLink to="/"><Button>Return to home page</Button></LLink>
-                </CenteredDiv>
+                </Centered>
             </Wrapper>
           </div>
         

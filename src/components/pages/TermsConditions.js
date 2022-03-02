@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Wrapper } from '../../utils/styles/misc';
 import { Body, H1, H3, Li, Ul } from '../../utils/styles/text';
 
-// TODO: Generate via https://www.termsandconditionsgenerator.com
+// TODO: Generated via https://www.termsandconditionsgenerator.com
 
 export default class TermsConditions extends Component {
     render() {

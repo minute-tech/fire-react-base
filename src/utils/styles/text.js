@@ -14,7 +14,7 @@ export const BodyFont = css`
 export const H1 = styled.h1`
     font-size: 50px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
@@ -25,7 +25,7 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
     font-size: 40px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 25px;
@@ -36,7 +36,7 @@ export const H2 = styled.h2`
 export const H3 = styled.h3`
     font-size: 30px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 20px;
@@ -46,7 +46,7 @@ export const H3 = styled.h3`
 export const H4 = styled.h4`
     font-size: 24px;
     ${HeadingFont}
-    color: ${props => (props.theme?.colors?.font?.heading ?? "black")};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     @media (max-width: 1200px) {
         font-size: 18px;
@@ -58,6 +58,7 @@ export const Body = styled.p`
     margin: ${props => props.margin ? props.margin : "1em 0"};
     display: ${props => props.display ? props.display : "block"};
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? "black")};
+    font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 
     ${(props) => (props.size === 'sm') && `
