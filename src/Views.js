@@ -18,11 +18,13 @@ import TermsConditions from './components/pages/TermsConditions';
 import Page404 from './components/misc/Page404';
 import AdminDashboard from './components/user/admin/AdminDashboard';
 import AdminMessages from './components/user/admin/AdminMessages';
+import LoggingIn from './components/user/auth/LoggingIn';
 
 class Views extends Component {
     render() {
         return (
                 <Routes>
+                    {/* Anyone routes */}
                     <Route 
                         index 
                         path="/" 
@@ -49,12 +51,35 @@ class Views extends Component {
                         element={<ErrorBoundary><TermsConditions /></ErrorBoundary>}
                     />
 
-                    <Route element={<ErrorBoundary><VisitorRoutes isUser={this.props.fireUser} /></ErrorBoundary>}>
+                    <Route 
+                        path="/logging-in" 
+                        element={
+                            <ErrorBoundary>
+                                <LoggingIn
+                                    fireUser={this.props.fireUser}
+                                    userLoggingIn={this.props.userLoggingIn}  
+                                />
+                            </ErrorBoundary>
+                        }
+                    />
+                    
+                    {/* Visitor ONLY routes */}
+                    <Route 
+                        element={
+                            <ErrorBoundary>
+                                <VisitorRoutes 
+                                    isUser={this.props.fireUser} 
+                                    isLoggingIn={this.props.isLoggingIn} 
+                                />
+                            </ErrorBoundary>
+                        }
+                    >
                         <Route 
                             path="/register" 
                             element={
                                 <Register 
                                     fireUser={this.props.fireUser}
+                                    userLoggingIn={this.props.userLoggingIn}
                                 />
                             }
                         />
@@ -63,13 +88,24 @@ class Views extends Component {
                             element={
                                 <Login 
                                     fireUser={this.props.fireUser}
+                                    userLoggingIn={this.props.userLoggingIn}
                                 />
                             }
                         />
                     </Route>
                     
-                    {/* isNotMFA={this.props.user?.multiFactor?.enrolledFactors && this.props.user.multiFactor.enrolledFactors.length === 0} */}
-                    <Route element={<ErrorBoundary><UserRoutes isUser={this.props.fireUser} /></ErrorBoundary>}>
+                    {/* User ONLY routes */}
+                    {/* isNotMFA={this.props.fireUser?.multiFactor?.enrolledFactors && this.props.fireUser.multiFactor.enrolledFactors.length === 0} */}
+                    <Route 
+                        element={
+                            <ErrorBoundary>
+                                <UserRoutes 
+                                    isUser={this.props.fireUser} 
+                                    isLoggingIn={this.props.isLoggingIn} 
+                                />
+                            </ErrorBoundary>
+                        }
+                    >
                         <Route 
                             path="/dashboard" 
                             element={
@@ -77,7 +113,7 @@ class Views extends Component {
                                     fireUser={this.props.fireUser} 
                                     readOnlyFlags={this.props.readOnlyFlags}
                                     user={this.props.user}
-                                    userLoggedOut={this.props.userLoggedOut} 
+                                    userLoggingOut={this.props.userLoggingOut} 
                                 />
                             }
                         />
@@ -93,7 +129,17 @@ class Views extends Component {
                         />
                     </Route>
 
-                    <Route element={<ErrorBoundary><AdminRoutes isAdmin={this.props?.readOnlyFlags?.isAdmin} /></ErrorBoundary>}>
+                    {/* Admin ONLY routes */}
+                    <Route 
+                        element={
+                            <ErrorBoundary>
+                                <AdminRoutes 
+                                    isAdmin={this.props?.readOnlyFlags?.isAdmin} 
+                                    isLoggingIn={this.props.isLoggingIn} 
+                                />
+                            </ErrorBoundary>
+                        }
+                    >
                         <Route 
                             path="/admin/dashboard" 
                             element={
@@ -122,10 +168,9 @@ class Views extends Component {
     }
 }
 
-function VisitorRoutes({ isUser }) {
-    // console.log("VisitorRoutes isUser: " + isUser)
+function VisitorRoutes({ isUser, isLoggingIn }) {
     let location = useLocation();
-    if (isUser) {
+    if (isUser && !isLoggingIn) {
         // ** ID needed to be defined so doesnt render twice:
         // https://stackoverflow.com/questions/62578112/react-toastify-showing-multiple-toast
         toast.warn("Sorry, but you need to be signed out to access this page.", {
@@ -138,10 +183,9 @@ function VisitorRoutes({ isUser }) {
   
 }
 
-function UserRoutes({ isUser }) {
-    // console.log("UserRoutes isUser: " + isUser)
+function UserRoutes({ isUser, isLoggingIn }) {
     let location = useLocation();
-    if (!isUser) {
+    if (!isUser && !isLoggingIn) {
         toast.warn("Sorry, but you need to be signed in to access this page.", {
             toastId: 'user',
         });
@@ -155,10 +199,9 @@ function UserRoutes({ isUser }) {
     }
 }
 
-function AdminRoutes({ isAdmin }) {
-    // console.log("AdminRoutes isAdmin: " + isAdmin)
+function AdminRoutes({ isAdmin, isLoggingIn }) {
     let location = useLocation();
-    if (!isAdmin) {
+    if (!isAdmin && !isLoggingIn) {
         toast.warn("Sorry, but you need to be an administrator to access this page.", {
             toastId: 'admin',
         });

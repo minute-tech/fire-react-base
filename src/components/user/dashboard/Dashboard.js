@@ -3,7 +3,7 @@ import { signOut } from 'firebase/auth';
 import { confirmAlert } from 'react-confirm-alert';
 import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
-import { FaCog } from 'react-icons/fa';
+import { FaCog, FaUserEdit } from 'react-icons/fa';
 
 import { withRouter } from '../../../utils/hocs';
 import { auth } from "../../../Fire.js";
@@ -16,11 +16,9 @@ class Dashboard extends Component {
     logOut = () => {
         signOut(auth).then(() => {
             console.log("Sign out successful.");
-            // this.props.navigate("/")
-            // window.location.reload();
             toast.success(`Signed out successfully!`);
             this.props.navigate("/");
-            this.props.userLoggedOut();
+            this.props.userLoggingOut();
             // onClose()
         }).catch((error) => {
             console.error("Error signing out: " + error);
@@ -35,7 +33,7 @@ class Dashboard extends Component {
                 <H3>Hi, {this.props?.fireUser?.displayName}!</H3>
                 <LLink to={`/profile`}> 
                     <Button>
-                        Edit your profile
+                        Edit your profile <FaUserEdit size={20} />
                     </Button>
                 </LLink>
                 <Hr/>

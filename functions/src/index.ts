@@ -26,7 +26,7 @@ export const onMessageCreated = functions.firestore
 
             const htmlEmail =
             `
-            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif" color: black;>
+            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif" color: black !important;>
                 <div style="text-align: center;">
                         <img 
                             alt="company logo"

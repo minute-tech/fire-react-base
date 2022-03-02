@@ -27,18 +27,22 @@ class UserLogin extends Component {
     }
 
     loginUser = (values) => {
+        const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
             'size': 'normal',
-            'callback': async (response) => {
-                this.setState({ submittingLoginUser: true });
+            'callback': (response) => {
                  // reCAPTCHA solved, allow signIn.
+                 this.props.userLoggingIn(true);
                  signInWithEmailAndPassword(auth, values.email, values.password)
                     .then((userCredential) => {
                         // Signed in 
                         const tempUser = userCredential.user;
-                        console.log("Logged in successfully: ")
-                        console.log(tempUser)
-                        this.props.navigate("/dashboard");
+                        console.log("Logged in successfully: ");
+                        console.log(tempUser);
+                        // Clean up
+                        toast.dismiss(recaptchaToastId);
+                        window.recaptchaVerifier.clear();
+                        this.props.navigate("/logging-in");
                         toast.success(`Logged in successfully!`);
                     }).catch((error) => {
                         const errorCode = error.code;
@@ -47,7 +51,7 @@ class UserLogin extends Component {
                             // TODO: add MFA to user accounts as an OPTION if admin its REQUIRED
                             console.log("MFA required.")
                         } 
-
+                        
                         console.log("Error signing in: " + errorCode + " - " + errorMessage)
                         if(errorCode === "auth/user-not-found"){
                             toast.error(`User with that email and/or password was not found.`);
@@ -55,7 +59,9 @@ class UserLogin extends Component {
                             toast.error(`Error: ${errorMessage}`);
                         }
                         
+                        this.setState({ submittingLoginUser: false });
                         window.recaptchaVerifier.clear();
+                        this.props.userLoggingIn(false);
                     });
             },
             'expired-callback': () => {
@@ -104,7 +110,7 @@ class UserLogin extends Component {
                     <Formik
                         initialValues={{email: "", password: ""}}
                         validationSchema={signInSchema}
-                        onSubmit={(values, actions) => {
+                        onSubmit={(values) => {
                             this.setState({ submittingLoginUser: true })
                             this.loginUser(values);
                         }}
@@ -207,7 +213,8 @@ class UserLogin extends Component {
                     )}
                 </LgContainer>
             </Wrapper>
-        )
+        ) 
+        
     }
 }
 

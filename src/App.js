@@ -33,6 +33,7 @@ export default class App extends Component {
             loadingFireUser: true,
             loadingUser: true,
             loadingReadOnlyFlags: true,
+            isLoggingIn: false,
             fireUser: "",
             user: "",
             readOnlyFlags: "",
@@ -66,6 +67,8 @@ export default class App extends Component {
 
     componentDidMount(){
         this.unsubAuth = onAuthStateChanged(auth, (fireUser) => {
+            console.log("fireUser: ");
+            console.log(fireUser);
             if (fireUser) {
                 this.setState({
                     fireUser: fireUser,
@@ -130,10 +133,6 @@ export default class App extends Component {
     }
 
     componentWillUnmount(){
-        if(this.unsubAuth){
-            this.unsubAuth();
-        }
-
         if(this.unsubUser){
             this.unsubUser();
         }
@@ -143,11 +142,10 @@ export default class App extends Component {
         }
     }
 
-    userLoggedOut = () => {
-        if(this.unsubAuth){
-            this.unsubAuth();
-        }
-
+    // These userLogging functions are to clean up, but 
+    // mainly we needed to "wake up" the parent component by changing the state.
+    // Might be a better way to do this.
+    userLoggingOut = () => {
         if(this.unsubUser){
             this.unsubUser();
         }
@@ -163,6 +161,12 @@ export default class App extends Component {
         });
     }
 
+    userLoggingIn = (value) => {
+        this.setState({
+            isLoggingIn: value
+        })
+    }
+
     render() {
         if(this.state.loadingFireUser || this.state.loadingUser || this.state.loadingReadOnlyFlags){
             return (
@@ -171,7 +175,6 @@ export default class App extends Component {
                 </Wrapper>
             )
         } else {
-
             return (
                 <HelmetProvider>
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
@@ -200,7 +203,9 @@ export default class App extends Component {
                                     fireUser={this.state.fireUser} 
                                     user={this.state.user} 
                                     readOnlyFlags={this.state.readOnlyFlags}
-                                    userLoggedOut={this.userLoggedOut} 
+                                    userLoggingOut={this.userLoggingOut} 
+                                    userLoggingIn={this.userLoggingIn} 
+                                    isLoggingIn={this.state.isLoggingIn}
                                 />
                                 <Footer />
                             </BrowserRouter>
