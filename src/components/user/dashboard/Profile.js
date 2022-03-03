@@ -18,6 +18,13 @@ import { firestore } from '../../../Fire';
 import { withTheme } from 'styled-components';
 
 class Profile extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            submittingUpdateUser: false
+        }
+    }
     updateProfile = (values) => {
         updateDoc(doc(firestore, "users", this.props.fireUser.uid), {
             firstName: values.firstName,

@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase/firestore";  
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { withTheme } from 'styled-components';
 
 import { Spinner, Wrapper } from '../../../utils/styles/misc'
 import { Body, H1, H2, Li, Ol } from '../../../utils/styles/text'
 import { firestore } from '../../../Fire';
 import { Button } from '../../../utils/styles/buttons';
 import { readTimestamp } from '../../../utils/misc';
-import { withTheme } from 'styled-components';
+
 
 class AdminMessages extends Component {
     constructor(props) {
@@ -14,66 +16,87 @@ class AdminMessages extends Component {
     
         this.state = {
             messages: "",
-            lastVisible: "",
+            lastOfPage: "",
+            currentPage: 0,
+            beginCursor: "",
+            finalCursor: "",
             loadingMessages: true
         }
     }
     componentDidMount = async () =>{
         // Paginate: https://firebase.google.com/docs/firestore/query-data/query-cursors
-        // Query the first page of docs
-        const first = query(collection(firestore, "messages"), orderBy("timestamp"), limit(100));
-        const messageDocSnaps = await getDocs(first);
+        // Query the first page of docs so we can display them to user
+        const currentPageQuery = query(
+            collection(firestore, "messages"), 
+            orderBy("timestamp"), 
+            limit(10)
+        );
+        const pageDocSnaps = await getDocs(currentPageQuery);
         let messages = [];
-        messageDocSnaps.forEach((doc, i) => {
+        pageDocSnaps.forEach((doc, i) => {
             messages.push(doc.data());
         })
-        this.setState({
-            messages: messages
-        })
-        // Get the last visible document
-        const currentCursor = messageDocSnaps.docs[messageDocSnaps.docs.length-1];
-        console.log("currentCursor: ", currentCursor);
-        this.setState({
-            currentCursor: currentCursor,
-            loadingMessages: false
-        })
 
+        // Get the last visible document cursor so we can reference it for the next page
+        const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
 
-    }
-
-    getNextMessages = () => {
-        // Construct a new query starting at this document,
         this.setState({
-            loadingMessages: true
-        })
-        const currentCursor = query(collection(firestore, "messages"),
-            orderBy("timestamp"),
-            startAfter(this.state.currentCursor),
-            limit(25));
-        
-        this.setState({
-            currentCursor: currentCursor,
-            loadingMessages: false
+            messages: messages,
+            finalCursor: finalCursor,
+            currentPage: 1,
+            loadingMessages: false,
         })
     }
+    // TODO: make sure we are not skipping any items with the beforeAfter, etc
+    getPrevMessages = async () => {
+        if(this.state.currentPage !== 1){
+            console.log("testing..")
+        }
+    }
+
+    getNextMessages = async () => {
+        // TODO: properly test if final page
+        if(this.state.currentPage !== 0){
+            this.setState({
+                loadingMessages: true
+            })
+            // Construct a new query starting at this document,
+            const currentPageQuery = query(
+                collection(firestore, "messages"), 
+                orderBy("timestamp"),
+                startAfter(this.state.finalCursor),
+                limit(10)
+            );
+            const pageDocSnaps = await getDocs(currentPageQuery);
+            let messages = [];
+            pageDocSnaps.forEach((doc, i) => {
+                messages.push(doc.data());
+            })
+            // TODO: these are undefined for some reason!
+            const beginCursor = pageDocSnaps.docs[ 0 ];
+            const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            const nextPage = this.state.currentPage - 1;
+            
+            this.setState({
+                beginCursor: beginCursor,
+                finalCursor: finalCursor,
+                loadingMessages: false,
+                currentPage: nextPage
+            })
+        }
+    }
+
 
     render() {
-        if(this.state.loadingMessages){
-            return (
-                <Wrapper>
-                    <H2>Loading... <Spinner /> </H2> 
-                </Wrapper>
-            )
-        } else {
-            return (
-                <Wrapper>
-                    <H1>Contact Messages</H1>
-                    <Body>Below are the messages from the contact form on the site.</Body>
-                    {this.state.messages.length === 0 && (
-                        <Body color={this.props.theme.colors.red} bold size={"lg"}>No messages yet!</Body>
-                    )}
-                    <Ol>
-                    { this.state.messages.length > 0 && this.state.messages.map((message, i) => {
+        return (
+            <Wrapper>
+                <H1>Contact Messages</H1>
+                <Body>Below are the messages from the contact form on the site.</Body>
+                {!this.state.loadingMessages && this.state.messages.length === 0 && (
+                    <Body color={this.props.theme.colors.red} bold size={"lg"}>No messages yet!</Body>
+                )}
+                <Ol>
+                    { !this.state.loadingMessages && this.state.messages.length > 0 && this.state.messages.map((message, i) => {
                         return (
                             <Li key={i}>
                                 <b>From:</b> {message.email}<br/>
@@ -83,14 +106,19 @@ class AdminMessages extends Component {
                             </Li>
                         )
                     })}
-                    </Ol>
-                   
-                    <Button onClick={() => this.getNextMessages()}>
-                        Get next messages    
+                </Ol>
+                {this.state.currentPage !== 1 && (
+                    <Button onClick={() => this.getPrevMessages()}>
+                        <FaChevronLeft /> Previous messages    
                     </Button>
-                </Wrapper>
-            )
-        }
+                )}
+                
+                {/* TODO: how to test if last page? */}
+                <Button style={{ float: "right" }} onClick={() => this.getNextMessages()}>
+                    Next messages <FaChevronRight /> 
+                </Button>
+            </Wrapper>
+        )
         
     }
 }
