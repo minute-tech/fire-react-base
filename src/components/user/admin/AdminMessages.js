@@ -3,8 +3,8 @@ import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { withTheme } from 'styled-components';
 
-import { Spinner, Wrapper } from '../../../utils/styles/misc'
-import { Body, H1, H2, Li, Ol } from '../../../utils/styles/text'
+import { Wrapper } from '../../../utils/styles/misc'
+import { Body, H1, Li, Ol } from '../../../utils/styles/text'
 import { firestore } from '../../../Fire';
 import { Button } from '../../../utils/styles/buttons';
 import { readTimestamp } from '../../../utils/misc';

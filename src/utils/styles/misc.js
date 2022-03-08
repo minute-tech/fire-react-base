@@ -21,15 +21,19 @@ export const GlobalStyle = createGlobalStyle`
         }
     }
 
-    @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.BODY} ;
+    // TODO: loading the font from the file is where the font flashing times issue is arising from
+    // Suggested to not use globalCSS: https://github.com/styled-components/styled-components/issues/2900
+    // Maybe try and use this lib: https://thabo-ambrose.medium.com/prevent-text-font-flickering-caused-by-using-a-custom-font-family-983c4b8d548d
+    // SOLUTION: For now, we will just have to manually type them into App.css to load smoothly
+    /* @font-face {
+        font-family: ${DEFAULT_THEME.FONTS.BODY};
         src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
         font-family: ${DEFAULT_THEME.FONTS.HEADING};
         src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
-    }
+    } */
 
     /* Change notification colors */
     :root{
