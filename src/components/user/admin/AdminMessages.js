@@ -29,7 +29,7 @@ class AdminMessages extends Component {
         const currentPageQuery = query(
             collection(firestore, "messages"), 
             orderBy("timestamp"), 
-            limit(10)
+            limit(5)
         );
         const pageDocSnaps = await getDocs(currentPageQuery);
         let messages = [];
@@ -65,23 +65,23 @@ class AdminMessages extends Component {
                 collection(firestore, "messages"), 
                 orderBy("timestamp"),
                 startAfter(this.state.finalCursor),
-                limit(10)
+                limit(5)
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
             let messages = [];
             pageDocSnaps.forEach((doc, i) => {
                 messages.push(doc.data());
             })
-            // TODO: these are undefined for some reason!
             const beginCursor = pageDocSnaps.docs[ 0 ];
             const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-            const nextPage = this.state.currentPage - 1;
+            const nextPage = this.state.currentPage + 1;
             
             this.setState({
+                messages: messages,
                 beginCursor: beginCursor,
                 finalCursor: finalCursor,
+                currentPage: nextPage,
                 loadingMessages: false,
-                currentPage: nextPage
             })
         }
     }

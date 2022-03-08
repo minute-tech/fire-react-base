@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 // import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
-    font-family: ${props => props.theme?.fonts?.heading || "Arial, Helvetica, sans-serif"};
+    font-family: ${props => props.theme?.fonts?.heading ?? "Arial, Helvetica, sans-serif"};
 `;
 
 export const BodyFont = css`
-    font-family: ${props => props.theme?.fonts?.body || "Arial, Helvetica, sans-serif"};
+    font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"};
 `;
 
 // Headings //

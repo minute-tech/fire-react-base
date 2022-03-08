@@ -1,13 +1,13 @@
 import styled, { createGlobalStyle }  from 'styled-components';
 import { lighten } from 'polished'
 import { FaSpinner } from 'react-icons/fa';
+import { keyframes } from 'styled-components';
 
 // Importing font into CSS global for use around app
 import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { DEFAULT_THEME } from '../constants';
 import { BodyFont } from './text';
-import { keyframes } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
     body {
@@ -22,55 +22,13 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.BODY || "Arial, Helvetica, sans-serif"} ;
+        font-family: ${DEFAULT_THEME.FONTS.BODY} ;
         src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.HEADING || "Arial, Helvetica, sans-serif"};
+        font-family: ${DEFAULT_THEME.FONTS.HEADING};
         src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
-    }
-
-    /* CSS for lightbox */
-    .my-masonry-grid {
-        display: -webkit-box; /* Not needed if autoprefixing */
-        display: -ms-flexbox; /* Not needed if autoprefixing */
-        display: flex;
-        margin-left: -30px; /* gutter size offset */
-        width: auto;
-    }
-
-    /* .my-masonry-grid img {
-        width: 100%;
-        height: auto;
-        max-width: 300px;
-        cursor: pointer;
-    } */
-
-    .my-masonry-grid_column {
-        padding-left: 30px; /* gutter size */
-        background-clip: padding-box;
-    }
-    
-    /* Style your items */
-    .my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
-        margin-bottom: 30px;
-    }
-
-    @media (max-width: 800px) {
-        .my-masonry-grid {
-        margin-left: -15px; /* gutter size offset */
-        }
-        .my-masonry-grid_column {
-        padding-left: 15px; /* gutter size offset */
-        }
-        .my-masonry-grid_column > div {
-        margin-bottom: 15px; /* space between items */
-        }
-    }
-
-    .ril-next-button, .ril-prev-button {
-        background-color: rgba(0, 0, 0, 0.6) !important;
     }
 
     /* Change notification colors */
@@ -128,9 +86,6 @@ export const Spinner = styled(FaSpinner)`
     padding: 0 !important;
     animation-timing-function: ease-in-out;
 `;
-
-
-
 
 // Alignment //
 export const Wrapper = styled.div`
