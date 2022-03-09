@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Wrapper } from '../../utils/styles/misc';
-import { ALink, Body, H1, H2, Li, Ul } from '../../utils/styles/text';
+import { Helmet } from 'react-helmet-async';
+import { Wrapper } from '../../../utils/styles/misc';
+import { ALink, Body, H1, H2, Li, Ul } from '../../../utils/styles/text';
 
 // TODO: Generated via: https://www.privacypolicygenerator.info/
 
@@ -8,6 +9,9 @@ export default class PrivacyPolicy extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Privacy Policy {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <H1>Privacy Policy</H1>
                 <Body>At Fire React Base, accessible from https://fire-react-base.web.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Fire React Base and how we use it.</Body>
 

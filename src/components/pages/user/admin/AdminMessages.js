@@ -3,11 +3,12 @@ import { collection, query, orderBy, startAfter, limit, getDocs } from "firebase
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { withTheme } from 'styled-components';
 
-import { Wrapper } from '../../../utils/styles/misc'
-import { Body, H1, Li, Ol } from '../../../utils/styles/text'
-import { firestore } from '../../../Fire';
-import { Button } from '../../../utils/styles/buttons';
-import { readTimestamp } from '../../../utils/misc';
+import { Wrapper } from '../../../../utils/styles/misc'
+import { Body, H1, Li, Ol } from '../../../../utils/styles/text'
+import { firestore } from '../../../../Fire';
+import { Button } from '../../../../utils/styles/buttons';
+import { readTimestamp } from '../../../../utils/misc';
+import { Helmet } from 'react-helmet-async';
 
 
 class AdminMessages extends Component {
@@ -89,6 +90,9 @@ class AdminMessages extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <H1>Contact Messages</H1>
                 <Body>Below are the messages from the contact form on the site.</Body>
                 {!this.state.loadingMessages && this.state.messages.length === 0 && (

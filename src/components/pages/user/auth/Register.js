@@ -5,17 +5,18 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from 'firebase/auth';
 import { FaChevronLeft } from 'react-icons/fa';
-
-import { firestore, auth } from "../../../Fire.js";
-import { userRegisterSchema } from "../../../utils/formSchemas"
-import { Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
-import { CField, FField } from '../../../utils/styles/forms.js';
-import { ALink, Body, H1, Label, LLink } from '../../../utils/styles/text.js';
-import { Button } from '../../../utils/styles/buttons';
 import { doc, setDoc } from 'firebase/firestore';
-import FormError from '../../misc/FormError.js';
-import { withRouter } from '../../../utils/hocs.js';
-import { PLACEHOLDER, SCHEMES } from '../../../utils/constants.js';
+
+import { firestore, auth } from "../../../../Fire.js";
+import { userRegisterSchema } from "../../../../utils/formSchemas"
+import { Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
+import { CField, FField } from '../../../../utils/styles/forms.js';
+import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js';
+import { Button } from '../../../../utils/styles/buttons';
+import FormError from '../../../misc/FormError.js';
+import { withRouter } from '../../../../utils/hocs.js';
+import { PLACEHOLDER, SCHEMES } from '../../../../utils/constants.js';
+import { Helmet } from 'react-helmet-async';
 
 class Register extends Component {
     constructor(props) {
@@ -113,10 +114,12 @@ class Register extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Register {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <Link to="/">
                     <Button>
-                        
-                    <FaChevronLeft />
+                        <FaChevronLeft />
                         &nbsp; Return home
                     </Button>
                 </Link>

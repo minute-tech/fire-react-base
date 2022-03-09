@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Wrapper } from '../../utils/styles/misc';
-import { Body, H1, H3, Li, Ul } from '../../utils/styles/text';
+import { Helmet } from 'react-helmet-async';
+
+import { Wrapper } from '../../../utils/styles/misc';
+import { Body, H1, H3, Li, Ul } from '../../../utils/styles/text';
 
 // TODO: Generated via https://www.termsandconditionsgenerator.com
 
@@ -8,6 +10,9 @@ export default class TermsConditions extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Terms &amp; Conditions {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <H1>Terms &amp; Conditions</H1>
 
                 <Body>These terms and conditions outline the rules and regulations for the use of Fire React Base's Website, located at https://fire-react-base.web.app.</Body>

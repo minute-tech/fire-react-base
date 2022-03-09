@@ -4,18 +4,19 @@ import { Form, Formik } from 'formik';
 import { FaChevronLeft } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { doc, updateDoc } from 'firebase/firestore';
+import { withTheme } from 'styled-components';
 import { FaMoon, FaSun } from 'react-icons/fa';
 
-import { withRouter } from '../../../utils/hocs';
-import { updateProfileSchema } from "../../../utils/formSchemas"
-import { Hr, Wrapper } from '../../../utils/styles/misc.js';
-import { FField } from '../../../utils/styles/forms.js';
-import { H1, Label, LLink } from '../../../utils/styles/text.js';
-import { Button } from '../../../utils/styles/buttons.js';
-import FormError from '../../misc/FormError.js';
-import { BTYPES, PLACEHOLDER, SCHEMES } from '../../../utils/constants';
-import { firestore } from '../../../Fire';
-import { withTheme } from 'styled-components';
+import { withRouter } from '../../../../utils/hocs';
+import { updateProfileSchema } from "../../../../utils/formSchemas"
+import { Hr, Wrapper } from '../../../../utils/styles/misc.js';
+import { FField } from '../../../../utils/styles/forms.js';
+import { H1, Label, LLink } from '../../../../utils/styles/text.js';
+import { Button } from '../../../../utils/styles/buttons.js';
+import FormError from '../../../misc/FormError.js';
+import { BTYPES, PLACEHOLDER, SCHEMES } from '../../../../utils/constants';
+import { firestore } from '../../../../Fire';
+import { Helmet } from 'react-helmet-async';
 
 class Profile extends Component {
     constructor(props) {
@@ -89,6 +90,9 @@ class Profile extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Profile {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <LLink to={`/dashboard`}> 
                     <Button>
                         <FaChevronLeft />&nbsp; Return to dashboard

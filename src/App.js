@@ -39,7 +39,7 @@ export default class App extends Component {
             readOnlyFlags: "",
             // Initially just pull the default site in case custom site not set yet
             site: {
-                name: DEFAULT_SITE.NAME,
+                name: DEFAULT_SITE.TITLE,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     url: DEFAULT_SITE.LOGO.URL
@@ -126,17 +126,16 @@ export default class App extends Component {
     componentDidMount(){
         let siteData = "";
         this.unsubPublicSite = onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
-            if(siteDoc.exists && siteDoc.data()){
+            if(siteDoc.exists()){
                 siteData = siteDoc.data();
-                // TODO: why do I need to also test && siteDoc.data() instead of just exists? ask SO
                 this.setState({
                     site: siteData,
-                    loadingSite: false,
+                    loadingSite: false
                 });
             } else {
                 console.log("No custom site set, using theme defaults set in constructor.")
                 this.setState({
-                    loadingSite: false,
+                    loadingSite: false
                 });
             }
         });
@@ -149,7 +148,7 @@ export default class App extends Component {
                 });
 
                 this.unsubUser = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
-                    if(userDoc.exists && userDoc.data()){
+                    if(userDoc.exists()){
                         // User exists
                         let userData = userDoc.data();
                         this.setState({
@@ -167,7 +166,7 @@ export default class App extends Component {
 
                 // For seeing if admin
                 this.unsubReadOnlyFlags = onSnapshot(doc(firestore, "users", fireUser.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
-                    if(readOnlyFlagsDoc.exists && readOnlyFlagsDoc.data()){
+                    if(readOnlyFlagsDoc.exists()){
                         this.setState({
                             readOnlyFlags: readOnlyFlagsDoc.data(),
                             loadingReadOnlyFlags: false,
@@ -280,7 +279,7 @@ export default class App extends Component {
     }
 
     render() {
-        if(this.state.loadingFireUser || this.state.loadingUser || this.state.loadingReadOnlyFlags){
+        if(this.state.loadingFireUser || this.state.loadingUser || this.state.loadingReadOnlyFlags || this.state.loadingSite){
             return (
                 <Wrapper>
                     <H2>Loading... <Spinner /> </H2> 
@@ -315,6 +314,7 @@ export default class App extends Component {
                                 <Views 
                                     fireUser={this.state.fireUser} 
                                     user={this.state.user} 
+                                    site={this.state.site}
                                     readOnlyFlags={this.state.readOnlyFlags}
                                     userLoggingOut={this.userLoggingOut} 
                                     userLoggingIn={this.userLoggingIn} 

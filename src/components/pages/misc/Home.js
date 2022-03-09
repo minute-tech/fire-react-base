@@ -4,11 +4,11 @@ import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { withTheme } from 'styled-components';
 
-import { BTYPES } from '../../utils/constants';
-import { Button } from '../../utils/styles/buttons';
-import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../utils/styles/misc';
-import { Body, H1, H3, LLink } from '../../utils/styles/text';
-import ContactForm from '../misc/ContactForm';
+import { BTYPES } from '../../../utils/constants';
+import { Button } from '../../../utils/styles/buttons';
+import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../../utils/styles/misc';
+import { Body, H1, H3, LLink } from '../../../utils/styles/text';
+import ContactForm from '../../misc/ContactForm';
 
 
 class Home extends Component {
@@ -20,7 +20,7 @@ class Home extends Component {
         return (
             <>
                 <Helmet>
-                    <title>Home | Fire React Base</title>
+                    <title>Home {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
                 <BgMediaContainer>
                     <BgColor

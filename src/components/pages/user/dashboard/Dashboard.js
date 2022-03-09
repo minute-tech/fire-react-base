@@ -5,12 +5,13 @@ import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
 import { FaCog, FaUserEdit } from 'react-icons/fa';
 
-import { withRouter } from '../../../utils/hocs';
-import { auth } from "../../../Fire.js";
-import { LLink, H1, H3, Body } from '../../../utils/styles/text.js';
-import { Button } from '../../../utils/styles/buttons.js';
-import { Hr, Wrapper } from '../../../utils/styles/misc.js';
-import ConfirmAlert from '../../misc/ConfirmAlert';
+import { withRouter } from '../../../../utils/hocs';
+import { auth } from "../../../../Fire.js";
+import { LLink, H1, H3, Body } from '../../../../utils/styles/text.js';
+import { Button } from '../../../../utils/styles/buttons.js';
+import { Hr, Wrapper } from '../../../../utils/styles/misc.js';
+import ConfirmAlert from '../../../misc/ConfirmAlert';
+import { Helmet } from 'react-helmet-async';
 
 class Dashboard extends Component {
     logOut = () => {
@@ -29,6 +30,9 @@ class Dashboard extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <H1>Dashboard</H1>
                 <H3>Hi, {this.props?.fireUser?.displayName}!</H3>
                 <LLink to={`/profile`}> 

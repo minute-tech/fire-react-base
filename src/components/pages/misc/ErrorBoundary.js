@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '../../utils/styles/buttons';
-import { Centered, Hr, Wrapper } from '../../utils/styles/misc';
-import { Body, H2, LLink } from '../../utils/styles/text';
+
+import { Button } from '../../../utils/styles/buttons';
+import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
+import { Body, H2, LLink } from '../../../utils/styles/text';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

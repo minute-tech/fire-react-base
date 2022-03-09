@@ -4,166 +4,179 @@ import { toast } from 'react-toastify';
 
 import { withRouter } from './utils/hocs';
 
-// Pages
-import Home from './components/pages/Home';
-import Login from './components/user/auth/Login.js';
-import Register from './components/user/auth/Register';
-import Dashboard from './components/user/dashboard/Dashboard';
-import Profile from './components/user/dashboard/Profile';
-import ErrorBoundary from './components/misc/ErrorBoundary';
-import About from './components/pages/About';
-import Credits from './components/pages/Credits';
-import PrivacyPolicy from './components/pages/PrivacyPolicy';
-import TermsConditions from './components/pages/TermsConditions';
-import Page404 from './components/misc/Page404';
-import AdminDashboard from './components/user/admin/AdminDashboard';
-import AdminMessages from './components/user/admin/AdminMessages';
-import LoggingIn from './components/user/auth/LoggingIn';
+// Pages //
+// Misc
+import Home from './components/pages/misc/Home';
+import About from './components/pages/misc/About';
+import Credits from './components/pages/misc/Credits';
+import PrivacyPolicy from './components/pages/misc/PrivacyPolicy';
+import TermsConditions from './components/pages/misc/TermsConditions';
+import ErrorBoundary from './components/pages/misc/ErrorBoundary';
+import Page404 from './components/pages/misc/Page404';
+// User
+import Login from './components/pages/user/auth/Login';
+import Register from './components/pages/user/auth/Register';
+import LoggingIn from './components/pages/user/auth/LoggingIn';
+import Dashboard from './components/pages/user/dashboard/Dashboard';
+import Profile from './components/pages/user/dashboard/Profile';
+// Admin
+import AdminDashboard from './components/pages/user/admin/AdminDashboard';
+import AdminMessages from './components/pages/user/admin/AdminMessages';
 
 class Views extends Component {
     render() {
         return (
-                <Routes>
-                    {/* Anyone routes */}
-                    <Route 
-                        index 
-                        path="/" 
-                        element={<ErrorBoundary><Home /></ErrorBoundary>}
-                    />
+            <Routes>
+                {/* Anyone routes */}
+                <Route 
+                    index 
+                    path="/" 
+                    element={<ErrorBoundary><Home site={this.props.site} /></ErrorBoundary>}
+                />
 
-                    <Route 
-                        path="/about" 
-                        element={<ErrorBoundary><About /></ErrorBoundary>}
-                    />
+                <Route 
+                    path="/about" 
+                    element={<ErrorBoundary><About site={this.props.site} /></ErrorBoundary>}
+                />
 
-                    <Route 
-                        path="/credits" 
-                        element={<ErrorBoundary><Credits /></ErrorBoundary>}
-                    />
+                <Route 
+                    path="/credits" 
+                    element={<ErrorBoundary><Credits site={this.props.site} /></ErrorBoundary>}
+                />
 
-                    <Route 
-                        path="/privacy-policy" 
-                        element={<ErrorBoundary><PrivacyPolicy /></ErrorBoundary>}
-                    />
+                <Route 
+                    path="/privacy-policy" 
+                    element={<ErrorBoundary><PrivacyPolicy site={this.props.site} /></ErrorBoundary>}
+                />
 
-                    <Route 
-                        path="/terms-conditions" 
-                        element={<ErrorBoundary><TermsConditions /></ErrorBoundary>}
-                    />
+                <Route 
+                    path="/terms-conditions" 
+                    element={<ErrorBoundary><TermsConditions site={this.props.site} /></ErrorBoundary>}
+                />
 
+                <Route 
+                    path="/logging-in" 
+                    element={
+                        <ErrorBoundary>
+                            <LoggingIn
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser}
+                                userLoggingIn={this.props.userLoggingIn}  
+                            />
+                        </ErrorBoundary>
+                    }
+                />
+                
+                {/* Visitor ONLY routes */}
+                <Route 
+                    element={
+                        <ErrorBoundary>
+                            <VisitorRoutes 
+                                site={this.props.site} 
+                                isUser={this.props.fireUser} 
+                                isLoggingIn={this.props.isLoggingIn} 
+                            />
+                        </ErrorBoundary>
+                    }
+                >
                     <Route 
-                        path="/logging-in" 
+                        path="/register" 
                         element={
-                            <ErrorBoundary>
-                                <LoggingIn
-                                    fireUser={this.props.fireUser}
-                                    userLoggingIn={this.props.userLoggingIn}  
-                                />
-                            </ErrorBoundary>
+                            <Register 
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser}
+                                userLoggingIn={this.props.userLoggingIn}
+                            />
                         }
                     />
-                    
-                    {/* Visitor ONLY routes */}
                     <Route 
+                        path="/login"
                         element={
-                            <ErrorBoundary>
-                                <VisitorRoutes 
-                                    isUser={this.props.fireUser} 
-                                    isLoggingIn={this.props.isLoggingIn} 
-                                />
-                            </ErrorBoundary>
+                            <Login 
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser}
+                                userLoggingIn={this.props.userLoggingIn}
+                            />
                         }
-                    >
-                        <Route 
-                            path="/register" 
-                            element={
-                                <Register 
-                                    fireUser={this.props.fireUser}
-                                    userLoggingIn={this.props.userLoggingIn}
-                                />
-                            }
-                        />
-                        <Route 
-                            path="/login"
-                            element={
-                                <Login 
-                                    fireUser={this.props.fireUser}
-                                    userLoggingIn={this.props.userLoggingIn}
-                                />
-                            }
-                        />
-                    </Route>
-                    
-                    {/* User ONLY routes */}
-                    {/* isNotMFA={this.props.fireUser?.multiFactor?.enrolledFactors && this.props.fireUser.multiFactor.enrolledFactors.length === 0} */}
+                    />
+                </Route>
+                
+                {/* User ONLY routes */}
+                {/* isNotMFA={this.props.fireUser?.multiFactor?.enrolledFactors && this.props.fireUser.multiFactor.enrolledFactors.length === 0} */}
+                <Route 
+                    element={
+                        <ErrorBoundary>
+                            <UserRoutes 
+                                site={this.props.site} 
+                                isUser={this.props.fireUser} 
+                                isLoggingIn={this.props.isLoggingIn} 
+                            />
+                        </ErrorBoundary>
+                    }
+                >
                     <Route 
+                        path="/dashboard" 
                         element={
-                            <ErrorBoundary>
-                                <UserRoutes 
-                                    isUser={this.props.fireUser} 
-                                    isLoggingIn={this.props.isLoggingIn} 
-                                />
-                            </ErrorBoundary>
+                            <Dashboard 
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser} 
+                                readOnlyFlags={this.props.readOnlyFlags}
+                                user={this.props.user}
+                                userLoggingOut={this.props.userLoggingOut} 
+                            />
                         }
-                    >
-                        <Route 
-                            path="/dashboard" 
-                            element={
-                                <Dashboard 
-                                    fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    user={this.props.user}
-                                    userLoggingOut={this.props.userLoggingOut} 
-                                />
-                            }
-                        />
-                        <Route 
-                            path="/profile" 
-                            element={
-                                <Profile 
-                                    fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    user={this.props.user}
-                                />
-                            }
-                        />
-                    </Route>
+                    />
+                    <Route 
+                        path="/profile" 
+                        element={
+                            <Profile 
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser} 
+                                readOnlyFlags={this.props.readOnlyFlags}
+                                user={this.props.user}
+                            />
+                        }
+                    />
+                </Route>
 
-                    {/* Admin ONLY routes */}
+                {/* Admin ONLY routes */}
+                <Route 
+                    element={
+                        <ErrorBoundary>
+                            <AdminRoutes 
+                                site={this.props.site} 
+                                isAdmin={this.props?.readOnlyFlags?.isAdmin} 
+                                isLoggingIn={this.props.isLoggingIn} 
+                            />
+                        </ErrorBoundary>
+                    }
+                >
                     <Route 
+                        path="/admin/dashboard" 
                         element={
-                            <ErrorBoundary>
-                                <AdminRoutes 
-                                    isAdmin={this.props?.readOnlyFlags?.isAdmin} 
-                                    isLoggingIn={this.props.isLoggingIn} 
-                                />
-                            </ErrorBoundary>
+                            <AdminDashboard 
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser} 
+                                readOnlyFlags={this.props.readOnlyFlags}
+                                user={this.props.user}
+                            />
                         }
-                    >
-                        <Route 
-                            path="/admin/dashboard" 
-                            element={
-                                <AdminDashboard 
-                                    fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    user={this.props.user}
-                                />
-                            }
-                        />
-                        <Route 
-                            path="/admin/messages" 
-                            element={
-                                <AdminMessages
-                                    fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    user={this.props.user}
-                                />
-                            }
-                        />
-                    </Route>
+                    />
+                    <Route 
+                        path="/admin/messages" 
+                        element={
+                            <AdminMessages
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser} 
+                                readOnlyFlags={this.props.readOnlyFlags}
+                                user={this.props.user}
+                            />
+                        }
+                    />
+                </Route>
 
-                    <Route path="*" element={<ErrorBoundary><Page404 /></ErrorBoundary>} />
-                </Routes>
+                <Route path="*" element={<ErrorBoundary><Page404 site={this.props.site} /></ErrorBoundary>} />
+            </Routes>
         )
     }
 }

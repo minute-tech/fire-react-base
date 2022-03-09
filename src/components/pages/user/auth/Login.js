@@ -4,17 +4,18 @@ import { Grid, Row, Col } from 'react-flexbox-grid';
 import { toast } from 'react-toastify';
 import { RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { FaChevronLeft } from 'react-icons/fa';
-
-import { withRouter } from '../../../utils/hocs';
-import { auth } from "../../../Fire.js";
-import { signInSchema } from "../../../utils/formSchemas"
-import { Centered, Hr, LgContainer, Recaptcha, Wrapper } from '../../../utils/styles/misc.js';
-import { ALink, Body, H1, Label, LLink, SLink } from '../../../utils/styles/text.js';
-import { FField, Input } from '../../../utils/styles/forms.js';
-import { Button } from '../../../utils/styles/buttons.js';
-import FormError from '../../misc/FormError';
-import { PLACEHOLDER } from '../../../utils/constants';
 import { withTheme } from 'styled-components';
+
+import { withRouter } from '../../../../utils/hocs';
+import { auth } from "../../../../Fire.js";
+import { signInSchema } from "../../../../utils/formSchemas"
+import { Centered, Hr, LgContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
+import { ALink, Body, H1, Label, LLink, SLink } from '../../../../utils/styles/text.js';
+import { FField, Input } from '../../../../utils/styles/forms.js';
+import { Button } from '../../../../utils/styles/buttons.js';
+import FormError from '../../../misc/FormError';
+import { PLACEHOLDER } from '../../../../utils/constants';
+import { Helmet } from 'react-helmet-async';
 
 class UserLogin extends Component {
     constructor(props) {
@@ -99,6 +100,9 @@ class UserLogin extends Component {
     render() {
         return (
             <Wrapper>
+                <Helmet>
+                    <title>Login {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                </Helmet>
                 <LLink to="/">
                     <Button type="button">
                         <FaChevronLeft />
