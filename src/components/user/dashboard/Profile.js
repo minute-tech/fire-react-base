@@ -13,7 +13,7 @@ import { FField } from '../../../utils/styles/forms.js';
 import { H1, Label, LLink } from '../../../utils/styles/text.js';
 import { Button } from '../../../utils/styles/buttons.js';
 import FormError from '../../misc/FormError.js';
-import { BTYPES, DEFAULT_THEME, PLACEHOLDER } from '../../../utils/constants';
+import { BTYPES, PLACEHOLDER, SCHEMES } from '../../../utils/constants';
 import { firestore } from '../../../Fire';
 import { withTheme } from 'styled-components';
 
@@ -25,6 +25,7 @@ class Profile extends Component {
             submittingUpdateUser: false
         }
     }
+
     updateProfile = (values) => {
         updateDoc(doc(firestore, "users", this.props.fireUser.uid), {
             firstName: values.firstName,
@@ -56,12 +57,12 @@ class Profile extends Component {
     }
 
     setThemeScheme = (currentScheme, userId) => {
-        if(currentScheme === DEFAULT_THEME.SCHEME.DARK.VALUE){
+        if(currentScheme === SCHEMES.DARK){
             // Currently Dark Theme, change to Light
             // Update Firestore doc to remember
             updateDoc(doc(firestore, "users", userId), {
                 flags: {
-                    themeScheme: DEFAULT_THEME.SCHEME.LIGHT.VALUE
+                    themeScheme: SCHEMES.LIGHT
                 }
             }).then(() => {
                 console.log("Successful update of user doc to Firestore.");
@@ -74,7 +75,7 @@ class Profile extends Component {
             // Update Firestore doc to remember
             updateDoc(doc(firestore, "users", userId), {
                 flags: {
-                    themeScheme: DEFAULT_THEME.SCHEME.DARK.VALUE
+                    themeScheme: SCHEMES.DARK
                 }
             }).then(() => {
                 console.log("Successful update of user doc to Firestore.");
@@ -214,15 +215,15 @@ class Profile extends Component {
                 </Formik>
                 <Hr />
                 <Button 
-                    color={this.props?.user?.flags?.themeScheme === DEFAULT_THEME.SCHEME.DARK.VALUE ? this.props.theme.colors.yellow : 'black'} 
+                    color={this.props?.user?.flags?.themeScheme === SCHEMES.DARK ? this.props.theme.colors.yellow : 'black'} 
                     btype={BTYPES.INVERTED}
                     onClick={() => this.setThemeScheme(this.props?.user?.flags?.themeScheme, this.props?.fireUser?.uid)}
                 >
                     Switch to&nbsp;
                     {
-                        this.props?.user?.flags?.themeScheme === DEFAULT_THEME.SCHEME.DARK.VALUE ? 
-                        <span>{DEFAULT_THEME.SCHEME.LIGHT.VALUE} mode <FaSun /> </span> : 
-                        <span>{DEFAULT_THEME.SCHEME.DARK.VALUE} mode <FaMoon /></span>
+                        this.props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
+                        <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
+                        <span>{SCHEMES.DARK} mode <FaMoon /></span>
                     }
                 </Button>
                     

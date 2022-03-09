@@ -4,6 +4,8 @@ import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { IconContext } from 'react-icons';
 
 // CSS
 import "./assets/css/App.css";
@@ -16,11 +18,9 @@ import Header from './components/misc/Header';
 import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 import { auth, firestore } from './Fire';
-import { DEFAULT_THEME } from './utils/constants';
+import { DEFAULT_SITE, SCHEMES } from './utils/constants';
 import { DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { IconContext } from 'react-icons';
 
 export default class App extends Component {
     constructor(props) {
@@ -37,38 +37,111 @@ export default class App extends Component {
             fireUser: "",
             user: "",
             readOnlyFlags: "",
-            // initially just pull their OS scheme preference
-            theme: {
-                value: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE,
-                colors: {
-                    primary: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.PRIMARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.PRIMARY,
-                    secondary: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.SECONDARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.SECONDARY,
-                    tertiary: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.TERTIARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.TERTIARY,
-                    red: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.RED : DEFAULT_THEME.SCHEME.LIGHT.COLORS.RED,
-                    green: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.GREEN : DEFAULT_THEME.SCHEME.LIGHT.COLORS.GREEN,
-                    yellow: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.YELLOW : DEFAULT_THEME.SCHEME.LIGHT.COLORS.YELLOW,
-                    blue: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BLUE : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BLUE,
-                    grey: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.GREY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.GREY,
-                    lightGrey: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.LIGHT_GREY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.LIGHT_GREY,
-                    font: {
-                        heading: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.HEADING : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.HEADING,
-                        body: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.BODY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.BODY,
-                        link: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.LINK : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.LINK,
+            // Initially just pull the default site in case custom site not set yet
+            site: {
+                name: DEFAULT_SITE.NAME,
+                logo: {
+                    width: DEFAULT_SITE.LOGO.WIDTH,
+                    url: DEFAULT_SITE.LOGO.URL
+                },
+                emails: {
+                    admin: DEFAULT_SITE.EMAILS.ADMIN
+                },
+                theme: { 
+                    fonts: {
+                        heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+                        body: DEFAULT_SITE.THEME.FONTS.BODY
                     },
-                    background: (window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BACKGROUND : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BACKGROUND,
+                    schemes: {
+                        light: {
+                            value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+                            colors: {
+                                primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+                                secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+                                tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+                                red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+                                green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+                                yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+                                blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+                                grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+                                lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+                                font: {
+                                    heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                                    body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                                    link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                                },
+                                background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+                            },
+                        },
+                        dark: {
+                            value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
+                            colors: {
+                                primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
+                                secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
+                                tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
+                                red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
+                                green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
+                                yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
+                                blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
+                                grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
+                                lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
+                                font: {
+                                    heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
+                                    body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
+                                    link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
+                                },
+                                background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
+                            },
+                        }
+                    }
+                },
+            },
+            currentTheme: {
+                value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+                colors: {
+                    primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+                    secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+                    tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+                    red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+                    green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+                    yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+                    blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+                    grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+                    lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+                    font: {
+                        heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                        body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                        link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                    },
+                    background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
                 },
                 fonts: {
-                    heading: DEFAULT_THEME.FONTS.HEADING,
-                    body: DEFAULT_THEME.FONTS.BODY
+                    heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+                    body: DEFAULT_SITE.THEME.FONTS.BODY
                 },
             }
         }
     }
 
     componentDidMount(){
+        let siteData = "";
+        this.unsubPublicSite = onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
+            if(siteDoc.exists && siteDoc.data()){
+                siteData = siteDoc.data();
+                // TODO: why do I need to also test && siteDoc.data() instead of just exists? ask SO
+                this.setState({
+                    site: siteData,
+                    loadingSite: false,
+                });
+            } else {
+                console.log("No custom site set, using theme defaults set in constructor.")
+                this.setState({
+                    loadingSite: false,
+                });
+            }
+        });
+
         this.unsubAuth = onAuthStateChanged(auth, (fireUser) => {
-            console.log("fireUser: ");
-            console.log(fireUser);
             if (fireUser) {
                 this.setState({
                     fireUser: fireUser,
@@ -76,51 +149,39 @@ export default class App extends Component {
                 });
 
                 this.unsubUser = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
-                    if(userDoc.exists){
-                        // User exists, so grab their scheme preference from Firestore
-                        // ** These set states are really big and annoying.. can we refactor them to be smaller?
+                    if(userDoc.exists && userDoc.data()){
+                        // User exists
                         let userData = userDoc.data();
                         this.setState({
                             user: userData,
                             loadingUser: false,
-                            theme: {
-                                value: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE,
-                                colors: {
-                                    primary: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.PRIMARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.PRIMARY,
-                                    secondary: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.SECONDARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.SECONDARY,
-                                    tertiary: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.TERTIARY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.TERTIARY,
-                                    red: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.RED : DEFAULT_THEME.SCHEME.LIGHT.COLORS.RED,
-                                    green: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.GREEN : DEFAULT_THEME.SCHEME.LIGHT.COLORS.GREEN,
-                                    yellow: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.YELLOW : DEFAULT_THEME.SCHEME.LIGHT.COLORS.YELLOW,
-                                    blue: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BLUE : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BLUE,
-                                    grey: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.GREY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.GREY,
-                                    lightGrey: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.LIGHT_GREY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.LIGHT_GREY,
-                                    font: {
-                                        heading: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.HEADING : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.HEADING,
-                                        body: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.BODY : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.BODY,
-                                        link: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.FONT.LINK : DEFAULT_THEME.SCHEME.LIGHT.COLORS.FONT.LINK,
-                                    },
-                                    background: (userData?.flags?.themeScheme ?? DEFAULT_THEME.SCHEME.LIGHT.VALUE) === DEFAULT_THEME.SCHEME.DARK.VALUE ? DEFAULT_THEME.SCHEME.DARK.COLORS.BACKGROUND : DEFAULT_THEME.SCHEME.LIGHT.COLORS.BACKGROUND,
-                                },
-                                fonts: {
-                                    heading: DEFAULT_THEME.FONTS.HEADING,
-                                    body: DEFAULT_THEME.FONTS.BODY
-                                },
-                            }
+                        });
+                        this.setCurrentTheme(userData);
+                    } else {
+                        console.log("No user exists.")
+                        this.setState({
+                            loadingUser: false,
                         });
                     }
                 });
 
                 // For seeing if admin
                 this.unsubReadOnlyFlags = onSnapshot(doc(firestore, "users", fireUser.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
-                    if(readOnlyFlagsDoc.exists){
+                    if(readOnlyFlagsDoc.exists && readOnlyFlagsDoc.data()){
                         this.setState({
                             readOnlyFlags: readOnlyFlagsDoc.data(),
                             loadingReadOnlyFlags: false,
                         });
-                    } 
+                    } else {
+                        console.log("No read only read only flags exists.")
+                        this.setState({
+                            loadingReadOnlyFlags: false,
+                        });
+                    }
                 });
+                
             } else {
+                this.setCurrentTheme();
                 // No user signed in
                 this.setState({
                     loadingFireUser: false,
@@ -133,6 +194,10 @@ export default class App extends Component {
     }
 
     componentWillUnmount(){
+        if(this.unsubPublicSite){
+            this.unsubPublicSite();
+        }
+
         if(this.unsubUser){
             this.unsubUser();
         }
@@ -167,6 +232,53 @@ export default class App extends Component {
         })
     }
 
+    // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
+    setCurrentTheme = (user = "") => {
+        let themeObject = {};
+        let isDarkScheme = false;
+
+        if(user){
+            // User signed in, so grab their currently set preference
+            if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
+                isDarkScheme = true
+            }
+        } else {
+            // No user signed in yet, so just grab the user's OS preference
+            if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
+                isDarkScheme = true
+            }
+        }
+        console.log("isDarkTheme: " + isDarkScheme)
+        themeObject = { 
+            value: isDarkScheme ? this.state.site.theme.schemes.dark.value : this.state.site.theme.schemes.light.value,
+            colors: {
+                primary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.primary : this.state.site.theme.schemes.light.colors.primary,
+                secondary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.secondary : this.state.site.theme.schemes.light.colors.secondary,
+                tertiary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.tertiary : this.state.site.theme.schemes.light.colors.tertiary,
+                red: isDarkScheme ? this.state.site.theme.schemes.dark.colors.red : this.state.site.theme.schemes.light.colors.red,
+                green: isDarkScheme ? this.state.site.theme.schemes.dark.colors.green : this.state.site.theme.schemes.light.colors.green,
+                yellow: isDarkScheme ? this.state.site.theme.schemes.dark.colors.yellow : this.state.site.theme.schemes.light.colors.yellow,
+                blue: isDarkScheme ? this.state.site.theme.schemes.dark.colors.blue : this.state.site.theme.schemes.light.colors.blue,
+                grey: isDarkScheme ? this.state.site.theme.schemes.dark.colors.grey : this.state.site.theme.schemes.light.colors.grey,
+                lightGrey: isDarkScheme ? this.state.site.theme.schemes.dark.colors.lightGrey : this.state.site.theme.schemes.light.colors.lightGrey,
+                font: {
+                    heading: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.heading : this.state.site.theme.schemes.light.colors.font.heading,
+                    body: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.body : this.state.site.theme.schemes.light.colors.font.body,
+                    link: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.link : this.state.site.theme.schemes.light.colors.font.link,
+                },
+                background: isDarkScheme ? this.state.site.theme.schemes.dark.colors.background : this.state.site.theme.schemes.light.colors.background,
+            },
+            fonts: {
+                heading: this.state.site.theme.fonts.heading,
+                body: this.state.site.theme.fonts.body
+            },
+        }
+
+        this.setState({
+            currentTheme: themeObject
+        })
+    }
+
     render() {
         if(this.state.loadingFireUser || this.state.loadingUser || this.state.loadingReadOnlyFlags){
             return (
@@ -178,7 +290,7 @@ export default class App extends Component {
             return (
                 <HelmetProvider>
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
-                        <ThemeProvider theme={this.state.theme}>
+                        <ThemeProvider theme={this.state.currentTheme}>
                             <BrowserRouter>
                                 {process.env.NODE_ENV === 'development' && (
                                     <DevAlert>
@@ -190,12 +302,13 @@ export default class App extends Component {
                                     autoClose={4000}
                                     hideProgressBar={false}
                                     newestOnTop={false}
-                                    theme={this.state.theme.value}
+                                    theme={this.state.currentTheme.value}
                                     closeOnClick
                                     rtl={false}
                                     pauseOnFocusLoss
                                     pauseOnHover
                                 />
+                                {/* <button onClick={() => this.setCurrentTheme(this.state.user)}>Set theme</button> */}
                                 <GlobalStyle /> 
                                 <Header fireUser={this.state.fireUser} />
                                 <FirebaseAnalytics />

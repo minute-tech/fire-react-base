@@ -2,7 +2,8 @@ rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
         // Sites collection // 
-        match /sites/{siteId} {
+        // Will contain documents like counts, public, sensitive, etc
+        match /site/{documentId} {
             function isAdmin() {
                 return (
                     get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true
@@ -14,9 +15,16 @@ service cloud.firestore {
                     get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isSuperAdmin == true
                 )
             }
-            
-            // Anyone can read or list site docs (default doc data is "public" data)
-            allow read, list: if true;
+
+            function isPublic() {
+                // ** Would be more scalable to test a field in the document if public
+                return (
+                    (documentId != 'sensitive' && documentId != 'counts')
+                )
+            }
+
+            // Anyone can read or list site docs as long as it isn't id of 'sensitive'
+            allow read, list: if isPublic();
             // Only admins or super admins can create and update
             allow create, update: if isAdmin();
             // Only super admins can delete it
@@ -66,6 +74,7 @@ service cloud.firestore {
         }
 
         // Contact Messages //
+        // ** I am torn on whether or not to include this collection as a subcol of "site"
         match /messages/{messageId} {
             function isAdmin() {
                 return (

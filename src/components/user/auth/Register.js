@@ -15,7 +15,7 @@ import { Button } from '../../../utils/styles/buttons';
 import { doc, setDoc } from 'firebase/firestore';
 import FormError from '../../misc/FormError.js';
 import { withRouter } from '../../../utils/hocs.js';
-import { DEFAULT_THEME, PLACEHOLDER } from '../../../utils/constants.js';
+import { PLACEHOLDER, SCHEMES } from '../../../utils/constants.js';
 
 class Register extends Component {
     constructor(props) {
@@ -66,7 +66,7 @@ class Register extends Component {
                                 email: values.email,
                                 phone: values.phone,
                                 flags: {
-                                    themeScheme: window.matchMedia(`(prefers-color-scheme: ${DEFAULT_THEME.SCHEME.DARK.VALUE})`).matches ? DEFAULT_THEME.SCHEME.DARK.VALUE : DEFAULT_THEME.SCHEME.LIGHT.VALUE
+                                    themeScheme: window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT
                                 },
                                 timestamp: Date.now(),
                             }).then(() => {

@@ -16,7 +16,6 @@ class AdminMessages extends Component {
     
         this.state = {
             messages: "",
-            lastOfPage: "",
             currentPage: 0,
             beginCursor: "",
             finalCursor: "",

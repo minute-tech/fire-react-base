@@ -6,7 +6,6 @@ import { keyframes } from 'styled-components';
 // Importing font into CSS global for use around app
 import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
-import { DEFAULT_THEME } from '../constants';
 import { BodyFont } from './text';
 
 export const GlobalStyle = createGlobalStyle`
@@ -26,12 +25,12 @@ export const GlobalStyle = createGlobalStyle`
     // Maybe try and use this lib: https://thabo-ambrose.medium.com/prevent-text-font-flickering-caused-by-using-a-custom-font-family-983c4b8d548d
     // SOLUTION: For now, we will just have to manually type them into App.css to load smoothly
     /* @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.BODY};
+        font-family: {};
         src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     }
 
     @font-face {
-        font-family: ${DEFAULT_THEME.FONTS.HEADING};
+        font-family: {DEFAULT_SITE.FONTS.HEADING};
         src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
     } */
 
