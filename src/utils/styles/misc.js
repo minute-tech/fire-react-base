@@ -271,7 +271,7 @@ export const BgMediaContainer = styled.div`
     width: 100%;
     margin-top: -5px;
     overflow: hidden;
-    ${BodyFont} ; // ** if this isnt working, reference back ship-form-template, i did something different with ||
+    ${BodyFont};
     position: relative;
 `;
 

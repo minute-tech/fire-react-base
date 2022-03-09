@@ -95,7 +95,7 @@ class Profile extends Component {
                 </Helmet>
                 <LLink to={`/dashboard`}> 
                     <Button>
-                        <FaChevronLeft />&nbsp; Return to dashboard
+                        <FaChevronLeft />&nbsp; Return to Dashboard
                     </Button>
                 </LLink>
                 <H1>Profile</H1>

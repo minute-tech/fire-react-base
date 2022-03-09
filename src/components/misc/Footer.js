@@ -3,7 +3,7 @@ import { Col, Grid, Row } from 'react-flexbox-grid';
 import { FaChevronUp } from 'react-icons/fa';
 
 import { ColA, ColB, ColC, FooterContainer } from "../../utils/styles/footer";
-import { LLink, ALink, SLink} from "../../utils/styles/text";
+import { LLink, SLink} from "../../utils/styles/text";
 export default class Footer extends Component {
     constructor(props) {
         super(props);
@@ -43,19 +43,6 @@ export default class Footer extends Component {
                     <Row middle="xs">
                         <ColA xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>
                             <Row start="sm">
-                                <Col xs={12}>
-                                    <ALink href="https://fire-react-base.web.app" target="_blank" rel="noopener">
-                                        Fire React Base 
-                                        {' '}
-                                        &copy;
-                                        {' '}
-                                        {this.state.year}
-                                    </ALink>
-                                </Col>
-                            </Row>
-                        </ColA>
-                        <ColB xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>
-                            <Row around="xs">
                                 <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
                                     <LLink to="/privacy-policy">Privacy Policy</LLink>
                                 </Col>  
@@ -65,6 +52,20 @@ export default class Footer extends Component {
                                 <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
                                     <LLink to="/credits">Credits</LLink>
                                 </Col>  
+                                
+                            </Row>
+                        </ColA>
+                        <ColB xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    <SLink>
+                                        {this.props?.site?.name ?? ""}
+                                        {' '}
+                                        &copy;
+                                        {' '}
+                                        {this.state.year}
+                                    </SLink>
+                                </Col>
                             </Row>
                         </ColB>
                         <ColC xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>

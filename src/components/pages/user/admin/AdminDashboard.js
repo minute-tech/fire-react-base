@@ -3,7 +3,7 @@ import { withTheme } from 'styled-components'
 import { BiMessageCheck } from "react-icons/bi"
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
-import { FaPlus } from 'react-icons/fa'
+import { FaChevronLeft, FaPlus } from 'react-icons/fa'
 
 import { Button } from '../../../../utils/styles/buttons'
 import { Hr, Wrapper } from '../../../../utils/styles/misc'
@@ -11,6 +11,7 @@ import { H1, LLink } from '../../../../utils/styles/text'
 import { BTYPES, DEFAULT_SITE } from '../../../../utils/constants'
 import { firestore } from '../../../../Fire'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 
 class AdminDashboard extends Component {
     createDefaultCustomSite = async () => {
@@ -87,15 +88,15 @@ class AdminDashboard extends Component {
                 toast.error(`Error setting public doc: ${error}`);
             });
     
-            await setDoc(doc(firestore, "site", "count"), {
+            await setDoc(doc(firestore, "site", "counts"), {
                 messages: 0,
                 users: 0
             }).then(() => {
-                console.log("Successful write of count doc to Firestore.");
-                toast.success(`Created count doc.`);
+                console.log("Successful write of counts doc to Firestore.");
+                toast.success(`Created counts doc.`);
             }).catch((error) => {
-                console.error("Error adding count document: ", error);
-                toast.error(`Error setting count doc: ${error}`);
+                console.error("Error adding counts document: ", error);
+                toast.error(`Error setting counts doc: ${error}`);
             });
         }
     }
@@ -106,6 +107,12 @@ class AdminDashboard extends Component {
                 <Helmet>
                     <title>Admin Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
+                <Link to="/dashboard">
+                    <Button>
+                        <FaChevronLeft />
+                        &nbsp; Back to User Dashboard
+                    </Button>
+                </Link>
                 <H1>Admin Dashboard</H1>
                 <LLink to={`/admin/messages`}> 
                     <Button color={this.props.theme.colors.green}>
@@ -113,9 +120,12 @@ class AdminDashboard extends Component {
                     </Button>
                 </LLink>
                 <Hr />
-                <Button color={this.props.theme.colors.yellow} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>
-                    Create Default Site <FaPlus />
-                </Button>
+                {this.props.site.name !== DEFAULT_SITE.NAME && (
+                    <Button color={this.props.theme.colors.yellow} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>
+                        Create Default Site <FaPlus />
+                    </Button>
+                )}
+                
             </Wrapper>
         )
     }

@@ -29,5 +29,6 @@ module.exports = {
     "import/no-unresolved": 0,
     "indent": "off",
     "max-len": 1,
+    "linebreak-style": "off",
   },
 };

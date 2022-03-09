@@ -27,9 +27,9 @@ export const NavTitle = styled.div`
 export const NavLogo = styled.img`
     width: 100%;
     height: auto;
-    max-width: ${props => props.size ? props.size : "150px"}; 
+    max-width: ${props => props.width ? props.width : "150px"}; 
     @media (max-width: 901px) {
-        max-width: ${props => props.size ? props.size : "125px"}; 
+        max-width: ${props => props.width ? props.width : "125px"}; 
     }
 `;
 

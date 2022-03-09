@@ -39,7 +39,7 @@ export default class App extends Component {
             readOnlyFlags: "",
             // Initially just pull the default site in case custom site not set yet
             site: {
-                name: DEFAULT_SITE.TITLE,
+                name: DEFAULT_SITE.NAME,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     url: DEFAULT_SITE.LOGO.URL
@@ -309,7 +309,10 @@ export default class App extends Component {
                                 />
                                 {/* <button onClick={() => this.setCurrentTheme(this.state.user)}>Set theme</button> */}
                                 <GlobalStyle /> 
-                                <Header fireUser={this.state.fireUser} />
+                                <Header 
+                                    site={this.state.site}
+                                    fireUser={this.state.fireUser} 
+                                />
                                 <FirebaseAnalytics />
                                 <Views 
                                     fireUser={this.state.fireUser} 
@@ -320,7 +323,9 @@ export default class App extends Component {
                                     userLoggingIn={this.userLoggingIn} 
                                     isLoggingIn={this.state.isLoggingIn}
                                 />
-                                <Footer />
+                                <Footer
+                                    site={this.state.site} 
+                                />
                             </BrowserRouter>
                         </ThemeProvider>
                     </IconContext.Provider>

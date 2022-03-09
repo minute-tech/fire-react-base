@@ -7,9 +7,14 @@ class Header extends Component {
     return (
         <header>
             <BrandContainer>
-                <NavLogo size='100px' margin="0" src={require("../../assets/images/logos/logo.png")} />
+                <NavLogo 
+                    width={this.props.site.logo.width} 
+                    margin="0" 
+                    // src={this.props.site.logo.url || require("../../assets/images/logos/logo.png")} 
+                    src={require("../../assets/images/logos/logo.png")} 
+                />
                 <NavLLink to='/'>
-                    <NavTitle>Header Title</NavTitle>
+                    <NavTitle>{this.props?.site?.name ?? ""}</NavTitle>
                 </NavLLink>
             </BrandContainer>
             
@@ -27,9 +32,7 @@ class Header extends Component {
                         <NavLLink to='/dashboard'><NavHoverText>Dashboard</NavHoverText></NavLLink>
                     </>
                 )}
-                
             </NavLinks>
-            {/* <div style={{backgroundColor: this.props.theme.colors.primary, height: "5px"}} /> */}
         </header>
     );
   }

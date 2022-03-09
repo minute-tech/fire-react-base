@@ -30,15 +30,19 @@ class Home extends Component {
                         <BgMedia
                             alt="hero background" 
                             // Honestly the below snippet somehow works so the little "image not found" icon with the alt tag doesn't pop up in the upper left of the banner bgColor, so don't remove the below til we find a better solution lol
-                            src={"https://firebasestorage.googleapis.com/v0/b/fire-react-base.appspot.com/o/public%2Fbackgrounds%2FDSC_0047.JPG?alt=media&token=9e53f2b2-25b7-4b7d-a85c-84ecf97fa1eb" || "https://firebasestorage.googleapis.com/v0/b/ship-form-template.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3c9c4000-80ef-4ed6-afa1-ed0097040efc"}
+                            src={
+                                "https://firebasestorage.googleapis.com/v0/b/fire-react-base.appspot.com/o/public%2Fbackgrounds%2FDSC_0047.JPG?alt=media&token=9e53f2b2-25b7-4b7d-a85c-84ecf97fa1eb" 
+                                || 
+                                "https://firebasestorage.googleapis.com/v0/b/ship-form-template.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3c9c4000-80ef-4ed6-afa1-ed0097040efc"
+                            }
                             bodyLength={500}
                         />
                     </BgColor>
                     <BgMediaModal>
-                        <BgMediaHeading>Fire React Base</BgMediaHeading>
+                        <BgMediaHeading>Hero Section</BgMediaHeading>
                         <BgMediaBody>
                             <p>
-                                This is the homepage, customize it as you please, please. Dolore irure deserunt occaecat tempor. Dolore reprehenderit ut consequat anim officia amet. 
+                                This is the homepage hero section, customize it as you please, please. Dolore irure deserunt occaecat tempor. Dolore reprehenderit ut consequat anim officia amet. 
                                 Laboris officia ea eu elit consectetur sit dolor duis adipisicing reprehenderit reprehenderit deserunt reprehenderit quis. 
                                 Fugiat est reprehenderit quis labore aute anim in labore officia non ut aliquip mollit. In laboris amet amet occaecat. Laboris minim culpa cillum veniam adipisicing et deserunt sit.
                             </p>

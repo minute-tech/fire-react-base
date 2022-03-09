@@ -1,19 +1,3 @@
-// ** font constants and colors only used as defaults if nothing loaded
-// ** to import custom local font under globalStyle since I will always have to hardcode the font constant because not a default html font nor a Google font if importing from webfontloader library
-export const BTYPES = {
-    INVERTED: 'inverted',
-    TEXTED: 'texted'
-}
-
-export const PLACEHOLDER = {
-    FIRST_NAME: "Taylor",
-    LAST_NAME: "Doe",
-    EMAIL: "taylor_doe@email.com",
-    PHONE: "+1 (123) 456-7890",
-    MESSAGE: "Detail what you want to say here.",
-    PASSWORD: "*********************"
-}
-
 export const DEFAULT_SITE = {
     NAME: "Fire React Base",
     LOGO: {
@@ -23,7 +7,7 @@ export const DEFAULT_SITE = {
     EMAILS: {
         ADMIN: [
             "doug@camposjames.com",
-        ]
+        ],
     },
     THEME: {
         FONTS: {
@@ -44,12 +28,12 @@ export const DEFAULT_SITE = {
                     LIGHT_GREY: "lightgrey",
                     BLUE: "navy",
                     FONT: {
-                        HEADING: 'black',
-                        BODY: 'black',
-                        LINK: 'navy'
+                        HEADING: "black",
+                        BODY: "black",
+                        LINK: "navy",
                     },
-                    BACKGROUND: "white"
-                }
+                    BACKGROUND: "white",
+                },
             },
             DARK: {
                 VALUE: "dark",
@@ -64,18 +48,13 @@ export const DEFAULT_SITE = {
                     LIGHT_GREY: "lightgrey",
                     BLUE: "navy",
                     FONT: {
-                        HEADING: 'white',
-                        BODY: 'white',
-                        LINK: 'lightblue'
+                        HEADING: "white",
+                        BODY: "white",
+                        LINK: "lightblue",
                     },
-                    BACKGROUND: "#36454F"
-                }
-            }
+                    BACKGROUND: "#36454F",
+                },
+            },
         },
-    }
+    },
 };
-
-export const SCHEMES = {
-    LIGHT: "light",
-    DARK: "dark"
-}
