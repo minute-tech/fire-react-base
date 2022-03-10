@@ -24,7 +24,7 @@ service cloud.firestore {
             }
 
             // Anyone can read or list site docs as long as it isn't id of 'sensitive'
-            allow read, list: if isPublic();
+            allow read, list: if isPublic() || isAdmin();
             // Only admins or super admins can create and update
             allow create, update: if isAdmin();
             // Only super admins can delete it

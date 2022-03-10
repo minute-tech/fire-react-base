@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle }  from 'styled-components';
-import { lighten } from 'polished'
+import { rgba } from 'polished'
 import { FaSpinner } from 'react-icons/fa';
 import { keyframes } from 'styled-components';
 
@@ -226,7 +226,6 @@ export const Table = styled.table`
 
 export const Thead = styled.thead`
     background-color: ${props => props.theme.colors.primary};
-    color: white;
 `;
 
 export const Th = styled.th`
@@ -236,7 +235,7 @@ export const Th = styled.th`
 `;
 
 export const Tr = styled.tr`
-    /* empty rn */
+    color: ${props => props.theme.colors.font.body};
 `;
 
 export const Td = styled.td`
@@ -255,13 +254,14 @@ export const TColumnHead = styled.td`
 
 export const Tbody = styled.tbody`
     ${Td}:hover {
-        background-color: ${props => lighten(0.7, props.theme.colors.primary)};
-        border-color: ${props => lighten(0.7, props.theme.colors.primary)};
+        background-color: ${props => rgba(props.theme.colors.primary, 0.15)};
+        border-top: 2px solid ${props => props.theme.colors.primary};
+        border-bottom: 2px solid ${props => props.theme.colors.primary};
     }
 
     ${Tr}:hover {
-        background-color: ${props => lighten(0.9, props.theme.colors.primary)};
-        border-color: ${props => lighten(0.9, props.theme.colors.primary)};
+        border-top: 2px solid ${props => props.theme.colors.secondary};
+        border-bottom: 2px solid ${props => props.theme.colors.secondary};
     }
 `;
 
@@ -386,7 +386,7 @@ export const DevAlert = styled.div`
     font-family: ${props => props.theme?.fonts?.body || 'Arial'};
     letter-spacing: 2px;
 `
-export const ConfirmCard = styled.div`
+export const ModalCard = styled.div`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: white;
     border-radius: 5px;
@@ -394,7 +394,41 @@ export const ConfirmCard = styled.div`
     padding: 30px 60px;
     position: relative;
     z-index: 10;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
     @media (max-width: 1180px) {
         padding: 15px 30px;
     }
+
+    // CSS Snippet to ensure internal words like in the message field are still readable
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 `
+
+export const ModalContainer = styled.div`
+    position: absolute;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+`
+

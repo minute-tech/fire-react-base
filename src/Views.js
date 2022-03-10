@@ -22,6 +22,7 @@ import Profile from './components/pages/user/dashboard/Profile';
 // Admin
 import AdminDashboard from './components/pages/user/admin/AdminDashboard';
 import AdminMessages from './components/pages/user/admin/AdminMessages';
+import ManageUsers from './components/pages/user/admin/ManageUsers';
 
 class Views extends Component {
     render() {
@@ -166,6 +167,17 @@ class Views extends Component {
                         path="/admin/messages" 
                         element={
                             <AdminMessages
+                                site={this.props.site} 
+                                fireUser={this.props.fireUser} 
+                                readOnlyFlags={this.props.readOnlyFlags}
+                                user={this.props.user}
+                            />
+                        }
+                    />
+                    <Route 
+                        path="/admin/users" 
+                        element={
+                            <ManageUsers
                                 site={this.props.site} 
                                 fireUser={this.props.fireUser} 
                                 readOnlyFlags={this.props.readOnlyFlags}

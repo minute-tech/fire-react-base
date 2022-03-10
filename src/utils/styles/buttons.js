@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BTYPES } from '../constants';
+import { BTYPES, SCHEMES } from '../constants';
 import { BodyFont } from './text';
 
 // ** Do we need to set the type for each button? like ` type="button" `
@@ -7,7 +7,7 @@ export const Button = styled.button`
     ${BodyFont}
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;
     margin: 5px;
-    color: ${props => props.btype !== BTYPES.INVERTED ? (props.btype !== BTYPES.TEXTED ? "white" : "black") : (props.color ?? "black")};
+    color: ${props => props.btype !== BTYPES.INVERTED ? (props.btype !== BTYPES.TEXTED ? "white" : props.theme.colors.font.body) : (props.color ?? "black")};
     border: ${props => (props.btype !== BTYPES.INVERTED && props.btype === BTYPES.TEXTED) ? "transparent" : (props.color ?? "black")} solid 2px; 
     border-radius: ${props => !props.rounded ? "0px" : "20px"};
     background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? (props.color ?? "black") : "transparent"};
@@ -41,7 +41,7 @@ export const Button = styled.button`
         text-decoration: none;
         cursor: pointer;
         background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? "transparent" : (props.color ?? "black")};
-        color: ${props => (props.btype !== BTYPES.INVERTED) ? (props.btype !== BTYPES.TEXTED ? (props.color ?? "black") : !props.color.includes("light") ? "white" : "black") : "white"};
+        color: ${props => (props.btype !== BTYPES.INVERTED) ? (props.btype !== BTYPES.TEXTED ? (props.color ?? "black") : !props.color ? "white" : "black") : "white"};
         border: ${props => (props.color ?? "black")} solid 2px;
         a {
             color: ${props => props.btype !== BTYPES.INVERTED ? (props.color ?? "black") : "white"};

@@ -3,7 +3,7 @@ import { withTheme } from 'styled-components'
 import { BiMessageCheck } from "react-icons/bi"
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
-import { FaChevronLeft, FaPlus } from 'react-icons/fa'
+import { FaChevronLeft, FaPlus, FaUserAlt } from 'react-icons/fa'
 
 import { Button } from '../../../../utils/styles/buttons'
 import { Hr, Wrapper } from '../../../../utils/styles/misc'
@@ -114,6 +114,11 @@ class AdminDashboard extends Component {
                     </Button>
                 </Link>
                 <H1>Admin Dashboard</H1>
+                <LLink to={`/admin/users`}> 
+                    <Button color={this.props.theme.colors.primary}>
+                        Manage Users <FaUserAlt />
+                    </Button>
+                </LLink>
                 <LLink to={`/admin/messages`}> 
                     <Button color={this.props.theme.colors.green}>
                         View Contact Messages <BiMessageCheck size={18} />

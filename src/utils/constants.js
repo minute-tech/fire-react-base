@@ -23,7 +23,7 @@ export const DEFAULT_SITE = {
     EMAILS: {
         ADMIN: [
             "doug@camposjames.com",
-        ]
+        ],
     },
     THEME: {
         FONTS: {
@@ -44,12 +44,12 @@ export const DEFAULT_SITE = {
                     LIGHT_GREY: "lightgrey",
                     BLUE: "navy",
                     FONT: {
-                        HEADING: 'black',
-                        BODY: 'black',
-                        LINK: 'navy'
+                        HEADING: "black",
+                        BODY: "black",
+                        LINK: "navy",
                     },
-                    BACKGROUND: "white"
-                }
+                    BACKGROUND: "white",
+                },
             },
             DARK: {
                 VALUE: "dark",
@@ -64,15 +64,15 @@ export const DEFAULT_SITE = {
                     LIGHT_GREY: "lightgrey",
                     BLUE: "navy",
                     FONT: {
-                        HEADING: 'white',
-                        BODY: 'white',
-                        LINK: 'lightblue'
+                        HEADING: "white",
+                        BODY: "white",
+                        LINK: "lightblue",
                     },
-                    BACKGROUND: "#36454F"
-                }
-            }
+                    BACKGROUND: "#36454F",
+                },
+            },
         },
-    }
+    },
 };
 
 export const SCHEMES = {
