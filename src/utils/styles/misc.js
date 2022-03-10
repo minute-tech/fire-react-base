@@ -230,8 +230,9 @@ export const Thead = styled.thead`
 
 export const Th = styled.th`
     padding: 8px;
-    text-align: left;
     border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
+    /* border-right: 1px solid ${props => props.theme.colors.lightGrey}; */
+    text-align: center;
 `;
 
 export const Tr = styled.tr`
@@ -239,8 +240,8 @@ export const Tr = styled.tr`
 `;
 
 export const Td = styled.td`
+    text-align: center;
     padding: 8px;
-    text-align: left;
     border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
 `;
 
@@ -368,6 +369,10 @@ export const OverflowXAuto = styled.div`
     overflow-x: auto;
 `;
 
+export const Div = styled.div`
+    margin: ${props => props.margin ? props.margin : "0"};
+`;
+
 export const VerticalAlign = styled.span`
     text-align: center;
     position: relative;
@@ -387,8 +392,9 @@ export const DevAlert = styled.div`
     letter-spacing: 2px;
 `
 export const ModalCard = styled.div`
+    text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: white;
+    background-color: ${props => props.theme.colors.background};
     border-radius: 5px;
     transition: 0.3s;
     padding: 30px 60px;
@@ -429,6 +435,6 @@ export const ModalContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: ${props => rgba(props.theme.colors.grey, 0.7)}
 `
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BTYPES, SCHEMES } from '../constants';
+import { BTYPES } from '../constants';
 import { BodyFont } from './text';
 
 // ** Do we need to set the type for each button? like ` type="button" `

@@ -39,18 +39,20 @@ export default class App extends Component {
             readOnlyFlags: "",
             // Initially just pull the default site in case custom site not set yet
             site: {
+                unset: true,
                 name: DEFAULT_SITE.NAME,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
-                    url: DEFAULT_SITE.LOGO.URL
+                    url: DEFAULT_SITE.LOGO.URL,
                 },
                 emails: {
-                    admin: DEFAULT_SITE.EMAILS.ADMIN
+                    support: DEFAULT_SITE.EMAILS.SUPPORT,
+                    noreply: DEFAULT_SITE.EMAILS.NOREPLY,
                 },
                 theme: { 
                     fonts: {
                         heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                        body: DEFAULT_SITE.THEME.FONTS.BODY
+                        body: DEFAULT_SITE.THEME.FONTS.BODY,
                     },
                     schemes: {
                         light: {
@@ -92,8 +94,8 @@ export default class App extends Component {
                                 },
                                 background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
                             },
-                        }
-                    }
+                        },
+                    },
                 },
             },
             currentTheme: {
@@ -117,7 +119,7 @@ export default class App extends Component {
                 },
                 fonts: {
                     heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                    body: DEFAULT_SITE.THEME.FONTS.BODY
+                    body: DEFAULT_SITE.THEME.FONTS.BODY,
                 },
             }
         }
@@ -150,12 +152,13 @@ export default class App extends Component {
                 this.unsubUser = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
                     if(userDoc.exists()){
                         // User exists
-                        let userData = userDoc.data();
+                        const docWithMore = Object.assign({}, userDoc.data());
+                        docWithMore.id = userDoc.id;
                         this.setState({
-                            user: userData,
+                            user: docWithMore,
                             loadingUser: false,
                         });
-                        this.setCurrentTheme(userData);
+                        this.setCurrentTheme(docWithMore);
                     } else {
                         console.log("No user exists.")
                         this.setState({

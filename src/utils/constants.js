@@ -21,9 +21,11 @@ export const DEFAULT_SITE = {
         URL: "https://firebasestorage.googleapis.com/v0/b/fire-react-base.appspot.com/o/public%2Flogos%2Flogo192.png?alt=media&token=a3f0ea8f-b612-48ce-b452-d58fe61ec88a",
     },
     EMAILS: {
-        ADMIN: [
-            "doug@camposjames.com",
+        MESSAGES: [
+            "hi@camposjames.com",
         ],
+        SUPPORT: "help@camposjames.com",
+        NOREPLY: "noreply@camposjames.com",
     },
     THEME: {
         FONTS: {

@@ -39,6 +39,7 @@ class ContactForm extends Component {
                 this.setState({
                     messageSubmitted: true
                 })
+                toast.success(`Message submitted successfully, thanks!`);
                 resetForm();
             }).catch(error => {
                 toast.error(`Error submitting message: ${error}`);
@@ -53,7 +54,7 @@ class ContactForm extends Component {
                 <>
                 <H1>Contact Form</H1>
                 <Centered>
-                    <H3 color={this.props.theme.colors.green}><FaCheck /> Message submitted successfully, thanks!</H3>
+                    <H3 color={this.props.theme.colors.green}><FaCheck /> Submitted.</H3>
                 </Centered>
                 </>
             )

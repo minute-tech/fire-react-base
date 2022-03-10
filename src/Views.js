@@ -21,7 +21,7 @@ import Dashboard from './components/pages/user/dashboard/Dashboard';
 import Profile from './components/pages/user/dashboard/Profile';
 // Admin
 import AdminDashboard from './components/pages/user/admin/AdminDashboard';
-import AdminMessages from './components/pages/user/admin/AdminMessages';
+import ManageMessages from './components/pages/user/admin/ManageMessages';
 import ManageUsers from './components/pages/user/admin/ManageUsers';
 
 class Views extends Component {
@@ -166,7 +166,7 @@ class Views extends Component {
                     <Route 
                         path="/admin/messages" 
                         element={
-                            <AdminMessages
+                            <ManageMessages
                                 site={this.props.site} 
                                 fireUser={this.props.fireUser} 
                                 readOnlyFlags={this.props.readOnlyFlags}

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { AiOutlineReload } from 'react-icons/ai';
 
 import { Button } from '../../../utils/styles/buttons';
 import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
-import { Body, H2, LLink } from '../../../utils/styles/text';
+import { Body, H2 } from '../../../utils/styles/text';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class ErrorBoundary extends React.Component {
                 </Body>
                 <Hr/>
                 <Centered margin="25px 0">
-                    <LLink to="/"><Button>Return to home page</Button></LLink>
+                    <Button onClick={() => window.location.reload()}><AiOutlineReload /> Reload page</Button>
                 </Centered>
             </Wrapper>
           </div>

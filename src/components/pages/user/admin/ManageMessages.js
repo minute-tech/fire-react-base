@@ -15,7 +15,7 @@ import { Col, Grid, Row } from 'react-flexbox-grid';
 import { BTYPES } from '../../../../utils/constants';
 
 
-class AdminMessages extends Component {
+class ManageMessages extends Component {
     constructor(props) {
         super(props)
     
@@ -31,12 +31,13 @@ class AdminMessages extends Component {
             shownMessages: []
         }
     }
+    
     componentDidMount = async () =>{
         this.unsubCounts = onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
             if(countsDoc.exists()){
-                countsDoc = countsDoc.data();
+                let countsData = countsDoc.data();
                 this.setState({
-                    messageCount: countsDoc.messages,
+                    messageCount: countsData.messages,
                     loadingCounts: false
                 });
             } else {
@@ -60,8 +61,10 @@ class AdminMessages extends Component {
         // Get content from each doc on this page 
         let messages = [];
         let shownMessages = []
-        pageDocSnaps.forEach((doc, i, array) => {
-            messages.push(doc.data());
+        pageDocSnaps.forEach((doc) => {
+            const docWithMore = Object.assign({}, doc.data());
+            docWithMore.id = doc.id;
+            messages.push(docWithMore);
             shownMessages.push(false)
         });
 
@@ -100,8 +103,10 @@ class AdminMessages extends Component {
             // Set data in docs to state
             let messages = [];
             let shownMessages = []
-            pageDocSnaps.forEach((doc, i, array) => {
-                messages.push(doc.data());
+            pageDocSnaps.forEach((doc) => {
+                const docWithMore = Object.assign({}, doc.data());
+                docWithMore.id = doc.id;
+                messages.push(docWithMore);
                 shownMessages.push(false)
             });
 
@@ -135,8 +140,10 @@ class AdminMessages extends Component {
             // Set data in docs to state
             let messages = [];
             let shownMessages = []
-            pageDocSnaps.forEach((doc, i, array) => {
-                messages.push(doc.data());
+            pageDocSnaps.forEach((doc) => {
+                const docWithMore = Object.assign({}, doc.data());
+                docWithMore.id = doc.id;
+                messages.push(docWithMore);
                 shownMessages.push(false)
             });
 
@@ -225,7 +232,7 @@ class AdminMessages extends Component {
                                                                     size="sm" 
                                                                     onClick={() => this.toggleMessage(false, i)}
                                                                 >
-                                                                    Close <CgClose />
+                                                                   <CgClose /> Close 
                                                                 </Button>
                                                             </ModalCard>
                                                         </ModalContainer>
@@ -271,5 +278,4 @@ class AdminMessages extends Component {
     }
 }
 
-
-export default withTheme(AdminMessages)
+export default withTheme(ManageMessages)

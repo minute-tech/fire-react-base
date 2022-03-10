@@ -25,12 +25,14 @@ class AdminDashboard extends Component {
             console.log("Public doc doesn't exist, go ahead and create default!");
             await setDoc(publicRef, {
                 name: DEFAULT_SITE.NAME,
+                projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     url: DEFAULT_SITE.LOGO.URL
                 },
                 emails: {
-                    admin: DEFAULT_SITE.EMAILS.ADMIN
+                    support: DEFAULT_SITE.EMAILS.SUPPORT,
+                    noreply: DEFAULT_SITE.EMAILS.NOREPLY,
                 },
                 theme: { 
                     schemes: {
@@ -98,6 +100,18 @@ class AdminDashboard extends Component {
                 console.error("Error adding counts document: ", error);
                 toast.error(`Error setting counts doc: ${error}`);
             });
+
+            await setDoc(doc(firestore, "site", "sensitive"), {
+                emails: {
+                    messages: DEFAULT_SITE.EMAILS.MESSAGES
+                }
+            }).then(() => {
+                console.log("Successful write of sensitive doc to Firestore.");
+                toast.success(`Created sensitive doc.`);
+            }).catch((error) => {
+                console.error("Error adding sensitive document: ", error);
+                toast.error(`Error setting sensitive doc: ${error}`);
+            });
         }
     }
 
@@ -121,11 +135,11 @@ class AdminDashboard extends Component {
                 </LLink>
                 <LLink to={`/admin/messages`}> 
                     <Button color={this.props.theme.colors.green}>
-                        View Contact Messages <BiMessageCheck size={18} />
+                        Manage Messages <BiMessageCheck size={18} />
                     </Button>
                 </LLink>
                 <Hr />
-                {this.props.site.name !== DEFAULT_SITE.NAME && (
+                {this.props.site.unset && (
                     <Button color={this.props.theme.colors.yellow} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>
                         Create Default Site <FaPlus />
                     </Button>
