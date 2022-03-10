@@ -1,21 +1,22 @@
 import React, { Component } from 'react';
 import { BrandContainer, NavHoverText, NavLinks, NavLLink, NavLogo, NavTitle } from '../../utils/styles/header';
 import { withTheme } from 'styled-components'
+import { LLink } from '../../utils/styles/text';
 
 class Header extends Component {
   render() {
     return (
         <header>
             <BrandContainer>
-                <NavLogo 
-                    width={this.props.site.logo.width} 
-                    margin="0" 
-                    // src={this.props.site.logo.url || require("../../assets/images/logos/logo.png")} 
-                    src={require("../../assets/images/logos/logo.png")} 
-                />
-                <NavLLink to='/'>
-                    <NavTitle>{this.props?.site?.name ?? ""}</NavTitle>
-                </NavLLink>
+                <LLink to='/'>
+                    <NavLogo 
+                        width={this.props.site.logo.width} 
+                        margin="0" 
+                        src={this.props.site.logo.url || require("../../assets/images/logos/logo.png")} 
+                        // src={require("../../assets/images/logos/logo.png")} 
+                    />
+                    {this.props.site.logo.showTitle && (<NavTitle>{this.props?.site?.name ?? ""}</NavTitle>)}
+                </LLink>
             </BrandContainer>
             
             <NavLinks>

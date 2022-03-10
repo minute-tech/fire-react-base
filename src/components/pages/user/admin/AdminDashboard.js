@@ -14,24 +14,30 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 
 class AdminDashboard extends Component {
-    createDefaultCustomSite = async () => {
+    createCustomSite = async () => {
         const publicRef = doc(firestore, "site", "public");
         const publicDocSnap = await getDoc(publicRef);
 
         if (publicDocSnap.exists()) {
-            toast.error(`Public doc exists, please delete existing store on Firebase console to recreate.`);
-            console.log("Public doc exists, please delete existing store on Firebase console to recreate.");
+            toast.error(`Public site doc exists, please delete existing site on Firebase console to recreate.`);
+            console.log("Public site doc exists, please delete existing site on Firebase console to recreate.");
         } else {
             console.log("Public doc doesn't exist, go ahead and create default!");
             await setDoc(publicRef, {
-                name: DEFAULT_SITE.NAME,
-                projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
+                name: "Clik Clak",
+                // projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
-                    width: DEFAULT_SITE.LOGO.WIDTH,
-                    url: DEFAULT_SITE.LOGO.URL
+                    width: "400px",
+                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Flogo.png?alt=media&token=d6ba49f1-057d-4ab4-8bb2-ef0588327ce0",
+                    showTitle: false,
+                },
+                hero: {
+                    banners: [
+                        "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Fbanner.png?alt=media&token=ac52851d-0ee8-4f2e-b1c3-d169daff6545"
+                    ]
                 },
                 emails: {
-                    support: DEFAULT_SITE.EMAILS.SUPPORT,
+                    support: "help@clikclak.com",
                     noreply: DEFAULT_SITE.EMAILS.NOREPLY,
                 },
                 theme: { 
@@ -39,8 +45,8 @@ class AdminDashboard extends Component {
                         light: {
                             value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
                             colors: {
-                                primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-                                secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+                                primary: "#470A68",
+                                secondary: "#000",
                                 tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
                                 red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
                                 green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
@@ -53,14 +59,14 @@ class AdminDashboard extends Component {
                                     body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
                                     link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
                                 },
-                                background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+                                background: "#FAF6FF",
                             },
                         },
                         dark: {
                             value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
                             colors: {
-                                primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
-                                secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
+                                primary: "#470A68",
+                                secondary: "#000",
                                 tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
                                 red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
                                 green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
@@ -89,21 +95,10 @@ class AdminDashboard extends Component {
                 console.error("Error adding public document: ", error);
                 toast.error(`Error setting public doc: ${error}`);
             });
-    
-            await setDoc(doc(firestore, "site", "counts"), {
-                messages: 0,
-                users: 0
-            }).then(() => {
-                console.log("Successful write of counts doc to Firestore.");
-                toast.success(`Created counts doc.`);
-            }).catch((error) => {
-                console.error("Error adding counts document: ", error);
-                toast.error(`Error setting counts doc: ${error}`);
-            });
 
             await setDoc(doc(firestore, "site", "sensitive"), {
                 emails: {
-                    messages: DEFAULT_SITE.EMAILS.MESSAGES
+                    messages: ["douglasrcjames@gmail.com"]
                 }
             }).then(() => {
                 console.log("Successful write of sensitive doc to Firestore.");
@@ -139,9 +134,9 @@ class AdminDashboard extends Component {
                     </Button>
                 </LLink>
                 <Hr />
-                {this.props.site.unset && (
-                    <Button color={this.props.theme.colors.yellow} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>
-                        Create Default Site <FaPlus />
+                {this.props.site.name === DEFAULT_SITE.NAME && (
+                    <Button color={this.props.theme.colors.yellow} btype={BTYPES.INVERTED} onClick={() => this.createCustomSite()}>
+                        Create Custom Site <FaPlus />
                     </Button>
                 )}
                 

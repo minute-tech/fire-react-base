@@ -1,5 +1,29 @@
 {
   "projects": {
-    "default": "fire-react-base"
+    "default": "fire-react-base",
+    "test": "test-fire-react-base",
+    "live": "fire-react-base"
+  },
+  "targets": {
+    "fire-react-base": {
+      "hosting": {
+        "draft": [
+          "draft1-clikclak"
+        ],
+        "prod": [
+          "fire-react-base"
+        ]
+      }
+    },
+    "test-fire-react-base": {
+      "hosting": {
+        "prod": [
+          "test-fire-react-base"
+        ],
+        "draft": [
+          "draft-test-fire-react-base"
+        ]
+      }
+    }
   }
 }

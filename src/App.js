@@ -44,6 +44,10 @@ export default class App extends Component {
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     url: DEFAULT_SITE.LOGO.URL,
+                    showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+                },
+                hero: {
+                    banners: DEFAULT_SITE.HERO.BANNERS,
                 },
                 emails: {
                     support: DEFAULT_SITE.EMAILS.SUPPORT,
@@ -250,7 +254,8 @@ export default class App extends Component {
                 isDarkScheme = true
             }
         }
-        console.log("isDarkTheme: " + isDarkScheme)
+        
+        // TODO: for some reason these are always staying to the default colors from the constructor and not being grabbed from the site public doc...
         themeObject = { 
             value: isDarkScheme ? this.state.site.theme.schemes.dark.value : this.state.site.theme.schemes.light.value,
             colors: {
@@ -275,6 +280,8 @@ export default class App extends Component {
                 body: this.state.site.theme.fonts.body
             },
         }
+        console.log("themeObject: ")
+        console.log(themeObject)
 
         this.setState({
             currentTheme: themeObject

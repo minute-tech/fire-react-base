@@ -6,6 +6,7 @@ export const BrandContainer = styled.div`
     width: 100%;
     margin: auto;
     text-align: center;
+    padding: 15px 0;
     /* margin: 15px 0; */
 `;
 

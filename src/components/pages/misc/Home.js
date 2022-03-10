@@ -31,9 +31,9 @@ class Home extends Component {
                             alt="hero background" 
                             // Honestly the below snippet somehow works so the little "image not found" icon with the alt tag doesn't pop up in the upper left of the banner bgColor, so don't remove the below til we find a better solution lol
                             src={
-                                "https://firebasestorage.googleapis.com/v0/b/fire-react-base.appspot.com/o/public%2Fbackgrounds%2FDSC_0047.JPG?alt=media&token=9e53f2b2-25b7-4b7d-a85c-84ecf97fa1eb" 
-                                || 
-                                "https://firebasestorage.googleapis.com/v0/b/ship-form-template.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3c9c4000-80ef-4ed6-afa1-ed0097040efc"
+                                this.props.site?.hero?.banners[0]
+                                ?? 
+                                "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3f10701d-498c-49fe-8286-0596d617c621"
                             }
                             bodyLength={500}
                         />

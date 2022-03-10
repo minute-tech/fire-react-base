@@ -60,9 +60,11 @@ class UserLogin extends Component {
                             toast.error(`Error: ${errorMessage}`);
                         }
                         
+                        // Clean up
                         this.setState({ submittingLoginUser: false });
                         window.recaptchaVerifier.clear();
                         this.props.userLoggingIn(false);
+                        toast.dismiss(recaptchaToastId);
                     });
             },
             'expired-callback': () => {
