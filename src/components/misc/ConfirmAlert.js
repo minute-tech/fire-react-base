@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { withTheme } from 'styled-components';
 import { BTYPES } from '../../utils/constants';
 import { Button } from '../../utils/styles/buttons'
 import { ModalCard } from '../../utils/styles/misc';
-import { H2 } from '../../utils/styles/text';
+import { Body, H2 } from '../../utils/styles/text';
 
 class ConfirmAlert extends Component {
     yesClicked = () => {
@@ -19,16 +20,21 @@ class ConfirmAlert extends Component {
 
     render() {
         return (
-            <ModalCard>
-                <H2>{this.props.headingText}</H2>
-                {this.props.bodyComponent}
-                <Button
+            // ** I need to pass the theme to each of these components separately because it is undefined in the ConfirmAlert library
+            <ModalCard theme={this.props.theme}>
+                <H2 theme={this.props.theme}>{this.props.headingText}</H2>
+                <Body theme={this.props.theme}>{this.props.body}</Body>
+                <Button 
+                    size="sm"
+                    theme={this.props.theme}
                     color={this.props.theme.colors.green}
                     onClick={() => this.yesClicked()}
                 >
                     {this.props.yesText}
                 </Button>
                 <Button
+                    size="sm"
+                    theme={this.props.theme}
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}
                     onClick={() => this.noClicked()}
@@ -40,4 +46,4 @@ class ConfirmAlert extends Component {
     }
 }
 
-export default ConfirmAlert;
+export default withTheme(ConfirmAlert);

@@ -9,13 +9,14 @@ import { withTheme } from 'styled-components';
 import { withRouter } from '../../../../utils/hocs';
 import { auth } from "../../../../Fire.js";
 import { signInSchema } from "../../../../utils/formSchemas"
-import { Centered, Hr, LgContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
-import { ALink, Body, H1, Label, LLink, SLink } from '../../../../utils/styles/text.js';
+import { LgContainer, ModalCard, ModalContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
+import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 import { FField, Input } from '../../../../utils/styles/forms.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import FormError from '../../../misc/FormError';
 import { PLACEHOLDER } from '../../../../utils/constants';
 import { Helmet } from 'react-helmet-async';
+import { CgClose } from 'react-icons/cg';
 
 class UserLogin extends Component {
     constructor(props) {
@@ -81,7 +82,8 @@ class UserLogin extends Component {
 
     toggleForgot = () => {
         this.setState({
-            forgotExpanded: !this.state.forgotExpanded
+            forgotExpanded: !this.state.forgotExpanded,
+            forgotEmail: ""
         })
     }
 
@@ -202,20 +204,29 @@ class UserLogin extends Component {
                     </Formik>
 
                     {this.state.forgotExpanded && (
-                        <Centered>
-                            <Hr/>
-                            <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
-                            <Input 
-                                type="text"
-                                placeholder={PLACEHOLDER.EMAIL}
-                                onChange={this.handleChange} 
-                                value={this.state.forgotEmail}
-                            />
-                            <Button color={this.props.theme.colors.green} type="button" onClick={() => this.sendPasswordReset()}>
-                                Send link
-                            </Button>
-                            <Hr/>
-                        </Centered>
+                        <ModalContainer onClick={() => this.toggleForgot()}>
+                            <ModalCard onClick={(e) => e.stopPropagation()}>
+                                <H2>Forgot Password</H2>
+                                <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
+                                <Input 
+                                    type="text"
+                                    placeholder={PLACEHOLDER.EMAIL}
+                                    onChange={this.handleChange} 
+                                    value={this.state.forgotEmail}
+                                />
+                                <Button color={this.props.theme.colors.green} type="button" onClick={() => this.sendPasswordReset()}>
+                                    Send password reset link
+                                </Button>
+                                <Button 
+                                    size="sm" 
+                                    onClick={() => this.toggleForgot()}
+                                >
+                                    <CgClose /> Cancel 
+                                </Button>
+                            </ModalCard>
+                        </ModalContainer>
+
+                       
                     )}
                 </LgContainer>
             </Wrapper>

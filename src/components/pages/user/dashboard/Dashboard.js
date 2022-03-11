@@ -58,11 +58,11 @@ class Dashboard extends Component {
                                         theme={this.props.theme}
                                         onClose={onClose} 
                                         headingText={`Log out?`}
-                                        bodyComponent={<Body>Are you sure you want to log out?</Body>}
+                                        body={<Body theme={this.props.theme}>Are you sure you want to log out?</Body>}
                                         yesFunc={this.logOut} 
                                         yesText={`Yes`} 
                                         noFunc={function () {}} 
-                                        noText={`No`}   
+                                        noText={`Cancel`}   
                                     />
                                 );
                             }

@@ -10,7 +10,7 @@ export const PLACEHOLDER = {
     LAST_NAME: "Doe",
     EMAIL: "taylor_doe@email.com",
     PHONE: "+1 (123) 456-7890",
-    MESSAGE: "Detail what you want to say here.",
+    BODY: "Detail what you want to say here.",
     PASSWORD: "*********************"
 }
 
@@ -22,9 +22,15 @@ export const DEFAULT_SITE = {
         SHOW_TITLE: true,
     },
     HERO: {
-        BANNERS: [
-            "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2FDSC_0047.JPG?alt=media&token=8d4ff53c-11c2-4849-9479-6cd091598635",
-        ],
+        HEADING: "Hero Section",
+        BODY: `This is the homepage hero section, customize it as you please, please. Dolore irure deserunt occaecat tempor. 
+            Dolore reprehenderit ut consequat anim officia amet. Laboris officia ea eu elit consectetur sit dolor duis adipisicing reprehenderit reprehenderit deserunt reprehenderit quis. 
+            Fugiat est reprehenderit quis labore aute anim in labore officia non ut aliquip mollit. In laboris amet amet occaecat. Laboris minim culpa cillum veniam adipisicing et deserunt sit.`,
+        CTA: {
+            LINK: "/about",
+            TEXT: "Call to Action",
+        },
+        BANNER: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2FDSC_0047.JPG?alt=media&token=8d4ff53c-11c2-4849-9479-6cd091598635",
     },
     EMAILS: {
         MESSAGES: [
@@ -42,7 +48,7 @@ export const DEFAULT_SITE = {
             LIGHT: {
                 VALUE: "light",
                 COLORS: {
-                    PRIMARY: "#470A68",
+                    PRIMARY: "dodgerblue",
                     SECONDARY: "hotpink",
                     TERTIARY: "tomato",
                     RED: "firebrick",
@@ -62,7 +68,7 @@ export const DEFAULT_SITE = {
             DARK: {
                 VALUE: "dark",
                 COLORS: {
-                    PRIMARY: "#470A68",
+                    PRIMARY: "dodgerblue",
                     SECONDARY: "hotpink",
                     TERTIARY: "tomato",
                     RED: "firebrick",

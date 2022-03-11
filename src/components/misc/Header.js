@@ -12,7 +12,7 @@ class Header extends Component {
                     <NavLogo 
                         width={this.props.site.logo.width} 
                         margin="0" 
-                        src={this.props.site.logo.url || require("../../assets/images/logos/logo.png")} 
+                        src={this.props.site.logo.url} 
                         // src={require("../../assets/images/logos/logo.png")} 
                     />
                     {this.props.site.logo.showTitle && (<NavTitle>{this.props?.site?.name ?? ""}</NavTitle>)}
@@ -22,13 +22,13 @@ class Header extends Component {
             <NavLinks>
                 <NavLLink to='/'><NavHoverText>Home</NavHoverText></NavLLink>
                 <NavLLink to='/about'><NavHoverText>About</NavHoverText></NavLLink>
-                {!this.props.fireUser && (
+                {!this.props.user && (
                     <>
                         <NavLLink to='/login'><NavHoverText>Login</NavHoverText></NavLLink>
                         <NavLLink to='/register'><NavHoverText>Register</NavHoverText></NavLLink>
                     </>
                 )}
-                {this.props.fireUser && (
+                {this.props.user && (
                     <>
                         <NavLLink to='/dashboard'><NavHoverText>Dashboard</NavHoverText></NavLLink>
                     </>

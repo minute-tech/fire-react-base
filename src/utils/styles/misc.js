@@ -204,14 +204,17 @@ export const LgWidth = styled.div`
     }
 `;
 
-// Images //
-export const ResponsiveImg = styled.img`
+// Images (always responsive) //
+export const Img = styled.img`
     width: 100%;
+    margin: ${props => props.margin ? props.margin : "0"};
     height: auto;
-    max-width: ${props => props.size || "100px"};
+    border-radius: ${props => props.rounded ? "50%" : "0"};
+    float: ${props => props.float || "none"};
+    max-width: ${props => props.width || "100px"};
 `;
 
-export const InlineImg = styled.span`
+export const InlineIcon = styled.span`
     font-size: ${props => props.size || "1 em"};
     display: ${props => props.display || "inline"};
     margin: ${props => props.margin || "0"};
@@ -233,6 +236,7 @@ export const Th = styled.th`
     border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
     /* border-right: 1px solid ${props => props.theme.colors.lightGrey}; */
     text-align: center;
+    color: white;
 `;
 
 export const Tr = styled.tr`
@@ -394,7 +398,7 @@ export const DevAlert = styled.div`
 export const ModalCard = styled.div`
     text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: ${props => props.theme.colors.background};
+    background-color: ${props => props.theme?.colors?.background ?? "white"};
     border-radius: 5px;
     transition: 0.3s;
     padding: 30px 60px;

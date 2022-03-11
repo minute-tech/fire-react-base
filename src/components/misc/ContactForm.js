@@ -31,7 +31,7 @@ class ContactForm extends Component {
             addDoc(collection(firestore, "messages"), {
                 name: values.name,
                 email: values.email,
-                message: values.message,
+                body: values.body,
                 timestamp: Date.now(),
             }).then((doc) => {
                 console.log("doc: ");
@@ -66,7 +66,7 @@ class ContactForm extends Component {
                         initialValues={{
                             name: "",
                             email: "",
-                            message: "",
+                            body: "",
                             policyAccept: false,
                         }}
                         onSubmit={(values, actions) => {
@@ -129,17 +129,17 @@ class ContactForm extends Component {
                                                 component="textarea"
                                                 required
                                                 onChange={props.handleChange}
-                                                placeholder={PLACEHOLDER.MESSAGE}
-                                                onKeyUp={() => this.setState({ errors: { message: false } })}
-                                                onClick={() => this.setState({ errors: { message: false } })}
-                                                name="message"
-                                                value={props.values.message || ''}
-                                                error={ ((props.errors.message && props.touched.message) || this.state?.errors?.message) ? 1 : 0 }
+                                                placeholder={PLACEHOLDER.BODY}
+                                                onKeyUp={() => this.setState({ errors: { body: false } })}
+                                                onClick={() => this.setState({ errors: { body: false } })}
+                                                name="body"
+                                                value={props.values.body || ''}
+                                                error={ ((props.errors.body && props.touched.body) || this.state?.errors?.body) ? 1 : 0 }
                                             />
                                             <FormError
-                                                yupError={props.errors.message}
-                                                formikTouched={props.touched.message}
-                                                stateError={this.state?.errors?.message}
+                                                yupError={props.errors.body}
+                                                formikTouched={props.touched.body}
+                                                stateError={this.state?.errors?.body}
                                             /> 
                                         </Col>
                                     </Row>

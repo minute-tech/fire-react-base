@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Wrapper } from '../../../utils/styles/misc';
-import { Body, H1 } from '../../../utils/styles/text';
+import { withTheme } from 'styled-components';
+import { Hr, Img, Wrapper } from '../../../utils/styles/misc';
+import { ALink, Body, H1 } from '../../../utils/styles/text';
+import ContactForm from '../../misc/ContactForm';
 
-export default class About extends Component {
+class About extends Component {
   render() {
     return (
         <Wrapper>
@@ -12,11 +14,48 @@ export default class About extends Component {
             </Helmet>
             <H1>About</H1>
             <Body>
-                Culpa Lorem do nostrud nostrud in id laborum non do consectetur. Lorem ex aute velit consectetur quis aliquip adipisicing. Amet commodo fugiat id nisi proident. 
-                In id proident magna nulla reprehenderit nulla et minim laboris culpa consequat ullamco. Exercitation et pariatur dolore ullamco est non irure ex occaecat sunt esse cupidatat exercitation. 
-                Ullamco duis veniam magna reprehenderit deserunt proident nulla esse Lorem.
+                Fire React Base was created by <ALink href="https://www.douglasrcjames.com" target="_blank" rel="noopener">Douglas R.C. James</ALink> as a clean slate for all future projects. 
+                Includes user authentication, admin roles, contact form, database, server side functions, and more! 
+                To demonstrate how to insert an image with this template, I am going to place a pic of my cat into this paragraph like you might see on an about page!
             </Body>
+            <Img 
+                width="150px" 
+                margin="15px"
+                rounded 
+                float="right" 
+                src={require("../../../assets/images/misc/cat.png")}
+                alt={"doug's cat"}
+            />
+            <Body>
+                Adipisicing labore consectetur pariatur consectetur ullamco voluptate fugiat nostrud eiusmod officia do. Non sint sint eu ullamco fugiat consequat. 
+                Eu ex qui et est nostrud exercitation dolor non nostrud exercitation ad Lorem. Adipisicing cillum irure laboris anim duis in qui excepteur proident. 
+                Excepteur eu proident duis consectetur voluptate nulla adipisicing reprehenderit cupidatat labore. Id excepteur ut sint ullamco enim occaecat pariatur tempor laborum.
+            </Body>
+            <Body>
+                Fugiat fugiat reprehenderit eiusmod nostrud in qui dolor aute anim duis ullamco deserunt ipsum. Elit Lorem enim sint sit eiusmod. 
+                Dolor cillum Lorem occaecat nulla tempor veniam. Quis eiusmod dolore incididunt laboris aliqua quis ea do. Do adipisicing laborum nostrud ea consectetur. 
+                Tempor aliquip labore sit consectetur aliquip voluptate aliqua exercitation duis duis. Elit minim enim dolor consectetur sit minim sit mollit officia cupidatat.
+            </Body>
+            <Body>
+                Eu ex qui et est nostrud exercitation dolor non nostrud exercitation ad Lorem. Adipisicing cillum irure laboris anim duis in qui excepteur proident. 
+                Fugiat fugiat reprehenderit eiusmod nostrud in qui dolor aute anim duis ullamco deserunt ipsum. Elit Lorem enim sint sit eiusmod. 
+                Dolor cillum Lorem occaecat nulla tempor veniam. Quis eiusmod dolore incididunt laboris aliqua quis ea do. Do adipisicing laborum nostrud ea consectetur. 
+                Tempor aliquip labore sit consectetur aliquip voluptate aliqua exercitation duis duis. Elit minim enim dolor consectetur sit minim sit mollit officia cupidatat.
+                Dolor cillum Lorem occaecat... Dolor cillum Lorem occaecat ....
+            </Body>
+            
+            <Body>
+                In occaecat occaecat nulla culpa dolor sit ipsum id id laborum aute deserunt. 
+                Quis ipsum nostrud cupidatat magna eiusmod aliqua eiusmod reprehenderit aute reprehenderit officia enim. Aute Lorem culpa mollit anim sit.
+                Mollit irure exercitation reprehenderit voluptate sunt et. Officia aliquip et cillum elit occaecat pariatur et incididunt tempor. Voluptate laboris sit officia mollit irure.
+                Cupidatat laborum ex qui officia duis mollit magna sunt nulla quis incididunt non ea. Amet aliquip nostrud voluptate ex eiusmod. Cupidatat pariatur eu reprehenderit sunt nisi. 
+                Ex est ea aliquip consequat adipisicing est. Lorem do irure excepteur est elit culpa deserunt cupidatat esse. Duis aliqua do dolor Lorem duis nostrud cupidatat ea aute excepteur esse. Eiusmod adipisicing dolor ullamco id.
+            </Body>
+            <Hr/>
+            <ContactForm />
         </Wrapper>
     );
   }
 }
+
+export default withTheme(About)

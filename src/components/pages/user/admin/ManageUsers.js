@@ -14,6 +14,8 @@ import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
 import { BTYPES } from '../../../../utils/constants';
+import { confirmAlert } from 'react-confirm-alert';
+import ConfirmAlert from '../../../misc/ConfirmAlert';
 
 class ManageUsers extends Component {
     constructor(props) {
@@ -229,7 +231,23 @@ class ManageUsers extends Component {
                     color={this.props.theme.colors.yellow}
                     btype={BTYPES.INVERTED}
                     size="sm"
-                    onClick={() => this.submitNewAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)}         
+                    onClick={() =>         
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                                return (
+                                    <ConfirmAlert
+                                        theme={this.props.theme}
+                                        onClose={onClose} 
+                                        headingText={`Add Admin`}
+                                        body={`Are you sure you want to upgrade <${user.email}> to be an Admin?`}
+                                        yesFunc={() => this.submitNewAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
+                                        yesText={`Yes`} 
+                                        noFunc={function () {}} 
+                                        noText={`No`}   
+                                    />
+                                );
+                            }
+                        })}       
                 >
                     Set as Admin <FaShieldAlt />
                 </Button> 
@@ -249,7 +267,23 @@ class ManageUsers extends Component {
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}
                     size="sm"
-                    onClick={() => this.submitNewSuperAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)}         
+                    onClick={() =>         
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                                return (
+                                    <ConfirmAlert
+                                        theme={this.props.theme}
+                                        onClose={onClose} 
+                                        headingText={`Add Super Admin`}
+                                        body={`Are you sure you want to upgrade <${user.email}> to be a SUPER Admin?`}
+                                        yesFunc={() => this.submitNewSuperAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
+                                        yesText={`Yes`}
+                                        noFunc={function () {}} 
+                                        noText={`Cancel`}   
+                                    />
+                                );
+                            }
+                        })}        
                 >
                     Set as Super Admin <FaShieldVirus />
                 </Button> 

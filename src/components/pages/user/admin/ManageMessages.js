@@ -227,7 +227,7 @@ class ManageMessages extends Component {
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{message.name}</Label> <ALink href={`mailto:${message.email}`}>&lt;{message.email}&gt;</ALink>
                                                                 <Body margin="0" size="sm"><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
-                                                                <Body>{message.message}</Body>
+                                                                <Body>{message.body}</Body>
                                                                 <Button 
                                                                     size="sm" 
                                                                     onClick={() => this.toggleMessage(false, i)}

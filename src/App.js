@@ -32,6 +32,7 @@ export default class App extends Component {
             // Usually only a few loading/submitting flags per page anyways. Con is long var names lol.
             loadingFireUser: true,
             loadingUser: true,
+            loadingSite: true,
             loadingReadOnlyFlags: true,
             isLoggingIn: false,
             fireUser: "",
@@ -47,7 +48,13 @@ export default class App extends Component {
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 hero: {
-                    banners: DEFAULT_SITE.HERO.BANNERS,
+                    heading: DEFAULT_SITE.HERO.HEADING,
+                    body: DEFAULT_SITE.HERO.BODY,
+                    cta: {
+                        link: DEFAULT_SITE.HERO.CTA.LINK,
+                        text: DEFAULT_SITE.HERO.CTA.TEXT,
+                    },                    
+                    banner: DEFAULT_SITE.HERO.BANNER,
                 },
                 emails: {
                     support: DEFAULT_SITE.EMAILS.SUPPORT,
@@ -240,6 +247,7 @@ export default class App extends Component {
 
     // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
     setCurrentTheme = (user = "") => {
+        console.log("setting current theme...")
         let themeObject = {};
         let isDarkScheme = false;
 
@@ -321,7 +329,7 @@ export default class App extends Component {
                                 <GlobalStyle /> 
                                 <Header 
                                     site={this.state.site}
-                                    fireUser={this.state.fireUser} 
+                                    user={this.state.user} 
                                 />
                                 <FirebaseAnalytics />
                                 <Views 

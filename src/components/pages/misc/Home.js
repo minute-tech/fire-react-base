@@ -8,8 +8,6 @@ import { BTYPES } from '../../../utils/constants';
 import { Button } from '../../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../../utils/styles/text';
-import ContactForm from '../../misc/ContactForm';
-
 
 class Home extends Component {
     sendAlert = (alertType) => {
@@ -31,25 +29,22 @@ class Home extends Component {
                             alt="hero background" 
                             // Honestly the below snippet somehow works so the little "image not found" icon with the alt tag doesn't pop up in the upper left of the banner bgColor, so don't remove the below til we find a better solution lol
                             src={
-                                this.props.site?.hero?.banners[0]
+                                this.props.site?.hero?.banner
                                 ?? 
-                                "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2Fblank-bg.png?alt=media&token=3f10701d-498c-49fe-8286-0596d617c621"
+                                require("../../../assets/images/misc/blank-bg.png")
                             }
                             bodyLength={500}
                         />
                     </BgColor>
                     <BgMediaModal>
-                        <BgMediaHeading>Hero Section</BgMediaHeading>
+                        <BgMediaHeading>{this.props.site.hero.heading}</BgMediaHeading>
                         <BgMediaBody>
-                            <p>
-                                This is the homepage hero section, customize it as you please, please. Dolore irure deserunt occaecat tempor. Dolore reprehenderit ut consequat anim officia amet. 
-                                Laboris officia ea eu elit consectetur sit dolor duis adipisicing reprehenderit reprehenderit deserunt reprehenderit quis. 
-                                Fugiat est reprehenderit quis labore aute anim in labore officia non ut aliquip mollit. In laboris amet amet occaecat. Laboris minim culpa cillum veniam adipisicing et deserunt sit.
-                            </p>
+                            {this.props.site.hero.body}
                         </BgMediaBody>
-                        <LLink to="/about">
+                        
+                        <LLink to={this.props.site.hero.cta.link}>
                             <Button color={this.props.theme.colors.primary} size='lg'>
-                                Call to Action
+                                {this.props.site.hero.cta.text}
                             </Button>
                         </LLink>
                     </BgMediaModal>
@@ -81,7 +76,6 @@ class Home extends Component {
                         </Row>
                     </Grid>
                     <Hr />
-                    <ContactForm />
                 </Wrapper>
             </>
         );

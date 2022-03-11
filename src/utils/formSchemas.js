@@ -12,11 +12,11 @@ export const contactFormSchema = yup.object().shape({
       .required("Your name is required.")
       .max(150,"Name can be at most 150 characters long.")
       .min(2,"Name must be at least 2 characters long."),
-    message: yup
+      body: yup
       .string()
-      .required("A message is required.")
-      .max(30000,"Message can be at most 30000 characters long.")
-      .min(10,"Message must be at least 10 characters long."),
+      .required("A message body is required.")
+      .max(30000,"Message body can be at most 30000 characters long.")
+      .min(10,"Message body must be at least 10 characters long."),
 })
 
 export const userRegisterSchema = yup.object().shape({

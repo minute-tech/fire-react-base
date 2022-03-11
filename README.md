@@ -42,6 +42,13 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 5. Deploy to alias
 - $ `firebase deploy --project=test`
 
+## Change from Default Base
+1. Check app for "TODO:" tags
+
+2. For now manually creating with button, so input theme details into the createCustomSite function in Admin Dashboard
+
+3. To update font, see App.css
+
 
 ### One Firebase project, multiple hosting URLs
 1. Name the two targets you wish, but first make sure these are hosting site names on each of test and live projects:

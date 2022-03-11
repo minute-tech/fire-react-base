@@ -71,7 +71,7 @@ export const onMessageCreated = functions.firestore
                     <p>
                         <b>Message</b>:
                         <br/>
-                        ${newValues.message}
+                        ${newValues.body}
                     </p>
                     <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData.theme.schemes.light.colors.primary};" role="separator">&#8202;</div>
                     <p>
@@ -93,7 +93,7 @@ export const onMessageCreated = functions.firestore
                 cc: "",
                 bcc: [],
                 subject: `New "${publicSiteData.name}" Contact Message`,
-                text: `${newValues.name} <${newValues.email}>: ${newValues.message}`,
+                text: `${newValues.name} <${newValues.email}>: ${newValues.body}`,
                 html: htmlEmail,
             };
 
@@ -119,7 +119,7 @@ export const onMessageCreated = functions.firestore
 
             // // **v9 not ready it seems
             // await updateDoc(doc(admin, "site", "sensitive"), {
-            //     message: increment(1)
+            //     body: increment(1)
             // }).then(() => {
             //     console.log(`Incremented messageCount`)
             // }).catch(error => {
@@ -182,7 +182,13 @@ export const onUserCreated = functions.firestore
                                 showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                             },
                             hero: {
-                                banners: DEFAULT_SITE.HERO.BANNERS,
+                                heading: DEFAULT_SITE.HERO.HEADING,
+                                body: DEFAULT_SITE.HERO.BODY,
+                                cta: {
+                                    link: DEFAULT_SITE.HERO.CTA.LINK,
+                                    text: DEFAULT_SITE.HERO.CTA.TEXT,
+                                },
+                                banner: DEFAULT_SITE.HERO.BANNER,
                             },
                             emails: {
                                 support: DEFAULT_SITE.EMAILS.SUPPORT,
