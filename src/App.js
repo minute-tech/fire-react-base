@@ -35,6 +35,7 @@ export default class App extends Component {
             loadingSite: true,
             loadingReadOnlyFlags: true,
             isLoggingIn: false,
+            isBurgerMenuOpen: false,
             fireUser: "",
             user: "",
             readOnlyFlags: "",
@@ -245,6 +246,12 @@ export default class App extends Component {
         })
     }
 
+    setBurgerMenuOpen = (isBurgerMenuOpen) => {
+        this.setState({
+            isBurgerMenuOpen: isBurgerMenuOpen
+        })
+    };
+
     // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
     setCurrentTheme = (user = "") => {
         console.log("setting current theme...")
@@ -330,6 +337,8 @@ export default class App extends Component {
                                 <Header 
                                     site={this.state.site}
                                     user={this.state.user} 
+                                    setBurgerMenuOpen={this.setBurgerMenuOpen}
+                                    isBurgerMenuOpen={this.state.isBurgerMenuOpen}
                                 />
                                 <FirebaseAnalytics />
                                 <Views 
