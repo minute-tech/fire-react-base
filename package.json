@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "env-cmd": "^10.1.0",
     "firebase": "^9.6.7",
     "formik": "^2.2.9",
     "polished": "^4.1.4",
@@ -20,8 +21,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "set PORT=3001 && env-cmd -f .env react-scripts start",
+    "start:test1": "set PORT=3001 && env-cmd -f .env.test1 react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
+    "build:test1": "env-cmd -f .env.test1 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

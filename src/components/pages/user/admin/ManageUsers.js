@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { toast } from 'react-toastify';
 
-import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, Wrapper, ModalContainer, Div } from '../../../../utils/styles/misc'
+import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div } from '../../../../utils/styles/misc'
 import { ALink, Body, H1, H2, Label } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
@@ -306,13 +306,13 @@ class ManageUsers extends Component {
     render() {
         if(this.state.loadingUsers && this.state.loadingCounts && this.state.loadingSensitive){
             return (
-                <Wrapper>
+                <>
                     <H2>Loading... <Spinner /> </H2> 
-                </Wrapper>
+                </>
             )
         } else { 
             return (
-                <Wrapper>
+                <>
                     <Helmet>
                         <title>Manage Users {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
@@ -423,7 +423,7 @@ class ManageUsers extends Component {
                         </Grid>
                         </>
                     )}
-                </Wrapper>
+                </>
             )
         }
     }

@@ -27,7 +27,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 * react-icons
     * Popular icon usage like font Awesome
 
-## Setup Base
+## Setup Firebase
 1. Create live and test Firebase projects for this new site, initializing Analytics, Authentication, Firestore, Storage, Hosting, and Functions in the Firebase project consoles.
 
 2. Clear existing Firebase project aliases:
@@ -41,6 +41,10 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 
 5. Deploy to alias
 - $ `firebase deploy --project=test`
+- Note that any Firebase Hosting accessed will always use the `production` environment, and live (not localhost) links, will always be at the `live` Firebase project! i.e. `test-fire-react-base` is still using the `fire-react-base` project env.
+
+6. If custom domain, add it to the authorized domain in Firebase console > Authentication > Sign in Method 
+- Make sure to add `sitename.com` and `www.sitename.com`
 
 ## Change from Default Base
 1. Check app for "TODO:" tags
@@ -52,11 +56,10 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 4. Add in icons to public 
 - Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
 
-
-### One Firebase project, multiple hosting URLs
+## Multiple hosting URLs at one Firebase project
 1. Name the two targets you wish, but first make sure these are hosting site names on each of test and live projects:
  $ `firebase target:apply hosting draft draft-appname`  
- $ `firebase target:apply hosting prod test-fire-react-base`  
+ $ `firebase target:apply hosting prod prod-appname`  
  
 2. Then update `firebase.json` file like so:  
 ```
@@ -100,8 +103,26 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 3. Then deploy to specific target like so:  
  $ `firebase deploy --only hosting:draft --project=test`
 
-4. Clear target names
+4. Clear target names:
  $ `firebase target:clear hosting draft`
+
+## Pushing current source code to showcase on new project
+Building from multiple .env files is using the library installed by `npm install env-cmd`.
+
+1. Create or use another Firebase project and get the config variables to place in our `.env.test1` file. Make sure to set all the steps above that pertain to a Firebase project being used with this template.
+- See `package.json` for npm build changes for .test1, etc
+
+2. Add the newly created Firebase project to this React project
+ $ `firebase use --add`
+
+3. Run a test environment (.env file is different)
+ $ `npm run-script start:test1` 
+
+4. Build a test environment (.env file is different)
+ $ `npm run-script build:test1` 
+
+4. Deploy to test environment
+ $ `firebase deploy --project=test --only hosting`
 
 ## Misc
 - More CLI commands: https://firebase.google.com/docs/cli

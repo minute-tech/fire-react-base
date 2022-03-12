@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight,  } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
 import { withTheme } from 'styled-components';
 
-import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, Wrapper, ModalContainer } from '../../../../utils/styles/misc'
+import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer } from '../../../../utils/styles/misc'
 import { ALink, Body, H1, H2, Label } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
@@ -168,13 +168,13 @@ class ManageMessages extends Component {
     render() {
         if(this.state.loadingMessages && this.state.loadingCounts){
             return (
-                <Wrapper>
+                <>
                     <H2>Loading... <Spinner /> </H2> 
-                </Wrapper>
+                </>
             )
         } else {
             return (
-                <Wrapper>
+                <>
                     <Helmet>
                         <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
@@ -269,7 +269,7 @@ class ManageMessages extends Component {
                         </Grid>
                         </>
                     )}
-                </Wrapper>
+                </>
             ) 
         }
         
