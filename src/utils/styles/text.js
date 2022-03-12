@@ -17,7 +17,7 @@ export const H1 = styled.h1`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
         font-size: 35px;
     }
 `;
@@ -27,7 +27,7 @@ export const H2 = styled.h2`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
         font-size: 25px;
         /* margin-bottom: 15px; */
     }
@@ -38,7 +38,7 @@ export const H3 = styled.h3`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
         font-size: 20px;
     }
 `;
@@ -48,7 +48,7 @@ export const H4 = styled.h4`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
-    @media (max-width: 1200px) {
+    @media (max-width: 900px) {
         font-size: 18px;
     }
 `;
@@ -63,28 +63,28 @@ export const Body = styled.p`
 
     ${(props) => (props.size === 'sm') && `
         font-size: 12px;
-        @media (max-width: 1200px) {
+        @media (max-width: 900px) {
             font-size: 10px;
         }
     `};
 
     ${(props) => (props.size === 'md') && `
         font-size: 16px;
-        @media (max-width: 1200px) {
+        @media (max-width: 900px) {
             font-size: 14px;
         }
     `};
 
     ${(props) => (props.size === 'lg') && `
         font-size: 20px;
-        @media (max-width: 1200px) {
+        @media (max-width: 900px) {
             font-size: 18px;
         }
     `};
 
     ${(props) => (props.size === 'xl') && `
         font-size: 28px;
-        @media (max-width: 1200px) {
+        @media (max-width: 900px) {
             font-size: 24px;
         }
     `};

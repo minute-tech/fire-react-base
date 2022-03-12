@@ -9,12 +9,12 @@ import { FaMoon, FaSun } from 'react-icons/fa';
 
 import { withRouter } from '../../../../utils/hocs';
 import { updateProfileSchema } from "../../../../utils/formSchemas"
-import { Hr, Wrapper } from '../../../../utils/styles/misc.js';
+import { Hr } from '../../../../utils/styles/misc.js';
 import { FField } from '../../../../utils/styles/forms.js';
 import { H1, Label, LLink } from '../../../../utils/styles/text.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import FormError from '../../../misc/FormError.js';
-import { BTYPES, PLACEHOLDER, SCHEMES } from '../../../../utils/constants';
+import { BTYPES, PLACEHOLDER, SCHEMES } from '../../../../utils/constants.js';
 import { firestore } from '../../../../Fire';
 import { Helmet } from 'react-helmet-async';
 
@@ -89,7 +89,7 @@ class Profile extends Component {
 
     render() {
         return (
-            <Wrapper>
+            <>
                 <Helmet>
                     <title>Profile {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
@@ -231,7 +231,7 @@ class Profile extends Component {
                     }
                 </Button>
                     
-            </Wrapper>
+            </>
         )
     }
 }

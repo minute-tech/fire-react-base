@@ -6,9 +6,6 @@ export const FField = styled(Field)`
     font-size: 16px;
     ${BodyFont}
     width: ${props => props.width ? props.width : "100%"};
-    @media (max-width: 1180px) {
-        width: 90%;
-    }
     padding: 10px;
     margin: 0 0 5px 0;
     box-sizing: border-box;
@@ -19,23 +16,26 @@ export const FField = styled(Field)`
     /* Set focus if error */
     outline-color: ${props => props.error ? props.theme.colors.red : "none"};
     box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
+
     &:focus {
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
+
     ${props => props.component === "textarea" && css`
         height: 150px;
         padding: 15px;
     `}
+
+    @media (max-width: 900px) {
+        width: 90%;
+    }
 `;
 
 export const Input = styled.input`
     font-size: 16px;
     ${BodyFont}
     width: ${props => props.width ? props.width : "100%"};
-    @media (max-width: 1180px) {
-        width: 90%;
-    }
     padding: 10px;
     margin: 0 0 5px 0;
     box-sizing: border-box;
@@ -43,14 +43,20 @@ export const Input = styled.input`
     border-radius: 2px;
     background-color: white;
     resize: none;
+    
     &:focus {
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
+
     ${props => props.component === "textarea" && css`
         height: 150px;
         padding: 15px;
     `}
+    
+    @media (max-width: 900px) {
+        width: 90%;
+    }
 `;
 
 export const RField = styled(Field)`

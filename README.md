@@ -47,7 +47,10 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 
 2. For now manually creating with button, so input theme details into the createCustomSite function in Admin Dashboard
 
-3. To update font, see App.css
+3. To update font, see `App.css` in src assets
+
+4. Add in icons to public 
+- Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
 
 
 ### One Firebase project, multiple hosting URLs

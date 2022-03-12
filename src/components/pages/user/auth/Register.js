@@ -15,7 +15,7 @@ import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js'
 import { Button } from '../../../../utils/styles/buttons';
 import FormError from '../../../misc/FormError.js';
 import { withRouter } from '../../../../utils/hocs.js';
-import { PLACEHOLDER, SCHEMES } from '../../../../utils/constants.js';
+import { PLACEHOLDER, SCHEMES, SIZES } from '../../../../utils/constants.js';
 import { Helmet } from 'react-helmet-async';
 
 class Register extends Component {
@@ -282,7 +282,7 @@ class Register extends Component {
                             </Row>
                             <Row center="xs">
                                 <Col xs={12}>
-                                    <Body size="sm">This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
+                                    <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                     <Recaptcha id="recaptcha" />
                                 </Col>
                             </Row>

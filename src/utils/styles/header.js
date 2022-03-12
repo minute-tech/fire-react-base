@@ -1,25 +1,35 @@
+import { rgba } from 'polished';
 import { NavLink } from 'react-router-dom';
 import styled  from 'styled-components';
 import { BodyFont, HeadingFont } from './text';
 
+const activeClassName = "active";
+
 export const HeaderContainer = styled.header`
-    display: block;
-    height: 200px; // TODO: prolly have to use this height and line height together?
+    display: flex;
+    align-items: center;
+    width: 100%;
 `;
 
 // Branding
-export const BrandContainer = styled.span`
-    display: inline;
+export const BrandContainer = styled.div`
+    width: 100%;
+`;
+
+export const BrandLink = styled(NavLink)`
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
 `;
 
 export const NavLogo = styled.img`
     width: 100%;
     height: auto;
-    min-height: 100px;
-    max-width: ${props => props.width ? props.width : "150px"}; 
+    max-width: ${props => props.width ? `${props.width}px` : "150px"}; 
     margin: 15px 10px;
-    @media (max-width: 901px) {
-        max-width: ${props => props.width ? props.width : "125px"}; 
+    
+    @media (max-width: 900px) {
+        max-width: ${props => props.width ? `${props.width * .8}px` : "100px"}; 
     }
 `;
 
@@ -31,11 +41,11 @@ export const NavTitle = styled.span`
     transition: color 0.15s linear;
 
     &:hover {
-        opacity: 0.6;
         text-decoration: none;
+        color: ${props => props.theme.colors.secondary};
     }
     
-    @media (max-width: 901px) {
+    @media (max-width: 900px) {
         font-size: 1.8em;
     }
 `;
@@ -44,7 +54,7 @@ export const NavTitle = styled.span`
 export const NavMenuContainer = styled.nav`
     display: inline;
     
-    @media (max-width: 901px) {
+    @media (max-width: 900px) {
         display: none;
     }
 `;
@@ -52,48 +62,56 @@ export const NavMenuContainer = styled.nav`
 export const NavLinks = styled.span`
     ${BodyFont}
     float: right;
-    padding-right: 30px;
+    padding-right: 25px;
 `;
 
-const activeClassName = "active";
 export const NavLLink = styled(NavLink)`
     transition: color 0.15s linear, border-bottom 0.15s linear;
-    border-bottom: 7px solid transparent;
+    border-bottom: 2px solid transparent;
     text-decoration: none;
     color: ${props => props.theme.colors.primary};
-    font-size: 18px;
+    font-size: 20px;
     margin: 0 18px;
-    padding: 14px 0;
+    padding: 5px 0;
 
     &.${activeClassName} {
-        border-bottom: 7px solid white;
+        border-bottom: 2px solid ${props => props.theme.colors.secondary};
     }
 
     &:hover {
-        border-bottom: 7px solid white;
+        border-bottom: 2px solid ${props => props.theme.colors.secondary};
         font-weight: 700;
+        color: ${props => props.theme.colors.secondary};
     };
 
-    @media (max-width: 901px) {
+    @media (max-width: 900px) {
         font-size: 14px;
     }
 
 `;
 
 // Burger Menu 
-export const BurgerMenuContainer = styled.span`
+export const BgOverlay = styled.div`
+    display: ${({ open }) => open ? 'inline' : 'none'};
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: ${props => rgba(props.theme.colors.grey, 0.7)};
+    transition: opacity 0.8s;
+    z-index: 7;
+`;
+
+export const BurgerNavContainer = styled.span`
     display: none;
 
-    @media (max-width: 901px) {
+    @media (max-width: 900px) {
         display: inline;
     }
 `;
 
 export const Burger = styled.button`
-    position: absolute;
-    top: 5%;
-    right: 2rem;
-    z-index: 9;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -103,12 +121,14 @@ export const Burger = styled.button`
     border: none;
     cursor: pointer;
     padding: 0;
-
+    margin-right: 25px;
     &:focus {
         outline: none;
     }
 
     div {
+        position: absolute;
+        z-index: 9;
         width: 2rem;
         height: 0.25rem;
         background: ${({ open }) => open ? '#0D0C1D' : '#EFFFFA'};
@@ -116,6 +136,7 @@ export const Burger = styled.button`
         transition: all 0.3s linear;
         position: relative;
         transform-origin: 1px;
+        background-color: ${props => props.color ? props.color : props.theme.colors.primary};
 
         :first-child {
             transform: ${({ open }) => open ? 'rotate(45deg)' : 'rotate(0)'};
@@ -130,13 +151,13 @@ export const Burger = styled.button`
             transform: ${({ open }) => open ? 'rotate(-45deg)' : 'rotate(0)'};
         }
     }
-`
+`;
 
-export const BurgerMenu = styled.nav`
+export const BurgerNav = styled.nav`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: #EFFFFA;
+    background-color: ${props => props.color ? props.color : props.theme.colors.background};
     transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(100%)'};
     height: 100vh;
     text-align: center;
@@ -148,33 +169,33 @@ export const BurgerMenu = styled.nav`
     z-index: 8;
     transition: transform 0.3s ease-in-out;
 
-    @media (max-width: 901px) {
+    @media (max-width: 900px) {
         width: 100%;
     }
-`
+`;
 
-export const BurgerMenuLink = styled(NavLink)`
+export const BurgerNavLink = styled(NavLink)`
     ${BodyFont}
     font-size: 2rem;
     text-transform: uppercase;
     padding: 2rem 0;
     font-weight: bold;
     letter-spacing: 0.5rem;
-    color: #0D0C1D;
+    color: ${props => props.color ? props.color : props.theme.colors.font.body};
     text-decoration: none;
-    transition: color 0.3s linear;
+    transition: all 0.3s linear;
 
-    @media (max-width: 576px) {
+    @media (max-width: 900px) {
         font-size: 1.5rem;
         text-align: center;
     }
 
     &:hover {
-        color: #343078;
+        background-color: ${props => props.theme.colors.primary};
     }
 
     &.${activeClassName} {
-        border-bottom: 7px solid white;
+        background-color: ${props => props.theme.colors.primary};
     }
 
 `;

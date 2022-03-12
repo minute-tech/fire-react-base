@@ -12,7 +12,7 @@ import { readTimestamp } from '../../../../utils/misc';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Col, Grid, Row } from 'react-flexbox-grid';
-import { BTYPES } from '../../../../utils/constants';
+import { BTYPES, SIZES } from '../../../../utils/constants.js';
 
 
 class ManageMessages extends Component {
@@ -178,7 +178,7 @@ class ManageMessages extends Component {
                     <Helmet>
                         <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
-                    <Link to="/admin/dashboard">
+                    <Link to="/dashboard/admin">
                         <Button>
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
@@ -186,7 +186,7 @@ class ManageMessages extends Component {
                     </Link>
                     <H1>Contact Messages: {this.state.messageCount}</H1>
                     {this.state.messageCount === 0 && (
-                        <Body color={this.props.theme.colors.red} bold size={"lg"}>No messages yet!</Body>
+                        <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No messages yet!</Body>
                     )}
                     {this.state.messageCount !== 0 && (
                         <>
@@ -216,8 +216,7 @@ class ManageMessages extends Component {
                                                 <Td>
                                                     <Button
                                                         btype={BTYPES.TEXTED} 
-                                                        color={this.props.theme.colors.primary}
-                                                        size="sm"
+                                                        size={SIZES.SM}
                                                         onClick={() => this.toggleMessage(true, i)}         
                                                     >
                                                         View message
@@ -226,10 +225,10 @@ class ManageMessages extends Component {
                                                         <ModalContainer onClick={() => this.toggleMessage(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{message.name}</Label> <ALink href={`mailto:${message.email}`}>&lt;{message.email}&gt;</ALink>
-                                                                <Body margin="0" size="sm"><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
+                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
                                                                 <Body>{message.body}</Body>
                                                                 <Button 
-                                                                    size="sm" 
+                                                                    size={SIZES.SM} 
                                                                     onClick={() => this.toggleMessage(false, i)}
                                                                 >
                                                                    <CgClose /> Close 
@@ -256,7 +255,7 @@ class ManageMessages extends Component {
                                     )}
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    <Body size="lg">Page {this.state.currentPage} of {Math.ceil(this.state.messageCount/this.state.messagesPerPage)}</Body>
+                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.messageCount/this.state.messagesPerPage)}</Body>
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage) && (

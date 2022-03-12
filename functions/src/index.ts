@@ -57,7 +57,7 @@ export const onMessageCreated = functions.firestore
                         <img 
                             alt="${publicSiteData.name} logo"
                             src="${publicSiteData.logo.url}"
-                            width="${publicSiteData.logo.width}" 
+                            width="${publicSiteData.logo.width}px" 
                             height="auto"
                         />
                 </div>
@@ -187,6 +187,8 @@ export const onUserCreated = functions.firestore
                                 cta: {
                                     link: DEFAULT_SITE.HERO.CTA.LINK,
                                     text: DEFAULT_SITE.HERO.CTA.TEXT,
+                                    size: DEFAULT_SITE.HERO.CTA.SIZE,
+                                    color: DEFAULT_SITE.HERO.CTA.COLOR,
                                 },
                                 banner: DEFAULT_SITE.HERO.BANNER,
                             },

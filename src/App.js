@@ -18,8 +18,8 @@ import Header from './components/misc/Header';
 import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 import { auth, firestore } from './Fire';
-import { DEFAULT_SITE, SCHEMES } from './utils/constants';
-import { DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
+import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
+import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
 export default class App extends Component {
@@ -35,7 +35,6 @@ export default class App extends Component {
             loadingSite: true,
             loadingReadOnlyFlags: true,
             isLoggingIn: false,
-            isBurgerMenuOpen: false,
             fireUser: "",
             user: "",
             readOnlyFlags: "",
@@ -54,6 +53,8 @@ export default class App extends Component {
                     cta: {
                         link: DEFAULT_SITE.HERO.CTA.LINK,
                         text: DEFAULT_SITE.HERO.CTA.TEXT,
+                        size: DEFAULT_SITE.HERO.CTA.SIZE,
+                        color: DEFAULT_SITE.HERO.CTA.COLOR,
                     },                    
                     banner: DEFAULT_SITE.HERO.BANNER,
                 },
@@ -146,6 +147,7 @@ export default class App extends Component {
                     site: siteData,
                     loadingSite: false
                 });
+                this.setCurrentTheme();
             } else {
                 console.log("No custom site set, using theme defaults set in constructor.")
                 this.setState({
@@ -246,15 +248,8 @@ export default class App extends Component {
         })
     }
 
-    setBurgerMenuOpen = (isBurgerMenuOpen) => {
-        this.setState({
-            isBurgerMenuOpen: isBurgerMenuOpen
-        })
-    };
-
     // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
     setCurrentTheme = (user = "") => {
-        console.log("setting current theme...")
         let themeObject = {};
         let isDarkScheme = false;
 
@@ -270,7 +265,6 @@ export default class App extends Component {
             }
         }
         
-        // TODO: for some reason these are always staying to the default colors from the constructor and not being grabbed from the site public doc...
         themeObject = { 
             value: isDarkScheme ? this.state.site.theme.schemes.dark.value : this.state.site.theme.schemes.light.value,
             colors: {
@@ -295,8 +289,6 @@ export default class App extends Component {
                 body: this.state.site.theme.fonts.body
             },
         }
-        console.log("themeObject: ")
-        console.log(themeObject)
 
         this.setState({
             currentTheme: themeObject
@@ -315,45 +307,44 @@ export default class App extends Component {
                 <HelmetProvider>
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
                         <ThemeProvider theme={this.state.currentTheme}>
-                            <BrowserRouter>
-                                {process.env.NODE_ENV === 'development' && (
-                                    <DevAlert>
-                                        LOCAL SERVER
-                                    </DevAlert>
-                                )}                            
-                                <ToastContainer
-                                    position="top-center"
-                                    autoClose={4000}
-                                    hideProgressBar={false}
-                                    newestOnTop={false}
-                                    theme={this.state.currentTheme.value}
-                                    closeOnClick
-                                    rtl={false}
-                                    pauseOnFocusLoss
-                                    pauseOnHover
-                                />
-                                {/* <button onClick={() => this.setCurrentTheme(this.state.user)}>Set theme</button> */}
-                                <GlobalStyle /> 
-                                <Header 
-                                    site={this.state.site}
-                                    user={this.state.user} 
-                                    setBurgerMenuOpen={this.setBurgerMenuOpen}
-                                    isBurgerMenuOpen={this.state.isBurgerMenuOpen}
-                                />
-                                <FirebaseAnalytics />
-                                <Views 
-                                    fireUser={this.state.fireUser} 
-                                    user={this.state.user} 
-                                    site={this.state.site}
-                                    readOnlyFlags={this.state.readOnlyFlags}
-                                    userLoggingOut={this.userLoggingOut} 
-                                    userLoggingIn={this.userLoggingIn} 
-                                    isLoggingIn={this.state.isLoggingIn}
-                                />
-                                <Footer
-                                    site={this.state.site} 
-                                />
-                            </BrowserRouter>
+                            <BodyWrapper>
+                                <BrowserRouter>
+                                    <GlobalStyle /> 
+                                    <FirebaseAnalytics />
+                                    {process.env.NODE_ENV === 'development' && (
+                                        <DevAlert>
+                                            LOCAL SERVER
+                                        </DevAlert>
+                                    )}      
+                                    <Header 
+                                        site={this.state.site}
+                                        user={this.state.user} 
+                                    />
+                                    <ToastContainer
+                                        position="top-center"
+                                        autoClose={4000}
+                                        hideProgressBar={false}
+                                        newestOnTop={false}
+                                        theme={this.state.currentTheme.value}
+                                        closeOnClick
+                                        rtl={false}
+                                        pauseOnFocusLoss
+                                        pauseOnHover
+                                    />
+                                    <Views 
+                                        fireUser={this.state.fireUser} 
+                                        user={this.state.user} 
+                                        site={this.state.site}
+                                        readOnlyFlags={this.state.readOnlyFlags}
+                                        userLoggingOut={this.userLoggingOut} 
+                                        userLoggingIn={this.userLoggingIn} 
+                                        isLoggingIn={this.state.isLoggingIn}
+                                    />
+                                    <Footer
+                                        site={this.state.site} 
+                                    />
+                                </BrowserRouter>
+                            </BodyWrapper>
                         </ThemeProvider>
                     </IconContext.Provider>
                 </HelmetProvider>

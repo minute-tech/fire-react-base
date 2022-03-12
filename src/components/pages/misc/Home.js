@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { withTheme } from 'styled-components';
 
-import { BTYPES } from '../../../utils/constants';
+import { BTYPES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../../utils/styles/text';
@@ -43,7 +43,10 @@ class Home extends Component {
                         </BgMediaBody>
                         
                         <LLink to={this.props.site.hero.cta.link}>
-                            <Button color={this.props.theme.colors.primary} size='lg'>
+                            <Button 
+                                size={this.props.site.hero.cta.size} 
+                                color={this.props.site.hero.cta.color}
+                            >
                                 {this.props.site.hero.cta.text}
                             </Button>
                         </LLink>
@@ -52,7 +55,7 @@ class Home extends Component {
                 <Wrapper>
                     <H1>Buttons</H1>
                     <Button>Default</Button>
-                    <Button color={this.props.theme.colors.primary} size='lg' onClick={() => this.sendAlert("info")}>Primary Large Normal Button</Button>
+                    <Button size='lg' onClick={() => this.sendAlert("info")}>Primary Large Normal Button</Button>
                     <Button color={this.props.theme.colors.secondary} size='md' btype={BTYPES.INVERTED} onClick={() => this.sendAlert("warn")}>Secondary Medium Inverted Button</Button>
                     <Button color={this.props.theme.colors.red} size='sm' btype={BTYPES.TEXTED} onClick={() => this.sendAlert("error")}>Red Small Texted Button</Button>
                     <Button color={this.props.theme.colors.green} size='md' rounded={true} onClick={() => this.sendAlert("success")}>Green Rounded Button</Button>

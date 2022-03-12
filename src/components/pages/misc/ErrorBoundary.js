@@ -5,6 +5,7 @@ import { AiOutlineReload } from 'react-icons/ai';
 import { Button } from '../../../utils/styles/buttons';
 import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
 import { Body, H2 } from '../../../utils/styles/text';
+import { SIZES } from '../../../utils/constants';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class ErrorBoundary extends React.Component {
                 <H2>Something went wrong</H2>
                 <Body>Sorry about this! Please <Link to="/about">contact us</Link> if the error persists.</Body>
                 <Hr/>
-                <Body size="sm">  
+                <Body size={SIZES.SM}>  
                     <b>More info:</b>  
                     <br/>
                     {this.state.error && this.state.error.toString()}

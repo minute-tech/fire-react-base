@@ -14,7 +14,7 @@ import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styl
 import { FField, Input } from '../../../../utils/styles/forms.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import FormError from '../../../misc/FormError';
-import { PLACEHOLDER } from '../../../../utils/constants';
+import { PLACEHOLDER, SIZES } from '../../../../utils/constants.js';
 import { Helmet } from 'react-helmet-async';
 import { CgClose } from 'react-icons/cg';
 
@@ -55,8 +55,8 @@ class UserLogin extends Component {
                         } 
                         
                         console.log("Error signing in: " + errorCode + " - " + errorMessage)
-                        if(errorCode === "auth/user-not-found"){
-                            toast.error(`User with that email and/or password was not found.`);
+                        if(errorCode === "auth/user-not-found" || errorCode === "auth/wrong-password"){
+                            toast.error(`Email or password was not accepted, please try another combination.`);
                         } else {
                             toast.error(`Error: ${errorMessage}`);
                         }
@@ -194,7 +194,7 @@ class UserLogin extends Component {
                                 </Row>
                                 <Row center="xs">
                                     <Col xs={12}>
-                                        <Body size="sm">This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
+                                        <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                         <Recaptcha id="recaptcha" />
                                     </Col>
                                 </Row>
@@ -218,7 +218,7 @@ class UserLogin extends Component {
                                     Send password reset link
                                 </Button>
                                 <Button 
-                                    size="sm" 
+                                    size={SIZES.SM}
                                     onClick={() => this.toggleForgot()}
                                 >
                                     <CgClose /> Cancel 

@@ -9,7 +9,7 @@ import { withRouter } from '../../../../utils/hocs';
 import { auth } from "../../../../Fire.js";
 import { LLink, H1, H3, Body } from '../../../../utils/styles/text.js';
 import { Button } from '../../../../utils/styles/buttons.js';
-import { Hr, Wrapper } from '../../../../utils/styles/misc.js';
+import { Hr } from '../../../../utils/styles/misc.js';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 import { Helmet } from 'react-helmet-async';
 
@@ -29,20 +29,20 @@ class Dashboard extends Component {
     
     render() {
         return (
-            <Wrapper>
+            <>
                 <Helmet>
                     <title>Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
                 <H1>Dashboard</H1>
                 <H3>Hi, {this.props?.fireUser?.displayName}!</H3>
-                <LLink to={`/profile`}> 
+                <LLink to={`/dashboard/profile`}> 
                     <Button>
                         Edit your profile <FaUserEdit size={20} />
                     </Button>
                 </LLink>
                 <Hr/>
                 {this.props.readOnlyFlags?.isAdmin && (
-                    <LLink to={`/admin/dashboard`}> 
+                    <LLink to={`/dashboard/admin`}> 
                         <Button>
                             Admin Dashboard <FaCog /> 
                         </Button>
@@ -70,7 +70,7 @@ class Dashboard extends Component {
                     >
                     Log out
                 </Button>
-            </Wrapper>
+            </>
         )
         
     }

@@ -23,6 +23,7 @@ import Profile from './components/pages/user/dashboard/Profile';
 import AdminDashboard from './components/pages/user/admin/AdminDashboard';
 import ManageMessages from './components/pages/user/admin/ManageMessages';
 import ManageUsers from './components/pages/user/admin/ManageUsers';
+import { Wrapper } from './utils/styles/misc';
 
 class Views extends Component {
     render() {
@@ -116,75 +117,89 @@ class Views extends Component {
                     }
                 >
                     <Route 
-                        path="/dashboard" 
-                        element={
-                            <Dashboard 
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser} 
-                                readOnlyFlags={this.props.readOnlyFlags}
-                                user={this.props.user}
-                                userLoggingOut={this.props.userLoggingOut} 
-                            />
+                        path="dashboard"
+                        element={  
+                            <Wrapper>
+                                <Outlet />
+                            </Wrapper> 
                         }
-                    />
-                    <Route 
-                        path="/profile" 
-                        element={
-                            <Profile 
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser} 
-                                readOnlyFlags={this.props.readOnlyFlags}
-                                user={this.props.user}
-                            />
-                        }
-                    />
-                </Route>
-
-                {/* Admin ONLY routes */}
-                <Route 
-                    element={
-                        <ErrorBoundary>
-                            <AdminRoutes 
-                                site={this.props.site} 
-                                isAdmin={this.props?.readOnlyFlags?.isAdmin} 
-                                isLoggingIn={this.props.isLoggingIn} 
-                            />
-                        </ErrorBoundary>
-                    }
-                >
-                    <Route 
-                        path="/admin/dashboard" 
-                        element={
-                            <AdminDashboard 
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser} 
-                                readOnlyFlags={this.props.readOnlyFlags}
-                                user={this.props.user}
-                            />
-                        }
-                    />
-                    <Route 
-                        path="/admin/messages" 
-                        element={
-                            <ManageMessages
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser} 
-                                readOnlyFlags={this.props.readOnlyFlags}
-                                user={this.props.user}
-                            />
-                        }
-                    />
-                    <Route 
-                        path="/admin/users" 
-                        element={
-                            <ManageUsers
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser} 
-                                readOnlyFlags={this.props.readOnlyFlags}
-                                user={this.props.user}
-                            />
-                        }
-                    />
+                    >
+                        <Route 
+                            index
+                            element={
+                                <Dashboard 
+                                    site={this.props.site} 
+                                    fireUser={this.props.fireUser} 
+                                    readOnlyFlags={this.props.readOnlyFlags}
+                                    user={this.props.user}
+                                    userLoggingOut={this.props.userLoggingOut} 
+                                />
+                            }
+                        />
+                        <Route 
+                            path="profile" 
+                            element={
+                                <Profile 
+                                    site={this.props.site} 
+                                    fireUser={this.props.fireUser} 
+                                    readOnlyFlags={this.props.readOnlyFlags}
+                                    user={this.props.user}
+                                />
+                            }
+                        />
+                        {/* Admin ONLY routes */}
+                        <Route 
+                            element={
+                                <ErrorBoundary>
+                                    <AdminRoutes 
+                                        site={this.props.site} 
+                                        isAdmin={this.props?.readOnlyFlags?.isAdmin} 
+                                        isLoggingIn={this.props.isLoggingIn} 
+                                    />
+                                </ErrorBoundary>
+                            }
+                        >
+                            <Route 
+                                path="admin" 
+                                element={ <Outlet /> }
+                            >
+                                <Route 
+                                    index
+                                    element={
+                                        <AdminDashboard
+                                            site={this.props.site} 
+                                            fireUser={this.props.fireUser} 
+                                            readOnlyFlags={this.props.readOnlyFlags}
+                                            user={this.props.user}
+                                        />
+                                    }
+                                />
+                                <Route 
+                                    path="messages" 
+                                    element={
+                                        <ManageMessages
+                                            site={this.props.site} 
+                                            fireUser={this.props.fireUser} 
+                                            readOnlyFlags={this.props.readOnlyFlags}
+                                            user={this.props.user}
+                                        />
+                                    }
+                                />
+                                <Route 
+                                    path="users" 
+                                    element={
+                                        <ManageUsers
+                                            site={this.props.site} 
+                                            fireUser={this.props.fireUser} 
+                                            readOnlyFlags={this.props.readOnlyFlags}
+                                            user={this.props.user}
+                                        />
+                                    }
+                                />
+                            </Route>
+                        </Route>
+                    </Route>
+                    
                 </Route>
 
                 <Route path="*" element={<ErrorBoundary><Page404 site={this.props.site} /></ErrorBoundary>} />

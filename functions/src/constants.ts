@@ -1,7 +1,31 @@
+export const BTYPES = {
+    INVERTED: "inverted",
+    TEXTED: "texted",
+};
+
+export const PLACEHOLDER = {
+    FIRST_NAME: "Taylor",
+    LAST_NAME: "Doe",
+    EMAIL: "taylor_doe@email.com",
+    PHONE: "+1 (123) 456-7890",
+    BODY: "Detail what you want to say here.",
+    PASSWORD: "*********************",
+};
+
+export const SIZES = {
+    XS: "xs",
+    SM: "sm",
+    MD: "md",
+    LG: "lg",
+    XL: "xl",
+    XXL: "2xl",
+    XXXL: "3xl",
+};
+
 export const DEFAULT_SITE = {
     NAME: "Fire React Base",
     LOGO: {
-        WIDTH: "100px",
+        WIDTH: 100,
         URL: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Flogo192.png?alt=media&token=d327bc99-6ee8-496e-86c7-0206244b837b",
         SHOW_TITLE: true,
     },
@@ -13,6 +37,8 @@ export const DEFAULT_SITE = {
         CTA: {
             LINK: "/about",
             TEXT: "Call to Action",
+            SIZE: SIZES.LG,
+            COLOR: "black",
         },
         BANNER: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2FDSC_0047.JPG?alt=media&token=8d4ff53c-11c2-4849-9479-6cd091598635",
     },
@@ -66,9 +92,14 @@ export const DEFAULT_SITE = {
                         BODY: "white",
                         LINK: "lightblue",
                     },
-                    BACKGROUND: "#36454F",
+                    BACKGROUND: "#242423",
                 },
             },
         },
     },
+};
+
+export const SCHEMES = {
+    LIGHT: "light",
+    DARK: "dark",
 };

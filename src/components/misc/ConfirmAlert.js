@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withTheme } from 'styled-components';
-import { BTYPES } from '../../utils/constants';
+import { BTYPES, SIZES } from '../../utils/constants.js';
 import { Button } from '../../utils/styles/buttons'
 import { ModalCard } from '../../utils/styles/misc';
 import { Body, H2 } from '../../utils/styles/text';
@@ -25,7 +25,7 @@ class ConfirmAlert extends Component {
                 <H2 theme={this.props.theme}>{this.props.headingText}</H2>
                 <Body theme={this.props.theme}>{this.props.body}</Body>
                 <Button 
-                    size="sm"
+                    size={SIZES.SM}
                     theme={this.props.theme}
                     color={this.props.theme.colors.green}
                     onClick={() => this.yesClicked()}
@@ -33,7 +33,7 @@ class ConfirmAlert extends Component {
                     {this.props.yesText}
                 </Button>
                 <Button
-                    size="sm"
+                    size={SIZES.SM}
                     theme={this.props.theme}
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}

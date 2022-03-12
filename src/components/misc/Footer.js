@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { FaChevronUp } from 'react-icons/fa';
+import { SIZES } from '../../utils/constants';
 
 import { ColA, ColB, ColC, FooterContainer } from "../../utils/styles/footer";
 import { LLink, SLink} from "../../utils/styles/text";
@@ -42,7 +43,7 @@ export default class Footer extends Component {
                 <Grid fluid>
                     <Row middle="xs">
                         <ColA xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>
-                            <Row start="sm">
+                            <Row start={SIZES.SM}>
                                 <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
                                     <LLink to="/privacy-policy">Privacy Policy</LLink>
                                 </Col>  
@@ -69,7 +70,7 @@ export default class Footer extends Component {
                             </Row>
                         </ColB>
                         <ColC xs={12} sm={4} $deviceWidth={this.state.deviceWidth}>
-                            <Row end="sm">
+                            <Row end={SIZES.SM}>
                                 <Col xs={12}>
                                     <SLink onClick={() => this.scrollTop()}>
                                         Back to top <FaChevronUp /> 

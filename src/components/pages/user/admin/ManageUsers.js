@@ -13,7 +13,7 @@ import { ALink, Body, H1, H2, Label } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
-import { BTYPES } from '../../../../utils/constants';
+import { BTYPES, SIZES } from '../../../../utils/constants.js';
 import { confirmAlert } from 'react-confirm-alert';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 
@@ -230,7 +230,7 @@ class ManageUsers extends Component {
                 <Button
                     color={this.props.theme.colors.yellow}
                     btype={BTYPES.INVERTED}
-                    size="sm"
+                    size={SIZES.SM}
                     onClick={() =>         
                         confirmAlert({
                             customUI: ({ onClose }) => {
@@ -266,7 +266,7 @@ class ManageUsers extends Component {
                 <Button
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}
-                    size="sm"
+                    size={SIZES.SM}
                     onClick={() =>         
                         confirmAlert({
                             customUI: ({ onClose }) => {
@@ -316,7 +316,7 @@ class ManageUsers extends Component {
                     <Helmet>
                         <title>Manage Users {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
-                    <Link to="/admin/dashboard">
+                    <Link to="/dashboard/admin">
                         <Button>
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
@@ -324,7 +324,7 @@ class ManageUsers extends Component {
                     </Link>
                     <H1>Manage Users: {this.state.userCount}</H1>
                     {this.state.userCount === 0 && (
-                        <Body color={this.props.theme.colors.red} bold size={"lg"}>No users yet!</Body>
+                        <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No users yet!</Body>
                     )}
                     {this.state.userCount !== 0 && (
                         <>
@@ -365,8 +365,7 @@ class ManageUsers extends Component {
                                                 <Td>
                                                     <Button
                                                         btype={BTYPES.TEXTED} 
-                                                        color={this.props.theme.colors.primary}
-                                                        size="sm"
+                                                        size={SIZES.SM}
                                                         onClick={() => this.toggleUser(true, i)}         
                                                     >
                                                         View full details
@@ -376,7 +375,7 @@ class ManageUsers extends Component {
                                                         <ModalContainer onClick={() => this.toggleUser(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{user.firstName} {user.lastName}</Label> <ALink href={`mailto:${user.email}`}>&lt;{user.email}&gt;</ALink>
-                                                                <Body margin="0" size="sm"><i>{readTimestamp(user.timestamp).date} @ {readTimestamp(user.timestamp).time}</i></Body>
+                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(user.timestamp).date} @ {readTimestamp(user.timestamp).time}</i></Body>
                                                                 <Div margin="10px 30px 0 0">
                                                                     { this.renderAdminBadges(user) }
                                                                     { this.renderSuperAdminBadges(user) }
@@ -384,7 +383,7 @@ class ManageUsers extends Component {
                                                                 
                                                                 <Hr/>
                                                                 <Button 
-                                                                    size="sm" 
+                                                                    size={SIZES.SM} 
                                                                     onClick={() => this.toggleUser(false, i)}
                                                                 >
                                                                     <CgClose /> Close
@@ -410,7 +409,7 @@ class ManageUsers extends Component {
                                     )}
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    <Body size="lg">Page {this.state.currentPage} of {Math.ceil(this.state.userCount/this.state.usersPerPage)}</Body>
+                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.userCount/this.state.usersPerPage)}</Body>
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage) && (

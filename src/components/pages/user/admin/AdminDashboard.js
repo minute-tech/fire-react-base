@@ -6,9 +6,9 @@ import { toast } from 'react-toastify'
 import { FaChevronLeft, FaPlus, FaUserAlt } from 'react-icons/fa'
 
 import { Button } from '../../../../utils/styles/buttons'
-import { Hr, Wrapper } from '../../../../utils/styles/misc'
+import { Hr } from '../../../../utils/styles/misc'
 import { H1, LLink } from '../../../../utils/styles/text'
-import { BTYPES, DEFAULT_SITE } from '../../../../utils/constants'
+import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
@@ -28,8 +28,8 @@ class AdminDashboard extends Component {
                 name: "Clik Clak",
                 // projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
-                    width: "400px",
-                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Flogo.png?alt=media&token=d6ba49f1-057d-4ab4-8bb2-ef0588327ce0",
+                    width: 300,
+                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Flogo.png?alt=media&token=527e10cd-3441-4060-b863-8bbe01e178b1",
                     showTitle: false,
                 },
                 hero: {
@@ -37,9 +37,11 @@ class AdminDashboard extends Component {
                     body: "",
                     cta: {
                         link: "/categories",
-                        text: "DIVE IN"
+                        text: "DIVE IN",
+                        size: SIZES.XL,
+                        color: "#470A68",
                     },                   
-                    banner: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Fbanner.png?alt=media&token=ac52851d-0ee8-4f2e-b1c3-d169daff6545",
+                    banner: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Fbanner.png?alt=media&token=0e99f5e2-fe00-4cf4-9223-62cfe8e07bc1",
                 },
                 emails: {
                     support: "help@clikclak.com",
@@ -84,7 +86,7 @@ class AdminDashboard extends Component {
                                     body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
                                     link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
                                 },
-                                background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
+                                background: "#5D666F",
                             },
                         }
                     },
@@ -141,6 +143,8 @@ class AdminDashboard extends Component {
                     cta: {
                         link: DEFAULT_SITE.HERO.CTA.LINK,
                         text: DEFAULT_SITE.HERO.CTA.TEXT,
+                        size: DEFAULT_SITE.HERO.CTA.SIZE,
+                        color: DEFAULT_SITE.HERO.CTA.COLOR,
                     },                    
                     banner: DEFAULT_SITE.HERO.BANNER,
                 },
@@ -217,7 +221,7 @@ class AdminDashboard extends Component {
 
     render() {
         return (
-            <Wrapper>
+            <>
                 <Helmet>
                     <title>Admin Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
@@ -228,12 +232,12 @@ class AdminDashboard extends Component {
                     </Button>
                 </Link>
                 <H1>Admin Dashboard</H1>
-                <LLink to={`/admin/users`}> 
-                    <Button color={this.props.theme.colors.primary}>
+                <LLink to={`/dashboard/admin/users`}> 
+                    <Button>
                         Manage Users <FaUserAlt />
                     </Button>
                 </LLink>
-                <LLink to={`/admin/messages`}> 
+                <LLink to={`/dashboard/admin/messages`}> 
                     <Button color={this.props.theme.colors.green}>
                         Manage Messages <BiMessageCheck size={18} />
                     </Button>
@@ -251,7 +255,7 @@ class AdminDashboard extends Component {
                     </>
                 )}
                 
-            </Wrapper>
+            </>
         )
     }
 }

@@ -12,7 +12,7 @@ import FormError from '../misc/FormError';
 import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
 import { Button } from '../../utils/styles/buttons.js';
 import { Centered, Hr } from '../../utils/styles/misc.js';
-import { PLACEHOLDER } from '../../utils/constants';
+import { PLACEHOLDER } from '../../utils/constants.js';
 import { FaCheck } from "react-icons/fa"
 
 class ContactForm extends Component {

@@ -1,38 +1,39 @@
 import styled, { createGlobalStyle }  from 'styled-components';
-import { rgba } from 'polished'
+import { rgb, rgba } from 'polished'
 import { FaSpinner } from 'react-icons/fa';
 import { keyframes } from 'styled-components';
 
 // Importing font into CSS global for use around app
-import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
-import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
+// import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
+// import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { BodyFont } from './text';
 
+
 export const GlobalStyle = createGlobalStyle`
+    // Try to stay away from using this Global Styling mainly for load times 
+    // See: https://github.com/styled-components/styled-components/issues/2900
     body {
         margin: 0;
-        position: relative;
-        min-height: 100vh;
-        padding-bottom: 5rem;    
-        background-color: ${props => props.theme.colors.background};
-        @media (max-width: 768px) {
-            padding-bottom: 10rem; 
-        }
     }
 
-    // TODO: loading the font from the file is where the font flashing times issue is arising from
-    // Suggested to not use globalCSS: https://github.com/styled-components/styled-components/issues/2900
-    // Maybe try and use this lib: https://thabo-ambrose.medium.com/prevent-text-font-flickering-caused-by-using-a-custom-font-family-983c4b8d548d
-    // SOLUTION: For now, we will just have to manually type them into App.css to load smoothly
-    /* @font-face {
-        font-family: {};
-        src: url(${RobotoRegular}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
-    }
+     // ** Loading the font from the file is where the font-face was taking to long to load and flashing times new roman issue is arising from
+    // Maybe try and use this lib to load in fonts from Google, etc: https://thabo-ambrose.medium.com/prevent-text-font-flickering-caused-by-using-a-custom-font-family-983c4b8d548d
+    // SOLUTION: For now, we will just have to manually load them instead of from the site public doc
+`;
 
-    @font-face {
-        font-family: {DEFAULT_SITE.FONTS.HEADING};
-        src: url(${RobotoBold}) format("truetype"); // truetype/opentype might change based on ttf or otf etc
-    } */
+export const BodyWrapper = styled.div`
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    padding-bottom: 5rem;    
+    background-color: ${props => props.theme.colors.background};
+
+    /* Overflow hidden so side nav can stay hidden, but transition-able */
+    overflow-x: hidden;
+    
+    @media (max-width: 900px) {
+        padding-bottom: 10rem; 
+    }
 
     /* Change notification colors */
     :root{
@@ -92,82 +93,45 @@ export const Spinner = styled(FaSpinner)`
 
 // Alignment //
 export const Wrapper = styled.div`
-    @media screen and (min-width: 1181px) {
-        margin: 0 auto;
-        width: 75%;
-        padding: 3% 0;
-    }
 
-    @media screen and (min-width: 561px) and (max-width: 1180px) {
-        margin: 0 auto;
-        width: 80%;
-        padding: 2% 0;
-    }
+    margin: 0 auto;
+    width: 75%;
+    padding: 3% 0;
 
-    @media screen and (max-width: 560px) {
-        margin: 0 auto;
-        width: 90%;
-        padding: 2% 0%;
+    @media (max-width: 900px) {
+        width: 85%;
     }
 `;
 
 // Containers
 export const SmContainer = styled.div`
-    @media screen and (min-width: 1181px) {
-        margin: auto;
-        width: 25%;
-        padding: 1%;
-    }
+    margin: auto;
+    width: 25%;
+    padding: 1%;
 
-    @media screen and (min-width: 561px) and (max-width: 1180px) {
-        margin: auto;
+    @media (max-width: 900px) {
         width: 70%;
-        padding: 1%;
-    }
-
-    @media screen and (max-width: 560px) {
-        margin: auto;
-        width: 85%;
-        padding: 1%;
     }
 `;
 
 export const MdContainer = styled.div`
-    @media screen and (min-width: 1181px) {
-        margin: auto;
-        width: 50%;
-        padding: 1%;
-    }
+    margin: auto;
+    width: 50%;
+    padding: 1%;
 
-    @media screen and (min-width: 561px) and (max-width: 1180px) {
-        margin: auto;
+    @media (max-width: 900px) {
         width: 80%;
-        padding: 1%;
-    }
-
-    @media screen and (max-width: 560px) {
-        margin: auto;
-        width: 90%;
-        padding: 1%;
     }
 `;
 
 export const LgContainer = styled.div`
-    @media screen and (min-width: 1181px) {
-        margin: auto;
-        width: 70%;
-        padding: 1%;
-    }
+    margin: auto;
+    width: 90%;
+    padding: 1%;
 
-    @media screen and (min-width: 561px) and (max-width: 1180px) {
+    @media (max-width: 900px) {
         margin: auto;
         width: 90%;
-        padding: 1%;
-    }
-
-    @media screen and (max-width: 560px) {
-        margin: auto;
-        width: 95%;
         padding: 1%;
     }
 `;
@@ -175,31 +139,25 @@ export const LgContainer = styled.div`
 
 // Widths
 export const SmWidth = styled.div`
-    @media screen and (min-width: 901px) {
-        width: 50% !important;
-    }
+    width: 50%;
 
-    @media screen and (max-width: 900px) {
-        width: 70% !important;
+    @media (max-width: 900px) {
+        width: 70%;
     }
 `;
 
 export const MdWidth = styled.div`
-    @media screen and (min-width: 901px) {
-        width: 75% !important;
-    }
+    width: 75%;
 
-    @media screen and (max-width: 900px) {
-        width: 80% !important;
+    @media (max-width: 900px) {
+        width: 80%;
     }
 `;
 
 export const LgWidth = styled.div`
-    @media screen and (min-width: 901px) {
-        width: 80% !important;
-    }
+    width: 80%;
 
-    @media screen and (max-width: 900px) {
+    @media (max-width: 900px) {
         width: 90% !important;
     }
 `;
@@ -288,7 +246,7 @@ export const BgMedia = styled.img`
     height: 70vh;
     object-fit: cover;
     /* filter: blur(1px); */
-    @media (max-width: 1200px), (max-height: 900px) {
+    @media (max-width: 900px), (max-height: 900px) {
         height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
@@ -299,7 +257,7 @@ export const BgColor = styled.div`
     width: 100vw;
     height: 70vh;
     background-color: ${props => props.bgColor ? props.bgColor : props.theme.colors.primary};
-    @media (max-width: 1200px), (max-height: 900px) {
+    @media (max-width: 900px), (max-height: 900px) {
         height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
@@ -307,7 +265,7 @@ export const BgColor = styled.div`
 export const BgMediaModal = styled.div`
     ${BodyFont}
     text-align: center;
-    background-color: rgb(255, 255, 255, 0.95);
+    background-color: ${props => props.noBg ? "" : rgb(255, 255, 255, 0.95)};
     border-radius: 5px;
     max-width: 60%;
     padding: 3rem 7rem;
@@ -316,7 +274,7 @@ export const BgMediaModal = styled.div`
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-    @media (max-width: 1200px), (max-height: 900px) {
+    @media (max-width: 900px), (max-height: 900px) {
         max-width: 80%;
         padding: 10px 25px 25px 25px;
     }
@@ -326,7 +284,7 @@ export const BgMediaHeading = styled.h1`
     font-size: 35px;
     font-weight: 900;
     margin-bottom: 1%;
-    @media (max-width: 1200px), (max-height: 900px) {
+    @media (max-width: 900px), (max-height: 900px) {
         font-size: 30px
     }
 `;
@@ -336,7 +294,7 @@ export const BgMediaBody = styled.div`
     line-height: 1.6;
     text-align: left;
     margin: 20px;
-    @media (max-width: 1200px), (max-height: 900px) {
+    @media (max-width: 900px), (max-height: 900px) {
         font-size: 16px;
         margin: 5px;
     }
@@ -360,6 +318,11 @@ export const Hr = styled.div`
     margin: ${props => props.margin ? props.margin : "15px 0"};
     width: ${props => props.width ? props.width : "100%"};
     float: ${props => props.selected ? props.selected : "none"};
+`;
+
+export const FullWidthLine = styled.div`
+    background-color: ${props => props.color ? props.color : props.theme.colors.primary};
+    height: 5px;
 `;
 
 export const Recaptcha = styled.div`
@@ -395,6 +358,8 @@ export const DevAlert = styled.div`
     font-family: ${props => props.theme?.fonts?.body || 'Arial'};
     letter-spacing: 2px;
 `
+
+// Modal
 export const ModalCard = styled.div`
     text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -403,6 +368,7 @@ export const ModalCard = styled.div`
     transition: 0.3s;
     padding: 30px 60px;
     position: relative;
+    width: 40%;
     z-index: 10;
     margin: 0;
     position: absolute;
@@ -410,8 +376,9 @@ export const ModalCard = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
 
-    @media (max-width: 1180px) {
+    @media (max-width: 900px) {
         padding: 15px 30px;
+        width: 80%;
     }
 
     // CSS Snippet to ensure internal words like in the message field are still readable
@@ -439,6 +406,7 @@ export const ModalContainer = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${props => rgba(props.theme.colors.grey, 0.7)}
-`
+    background-color: ${props => rgba(props.theme.colors.grey, 0.7)};
+`;
+
 
