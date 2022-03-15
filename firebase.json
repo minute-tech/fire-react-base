@@ -21,7 +21,18 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ]
+    ],
+    "headers": [ {
+        "source": "**/*",
+        "headers": [
+            {"key": "X-Content-Type-Options", "value": "nosniff"},
+            {"key": "X-Frame-Options", "value": "SAMEORIGIN"},
+            {"key": "X-UA-Compatible", "value": "ie=edge"},
+            {"key": "X-XSS-Protection", "value": "1; mode=block"},
+            {"key": "Referrer-Policy", "value": "strict-origin-when-cross-origin"},
+            {"key": "Permissions-Policy", "value": "accelerometer=(), autoplay=(self), camera=(), display-capture=(), fullscreen=(self), geolocation=(self), gyroscope=(), keyboard-map=(self), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), usb=()"}  
+        ]
+    } ]
   },
   "storage": {
     "rules": "storage.rules"

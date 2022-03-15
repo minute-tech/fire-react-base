@@ -30,7 +30,7 @@ class Header extends Component {
                             margin="0" 
                             // src={this.props.site.logo.url} 
                             src={require("../../assets/images/logos/logo.png")} 
-                            // src={require("../../assets/images/logos/cc-logo.png")} 
+                            // src={require("../../assets/images/logos/cc-logo.png")}  
                         />
                         {this.props.site.logo.showTitle && (<NavTitle removeActiveStyle>{this.props?.site?.name ?? ""}</NavTitle>)}
                     </BrandLink>

@@ -21,7 +21,7 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "set PORT=3001 && env-cmd -f .env react-scripts start",
+    "start": "set PORT=3000 && env-cmd -f .env react-scripts start",
     "start:test1": "set PORT=3001 && env-cmd -f .env.test1 react-scripts start",
     "build": "env-cmd -f .env react-scripts build",
     "build:test1": "env-cmd -f .env.test1 react-scripts build",

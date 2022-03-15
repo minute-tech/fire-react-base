@@ -56,6 +56,11 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 4. Add in icons to public 
 - Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
 
+5. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.
+https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+https://www.permissionspolicy.com/
+
 ## Multiple hosting URLs at one Firebase project
 1. Name the two targets you wish, but first make sure these are hosting site names on each of test and live projects:
  $ `firebase target:apply hosting draft draft-appname`  
