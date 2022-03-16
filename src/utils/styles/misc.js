@@ -178,6 +178,14 @@ export const InlineIcon = styled.span`
     margin: ${props => props.margin || "0"};
 `;
 
+export const GalleryImg = styled(Img)`
+    position: relative;
+    cursor: pointer;
+    &:hover {
+        opacity: .6;
+    }
+`;
+
 // Table
 export const Table = styled.table`
     border-collapse: collapse;

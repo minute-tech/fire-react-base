@@ -83,7 +83,7 @@ class ManageMessages extends Component {
         }
     }
     
-    getPrevMessages = async () => {
+    getPrevPage = async () => {
         if(this.state.currentPage !== 1){
             this.setState({
                 loadingMessages: true
@@ -120,7 +120,7 @@ class ManageMessages extends Component {
         }
     }
 
-    getNextMessages = async () => {
+    getNextPage = async () => {
         if(this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage)){
             this.setState({
                 loadingMessages: true
@@ -249,7 +249,7 @@ class ManageMessages extends Component {
                             <Row center="xs" middle="xs">
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== 1 && (
-                                        <Button onClick={() => this.getPrevMessages()}>
+                                        <Button onClick={() => this.getPrevPage()}>
                                             <FaChevronLeft /> Previous page    
                                         </Button>
                                     )}
@@ -259,7 +259,7 @@ class ManageMessages extends Component {
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage) && (
-                                        <Button onClick={() => this.getNextMessages()}>
+                                        <Button onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>
                                     )}

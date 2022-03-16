@@ -43,7 +43,7 @@ export const DEFAULT_SITE = {
         BANNER: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fbanners%2FDSC_0047.JPG?alt=media&token=8d4ff53c-11c2-4849-9479-6cd091598635",
     },
     EMAILS: {
-        MESSAGES: [
+        MESSENGERS: [
             "hi@camposjames.com",
         ],
         SUPPORT: "help@camposjames.com",

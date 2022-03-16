@@ -104,9 +104,7 @@ class AdminDashboard extends Component {
             });
 
             await setDoc(doc(firestore, "site", "sensitive"), {
-                emails: {
-                    messages: ["douglasrcjames@gmail.com"]
-                }
+                messengers: ["douglasrcjames@gmail.com"]
             }, {merge: true}).then(() => {
                 console.log("Successful write of sensitive doc to Firestore.");
                 toast.success(`Created sensitive doc.`);
@@ -206,9 +204,7 @@ class AdminDashboard extends Component {
 
             // Set sensitive doc
             await setDoc(doc(firestore, "site", "sensitive"), {
-                emails: {
-                    messages: DEFAULT_SITE.EMAILS.MESSAGES
-                }
+                messengers: DEFAULT_SITE.EMAILS.MESSENGERS
             }, {merge: true}).then(() => {
                 console.log("Successful write of sensitive doc to Firestore.");
                 toast.success(`Created sensitive doc.`);

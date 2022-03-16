@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { withTheme } from 'styled-components';
-import { Hr, Img, Wrapper } from '../../../utils/styles/misc';
-import { ALink, Body, H1 } from '../../../utils/styles/text';
+
+import { ANIMAL_GALLERY } from '../../../utils/constants';
+import { Centered, Hr, Img, Wrapper } from '../../../utils/styles/misc';
+import { ALink, Body, H1, H3 } from '../../../utils/styles/text';
 import ContactForm from '../../misc/ContactForm';
+import PhotoGallery from '../../misc/PhotoGallery';
 
 class About extends Component {
   render() {
@@ -23,7 +26,7 @@ class About extends Component {
                 margin="15px"
                 rounded 
                 float="right" 
-                src={require("../../../assets/images/misc/cat.png")}
+                src={require("../../../assets/images/misc/animals/cat.png")}
                 alt={"doug's cat"}
             />
             <Body>
@@ -51,6 +54,11 @@ class About extends Component {
                 Cupidatat laborum ex qui officia duis mollit magna sunt nulla quis incididunt non ea. Amet aliquip nostrud voluptate ex eiusmod. Cupidatat pariatur eu reprehenderit sunt nisi. 
                 Ex est ea aliquip consequat adipisicing est. Lorem do irure excepteur est elit culpa deserunt cupidatat esse. Duis aliqua do dolor Lorem duis nostrud cupidatat ea aute excepteur esse. Eiusmod adipisicing dolor ullamco id.
             </Body>
+            <Centered>
+                <H3>Animal Gallery</H3>
+                <PhotoGallery photos={ANIMAL_GALLERY} />
+            </Centered>
+            
             <Hr/>
             <ContactForm />
         </Wrapper>

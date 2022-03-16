@@ -43,12 +43,11 @@ export const onMessageCreated = functions.firestore
                     sensitiveSiteData = docWithMore;
                 } else {
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
-                    sensitiveSiteData.emails.messages = DEFAULT_SITE.EMAILS.MESSAGES;
+                    sensitiveSiteData.messengers = DEFAULT_SITE.EMAILS.MESSENGERS;
                 }
             }).catch((error) => {
                 console.log("Error getting site sensitive document:", error);
             });
-
 
             const htmlEmail =
             `
@@ -87,7 +86,7 @@ export const onMessageCreated = functions.firestore
 
             // Pack It
             const msg = {
-                to: sensitiveSiteData.emails.messages,
+                to: sensitiveSiteData.messengers,
                 from: `${publicSiteData.name} <${publicSiteData.emails.noreply}>`,
                 replyTo: `${newValues.email}`,
                 cc: "",
@@ -266,9 +265,18 @@ export const onUserCreated = functions.firestore
                     // Set default email recipient for contact messages
                     allPromises.push(
                         admin.firestore().collection("site").doc("sensitive").set({
-                            emails: {
-                                messages: DEFAULT_SITE.EMAILS.MESSAGES,
-                            },
+                            messengers: DEFAULT_SITE.EMAILS.MESSENGERS,
+                            // ** Not 100% sure if I should be setting this here or by passing firstUser: true to the newAdmins instead?
+                            admins: [{
+                                id: context.params.userId,
+                                email: newValues.email,
+                                name: `${newValues.firstName} ${newValues.lastName}`,
+                            }],
+                            superAdmins: [{
+                                id: context.params.userId,
+                                email: newValues.email,
+                                name: `${newValues.firstName} ${newValues.lastName}`,
+                            }],
                         }, {merge: true}).then(() => {
                             console.log("Successful write of sensitive doc to Firestore.");
                         }).catch((error) => {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast, addDoc } from "firebase/firestore";  
+import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast, addDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";  
 import { FaChevronLeft, FaChevronRight, FaShieldAlt, FaShieldVirus } from 'react-icons/fa';
-import { CgClose } from 'react-icons/cg';
+import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { withTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,7 @@ class ManageUsers extends Component {
             users: [],
             admins: [],
             superAdmins: [],
+            messengerEmails: [],
             currentPage: 0,
             beginCursor: "",
             finalCursor: "",
@@ -58,6 +59,7 @@ class ManageUsers extends Component {
                 this.setState({
                     admins: sensitiveData.admins || [],
                     superAdmins: sensitiveData.superAdmins || [],
+                    messengerEmails: sensitiveData.messengers || [],
                     loadingSensitive: false
                 });
             } else {
@@ -107,7 +109,7 @@ class ManageUsers extends Component {
         }
     }
     
-    getPrevMessages = async () => {
+    getPrevPage = async () => {
         if(this.state.currentPage !== 1){
             this.setState({
                 loadingUsers: true
@@ -144,7 +146,7 @@ class ManageUsers extends Component {
         }
     }
 
-    getNextMessages = async () => {
+    getNextPage = async () => {
         if(this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage)){
             this.setState({
                 loadingUsers: true
@@ -198,10 +200,10 @@ class ManageUsers extends Component {
             timestamp: Date.now(),
         }).then(() => {
             console.log("Successful add of new admin doc to Firestore.");
-            toast.success("Successful add of new admin doc to Firestore.");
+            toast.success("Successful add of new admin!");
         }).catch((error) => {
-            console.error("Error adding document: ", error);
-            toast.error(`Error setting users doc: ${error}`);
+            console.error("Error adding newAdmins doc: ", error);
+            toast.error(`Error setting newAdmins doc: ${error}`);
         });
     }
 
@@ -215,10 +217,36 @@ class ManageUsers extends Component {
             timestamp: Date.now(),
         }).then(() => {
             console.log("Successful add of new super admin doc to Firestore.");
-            toast.success("Successful add of new super admin doc to Firestore.");
+            toast.success("Successful add of new super admin!");
         }).catch((error) => {
-            console.error("Error adding document: ", error);
-            toast.error(`Error setting users doc: ${error}`);
+            console.error("Error adding newAdmins doc: ", error);
+            toast.error(`Error setting newAdmins doc: ${error}`);
+        });
+    }
+
+    addMessenger = (email) => {
+        // Write to the current newAdmins collection to be verified on the backend.
+        updateDoc(doc(firestore, "site", "sensitive"), {
+            "messengers": arrayUnion(email)
+        }).then(() => {
+            console.log("Successful add of email to get contact messages doc to Firestore.");
+            toast.success("Successful add of a new email to get contact messages.");
+        }).catch((error) => {
+            console.error("Error updating sensitive doc: ", error);
+            toast.error(`Error updating sensitive doc: ${error}`);
+        });
+    }
+
+    removeMessenger = (email) => {
+        // Write to the current newAdmins collection to be verified on the backend.
+        updateDoc(doc(firestore, "site", "sensitive"), {
+            "messengers": arrayRemove(email)
+        }).then(() => {
+            console.log("Successfully removed email from contact messages doc to Firestore.");
+            toast.success("Successfully removed email from contact messages.");
+        }).catch((error) => {
+            console.error("Error updating sensitive doc: ", error);
+            toast.error(`Error updating sensitive doc: ${error}`);
         });
     }
 
@@ -293,6 +321,79 @@ class ManageUsers extends Component {
             // Already superAdmin
             return (
                 <Body margin="0" display="inline-block" color={this.props.theme.colors.red}><FaShieldVirus /> Super Admin</Body>
+            )
+            
+        } else {
+            // Not admin
+            return (
+                ""
+            )
+        }
+    }
+
+    renderMessengerBadges = (user) => {
+        if(
+            !this.state.messengerEmails.some(email => email === user.email) && 
+            this.state.admins.some(admin => admin.id === user.id)
+        ){
+            // Is admin but not on email list
+            return (
+                <Button
+                    color={this.props.theme.colors.green}
+                    btype={BTYPES.INVERTED}
+                    size={SIZES.SM}
+                    onClick={() =>         
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                                return (
+                                    <ConfirmAlert
+                                        theme={this.props.theme}
+                                        onClose={onClose} 
+                                        headingText={`Add Contact Messenger`}
+                                        body={`Are you sure you want to add <${user.email}> to be a recipient of all incoming contact messages?`}
+                                        yesFunc={() => this.addMessenger(user.email)} 
+                                        yesText={`Yes`}
+                                        noFunc={function () {}} 
+                                        noText={`Cancel`}   
+                                    />
+                                );
+                            }
+                        })}        
+                >
+                    Set as Messenger <CgMailOpen />
+                </Button> 
+            )
+            
+        } else if (
+            this.state.messengerEmails.some(email => email === user.email) && 
+            this.state.admins.some(admin => admin.id === user.id)
+        ) {
+            // Is admin and already receiving emails, but prompted to remove
+            return (
+                <Button
+                    color={this.props.theme.colors.red}
+                    btype={BTYPES.INVERTED}
+                    size={SIZES.SM}
+                    onClick={() =>         
+                        confirmAlert({
+                            customUI: ({ onClose }) => {
+                                return (
+                                    <ConfirmAlert
+                                        theme={this.props.theme}
+                                        onClose={onClose} 
+                                        headingText={`Remove Messenger`}
+                                        body={`Are you sure you want to remove <${user.email}> so the user will no longer receive contact messages?`}
+                                        yesFunc={() => this.removeMessenger(user.email)} 
+                                        yesText={`Yes`}
+                                        noFunc={function () {}} 
+                                        noText={`Cancel`}   
+                                    />
+                                );
+                            }
+                        })}        
+                >
+                    Remove Messenger? <CgMail />
+                </Button> 
             )
             
         } else {
@@ -379,6 +480,7 @@ class ManageUsers extends Component {
                                                                 <Div margin="10px 30px 0 0">
                                                                     { this.renderAdminBadges(user) }
                                                                     { this.renderSuperAdminBadges(user) }
+                                                                    { this.renderMessengerBadges(user) }
                                                                 </Div> 
                                                                 
                                                                 <Hr/>
@@ -403,7 +505,7 @@ class ManageUsers extends Component {
                             <Row center="xs" middle="xs">
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== 1 && (
-                                        <Button onClick={() => this.getPrevMessages()}>
+                                        <Button onClick={() => this.getPrevPage()}>
                                             <FaChevronLeft /> Previous page    
                                         </Button>
                                     )}
@@ -413,7 +515,7 @@ class ManageUsers extends Component {
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage) && (
-                                        <Button onClick={() => this.getNextMessages()}>
+                                        <Button onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>
                                     )}
