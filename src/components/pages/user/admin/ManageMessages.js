@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast } from "firebase/firestore";  
+import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast, where } from "firebase/firestore";  
 import { FaChevronLeft, FaChevronRight,  } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
 import { withTheme } from 'styled-components';
@@ -157,14 +157,16 @@ class ManageMessages extends Component {
         }
     }
 
-    search = (term) => {
+    search = (field, term) => {
         this.setState({
             loadingDocs: true
         })
+
         // Construct a new query starting at this document,
         const currentPageQuery = query(
             collection(firestore, "messages"), 
             orderBy("timestamp", "desc"),
+            where(field, "==", term),
             startAfter(this.state.finalCursor),
             limit(this.state.docsPerPage)
         );
