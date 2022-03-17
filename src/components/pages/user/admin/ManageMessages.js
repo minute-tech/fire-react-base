@@ -24,11 +24,11 @@ class ManageMessages extends Component {
             currentPage: 0,
             beginCursor: "",
             finalCursor: "",
-            loadingMessages: true,
+            loadingDocs: true,
             loadingCounts: true,
             messageCount: 0,
-            messagesPerPage: 10,
-            shownMessages: []
+            docsPerPage: 10,
+            shownDocDetails: []
         }
     }
     
@@ -52,7 +52,7 @@ class ManageMessages extends Component {
         const currentPageQuery = query(
             collection(firestore, "messages"), 
             orderBy("timestamp", "desc"), 
-            limit(this.state.messagesPerPage)
+            limit(this.state.docsPerPage)
         );
         const pageDocSnaps = await getDocs(currentPageQuery);
         // Get the last visible document cursor so we can reference it for the next page
@@ -60,20 +60,20 @@ class ManageMessages extends Component {
 
         // Get content from each doc on this page 
         let messages = [];
-        let shownMessages = []
+        let shownDocDetails = []
         pageDocSnaps.forEach((doc) => {
             const docWithMore = Object.assign({}, doc.data());
             docWithMore.id = doc.id;
             messages.push(docWithMore);
-            shownMessages.push(false)
+            shownDocDetails.push(false)
         });
 
         this.setState({
             messages: messages,
             finalCursor: finalCursor,
             currentPage: 1,
-            loadingMessages: false,
-            shownMessages: shownMessages
+            loadingDocs: false,
+            shownDocDetails: shownDocDetails
         })
     }
 
@@ -86,14 +86,14 @@ class ManageMessages extends Component {
     getPrevPage = async () => {
         if(this.state.currentPage !== 1){
             this.setState({
-                loadingMessages: true
+                loadingDocs: true
             })
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "messages"), 
                 orderBy("timestamp", "desc"),
-                endAt(this.state.beginCursor),
-                limitToLast(this.state.messagesPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
+                endAt(this.state.beginCursor), 
+                limitToLast(this.state.docsPerPage) // Adding this seemed to solve the going back issue, but now everything is jumbled when going back
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
             const beginCursor = pageDocSnaps.docs[ 0 ];
@@ -102,12 +102,12 @@ class ManageMessages extends Component {
 
             // Set data in docs to state
             let messages = [];
-            let shownMessages = []
+            let shownDocDetails = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 messages.push(docWithMore);
-                shownMessages.push(false)
+                shownDocDetails.push(false)
             });
 
             this.setState({
@@ -115,22 +115,22 @@ class ManageMessages extends Component {
                 beginCursor: beginCursor,
                 finalCursor: finalCursor,
                 currentPage: prevPage,
-                loadingMessages: false,
+                loadingDocs: false,
             })
         }
     }
 
     getNextPage = async () => {
-        if(this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage)){
+        if(this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.docsPerPage)){
             this.setState({
-                loadingMessages: true
+                loadingDocs: true
             })
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "messages"), 
                 orderBy("timestamp", "desc"),
                 startAfter(this.state.finalCursor),
-                limit(this.state.messagesPerPage)
+                limit(this.state.docsPerPage)
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
             const beginCursor = pageDocSnaps.docs[ 0 ];
@@ -139,12 +139,12 @@ class ManageMessages extends Component {
 
             // Set data in docs to state
             let messages = [];
-            let shownMessages = []
+            let shownDocDetails = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 messages.push(docWithMore);
-                shownMessages.push(false)
+                shownDocDetails.push(false)
             });
 
             this.setState({
@@ -152,21 +152,56 @@ class ManageMessages extends Component {
                 beginCursor: beginCursor,
                 finalCursor: finalCursor,
                 currentPage: nextPage,
-                loadingMessages: false,
+                loadingDocs: false,
             })
         }
     }
 
+    search = (term) => {
+        this.setState({
+            loadingDocs: true
+        })
+        // Construct a new query starting at this document,
+        const currentPageQuery = query(
+            collection(firestore, "messages"), 
+            orderBy("timestamp", "desc"),
+            startAfter(this.state.finalCursor),
+            limit(this.state.docsPerPage)
+        );
+        const pageDocSnaps = await getDocs(currentPageQuery);
+        const beginCursor = pageDocSnaps.docs[ 0 ];
+        const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+        const nextPage = this.state.currentPage + 1;
+
+        // Set data in docs to state
+        let messages = [];
+        let shownDocDetails = []
+        pageDocSnaps.forEach((doc) => {
+            const docWithMore = Object.assign({}, doc.data());
+            docWithMore.id = doc.id;
+            messages.push(docWithMore);
+            shownDocDetails.push(false)
+        });
+
+        this.setState({
+            messages: messages,
+            beginCursor: beginCursor,
+            finalCursor: finalCursor,
+            currentPage: nextPage,
+            loadingDocs: false,
+        })
+    }
+
     toggleMessage = (newStatus, index) => {
-        let tempShownMessages = this.state.shownMessages
+        let tempShownMessages = this.state.shownDocDetails
         tempShownMessages[index] = newStatus
         this.setState({
-            shownMessages: tempShownMessages
+            shownDocDetails: tempShownMessages
         })
     }
 
     render() {
-        if(this.state.loadingMessages && this.state.loadingCounts){
+        if(this.state.loadingDocs && this.state.loadingCounts){
             return (
                 <>
                     <H2>Loading... <Spinner /> </H2> 
@@ -221,7 +256,7 @@ class ManageMessages extends Component {
                                                     >
                                                         View message
                                                     </Button>
-                                                    {this.state.shownMessages[i] && (
+                                                    {this.state.shownDocDetails[i] && (
                                                         <ModalContainer onClick={() => this.toggleMessage(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{message.name}</Label> <ALink href={`mailto:${message.email}`}>&lt;{message.email}&gt;</ALink>
@@ -255,10 +290,10 @@ class ManageMessages extends Component {
                                     )}
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.messageCount/this.state.messagesPerPage)}</Body>
+                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.messageCount/this.state.docsPerPage)}</Body>
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage) && (
+                                    {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.docsPerPage) && (
                                         <Button onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>

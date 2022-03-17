@@ -29,12 +29,12 @@ class ManageUsers extends Component {
             currentPage: 0,
             beginCursor: "",
             finalCursor: "",
-            loadingUsers: true,
+            loadingDocs: true,
             loadingSensitive: true,
             loadingCounts: true,
             userCount: 0,
-            usersPerPage: 10,
-            shownUsers: []
+            docsPerPage: 10,
+            shownDocDetails: []
         }
     }
     componentDidMount = async () =>{
@@ -74,7 +74,7 @@ class ManageUsers extends Component {
         const currentPageQuery = query(
             collection(firestore, "users"), 
             orderBy("timestamp", "desc"), 
-            limit(this.state.usersPerPage)
+            limit(this.state.docsPerPage)
         );
         const pageDocSnaps = await getDocs(currentPageQuery);
         // Get the last visible document cursor so we can reference it for the next page
@@ -82,20 +82,20 @@ class ManageUsers extends Component {
         
         // Get content from each doc on this page 
         let users = [];
-        let shownUsers = []
+        let shownDocDetails = []
         pageDocSnaps.forEach((doc) => {
             const docWithMore = Object.assign({}, doc.data());
             docWithMore.id = doc.id;
             users.push(docWithMore);
-            shownUsers.push(false)
+            shownDocDetails.push(false)
         });
 
         this.setState({
             users: users,
             finalCursor: finalCursor,
             currentPage: 1,
-            loadingUsers: false,
-            shownUsers: shownUsers
+            loadingDocs: false,
+            shownDocDetails: shownDocDetails
         })
     }
 
@@ -112,14 +112,14 @@ class ManageUsers extends Component {
     getPrevPage = async () => {
         if(this.state.currentPage !== 1){
             this.setState({
-                loadingUsers: true
+                loadingDocs: true
             })
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "users"), 
                 orderBy("timestamp", "desc"),
                 endAt(this.state.beginCursor),
-                limitToLast(this.state.usersPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
+                limitToLast(this.state.docsPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
             const beginCursor = pageDocSnaps.docs[ 0 ];
@@ -128,12 +128,12 @@ class ManageUsers extends Component {
 
             // Set data in docs to state
             let users = [];
-            let shownUsers = []
+            let shownDocDetails = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 users.push(docWithMore);
-                shownUsers.push(false)
+                shownDocDetails.push(false)
             });
 
             this.setState({
@@ -141,22 +141,22 @@ class ManageUsers extends Component {
                 beginCursor: beginCursor,
                 finalCursor: finalCursor,
                 currentPage: prevPage,
-                loadingUsers: false,
+                loadingDocs: false,
             })
         }
     }
 
     getNextPage = async () => {
-        if(this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage)){
+        if(this.state.currentPage !== Math.ceil(this.state.userCount/this.state.docsPerPage)){
             this.setState({
-                loadingUsers: true
+                loadingDocs: true
             })
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "users"), 
                 orderBy("timestamp", "desc"),
                 startAfter(this.state.finalCursor),
-                limit(this.state.usersPerPage)
+                limit(this.state.docsPerPage)
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
             const beginCursor = pageDocSnaps.docs[ 0 ];
@@ -165,12 +165,12 @@ class ManageUsers extends Component {
 
             // Set data in docs to state
             let users = [];
-            let shownUsers = []
+            let shownDocDetails = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 users.push(docWithMore);
-                shownUsers.push(false)
+                shownDocDetails.push(false)
             });
 
             this.setState({
@@ -178,16 +178,16 @@ class ManageUsers extends Component {
                 beginCursor: beginCursor,
                 finalCursor: finalCursor,
                 currentPage: nextPage,
-                loadingUsers: false,
+                loadingDocs: false,
             })
         }
     }
 
     toggleUser = (newStatus, index) => {
-        let tempShownMessages = this.state.shownUsers
+        let tempShownMessages = this.state.shownDocDetails
         tempShownMessages[index] = newStatus
         this.setState({
-            shownUsers: tempShownMessages
+            shownDocDetails: tempShownMessages
         })
     }
 
@@ -405,7 +405,7 @@ class ManageUsers extends Component {
     }
 
     render() {
-        if(this.state.loadingUsers && this.state.loadingCounts && this.state.loadingSensitive){
+        if(this.state.loadingDocs && this.state.loadingCounts && this.state.loadingSensitive){
             return (
                 <>
                     <H2>Loading... <Spinner /> </H2> 
@@ -472,7 +472,7 @@ class ManageUsers extends Component {
                                                         View full details
                                                     </Button>
 
-                                                    {this.state.shownUsers[i] && (
+                                                    {this.state.shownDocDetails[i] && (
                                                         <ModalContainer onClick={() => this.toggleUser(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{user.firstName} {user.lastName}</Label> <ALink href={`mailto:${user.email}`}>&lt;{user.email}&gt;</ALink>
@@ -511,10 +511,10 @@ class ManageUsers extends Component {
                                     )}
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.userCount/this.state.usersPerPage)}</Body>
+                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.userCount/this.state.docsPerPage)}</Body>
                                 </Col>
                                 <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage) && (
+                                    {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.docsPerPage) && (
                                         <Button onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>
