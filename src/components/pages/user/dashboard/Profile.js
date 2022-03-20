@@ -48,15 +48,6 @@ class Profile extends Component {
         });
     }
 
-    // TODO add input for email for me
-    sendPasswordReset = (email) => {
-        // firebase.auth().sendPasswordResetEmail(email).then(() => {
-        //     toast.success(`Password reset email sent to user's email on file, check your inbox!`);
-        // }).catch((error) => {
-        //     toast.error(`Error sending password reset link: ${error}`);
-        // });
-    }
-
     setThemeScheme = (currentScheme, userId) => {
         if(currentScheme === SCHEMES.DARK){
             // Currently Dark Theme, change to Light

@@ -167,7 +167,6 @@ export const onUserCreated = functions.firestore
                         })
                     );
                 } else {
-                    // TODO Test for sure that this is the first user!
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
 
                     // Set default site public data like theme, logo, etc
@@ -375,7 +374,6 @@ export const onAdminCreated = functions.firestore
                 );
             }
 
-            // TODO: send user an email for record and instructing them where to visit!
             return Promise.all(allPromises);
         } catch (error) {
             console.error(error);

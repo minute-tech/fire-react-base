@@ -49,10 +49,6 @@ class UserLogin extends Component {
                     }).catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
-                        if(error.code === "auth/multi-factor-auth-required"){
-                            // TODO: add MFA to user accounts as an OPTION if admin its REQUIRED
-                            console.log("MFA required.")
-                        } 
                         
                         console.log("Error signing in: " + errorCode + " - " + errorMessage)
                         if(errorCode === "auth/user-not-found" || errorCode === "auth/wrong-password"){

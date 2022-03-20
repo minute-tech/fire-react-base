@@ -27,44 +27,94 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 * react-icons
     * Popular icon usage like font Awesome
 
-## Setup Firebase
-1. Create live and test Firebase projects for this new site, initializing Analytics, Authentication, Firestore, Storage, Hosting, and Functions in the Firebase project consoles.
+## Initialization
 
-2. Clear existing Firebase project aliases:
-- $ `firebase use --clear`
+1. Create Github project using this template
+- Name with a dash `-` instead of a dot `.` such as `camposjames-com` to line up with Firebase project name
 
-3. Set new Firebase project aliases:
+2. Clone this new Github project to desktop for setup
+
+3. Create 2 Firebase projects (live and test) for this new site @ https://console.firebase.google.com/
+- Names with a dash `-` instead of a dot `.` such as `camposjames-com` to match GitHub repo name
+- Initialize Analytics, Authentication, Firestore, Storage, Hosting, and Functions in the Firebase project console by clicking through those tabs on the left
+- Add a web app under Gear > Project Settings > Your Apps, then grab the Config snippet to copy past in a `.env` file (copy and rename `template.env` to `.env`)
+- You be prompted for Blaze billing in Functions tab, enable and set an alert to like $25, this won't cost much unless your app blows up!
+
+4. Install NPM libraries
+- Run `npm install` in the terminal window in main directory
+- Navigate to functions directory with `cd ./functions/` then run `npm install` there as well, then back to main directory `cd ../`
+
+5. Set new Firebase project aliases:
+- Delete file `.firebaserc`
 - $ `firebase use --add` once for each 'live' and 'test'
 
-4. Set SendGrid key:
-- $ `firebase functions:config:set sendgrid_api.key="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxx" --project test` 
+6. Set Firebase Function variables (SendGrid)
+- $ `firebase functions:config:set sendgrid_api.key="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" --project test`
+- $ `firebase functions:config:set sendgrid_api.key="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" --project live`
 
-5. Deploy to alias
-- $ `firebase deploy --project=test`
-- Note that any Firebase Hosting accessed will always use the `production` environment, and live (not localhost) links, will always be at the `live` Firebase project! i.e. `test-fire-react-base` is still using the `fire-react-base` project env.
+7. Search for TODOs around code
+- "Fire React Base" / "fire-react-base" usages replaced by your app name in some places
+- Update `name` in `package.json` from `fire-react-base` to your appname
+- Update `robots.txt` to be the main domain for this site, with extension path of `/sitemap.xml`
+- Update `sitemap.xml` to be the main domain for this site with current date. Remember to come back to this file and update the paths for SEO!
+- Update `manifest.json` to be this app's name and colors. This file is used for installing the web app on mobile and desktop devices.
+- Generate Privacy Policy and Terms & Conditions for the site nad replace existing pages
+- Update `index.html` in `public` folder such as default `<title>`, `theme-color`, `description`, and more
+- Update `README.md`, at least the title and description to this project. I just copy-paste the same description used in `index.html`.
 
-6. If custom domain, add it to the authorized domain in Firebase console > Authentication > Sign in Method 
-- Make sure to add `sitename.com` and `www.sitename.com`
-
-## Change from Default Base
-1. Check app for "TODO:" tags
-
-2. For now manually creating with button, so input theme details into the createCustomSite function in Admin Dashboard
-
-3. To update font, see `App.css` in src assets
-
-4. Add in icons to public 
+8. Add in icons to public 
 - Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
 
-5. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.
-https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-https://www.permissionspolicy.com/
+9. Update font at `App.css` in src assets
+- font `.ttf`/`.otf` font file placed in assets > fonts
 
-## Multiple hosting URLs at one Firebase project
+10. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
+- https://www.permissionspolicy.com/
+
+11. Build 
+- $ `npm run-script build`
+- $ `npm run-script build:test1` if using another `.env`
+
+12. Deploy to alias
+- $ `firebase deploy --project=live`
+- Note that any Firebase Hosting accessed will always use the `production` environment, and live (not localhost) links, will always be at the `live` Firebase project! i.e. `test-fire-react-base` is still using the `fire-react-base` project env.
+
+99. Extra Config
+- If custom domain, add it to the authorized domain in Firebase console > Authentication > Sign in Method 
+    - Make sure to add `sitename.com` and `www.sitename.com`
+
+## Customization
+
+1. Default `site` collection created when the first user doc is added and is auto set to be a super admin.
+
+2. For now manually creating custom sites with button click, triggering a hard coded constant object to be set on Firestore. So just hard code your theme details into the `createCustomSite()` function in Admin Dashboard, `site` > `public` doc must be missing for buttons to appear.
+
+## Multiple Firebase project .env's 
+Building from multiple .env files is using the library installed by `npm install env-cmd`.
+
+1. Create or use another Firebase project and get the config variables to place in our `.env.test1` file. Make sure to set all the steps above that pertain to a Firebase project being used with this template.
+- See `package.json` for npm build changes for .test1, etc
+
+2. Add the newly created Firebase project to this React project
+- $ `firebase use --add`
+
+3. Run a test environment (.env file is different)
+- $ `npm run-script start:test1`
+
+4. Build a test environment (.env file is different)
+- $ `npm run-script build:test1` 
+
+4. Deploy to test environment
+- $ `firebase deploy --project=test --only hosting`
+
+## Multiple hosting URLs for one Firebase project 
+Sometimes you may want to showcase a quick frontend draft for the client. You can deploy that build directly to a new hosting URL like "draft1"
+
 1. Name the two targets you wish, but first make sure these are hosting site names on each of test and live projects:
- $ `firebase target:apply hosting draft draft-appname`  
- $ `firebase target:apply hosting prod prod-appname`  
+-  $ `firebase target:apply hosting draft draft-appname`  
+-  $ `firebase target:apply hosting prod prod-appname`  
  
 2. Then update `firebase.json` file like so:  
 ```
@@ -111,23 +161,5 @@ https://www.permissionspolicy.com/
 4. Clear target names:
  $ `firebase target:clear hosting draft`
 
-## Pushing current source code to showcase on new project
-Building from multiple .env files is using the library installed by `npm install env-cmd`.
-
-1. Create or use another Firebase project and get the config variables to place in our `.env.test1` file. Make sure to set all the steps above that pertain to a Firebase project being used with this template.
-- See `package.json` for npm build changes for .test1, etc
-
-2. Add the newly created Firebase project to this React project
- $ `firebase use --add`
-
-3. Run a test environment (.env file is different)
- $ `npm run-script start:test1` 
-
-4. Build a test environment (.env file is different)
- $ `npm run-script build:test1` 
-
-4. Deploy to test environment
- $ `firebase deploy --project=test --only hosting`
-
 ## Misc
-- More CLI commands: https://firebase.google.com/docs/cli
+- More Firebase CLI commands: https://firebase.google.com/docs/cli
