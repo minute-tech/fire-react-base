@@ -3,15 +3,14 @@ import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc
 import { FaChevronLeft, FaChevronRight,  } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
 import { withTheme } from 'styled-components';
+import { Helmet } from 'react-helmet-async';
+import { Col, Grid, Row } from 'react-flexbox-grid';
 
 import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer } from '../../../../utils/styles/misc'
-import { ALink, Body, H1, H2, Label } from '../../../../utils/styles/text'
+import { ALink, Body, H1, H2, Label, LLink } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
-import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
-import { Col, Grid, Row } from 'react-flexbox-grid';
 import { BTYPES, SIZES } from '../../../../utils/constants.js';
 
 
@@ -178,12 +177,12 @@ class ManageMessages extends Component {
                     <Helmet>
                         <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
-                    <Link to="/dashboard/admin">
+                    <LLink to="/dashboard/admin">
                         <Button>
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
                         </Button>
-                    </Link>
+                    </LLink>
                     <H1>Contact Messages: {this.state.messageCount}</H1>
                     {this.state.messageCount === 0 && (
                         <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No messages yet!</Body>

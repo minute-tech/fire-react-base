@@ -4,14 +4,13 @@ import { BiMessageCheck } from "react-icons/bi"
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
 import { FaChevronLeft, FaPlus, FaUserAlt } from 'react-icons/fa'
+import { Helmet } from 'react-helmet-async'
 
 import { Button } from '../../../../utils/styles/buttons'
 import { Hr } from '../../../../utils/styles/misc'
 import { H1, LLink } from '../../../../utils/styles/text'
 import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
-import { Helmet } from 'react-helmet-async'
-import { Link } from 'react-router-dom'
 
 class AdminDashboard extends Component {
     createCustomSite = async () => {
@@ -221,12 +220,12 @@ class AdminDashboard extends Component {
                 <Helmet>
                     <title>Admin Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
-                <Link to="/dashboard">
+                <LLink to="/dashboard">
                     <Button>
                         <FaChevronLeft />
                         &nbsp; Back to User Dashboard
                     </Button>
-                </Link>
+                </LLink>
                 <H1>Admin Dashboard</H1>
                 <LLink to={`/dashboard/admin/users`}> 
                     <Button>

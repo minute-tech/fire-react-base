@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { AiOutlineReload } from 'react-icons/ai';
 
 import { Button } from '../../../utils/styles/buttons';
 import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
-import { Body, H2 } from '../../../utils/styles/text';
+import { Body, H2, LLink } from '../../../utils/styles/text';
 import { SIZES } from '../../../utils/constants';
 
 class ErrorBoundary extends React.Component {
@@ -30,7 +29,7 @@ class ErrorBoundary extends React.Component {
           <div style={{ height: "100vh" }}>
             <Wrapper>
                 <H2>Something went wrong</H2>
-                <Body>Sorry about this! Please <Link to="/about">contact us</Link> if the error persists.</Body>
+                <Body>Sorry about this! Please <LLink to="/about">contact us</LLink> if the error persists.</Body>
                 <Hr/>
                 <Body size={SIZES.SM}>  
                     <b>More info:</b>  

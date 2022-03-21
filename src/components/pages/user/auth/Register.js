@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { createUserWithEmailAndPassword, RecaptchaVerifier, updateProfile } from 'firebase/auth';
 import { FaChevronLeft } from 'react-icons/fa';
@@ -117,12 +116,12 @@ class Register extends Component {
                 <Helmet>
                     <title>Register {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                 </Helmet>
-                <Link to="/">
+                <LLink to="/">
                     <Button>
                         <FaChevronLeft />
                         &nbsp; Return home
                     </Button>
-                </Link>
+                </LLink>
                 <H1>Register</H1>
                 <Formik
                     initialValues={{

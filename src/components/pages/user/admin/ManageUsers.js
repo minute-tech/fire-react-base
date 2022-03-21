@@ -4,17 +4,16 @@ import { FaChevronLeft, FaChevronRight, FaShieldAlt, FaShieldVirus } from 'react
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { withTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import { confirmAlert } from 'react-confirm-alert';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { toast } from 'react-toastify';
 
 import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div } from '../../../../utils/styles/misc'
-import { ALink, Body, H1, H2, Label } from '../../../../utils/styles/text'
+import { ALink, Body, H1, H2, Label, LLink } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
 import { BTYPES, SIZES } from '../../../../utils/constants.js';
-import { confirmAlert } from 'react-confirm-alert';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 
 class ManageUsers extends Component {
@@ -417,12 +416,12 @@ class ManageUsers extends Component {
                     <Helmet>
                         <title>Manage Users {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
-                    <Link to="/dashboard/admin">
+                    <LLink to="/dashboard/admin">
                         <Button>
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
                         </Button>
-                    </Link>
+                    </LLink>
                     <H1>Manage Users: {this.state.userCount}</H1>
                     {this.state.userCount === 0 && (
                         <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No users yet!</Body>
