@@ -24,35 +24,35 @@ class AdminDashboard extends Component {
             console.log("Public doc doesn't exist, go ahead and create default!");
             
             await setDoc(publicRef, {
-                name: "Clik Clak",
+                name: "Campos James LLC",
                 // projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
-                    width: 300,
-                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Flogo.png?alt=media&token=527e10cd-3441-4060-b863-8bbe01e178b1",
-                    showTitle: false,
-                },
-                hero: {
-                    heading: "",
-                    body: "",
-                    cta: {
-                        link: "/categories",
-                        text: "DIVE IN",
-                        size: SIZES.XL,
-                        color: "#470A68",
-                    },                   
-                    banner: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fclikclak%2Fbanner.png?alt=media&token=0e99f5e2-fe00-4cf4-9223-62cfe8e07bc1",
+                    width: DEFAULT_SITE.LOGO.WIDTH,
+                    url: DEFAULT_SITE.LOGO.URL,
+                    showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 emails: {
-                    support: "help@clikclak.com",
+                    support: DEFAULT_SITE.EMAILS.SUPPORT,
                     noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+                },
+                hero: {
+                    heading: DEFAULT_SITE.HERO.HEADING,
+                    body: DEFAULT_SITE.HERO.BODY,
+                    cta: {
+                        link: DEFAULT_SITE.HERO.CTA.LINK,
+                        text: DEFAULT_SITE.HERO.CTA.TEXT,
+                        size: DEFAULT_SITE.HERO.CTA.SIZE,
+                        color: DEFAULT_SITE.HERO.CTA.COLOR,
+                    },                    
+                    banner: DEFAULT_SITE.HERO.BANNER,
                 },
                 theme: { 
                     schemes: {
                         light: {
                             value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
                             colors: {
-                                primary: "#470A68",
-                                secondary: "#000",
+                                primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+                                secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
                                 tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
                                 red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
                                 green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
@@ -65,14 +65,14 @@ class AdminDashboard extends Component {
                                     body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
                                     link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
                                 },
-                                background: "#FAF6FF",
+                                background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
                             },
                         },
                         dark: {
                             value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
                             colors: {
-                                primary: "#470A68",
-                                secondary: "#000",
+                                primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
+                                secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
                                 tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
                                 red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
                                 green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
@@ -85,7 +85,7 @@ class AdminDashboard extends Component {
                                     body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
                                     link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
                                 },
-                                background: "#5D666F",
+                                background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
                             },
                         }
                     },
@@ -240,8 +240,8 @@ class AdminDashboard extends Component {
                 <Hr />
                 {this.props.site.unset  && (
                     <>
-                        <Button color="purple" btype={BTYPES.INVERTED} onClick={() => this.createCustomSite()}>
-                            Create Clik Clak Site <FaPlus />
+                        <Button color="pink" btype={BTYPES.INVERTED} onClick={() => this.createCustomSite()}>
+                            Create Campos James Site <FaPlus />
                         </Button>
                     
                         <Button color={this.props.theme.colors.green} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>

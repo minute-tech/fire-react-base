@@ -3,7 +3,8 @@
     "default": "fire-react-base",
     "test": "test-fire-react-base",
     "live": "fire-react-base",
-    "clikclak-com": "clikclak-com",
-    "test-clikclak-com": "test-clikclak-com"
-  }
+    "camposjames-com": "camposjames-com",
+    "test-camposjames-com": "test-camposjames-com"
+  },
+  "targets": {}
 }
