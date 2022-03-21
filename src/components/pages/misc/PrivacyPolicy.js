@@ -86,7 +86,8 @@ export default class PrivacyPolicy extends Component {
                 <Body>The right to object to processing - You have the right to object to our processing of your personal data, under certain conditions.</Body>
                 <Body>The right to data portability - You have the right to request that we transfer the data that we have collected to another organization, or directly to you, under certain conditions.</Body>
                 <Body>If you make a request, we have one month to respond to you. If you would like to exercise any of these rights, please contact us.</Body>
-
+                <Body>Contact <ALink href="mailto:help@camposjames.com">help@camposjames.com</ALink> for any requests.</Body>
+                
                 <H2>Children's Information</H2>
 
                 <Body>Another part of our priority is adding protection for children while using the internet. We encourage parents and guardians to observe, participate in, and/or monitor and guide their online activity.</Body>
