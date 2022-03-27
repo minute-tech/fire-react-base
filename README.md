@@ -30,12 +30,12 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 ## Initialization
 
 1. Create Github project using this template
-- Name with a dash `-` instead of a dot `.` such as `camposjames-com` to line up with Firebase project name
+- Name with a dash `-` instead of a dot `.` such as `appname-com` to line up with Firebase project name
 
 2. Clone this new Github project to desktop for setup
 
 3. Create 2 Firebase projects (live and test) for this new site @ https://console.firebase.google.com/
-- Names with a dash `-` instead of a dot `.` such as `camposjames-com` to match GitHub repo name
+- Names with a dash `-` instead of a dot `.` such as `appname-com` to match GitHub repo name
 - Initialize Analytics, Authentication, Firestore, Storage, Hosting, and Functions in the Firebase project console by clicking through those tabs on the left
 - Add a web app under Gear > Project Settings > Your Apps, then grab the Config snippet to copy past in a `.env` file (copy and rename `template.env` to `.env`)
 - You be prompted for Blaze billing in Functions tab, enable and set an alert to like $25, this won't cost much unless your app blows up!

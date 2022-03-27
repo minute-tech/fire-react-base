@@ -79,7 +79,7 @@ export const onMessageCreated = functions.firestore
                     <p>
                         Feel free to reach out to <a href="mailto:${publicSiteData.emails.support}">${publicSiteData.emails.support}</a> if you have any questions!
                     </p>
-                    <p style="text-align: center; margin: 50px 0;"><a href="https://camposjames.com">Powered by Campos James LLC</a></p>
+                    <p style="text-align: center; margin: 50px 0;"><a href="https://minute.tech">Powered by Minute.tech</a></p>
                 </div>
             </div>
             `;

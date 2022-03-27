@@ -13,7 +13,7 @@ export default class Credits extends Component {
                 <H1>Credits</H1>
                 <Body>Attributions to those who helped make this website happen.</Body>
                 <Ul>
-                    <Li>Designed and built by <ALink href="https://camposjames.com/" target="_blank" rel="noopener">Campos James LLC</ALink></Li>
+                    <Li>Designed and built by <ALink href="https://minute.tech" target="_blank" rel="noopener">Minute.tech</ALink></Li>
                     <Li>Support from Mom &amp; Dad</Li>
                 </Ul>
             </Wrapper>

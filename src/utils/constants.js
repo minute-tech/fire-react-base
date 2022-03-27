@@ -46,10 +46,10 @@ export const DEFAULT_SITE = {
     },
     EMAILS: {
         MESSENGERS: [
-            "hi@camposjames.com",
+            "hi@minute.tech",
         ],
-        SUPPORT: "help@camposjames.com",
-        NOREPLY: "noreply@camposjames.com",
+        SUPPORT: "help@minute.tech",
+        NOREPLY: "noreply@minute.tech",
     },
     THEME: {
         FONTS: {

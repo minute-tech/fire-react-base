@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet-async'
 import { Button } from '../../../../utils/styles/buttons'
 import { Hr } from '../../../../utils/styles/misc'
 import { H1, LLink } from '../../../../utils/styles/text'
-import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
+import { BTYPES, DEFAULT_SITE } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 
 class AdminDashboard extends Component {
@@ -24,7 +24,7 @@ class AdminDashboard extends Component {
             console.log("Public doc doesn't exist, go ahead and create default!");
             
             await setDoc(publicRef, {
-                name: "Campos James LLC",
+                name: "Minute.tech",
                 // projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
@@ -241,7 +241,7 @@ class AdminDashboard extends Component {
                 {this.props.site.unset  && (
                     <>
                         <Button color="pink" btype={BTYPES.INVERTED} onClick={() => this.createCustomSite()}>
-                            Create Campos James Site <FaPlus />
+                            Create minute.tech Site <FaPlus />
                         </Button>
                     
                         <Button color={this.props.theme.colors.green} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>

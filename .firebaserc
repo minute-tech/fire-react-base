@@ -2,9 +2,7 @@
   "projects": {
     "default": "fire-react-base",
     "test": "test-fire-react-base",
-    "live": "fire-react-base",
-    "camposjames-com": "camposjames-com",
-    "test-camposjames-com": "test-camposjames-com"
+    "live": "fire-react-base"
   },
   "targets": {}
 }

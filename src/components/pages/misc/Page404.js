@@ -21,7 +21,7 @@ export default class Page404 extends Component {
                 </Button>
             </LLink>
             <H1><BiError style={{}} /> Page Not Found</H1>
-            <Body>Sorry, but it looks like the page you were looking for was not found in our directory. Please check the address, or contact <ALink href="mailto:help@camposjames.com">help@camposjames.com</ALink></Body>
+            <Body>Sorry, but it looks like the page you were looking for was not found in our directory. Please check the address, or contact <ALink href="mailto:help@minute.tech">help@minute.tech</ALink></Body>
         </Wrapper>
     );
   }
