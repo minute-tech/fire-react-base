@@ -49,8 +49,8 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 - $ `firebase use --add` once for each 'live' and 'test'
 
 6. Set Firebase Function variables (SendGrid)
-- $ `firebase functions:config:set sendgrid_api.key="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" --project test`
-- $ `firebase functions:config:set sendgrid_api.key="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" --project live`
+- $ `firebase functions:config:set sendgrid_api.key="SG.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" --project test`
+- $ `firebase functions:config:set sendgrid_api.key="SG.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" --project live`
 
 7. Search for TODOs around code
 - "Fire React Base" / "fire-react-base" usages replaced by your app name in some places
