@@ -30,7 +30,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 ## Initialization
 
 1. Create Github project using this template
-- Name with a dash `-` instead of a dot `.` such as `appname-com` to line up with Firebase project name
+   - Name with a dash `-` instead of a dot `.` such as `appname-com` to line up with Firebase project name
 
 2. Clone this new Github project to desktop for setup
 
