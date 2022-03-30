@@ -62,7 +62,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - Update `index.html` in `public` folder such as default `<title>`, `theme-color`, `description`, and more
    - Update `README.md`, at least the title and description to this project. I just copy-paste the same description used in `index.html`.
 
-**8. Add in icons to public **
+**8. Add in icons to public**
    - Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
 
 **9. Update font at `App.css` in src assets**
@@ -73,7 +73,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
    - https://www.permissionspolicy.com/
 
-**11. Build **
+**11. Build**
    - $ `npm run-script build`
    - $ `npm run-script build:test1` if using another `.env`
 
@@ -118,7 +118,7 @@ Sometimes you may want to showcase a quick frontend draft for the client. You ca
    -  $ `firebase target:apply hosting draft draft-appname`  
    -  $ `firebase target:apply hosting prod prod-appname`  
  
-**2. Then update `firebase.json` file like so:  **
+**2. Then update `firebase.json` file like so:**
 ```
 ...
 "hosting": [
@@ -157,7 +157,7 @@ Sometimes you may want to showcase a quick frontend draft for the client. You ca
 
 ```  
 
-**3. Then deploy to specific target like so:  **
+**3. Then deploy to specific target like so:**
    - $ `firebase deploy --only hosting:draft --project=test`
 
 **4. Clear target names:**
