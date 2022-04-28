@@ -152,7 +152,6 @@ class UserLogin extends Component {
                                             required
                                             onChange={props.handleChange}
                                             name="password"
-                                            autoComplete={"off"}
                                             value={props.values.password}
                                             placeholder={PLACEHOLDER.PASSWORD}
                                             onKeyUp={() => this.setState({ errors: { password: false } })}

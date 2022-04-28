@@ -215,7 +215,6 @@ class Register extends Component {
                                         required
                                         onChange={props.handleChange}
                                         name="password"
-                                        autoComplete={"off"}
                                         onKeyUp={() => this.setState({ errors: { password: false } })}
                                         onClick={() => this.setState({ errors: { password: false } })}
                                         value={props.values.password}
@@ -235,7 +234,6 @@ class Register extends Component {
                                         required
                                         onChange={props.handleChange}
                                         name="confirmPassword"
-                                        autoComplete={"off"}
                                         onKeyUp={() => this.setState({ errors: { confirmPassword: false } })}
                                         onClick={() => this.setState({ errors: { confirmPassword: false } })}
                                         value={props.values.confirmPassword}

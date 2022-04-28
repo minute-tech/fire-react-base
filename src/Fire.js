@@ -2,6 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
+
 // TODO: include the config vars in the .env file
 const liveConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_LIVE_API_KEY,
@@ -28,16 +30,19 @@ const testConfig = {
 
 const config = (process.env.NODE_ENV === 'production' ? liveConfig : testConfig); 
 
+// TODO: switch these config definitions if not using a test env
 // const config = (liveConfig);
 
 const fire = initializeApp(config);
 const firestore = getFirestore(fire);
+const storage = getStorage(fire);
 const analytics = getAnalytics(fire);
 const auth = getAuth(fire);
 
 export {
-  fire,
-  firestore,
-  analytics, 
-  auth
+    fire,
+    firestore,
+    analytics, 
+    auth,
+    storage
 };
