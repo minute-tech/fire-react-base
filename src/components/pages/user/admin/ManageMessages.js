@@ -27,7 +27,7 @@ class ManageMessages extends Component {
             loadingCounts: true,
             messageCount: 0,
             messagesPerPage: 10,
-            shownMessages: []
+            shownModals: []
         }
     }
     
@@ -59,12 +59,12 @@ class ManageMessages extends Component {
 
         // Get content from each doc on this page 
         let messages = [];
-        let shownMessages = []
+        let shownModals = []
         pageDocSnaps.forEach((doc) => {
             const docWithMore = Object.assign({}, doc.data());
             docWithMore.id = doc.id;
             messages.push(docWithMore);
-            shownMessages.push(false)
+            shownModals.push(false)
         });
 
         this.setState({
@@ -72,7 +72,7 @@ class ManageMessages extends Component {
             finalCursor: finalCursor,
             currentPage: 1,
             loadingMessages: false,
-            shownMessages: shownMessages
+            shownModals: shownModals
         })
     }
 
@@ -101,12 +101,12 @@ class ManageMessages extends Component {
 
             // Set data in docs to state
             let messages = [];
-            let shownMessages = []
+            let shownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 messages.push(docWithMore);
-                shownMessages.push(false)
+                shownModals.push(false)
             });
 
             this.setState({
@@ -138,12 +138,12 @@ class ManageMessages extends Component {
 
             // Set data in docs to state
             let messages = [];
-            let shownMessages = []
+            let shownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 messages.push(docWithMore);
-                shownMessages.push(false)
+                shownModals.push(false)
             });
 
             this.setState({
@@ -156,11 +156,11 @@ class ManageMessages extends Component {
         }
     }
 
-    toggleMessage = (newStatus, index) => {
-        let tempShownMessages = this.state.shownMessages
-        tempShownMessages[index] = newStatus
+    toggleModal = (newStatus, index) => {
+        let tempShownModals = this.state.shownModals
+        tempShownModals[index] = newStatus
         this.setState({
-            shownMessages: tempShownMessages
+            shownModals: tempShownModals
         })
     }
 
@@ -216,19 +216,19 @@ class ManageMessages extends Component {
                                                     <Button
                                                         btype={BTYPES.TEXTED} 
                                                         size={SIZES.SM}
-                                                        onClick={() => this.toggleMessage(true, i)}         
+                                                        onClick={() => this.toggleModal(true, i)}         
                                                     >
                                                         View message
                                                     </Button>
-                                                    {this.state.shownMessages[i] && (
-                                                        <ModalContainer onClick={() => this.toggleMessage(false, i)}>
+                                                    {this.state.shownModals[i] && (
+                                                        <ModalContainer onClick={() => this.toggleModal(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{message.name}</Label> <ALink href={`mailto:${message.email}`}>&lt;{message.email}&gt;</ALink>
                                                                 <Body margin="0" size={SIZES.SM}><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
                                                                 <Body>{message.body}</Body>
                                                                 <Button 
                                                                     size={SIZES.SM} 
-                                                                    onClick={() => this.toggleMessage(false, i)}
+                                                                    onClick={() => this.toggleModal(false, i)}
                                                                 >
                                                                    <CgClose /> Close 
                                                                 </Button>

@@ -109,3 +109,19 @@ export const Slider = styled.div`
     }
   }
 `;
+
+// File input
+
+export const FileInputLabel = styled.label`
+    display: block;
+    cursor: pointer;
+    color: ${props => props.selected ? props.theme.colors.red : props.theme.colors.font.body};
+    border: 2px solid ${props => props.selected ? props.theme.colors.red : props.theme.colors.primary};
+    font-size: 18px;
+    padding: 20px;
+    margin: 25px 0px;
+    ${BodyFont};
+`;
+export const FileInput = styled.input`
+    display: none;
+`;

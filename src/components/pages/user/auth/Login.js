@@ -76,7 +76,7 @@ class UserLogin extends Component {
         this.setState({ forgotEmail: event.target.value });
     }    
 
-    toggleForgot = () => {
+    toggleModal = () => {
         this.setState({
             forgotExpanded: !this.state.forgotExpanded,
             forgotEmail: ""
@@ -184,7 +184,7 @@ class UserLogin extends Component {
                                 </Row>
                                 <Row center="xs" style={{margin:"10px 0"}}>
                                     <Col xs={12}>
-                                        <SLink onClick={() => this.toggleForgot()}>Forgot password?</SLink>
+                                        <SLink onClick={() => this.toggleModal()}>Forgot password?</SLink>
                                     </Col>
                                 </Row>
                                 <Row center="xs">
@@ -199,7 +199,7 @@ class UserLogin extends Component {
                     </Formik>
 
                     {this.state.forgotExpanded && (
-                        <ModalContainer onClick={() => this.toggleForgot()}>
+                        <ModalContainer onClick={() => this.toggleModal()}>
                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                 <H2>Forgot Password</H2>
                                 <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
@@ -214,7 +214,7 @@ class UserLogin extends Component {
                                 </Button>
                                 <Button 
                                     size={SIZES.SM}
-                                    onClick={() => this.toggleForgot()}
+                                    onClick={() => this.toggleModal()}
                                 >
                                     <CgClose /> Cancel 
                                 </Button>

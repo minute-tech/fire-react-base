@@ -6,17 +6,19 @@ import { toast } from "react-toastify";
 import { doc, updateDoc } from "firebase/firestore";
 import { withTheme } from "styled-components";
 import { FaMoon, FaSun } from "react-icons/fa";
+import { CgClose, CgAttachment } from "react-icons/cg";
+import { BsCloudUpload } from "react-icons/bs";
 import { Helmet } from "react-helmet-async";
 import { updateProfile } from "firebase/auth";
 
 import { withRouter } from "../../../../utils/hocs";
 import { updateProfileSchema } from "../../../../utils/formSchemas"
-import { Hr } from "../../../../utils/styles/misc.js";
-import { FField } from "../../../../utils/styles/forms.js";
-import { H1, Label, LLink } from "../../../../utils/styles/text.js";
+import { Hr, Img, ModalCard, ModalContainer } from "../../../../utils/styles/misc.js";
+import { FField, FileInput, FileInputLabel } from "../../../../utils/styles/forms.js";
+import { Body, H1, Label, LLink } from "../../../../utils/styles/text.js";
 import { Button } from "../../../../utils/styles/buttons.js";
 import FormError from "../../../misc/FormError.js";
-import { BTYPES, PLACEHOLDER, SCHEMES } from "../../../../utils/constants.js";
+import { BTYPES, PLACEHOLDER, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore, storage } from "../../../../Fire";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
@@ -25,7 +27,11 @@ class Profile extends Component {
         super(props)
     
         this.state = {
-            submittingUpdateUser: false
+            submittingUpdateUser: false,
+            submittingUpdateAvatar: false,
+            shownModals: [],
+            files: [],
+            uploadProgress: ""
         }
     }
 
@@ -60,13 +66,25 @@ class Profile extends Component {
         });
     }
 
-    // TODO: build upload input and style it for profile pic.
+    handleFileSelect = (e) => {
+        console.log("e.target.files: ")
+        console.log(e.target.files)
+
+        this.setState({
+            files: e.target.files
+        })
+    }
+
     uploadFile = async (file) => {
+        this.setState({
+            submittingUpdateAvatar: true
+        });
+
         // https://firebase.google.com/docs/storage/web/upload-files
         // Create the file metadata
         /** @type {any} */
         const metadata = {
-            contentType: "image/jpeg"
+            contentType: file.type
         };
         
         // Upload file and metadata to the object "images/mountains.jpg"
@@ -79,6 +97,9 @@ class Profile extends Component {
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 console.log("Upload is " + progress + "% done");
+                // this.setState({
+                //     uploadProgress: progress
+                // })
                 switch (snapshot.state) {
                     case "paused":
                     console.log("Upload is paused");
@@ -117,8 +138,31 @@ class Profile extends Component {
             () => {
                 // Upload completed successfully, now we can get the download URL
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log("File available at", downloadURL);
+                    updateDoc(doc(firestore, "users", this.props.fireUser.uid), {
+                        avatar: downloadURL
+                    }).then(() => {
+                        console.log("Successful update of user doc to Firestore.");
+                        updateProfile(auth.currentUser, {
+                            photoURL: downloadURL
+                        }).then(() => {
+                            toast.success(`Successfully updated the user profile.`);
+                            console.log("Successfully updated the user profile on firebase");
+                            this.toggleModal(false, 0)
+                            this.setState({
+                                submittingUpdateAvatar: false
+                            })
+                        }).catch((error) => {
+                            console.error(error);
+                        });
+                    }).catch((error) => {
+                        console.error("Error adding document: ", error);
+                        toast.error(`Error setting users doc: ${error}`);
+                        this.setState({
+                            submittingUpdateAvatar: false
+                        })
+                    });
                 });
+                
             }
         );
     }
@@ -153,7 +197,18 @@ class Profile extends Component {
         }
     }
 
+    
+    toggleModal = (newStatus, index) => {
+        let tempShownModals = this.state.shownModals
+        tempShownModals[index] = newStatus
+        this.setState({
+            shownModals: tempShownModals
+        })
+    }
+
     render() {
+        console.log("this.props.fireUser: ")
+        console.log(this.props.fireUser)
         return (
             <>
                 <Helmet>
@@ -184,6 +239,107 @@ class Profile extends Component {
                     {props => (
                     <Form>
                         <Grid fluid>
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    <Img 
+                                        src={this.props.user.avatar}
+                                        rounded
+                                        alt={`${this.props.user.firstName} profile picture`}
+                                        width={"300px"}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    <Button 
+                                        type="button"
+                                        btype={BTYPES.TEXTED} 
+                                        color={this.props.theme.colors.yellow}
+                                        onClick={() => this.toggleModal(true, 0)}>
+                                            update picture
+                                    </Button>
+                                    {this.state.shownModals[0] && (
+                                        <ModalContainer onClick={() => this.toggleModal(false, 0)}>
+                                            <ModalCard onClick={(e) => e.stopPropagation()}>
+                                                <Label>Update profile avatar</Label>
+                                                <Body>Select a new picture from your machine:</Body>
+                                                <FileInputLabel for="avatar" selected={this.state.files.length > 0 ? true : false}>
+                                                    <CgAttachment /> Select a new image
+                                                    <FileInput 
+                                                        id="avatar" 
+                                                        type="file" 
+                                                        accept="image/png, image/jpg, image/jpeg" 
+                                                        // multiple
+                                                        onChange={this.handleFileSelect} 
+                                                    />
+                                                    {this.state.files.length > 0 && Array.from(this.state.files).map((file, f) => {
+                                                        const fileSizeMb = (file.size / (1024 ** 2)).toFixed(2);
+                                                        if(this.state.files.length > 1){
+                                                            return (
+                                                                <div style={{ margin: "15px 0" }}>
+                                                                    <Body>{f + 1}. {file.name} <i>({fileSizeMb}Mb)</i></Body>
+                                                                </div>
+                                                            )
+                                                        } else {
+                                                            if(file.type.includes("image")){
+                                                                return (
+                                                                    <div style={{ margin: "15px 0" }}>
+                                                                        <Body>{file.name} <i>({fileSizeMb}Mb)</i></Body>
+                                                                        <br />
+                                                                        <Img 
+                                                                            key={f}
+                                                                            width="300px"
+                                                                            alt="file preview"
+                                                                            src={URL.createObjectURL(file)}
+                                                                        />
+                                                                    </div>
+                                                                    
+                                                                );
+                                                            } else {
+                                                                return (
+                                                                    <div style={{ margin: "15px 0" }}>
+                                                                        <Label>{file.name} <i>{fileSizeMb}Mb</i></Label>
+                                                                        <br />
+                                                                        <embed 
+                                                                            key={f}
+                                                                            width="100%"
+                                                                            height="auto"
+                                                                            src={URL.createObjectURL(file)}
+                                                                        />
+                                                                    </div>
+                                                                    
+                                                                );
+                                                            }
+                                                        }
+                                                    })}
+                                                    {this.state.uploadProgress && (
+                                                        <span>{this.state.uploadProgress}</span>
+                                                    )}
+                                                    {this.state.files.length > 0 && (
+                                                        <Button 
+                                                            type="button" 
+                                                            onClick={() => this.uploadFile(this.state.files[0])}
+                                                            // onClick={() => this.uploadFile(this.state.files.length > 1 ? this.state.files : this.state.files[0])}
+                                                        >
+                                                            Upload &amp; Save Avatar &nbsp;<BsCloudUpload size={20} />
+                                                        </Button>
+                                                    )}
+                                                </FileInputLabel>
+                                                
+                                                <Hr />
+                                                <Button 
+                                                    size={SIZES.SM} 
+                                                    onClick={() => this.toggleModal(false, 0)}
+                                                >
+                                                    <CgClose /> Close 
+                                                </Button>
+                                            </ModalCard>
+                                        </ModalContainer>
+                                        
+                                    )}
+                                </Col>
+                               
+                            </Row>
                             <Row>
                                 <Col sm={12} md={6}>
                                     <Label>First name:</Label>

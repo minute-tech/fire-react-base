@@ -33,7 +33,7 @@ class ManageUsers extends Component {
             loadingCounts: true,
             userCount: 0,
             usersPerPage: 10,
-            shownUsers: []
+            shownModals: []
         }
     }
     componentDidMount = async () =>{
@@ -81,12 +81,12 @@ class ManageUsers extends Component {
         
         // Get content from each doc on this page 
         let users = [];
-        let shownUsers = []
+        let shownModals = []
         pageDocSnaps.forEach((doc) => {
             const docWithMore = Object.assign({}, doc.data());
             docWithMore.id = doc.id;
             users.push(docWithMore);
-            shownUsers.push(false)
+            shownModals.push(false)
         });
 
         this.setState({
@@ -94,7 +94,7 @@ class ManageUsers extends Component {
             finalCursor: finalCursor,
             currentPage: 1,
             loadingUsers: false,
-            shownUsers: shownUsers
+            shownModals: shownModals
         })
     }
 
@@ -127,12 +127,12 @@ class ManageUsers extends Component {
 
             // Set data in docs to state
             let users = [];
-            let shownUsers = []
+            let shownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 users.push(docWithMore);
-                shownUsers.push(false)
+                shownModals.push(false)
             });
 
             this.setState({
@@ -164,12 +164,12 @@ class ManageUsers extends Component {
 
             // Set data in docs to state
             let users = [];
-            let shownUsers = []
+            let shownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 users.push(docWithMore);
-                shownUsers.push(false)
+                shownModals.push(false)
             });
 
             this.setState({
@@ -182,11 +182,11 @@ class ManageUsers extends Component {
         }
     }
 
-    toggleUser = (newStatus, index) => {
-        let tempShownMessages = this.state.shownUsers
-        tempShownMessages[index] = newStatus
+    toggleModal = (newStatus, index) => {
+        let tempShownModals = this.state.shownModals
+        tempShownModals[index] = newStatus
         this.setState({
-            shownUsers: tempShownMessages
+            shownModals: tempShownModals
         })
     }
 
@@ -466,13 +466,13 @@ class ManageUsers extends Component {
                                                     <Button
                                                         btype={BTYPES.TEXTED} 
                                                         size={SIZES.SM}
-                                                        onClick={() => this.toggleUser(true, i)}         
+                                                        onClick={() => this.toggleModal(true, i)}         
                                                     >
                                                         View full details
                                                     </Button>
 
-                                                    {this.state.shownUsers[i] && (
-                                                        <ModalContainer onClick={() => this.toggleUser(false, i)}>
+                                                    {this.state.shownModals[i] && (
+                                                        <ModalContainer onClick={() => this.toggleModal(false, i)}>
                                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                                 <Label>{user.firstName} {user.lastName}</Label> <ALink href={`mailto:${user.email}`}>&lt;{user.email}&gt;</ALink>
                                                                 <Body margin="0" size={SIZES.SM}><i>{readTimestamp(user.timestamp).date} @ {readTimestamp(user.timestamp).time}</i></Body>
@@ -485,7 +485,7 @@ class ManageUsers extends Component {
                                                                 <Hr/>
                                                                 <Button 
                                                                     size={SIZES.SM} 
-                                                                    onClick={() => this.toggleUser(false, i)}
+                                                                    onClick={() => this.toggleModal(false, i)}
                                                                 >
                                                                     <CgClose /> Close
                                                                 </Button>
