@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
@@ -22,337 +22,336 @@ import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
-export default class App extends Component {
-    constructor(props) {
-      super(props)
-        this.state = {
-            // Reminder that we cannot have a nested object with all loading or submitting flags
-            // The objects are being overwritten when we change just 1 flag. We could prevent that by
-            // copying the object, then changing it and re-setting the state, but that is cumbersome.
-            // Usually only a few loading/submitting flags per page anyways. Con is long var names lol.
-            loadingFireUser: true,
-            loadingUser: true,
-            loadingSite: true,
-            loadingReadOnlyFlags: true,
-            isLoggingIn: false,
-            fireUser: "",
-            user: "",
-            readOnlyFlags: "",
-            // Initially just pull the default site in case custom site not set yet
-            site: {
-                unset: true,
-                name: DEFAULT_SITE.NAME,
-                logo: {
-                    width: DEFAULT_SITE.LOGO.WIDTH,
-                    url: DEFAULT_SITE.LOGO.URL,
-                    showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
-                },
-                hero: {
-                    heading: DEFAULT_SITE.HERO.HEADING,
-                    body: DEFAULT_SITE.HERO.BODY,
-                    cta: {
-                        link: DEFAULT_SITE.HERO.CTA.LINK,
-                        text: DEFAULT_SITE.HERO.CTA.TEXT,
-                        size: DEFAULT_SITE.HERO.CTA.SIZE,
-                        color: DEFAULT_SITE.HERO.CTA.COLOR,
-                    },                    
-                    banner: DEFAULT_SITE.HERO.BANNER,
-                },
-                emails: {
-                    support: DEFAULT_SITE.EMAILS.SUPPORT,
-                    noreply: DEFAULT_SITE.EMAILS.NOREPLY,
-                },
-                theme: { 
-                    fonts: {
-                        heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                        body: DEFAULT_SITE.THEME.FONTS.BODY,
+function App() {
+    const [loading, setLoading] = useState({ 
+        user: true,
+        fireUser: true,
+        site: true,
+        readOnlyFlags: true
+    }); 
+
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+    const [user, setUser] = useState("");
+
+    const [fireUser, setFireUser] = useState("");
+
+    const [readOnlyFlags, setReadOnlyFlags] = useState("");
+
+    // Initially just pull the default site in case custom site not set yet
+    const [site, setSite] = useState({
+        unset: true,
+        name: DEFAULT_SITE.NAME,
+        logo: {
+            width: DEFAULT_SITE.LOGO.WIDTH,
+            url: DEFAULT_SITE.LOGO.URL,
+            showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+        },
+        hero: {
+            heading: DEFAULT_SITE.HERO.HEADING,
+            body: DEFAULT_SITE.HERO.BODY,
+            cta: {
+                link: DEFAULT_SITE.HERO.CTA.LINK,
+                text: DEFAULT_SITE.HERO.CTA.TEXT,
+                size: DEFAULT_SITE.HERO.CTA.SIZE,
+                color: DEFAULT_SITE.HERO.CTA.COLOR,
+            },                    
+            banner: DEFAULT_SITE.HERO.BANNER,
+        },
+        emails: {
+            support: DEFAULT_SITE.EMAILS.SUPPORT,
+            noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+        },
+        theme: { 
+            fonts: {
+                heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+                body: DEFAULT_SITE.THEME.FONTS.BODY,
+            },
+            schemes: {
+                light: {
+                    value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+                    colors: {
+                        primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+                        secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+                        tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+                        red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+                        green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+                        yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+                        blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+                        grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+                        font: {
+                            heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                            body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                            link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                        },
+                        background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
                     },
-                    schemes: {
-                        light: {
-                            value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
-                            colors: {
-                                primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-                                secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-                                tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-                                red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-                                green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-                                yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-                                blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-                                grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-                                lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
-                                font: {
-                                    heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                                    body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                                    link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
-                                },
-                                background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
-                            },
+                },
+                dark: {
+                    value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
+                    colors: {
+                        primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
+                        secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
+                        tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
+                        red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
+                        green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
+                        yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
+                        blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
+                        grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
+                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
+                        font: {
+                            heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
+                            body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
+                            link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
                         },
-                        dark: {
-                            value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
-                            colors: {
-                                primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
-                                secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
-                                tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
-                                red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
-                                green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
-                                yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
-                                blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
-                                grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
-                                lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
-                                font: {
-                                    heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
-                                    body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
-                                    link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
-                                },
-                                background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
-                            },
-                        },
+                        background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
                     },
                 },
             },
-            currentTheme: {
-                value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+        },
+    });
+
+    const [currentTheme, setCurrentTheme] = useState({
+        value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+        colors: {
+            primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+            secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+            tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+            red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+            green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+            yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+            blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+            grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+            lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+            font: {
+                heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+            },
+            background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+        },
+        fonts: {
+            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+            body: DEFAULT_SITE.THEME.FONTS.BODY,
+        },
+    })
+
+    const unsubPublicSite = useRef();
+    const unsubAuth = useRef();
+    const unsubUser = useRef();
+    const unsubReadOnlyFlags = useRef();
+
+    useEffect(() => {
+        let siteData = "";
+        // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
+        const assembleThemeObject = () => {
+            let themeObject = {};
+            let isDarkScheme = false;
+
+            if(user){
+                // User signed in, so grab their currently set preference
+                if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
+                    isDarkScheme = true
+                }
+            } else {
+                // No user signed in yet, so just grab the user's OS preference
+                if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
+                    isDarkScheme = true
+                }
+            }
+            
+            themeObject = { 
+                value: isDarkScheme ? site.theme.schemes.dark.value : site.theme.schemes.light.value,
                 colors: {
-                    primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-                    secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-                    tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-                    red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-                    green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-                    yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-                    blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-                    grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-                    lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+                    primary: isDarkScheme ? site.theme.schemes.dark.colors.primary : site.theme.schemes.light.colors.primary,
+                    secondary: isDarkScheme ? site.theme.schemes.dark.colors.secondary : site.theme.schemes.light.colors.secondary,
+                    tertiary: isDarkScheme ? site.theme.schemes.dark.colors.tertiary : site.theme.schemes.light.colors.tertiary,
+                    red: isDarkScheme ? site.theme.schemes.dark.colors.red : site.theme.schemes.light.colors.red,
+                    green: isDarkScheme ? site.theme.schemes.dark.colors.green : site.theme.schemes.light.colors.green,
+                    yellow: isDarkScheme ? site.theme.schemes.dark.colors.yellow : site.theme.schemes.light.colors.yellow,
+                    blue: isDarkScheme ? site.theme.schemes.dark.colors.blue : site.theme.schemes.light.colors.blue,
+                    grey: isDarkScheme ? site.theme.schemes.dark.colors.grey : site.theme.schemes.light.colors.grey,
+                    lightGrey: isDarkScheme ? site.theme.schemes.dark.colors.lightGrey : site.theme.schemes.light.colors.lightGrey,
                     font: {
-                        heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                        body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                        link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                        heading: isDarkScheme ? site.theme.schemes.dark.colors.font.heading : site.theme.schemes.light.colors.font.heading,
+                        body: isDarkScheme ? site.theme.schemes.dark.colors.font.body : site.theme.schemes.light.colors.font.body,
+                        link: isDarkScheme ? site.theme.schemes.dark.colors.font.link : site.theme.schemes.light.colors.font.link,
                     },
-                    background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+                    background: isDarkScheme ? site.theme.schemes.dark.colors.background : site.theme.schemes.light.colors.background,
                 },
                 fonts: {
-                    heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                    body: DEFAULT_SITE.THEME.FONTS.BODY,
+                    heading: site.theme.fonts.heading,
+                    body: site.theme.fonts.body
                 },
             }
+            setCurrentTheme(themeObject)
         }
-    }
 
-    componentDidMount(){
-        let siteData = "";
-        this.unsubPublicSite = onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
+        unsubPublicSite.current = onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
             if(siteDoc.exists()){
                 siteData = siteDoc.data();
-                this.setState({
-                    site: siteData,
-                    loadingSite: false
-                });
-                this.setCurrentTheme();
+                setSite(siteData)
+                setLoading(prevState => ({
+                    ...prevState,
+                    site: false
+                }));
+                assembleThemeObject();
             } else {
-                console.log("No custom site set, using theme defaults set in constructor.")
-                this.setState({
-                    loadingSite: false
-                });
+                // TODO: why does this keep triggering like crazy?
+                // AM I USING REFS correcT?! I tried without and decalrign them in useEffect (commenting out usage outside useEffect) still didnt work:/
+                console.log("No custom site set, using theme defaults in setSite.")
+                setLoading(prevState => ({
+                    ...prevState,
+                    site: false
+                }));
             }
         });
 
-        this.unsubAuth = onAuthStateChanged(auth, (fireUser) => {
-            if (fireUser) {
-                this.setState({
-                    fireUser: fireUser,
-                    loadingFireUser: false,
-                });
+        unsubAuth.current = onAuthStateChanged(auth, (fireUserData) => {
+            if (fireUserData) {
+                setFireUser(fireUserData)
+                setLoading(prevState => ({
+                    ...prevState,
+                    fireUser: false
+                }))
 
-                this.unsubUser = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
+                unsubUser.current = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
                     if(userDoc.exists()){
                         // User exists
                         const docWithMore = Object.assign({}, userDoc.data());
                         docWithMore.id = userDoc.id;
-                        this.setState({
+
+                        setUser({
                             user: docWithMore,
-                            loadingUser: false,
                         });
-                        this.setCurrentTheme(docWithMore);
+                        setLoading(prevState => ({
+                            ...prevState,
+                            user: false
+                        }))
+                        assembleThemeObject();
                     } else {
                         console.log("No user exists.")
-                        this.setState({
-                            loadingUser: false,
-                        });
+                        setLoading(prevState => ({
+                            ...prevState,
+                            user: false
+                        }))
                     }
                 });
 
                 // For seeing if admin
-                this.unsubReadOnlyFlags = onSnapshot(doc(firestore, "users", fireUser.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
+                unsubReadOnlyFlags.current = onSnapshot(doc(firestore, "users", fireUser.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
                     if(readOnlyFlagsDoc.exists()){
-                        this.setState({
-                            readOnlyFlags: readOnlyFlagsDoc.data(),
-                            loadingReadOnlyFlags: false,
-                        });
+                        setReadOnlyFlags(readOnlyFlagsDoc.data());
+                        setLoading(prevState => ({
+                            ...prevState,
+                            readOnlyFlags: false
+                        }));
                     } else {
                         console.log("No read only read only flags exists.")
-                        this.setState({
-                            loadingReadOnlyFlags: false,
-                        });
+                        setLoading(prevState => ({
+                            ...prevState,
+                            readOnlyFlags: false
+                        }));
                     }
                 });
                 
             } else {
-                this.setCurrentTheme();
                 // No user signed in
-                this.setState({
-                    loadingFireUser: false,
-                    loadingUser: false,
-                    loadingReadOnlyFlags: false,
-                });
+                assembleThemeObject();
+                setLoading(prevState => ({
+                    ...prevState,
+                    fireUser: false,
+                    user: false,
+                    readOnlyFlags: false
+                }))
             }
         });
 
-    }
-
-    componentWillUnmount(){
-        if(this.unsubPublicSite){
-            this.unsubPublicSite();
-        }
-
-        if(this.unsubUser){
-            this.unsubUser();
-        }
-
-        if(this.unsubReadOnlyFlags){
-            this.unsubReadOnlyFlags();
-        }
-    }
+        return () => {
+            if(unsubPublicSite.current){
+                unsubPublicSite?.current();
+            }
+            if(unsubUser.current){
+                unsubUser?.current();
+            }
+            if(unsubReadOnlyFlags.current){
+                unsubReadOnlyFlags?.current();
+            }
+        };
+    }, [unsubPublicSite, unsubAuth, unsubUser, unsubReadOnlyFlags, site, user, fireUser]);
 
     // These userLogging functions are to clean up, but 
     // mainly we needed to "wake up" the parent component by changing the state.
-    // Might be a better way to do this.
-    userLoggingOut = () => {
-        if(this.unsubUser){
-            this.unsubUser();
-        }
+    // Might be a better way to do this... tbd
+    const userLoggingOut = () => {
+        unsubUser?.current();
+        unsubReadOnlyFlags?.current();
 
-        if(this.unsubReadOnlyFlags){
-            this.unsubReadOnlyFlags();
-        }
-
-        this.setState({
-            fireUser: "",
-            user: "",
-            readOnlyFlags: "",
-        });
+        setFireUser("");
+        setUser("");
+        setReadOnlyFlags("")
+    }
+    
+    if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
+        return (
+            <Wrapper>
+                <H2>Loading... <Spinner /> </H2> 
+            </Wrapper>
+        )
+    } else {
+        return (
+            <HelmetProvider>
+                <Helmet>
+                    <title>{site.name ? `${site.name}` : "Fire React Base"}</title>
+                </Helmet>
+                <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
+                    <ThemeProvider theme={currentTheme}>
+                        <BodyWrapper>
+                            <BrowserRouter>
+                                <GlobalStyle /> 
+                                <FirebaseAnalytics />
+                                {process.env.NODE_ENV === 'development' && (
+                                    <DevAlert>
+                                        LOCAL SERVER
+                                    </DevAlert>
+                                )}      
+                                <Header 
+                                    site={site}
+                                    user={user} 
+                                />
+                                <ToastContainer
+                                    position="top-center"
+                                    autoClose={4000}
+                                    hideProgressBar={false}
+                                    newestOnTop={false}
+                                    theme={currentTheme.value}
+                                    closeOnClick
+                                    rtl={false}
+                                    pauseOnFocusLoss
+                                    pauseOnHover
+                                />
+                                <Views 
+                                    fireUser={fireUser} 
+                                    user={user} 
+                                    site={site}
+                                    readOnlyFlags={readOnlyFlags}
+                                    userLoggingOut={userLoggingOut} 
+                                    setIsLoggingIn={setIsLoggingIn} 
+                                    isLoggingIn={isLoggingIn}
+                                />
+                                <Footer
+                                    site={site} 
+                                />
+                            </BrowserRouter>
+                        </BodyWrapper>
+                    </ThemeProvider>
+                </IconContext.Provider>
+            </HelmetProvider>
+        );
     }
 
-    userLoggingIn = (value) => {
-        this.setState({
-            isLoggingIn: value
-        })
-    }
-
-    // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
-    setCurrentTheme = (user = "") => {
-        let themeObject = {};
-        let isDarkScheme = false;
-
-        if(user){
-            // User signed in, so grab their currently set preference
-            if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
-                isDarkScheme = true
-            }
-        } else {
-            // No user signed in yet, so just grab the user's OS preference
-            if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
-                isDarkScheme = true
-            }
-        }
-        
-        themeObject = { 
-            value: isDarkScheme ? this.state.site.theme.schemes.dark.value : this.state.site.theme.schemes.light.value,
-            colors: {
-                primary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.primary : this.state.site.theme.schemes.light.colors.primary,
-                secondary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.secondary : this.state.site.theme.schemes.light.colors.secondary,
-                tertiary: isDarkScheme ? this.state.site.theme.schemes.dark.colors.tertiary : this.state.site.theme.schemes.light.colors.tertiary,
-                red: isDarkScheme ? this.state.site.theme.schemes.dark.colors.red : this.state.site.theme.schemes.light.colors.red,
-                green: isDarkScheme ? this.state.site.theme.schemes.dark.colors.green : this.state.site.theme.schemes.light.colors.green,
-                yellow: isDarkScheme ? this.state.site.theme.schemes.dark.colors.yellow : this.state.site.theme.schemes.light.colors.yellow,
-                blue: isDarkScheme ? this.state.site.theme.schemes.dark.colors.blue : this.state.site.theme.schemes.light.colors.blue,
-                grey: isDarkScheme ? this.state.site.theme.schemes.dark.colors.grey : this.state.site.theme.schemes.light.colors.grey,
-                lightGrey: isDarkScheme ? this.state.site.theme.schemes.dark.colors.lightGrey : this.state.site.theme.schemes.light.colors.lightGrey,
-                font: {
-                    heading: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.heading : this.state.site.theme.schemes.light.colors.font.heading,
-                    body: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.body : this.state.site.theme.schemes.light.colors.font.body,
-                    link: isDarkScheme ? this.state.site.theme.schemes.dark.colors.font.link : this.state.site.theme.schemes.light.colors.font.link,
-                },
-                background: isDarkScheme ? this.state.site.theme.schemes.dark.colors.background : this.state.site.theme.schemes.light.colors.background,
-            },
-            fonts: {
-                heading: this.state.site.theme.fonts.heading,
-                body: this.state.site.theme.fonts.body
-            },
-        }
-
-        this.setState({
-            currentTheme: themeObject
-        })
-    }
-
-    render() {
-        if(this.state.loadingFireUser || this.state.loadingUser || this.state.loadingReadOnlyFlags || this.state.loadingSite){
-            return (
-                <Wrapper>
-                    <H2>Loading... <Spinner /> </H2> 
-                </Wrapper>
-            )
-        } else {
-            return (
-                <HelmetProvider>
-                    <Helmet>
-                        <title>{this.state.site.name ? `${this.state.site.name}` : "Fire React Base"}</title>
-                    </Helmet>
-                    <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
-                        <ThemeProvider theme={this.state.currentTheme}>
-                            <BodyWrapper>
-                                <BrowserRouter>
-                                    <GlobalStyle /> 
-                                    <FirebaseAnalytics />
-                                    {process.env.NODE_ENV === 'development' && (
-                                        <DevAlert>
-                                            LOCAL SERVER
-                                        </DevAlert>
-                                    )}      
-                                    <Header 
-                                        site={this.state.site}
-                                        user={this.state.user} 
-                                    />
-                                    <ToastContainer
-                                        position="top-center"
-                                        autoClose={4000}
-                                        hideProgressBar={false}
-                                        newestOnTop={false}
-                                        theme={this.state.currentTheme.value}
-                                        closeOnClick
-                                        rtl={false}
-                                        pauseOnFocusLoss
-                                        pauseOnHover
-                                    />
-                                    <Views 
-                                        fireUser={this.state.fireUser} 
-                                        user={this.state.user} 
-                                        site={this.state.site}
-                                        readOnlyFlags={this.state.readOnlyFlags}
-                                        userLoggingOut={this.userLoggingOut} 
-                                        userLoggingIn={this.userLoggingIn} 
-                                        isLoggingIn={this.state.isLoggingIn}
-                                    />
-                                    <Footer
-                                        site={this.state.site} 
-                                    />
-                                </BrowserRouter>
-                            </BodyWrapper>
-                        </ThemeProvider>
-                    </IconContext.Provider>
-                </HelmetProvider>
-            );
-        }
-    }
+    // return (<h1>hi</h1>)
 }
 
+export default App;
