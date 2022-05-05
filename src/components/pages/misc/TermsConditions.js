@@ -15,9 +15,9 @@ export default class TermsConditions extends Component {
                 </Helmet>
                 <H1>Terms &amp; Conditions</H1>
 
-                <Body>These terms and conditions outline the rules and regulations for the use of Fire React Base's Website, located at https://fire-react-base.web.app.</Body>
+                <Body>These terms and conditions outline the rules and regulations for the use of the {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} Website, located at https://fire-react-base.web.app.</Body>
 
-                <Body>By accessing this website we assume you accept these terms and conditions. Do not continue to use Fire React Base if you do not agree to take all of the terms and conditions stated on this page.</Body>
+                <Body>By accessing this website we assume you accept these terms and conditions. Do not continue to use the {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} if you do not agree to take all of the terms and conditions stated on this page.</Body>
 
                 <Body>
                     The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person log on this website and compliant to the Company's terms and conditions. 
@@ -28,7 +28,7 @@ export default class TermsConditions extends Component {
 
                 <H3>Cookies</H3>
 
-                <Body>We employ the use of cookies. By accessing Fire React Base, you agreed to use cookies in agreement with the Fire React Base's Privacy Policy. </Body>
+                <Body>We employ the use of cookies. By accessing {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}, you agreed to use cookies in agreement with the the {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} Privacy Policy. </Body>
 
                 <Body>
                     Most interactive websites use cookies to let us retrieve the user's details for each visit. Cookies are used by our website to enable the functionality of certain areas to make 
@@ -38,24 +38,24 @@ export default class TermsConditions extends Component {
                 <H3>License</H3>
 
                 <Body>
-                    Unless otherwise stated, Fire React Base and/or its licensors own the intellectual property rights for all material on Fire React Base. All intellectual property rights are reserved. 
-                    You may access this from Fire React Base for your own personal use subjected to restrictions set in these terms and conditions.
+                    Unless otherwise stated, {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} and/or its licensors own the intellectual property rights for all material on {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}. All intellectual property rights are reserved. 
+                    You may access this from {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} for your own personal use subjected to restrictions set in these terms and conditions.
                 </Body>
 
                 <Body>You must not:</Body>
                 <Ul>
-                    <Li>Republish material from Fire React Base</Li>
-                    <Li>Sell, rent or sub-license material from Fire React Base</Li>
-                    <Li>Reproduce, duplicate or copy material from Fire React Base</Li>
-                    <Li>Redistribute content from Fire React Base</Li>
+                    <Li>Republish material from {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}</Li>
+                    <Li>Sell, rent or sub-license material from {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}</Li>
+                    <Li>Reproduce, duplicate or copy material from {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}</Li>
+                    <Li>Redistribute content from {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}</Li>
                 </Ul>
 
                 <Body>This Agreement shall begin on the date hereof.</Body>
 
                 <Body>
-                    Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. Fire React Base does not filter, edit, publish or review 
-                    Comments prior to their presence on the website. Comments do not reflect the views and opinions of Fire React Base,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. 
-                    To the extent permitted by applicable laws, Fire React Base shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments 
+                    Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} does not filter, edit, publish or review 
+                    Comments prior to their presence on the website. Comments do not reflect the views and opinions of {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}, its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. 
+                    To the extent permitted by applicable laws, {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments 
                     on this website.
                 </Body>
 
@@ -70,7 +70,7 @@ export default class TermsConditions extends Component {
                     <Li>The Comments will not be used to solicit or promote business or custom or present commercial activities or unlawful activity.</Li>
                 </Ul>
 
-                <Body>You hereby grant Fire React Base a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.</Body>
+                <Body>You hereby grant {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.</Body>
 
                 <H3>Hyperlinking to our Content</H3>
 
@@ -103,7 +103,7 @@ export default class TermsConditions extends Component {
 
                 <Body>
                     We will approve link requests from these organizations if we decide that: (a) the link would not make us look unfavorably to ourselves or to our accredited businesses; (b) the organization does 
-                    not have any negative records with us; (c) the benefit to us from the visibility of the hyperlink compensates the absence of Fire React Base; and (d) the link is in the context of general resource information.
+                    not have any negative records with us; (c) the benefit to us from the visibility of the hyperlink compensates the absence of {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}; and (d) the link is in the context of general resource information.
                 </Body>
 
                 <Body>
@@ -112,7 +112,7 @@ export default class TermsConditions extends Component {
                 </Body>
 
                 <Body>
-                    If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website, you must inform us by sending an e-mail to Fire React Base. 
+                    If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website, you must inform us by sending an e-mail to {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"}. 
                     Please include your name, your organization name, contact information as well as the URL of your site, a list of any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would like to link. 
                     Wait 2-3 weeks for a response.
                 </Body>
@@ -125,7 +125,7 @@ export default class TermsConditions extends Component {
                     <Li>By use of any other description of our Website being linked to that makes sense within the context and format of content on the linking party's site.</Li>
                 </Ul>
 
-                <Body>No use of Fire React Base's logo or other artwork will be allowed for linking absent a trademark license agreement.</Body>
+                <Body>No use of the {this.props.site.name ? `${this.props.site.name}` : "Fire React Base"} logo or other artwork will be allowed for linking absent a trademark license agreement.</Body>
 
                 <H3>iFrames</H3>
 

@@ -42,6 +42,10 @@ export const Button = styled.button`
         font-weight: 700;
     `}
 
+        /* TODO: custom padding wasnt working
+        padding: ${props => props.padding ? props.padding : "25px 60px"}; */
+
+
     // Psuedo-classes
     &:hover {
         text-decoration: none;

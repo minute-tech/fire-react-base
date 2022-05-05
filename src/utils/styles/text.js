@@ -1,5 +1,6 @@
 import styled, { css }  from 'styled-components';
 import { Link } from "react-router-dom";
+import { SIZES } from '../constants';
 // import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
@@ -17,6 +18,7 @@ export const H1 = styled.h1`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
+    display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 900px) {
         font-size: 35px;
     }
@@ -27,6 +29,7 @@ export const H2 = styled.h2`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
+    display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 900px) {
         font-size: 25px;
         /* margin-bottom: 15px; */
@@ -38,6 +41,7 @@ export const H3 = styled.h3`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
+    display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 900px) {
         font-size: 20px;
     }
@@ -48,6 +52,7 @@ export const H4 = styled.h4`
     ${HeadingFont}
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
+    display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 900px) {
         font-size: 18px;
     }
@@ -61,28 +66,28 @@ export const Body = styled.p`
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 
-    ${(props) => (props.size === 'sm') && `
+    ${(props) => (props.size === SIZES.SM) && `
         font-size: 12px;
         @media (max-width: 900px) {
             font-size: 10px;
         }
     `};
 
-    ${(props) => (props.size === 'md') && `
+    ${(props) => (props.size === SIZES.MD) && `
         font-size: 16px;
         @media (max-width: 900px) {
             font-size: 14px;
         }
     `};
 
-    ${(props) => (props.size === 'lg') && `
+    ${(props) => (props.size === SIZES.LG) && `
         font-size: 20px;
         @media (max-width: 900px) {
             font-size: 18px;
         }
     `};
 
-    ${(props) => (props.size === 'xl') && `
+    ${(props) => (props.size === SIZES.XL) && `
         font-size: 28px;
         @media (max-width: 900px) {
             font-size: 24px;

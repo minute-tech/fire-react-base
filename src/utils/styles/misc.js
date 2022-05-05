@@ -6,7 +6,7 @@ import { keyframes } from 'styled-components';
 // Importing font into CSS global for use around app
 // import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 // import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
-import { BodyFont } from './text';
+import { BodyFont, HeadingFont } from './text';
 
 
 export const GlobalStyle = createGlobalStyle`
@@ -290,7 +290,7 @@ export const BgMediaModal = styled.div`
 
 export const BgMediaHeading = styled.h1`
     font-size: 35px;
-    font-weight: 900;
+    ${HeadingFont}
     margin-bottom: 1%;
     @media (max-width: 900px), (max-height: 900px) {
         font-size: 30px
@@ -330,7 +330,17 @@ export const Hr = styled.div`
 
 export const FullWidthLine = styled.div`
     background-color: ${props => props.color ? props.color : props.theme.colors.primary};
-    height: 5px;
+    height: ${props => props.height ? props.height : "5px"};
+    padding: ${props => props.padding ? props.padding : "0"};
+`;
+
+export const FullWidthHeader = styled.div`
+    width: 100%;
+    height: 200px;
+    margin-bottom: 50px;
+    background-image: url(${props => props.src});
+    background-position: 50% 50%; // change me around to move up and down!
+    background-size: cover;
 `;
 
 export const Recaptcha = styled.div`

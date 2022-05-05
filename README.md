@@ -55,10 +55,9 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 **7. Search for TODOs around code**
    - "Fire React Base" / "fire-react-base" usages replaced by your app name in some places
    - Update `name` in `package.json` from `fire-react-base` to your appname
-   - Update `robots.txt` to be the main domain for this site, with extension path of `/sitemap.xml`
+   - Update `robots.txt` to be the main domain for this site, with extension path of `/sitemap.xml`. This is used for SEO.
    - Update `sitemap.xml` to be the main domain for this site with current date. Remember to come back to this file and update the paths for SEO!
    - Update `manifest.json` to be this app's name and colors. This file is used for installing the web app on mobile and desktop devices.
-   - Generate Privacy Policy and Terms & Conditions for the site nad replace existing pages
    - Update `index.html` in `public` folder such as default `<title>`, `theme-color`, `description`, and more
    - Update `README.md`, at least the title and description to this project. I just copy-paste the same description used in `index.html`.
 
@@ -69,6 +68,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - font `.ttf`/`.otf` font file placed in assets > fonts
 
 **10. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.**
+   - Check `firebase.json`
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
    - https://www.permissionspolicy.com/

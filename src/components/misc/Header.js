@@ -28,8 +28,9 @@ class Header extends Component {
                         <NavLogo 
                             width={this.props.site.logo.width}
                             margin="0" 
-                            // src={this.props.site.logo.url} 
-                            src={require("../../assets/images/logos/logo.png")} 
+                            src={this.props.site.logo.url} 
+                            // TODO: if logo is loading slow, just load from local folder instead of URL
+                            // src={require("../../assets/images/logos/logo.png")} 
                             // src={require("../../assets/images/logos/cc-logo.png")}  
                         />
                         {this.props.site.logo.showTitle && (<NavTitle removeActiveStyle>{this.props?.site?.name ?? ""}</NavTitle>)}
@@ -109,7 +110,7 @@ class Header extends Component {
                 </BurgerNavContainer>
 
             </HeaderContainer>
-            <FullWidthLine />
+            <FullWidthLine height={"5px"}/>
             </>
         );
     }

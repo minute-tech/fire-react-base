@@ -4,6 +4,7 @@ import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
+import { FaCheck } from "react-icons/fa"
 
 import { firestore } from "../../Fire";
 import { CField, FField } from '../../utils/styles/forms';
@@ -13,21 +14,28 @@ import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
 import { Button } from '../../utils/styles/buttons.js';
 import { Centered, Hr } from '../../utils/styles/misc.js';
 import { PLACEHOLDER } from '../../utils/constants.js';
-import { FaCheck } from "react-icons/fa"
 
 class ContactForm extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            messageSubmitted: false
+            messageSubmitted: false,
+            submittingMessage: false
         }
     }
 
     submitMessage = (values, resetForm) => {
+        this.setState({
+            submittingMessage: true
+        })
         if(!values.policyAccept){
             toast.warn('Please accept our Privacy Policy and Terms & Conditions.');
+            this.setState({
+                submittingMessage: false
+            })
         } else {
+            toast.dismiss();
             addDoc(collection(firestore, "messages"), {
                 name: values.name,
                 email: values.email,
@@ -37,12 +45,16 @@ class ContactForm extends Component {
                 console.log("doc: ");
                 console.log(doc);
                 this.setState({
-                    messageSubmitted: true
+                    messageSubmitted: true,
+                    submittingMessage: false
                 })
                 toast.success(`Message submitted successfully, thanks!`);
                 resetForm();
             }).catch(error => {
                 toast.error(`Error submitting message: ${error}`);
+                this.setState({
+                    submittingMessage: false
+                })
             });
         }
        

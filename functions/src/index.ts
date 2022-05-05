@@ -173,7 +173,7 @@ export const onUserCreated = functions.firestore
                     allPromises.push(
                         admin.firestore().collection("site").doc("public").set({
                             name: DEFAULT_SITE.NAME,
-                            // projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID, // TODO: get this from firebase somehow
+                            projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID, // TODO: get this from firebase somehow
                             logo: {
                                 width: DEFAULT_SITE.LOGO.WIDTH,
                                 url: DEFAULT_SITE.LOGO.URL,

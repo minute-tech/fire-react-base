@@ -7,20 +7,19 @@ import { doc, updateDoc } from "firebase/firestore";
 import { withTheme } from "styled-components";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { CgClose, CgAttachment } from "react-icons/cg";
-import { BsCloudUpload } from "react-icons/bs";
 import { Helmet } from "react-helmet-async";
 import { updateProfile } from "firebase/auth";
 
 import { withRouter } from "../../../../utils/hocs";
 import { updateProfileSchema } from "../../../../utils/formSchemas"
 import { Hr, Img, ModalCard, ModalContainer } from "../../../../utils/styles/misc.js";
-import { FField, FileInput, FileInputLabel } from "../../../../utils/styles/forms.js";
+import { FField } from "../../../../utils/styles/forms.js";
 import { Body, H1, Label, LLink } from "../../../../utils/styles/text.js";
 import { Button } from "../../../../utils/styles/buttons.js";
 import FormError from "../../../misc/FormError.js";
 import { BTYPES, PLACEHOLDER, SCHEMES, SIZES } from "../../../../utils/constants.js";
-import { auth, firestore, storage } from "../../../../Fire";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { auth, firestore } from "../../../../Fire";
+import FileUpload from "../../../misc/FileUpload";
 
 class Profile extends Component {
     constructor(props) {
@@ -28,10 +27,7 @@ class Profile extends Component {
     
         this.state = {
             submittingUpdateUser: false,
-            submittingUpdateAvatar: false,
             shownModals: [],
-            files: [],
-            uploadProgress: ""
         }
     }
 
@@ -66,107 +62,6 @@ class Profile extends Component {
         });
     }
 
-    handleFileSelect = (e) => {
-        console.log("e.target.files: ")
-        console.log(e.target.files)
-
-        this.setState({
-            files: e.target.files
-        })
-    }
-
-    uploadFile = async (file) => {
-        this.setState({
-            submittingUpdateAvatar: true
-        });
-
-        // https://firebase.google.com/docs/storage/web/upload-files
-        // Create the file metadata
-        /** @type {any} */
-        const metadata = {
-            contentType: file.type
-        };
-        
-        // Upload file and metadata to the object "images/mountains.jpg"
-        const storageRef = ref(storage, `users/${this.props.user.id}/images/` + file.name);
-        const uploadTask = uploadBytesResumable(storageRef, file, metadata);
-        
-        // Listen for state changes, errors, and completion of the upload.
-        uploadTask.on("state_changed",
-            (snapshot) => {
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log("Upload is " + progress + "% done");
-                // this.setState({
-                //     uploadProgress: progress
-                // })
-                switch (snapshot.state) {
-                    case "paused":
-                    console.log("Upload is paused");
-                    break;
-
-                    case "running":
-                    console.log("Upload is running");
-                    break;
-
-                    default:
-                    console.log("Default case upload snapshot...");
-                    break;
-                }
-            }, 
-            (error) => {
-                // A full list of error codes is available at
-                // https://firebase.google.com/docs/storage/web/handle-errors
-                switch (error.code) {
-                    case "storage/unauthorized":
-                    console.log("User doesn't have permission to access the object");
-                    break;
-
-                    case "storage/canceled":
-                    console.log("User canceled the upload");
-                    break;
-            
-                    case "storage/unknown":
-                    console.log("Unknown error occurred, inspect error.serverResponse");
-                    break;
-
-                    default:
-                    console.log("Default case upload snapshot...");
-                    break;
-                }
-            }, 
-            () => {
-                // Upload completed successfully, now we can get the download URL
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    updateDoc(doc(firestore, "users", this.props.fireUser.uid), {
-                        avatar: downloadURL
-                    }).then(() => {
-                        console.log("Successful update of user doc to Firestore.");
-                        updateProfile(auth.currentUser, {
-                            photoURL: downloadURL
-                        }).then(() => {
-                            toast.success(`Successfully updated the user profile.`);
-                            console.log("Successfully updated the user profile on firebase");
-                            this.toggleModal(false, 0)
-                            this.setState({
-                                submittingUpdateAvatar: false
-                            })
-                        }).catch((error) => {
-                            console.error(error);
-                        });
-                    }).catch((error) => {
-                        console.error("Error adding document: ", error);
-                        toast.error(`Error setting users doc: ${error}`);
-                        this.setState({
-                            submittingUpdateAvatar: false
-                        })
-                    });
-                });
-                
-            }
-        );
-    }
-
     setThemeScheme = (currentScheme, userId) => {
         if(currentScheme === SCHEMES.DARK){
             // Currently Dark Theme, change to Light
@@ -195,6 +90,32 @@ class Profile extends Component {
                 toast.error(`Error setting users doc: ${error}`);
             });
         }
+    }
+
+    updateAvatar = (url) => {
+        updateDoc(doc(firestore, "users", this.props.fireUser.uid), {
+            avatar: url
+        }).then(() => {
+            console.log("Successful update of user doc to Firestore.");
+            updateProfile(auth.currentUser, {
+                photoURL: url
+            }).then(() => {
+                toast.success(`Successfully updated the user profile.`);
+                console.log("Successfully updated the user profile on firebase");
+                this.toggleModal(false, 0)
+                this.setState({
+                    submittingFile: false
+                })
+            }).catch((error) => {
+                console.error(error);
+            });
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            toast.error(`Error setting users doc: ${error}`);
+            this.setState({
+                submittingFile: false
+            })
+        });
     }
 
     
@@ -263,68 +184,13 @@ class Profile extends Component {
                                             <ModalCard onClick={(e) => e.stopPropagation()}>
                                                 <Label>Update profile avatar</Label>
                                                 <Body>Select a new picture from your machine:</Body>
-                                                <FileInputLabel for="avatar" selected={this.state.files.length > 0 ? true : false}>
-                                                    <CgAttachment /> Select a new image
-                                                    <FileInput 
-                                                        id="avatar" 
-                                                        type="file" 
-                                                        accept="image/png, image/jpg, image/jpeg" 
-                                                        // multiple
-                                                        onChange={this.handleFileSelect} 
-                                                    />
-                                                    {this.state.files.length > 0 && Array.from(this.state.files).map((file, f) => {
-                                                        const fileSizeMb = (file.size / (1024 ** 2)).toFixed(2);
-                                                        if(this.state.files.length > 1){
-                                                            return (
-                                                                <div style={{ margin: "15px 0" }}>
-                                                                    <Body>{f + 1}. {file.name} <i>({fileSizeMb}Mb)</i></Body>
-                                                                </div>
-                                                            )
-                                                        } else {
-                                                            if(file.type.includes("image")){
-                                                                return (
-                                                                    <div style={{ margin: "15px 0" }}>
-                                                                        <Body>{file.name} <i>({fileSizeMb}Mb)</i></Body>
-                                                                        <br />
-                                                                        <Img 
-                                                                            key={f}
-                                                                            width="300px"
-                                                                            alt="file preview"
-                                                                            src={URL.createObjectURL(file)}
-                                                                        />
-                                                                    </div>
-                                                                    
-                                                                );
-                                                            } else {
-                                                                return (
-                                                                    <div style={{ margin: "15px 0" }}>
-                                                                        <Label>{file.name} <i>{fileSizeMb}Mb</i></Label>
-                                                                        <br />
-                                                                        <embed 
-                                                                            key={f}
-                                                                            width="100%"
-                                                                            height="auto"
-                                                                            src={URL.createObjectURL(file)}
-                                                                        />
-                                                                    </div>
-                                                                    
-                                                                );
-                                                            }
-                                                        }
-                                                    })}
-                                                    {this.state.uploadProgress && (
-                                                        <span>{this.state.uploadProgress}</span>
-                                                    )}
-                                                    {this.state.files.length > 0 && (
-                                                        <Button 
-                                                            type="button" 
-                                                            onClick={() => this.uploadFile(this.state.files[0])}
-                                                            // onClick={() => this.uploadFile(this.state.files.length > 1 ? this.state.files : this.state.files[0])}
-                                                        >
-                                                            Upload &amp; Save Avatar &nbsp;<BsCloudUpload size={20} />
-                                                        </Button>
-                                                    )}
-                                                </FileInputLabel>
+                                                <FileUpload
+                                                    name="avatar"
+                                                    selectBtn=""
+                                                    accepts="image/png, image/jpg, image/jpeg" 
+                                                    onUploadSuccess={this.updateAvatar}
+                                                    user={this.props.user}
+                                                />
                                                 
                                                 <Hr />
                                                 <Button 

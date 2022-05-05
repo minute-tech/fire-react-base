@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HelmetProvider } from 'react-helmet-async';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -305,6 +305,9 @@ export default class App extends Component {
         } else {
             return (
                 <HelmetProvider>
+                    <Helmet>
+                        <title>{this.state.site.name ? `${this.state.site.name}` : "Fire React Base"}</title>
+                    </Helmet>
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
                         <ThemeProvider theme={this.state.currentTheme}>
                             <BodyWrapper>
