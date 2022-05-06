@@ -7,7 +7,7 @@ import { FaCog, FaUserEdit } from 'react-icons/fa';
 
 import { withRouter } from '../../../../utils/hocs';
 import { auth } from "../../../../Fire.js";
-import { LLink, H1, H3, Body } from '../../../../utils/styles/text.js';
+import { LLink, H1, H3 } from '../../../../utils/styles/text.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import { Hr } from '../../../../utils/styles/misc.js';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
@@ -18,8 +18,12 @@ class Dashboard extends Component {
         signOut(auth).then(() => {
             console.log("Sign out successful.");
             toast.success(`Signed out successfully!`);
-            this.props.navigate("/");
-            this.props.userLoggingOut();
+
+            this.props.setFireUser("");
+            this.props.setUser("");
+            this.props.setReadOnlyFlags("")
+            
+            console.log("Cleaned up log out.")
             // onClose()
         }).catch((error) => {
             console.error("Error signing out: " + error);
@@ -58,7 +62,7 @@ class Dashboard extends Component {
                                         theme={this.props.theme}
                                         onClose={onClose} 
                                         headingText={`Log out?`}
-                                        body={<span theme={this.props.theme}>Are you sure you want to log out?</span>}
+                                        body={<span>Are you sure you want to log out?</span>}
                                         yesFunc={this.logOut} 
                                         yesText={`Yes`} 
                                         noFunc={function () {}} 

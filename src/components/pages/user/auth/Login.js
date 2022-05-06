@@ -34,7 +34,7 @@ class UserLogin extends Component {
             'size': 'normal',
             'callback': (response) => {
                  // reCAPTCHA solved, allow signIn.
-                 this.props.userLoggingIn(true);
+                 this.props.setIsLoggingIn(true);
                  signInWithEmailAndPassword(auth, values.email, values.password)
                     .then((userCredential) => {
                         // Signed in 
@@ -60,7 +60,7 @@ class UserLogin extends Component {
                         // Clean up
                         this.setState({ submittingLoginUser: false });
                         window.recaptchaVerifier.clear();
-                        this.props.userLoggingIn(false);
+                        this.props.setIsLoggingIn(false);
                         toast.dismiss(recaptchaToastId);
                     });
             },

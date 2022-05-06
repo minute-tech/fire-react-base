@@ -63,7 +63,7 @@ class Views extends Component {
                             <LoggingIn
                                 site={this.props.site} 
                                 fireUser={this.props.fireUser}
-                                userLoggingIn={this.props.userLoggingIn}  
+                                setIsLoggingIn={this.props.setIsLoggingIn}  
                             />
                         </ErrorBoundary>
                     }
@@ -87,7 +87,7 @@ class Views extends Component {
                             <Register 
                                 site={this.props.site} 
                                 fireUser={this.props.fireUser}
-                                userLoggingIn={this.props.userLoggingIn}
+                                setIsLoggingIn={this.props.setIsLoggingIn}
                             />
                         }
                     />
@@ -97,7 +97,7 @@ class Views extends Component {
                             <Login 
                                 site={this.props.site} 
                                 fireUser={this.props.fireUser}
-                                userLoggingIn={this.props.userLoggingIn}
+                                setIsLoggingIn={this.props.setIsLoggingIn}
                             />
                         }
                     />
@@ -130,9 +130,12 @@ class Views extends Component {
                                 <Dashboard 
                                     site={this.props.site} 
                                     fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
                                     user={this.props.user}
-                                    userLoggingOut={this.props.userLoggingOut} 
+                                    readOnlyFlags={this.props.readOnlyFlags}
+                                    
+                                    setFireUser={this.props.setFireUser}
+                                    setUser={this.props.setUser}
+                                    setReadOnlyFlags={this.props.setReadOnlyFlags}
                                 />
                             }
                         />

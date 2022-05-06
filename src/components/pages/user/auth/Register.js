@@ -41,7 +41,7 @@ class Register extends Component {
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                 'size': 'normal',
                 'callback': async (response) => {
-                    this.props.userLoggingIn(true);
+                    this.props.setIsLoggingIn(true);
                     await createUserWithEmailAndPassword(auth, values.email, values.password)
                         .then(async (userCredential) => {
                             // Register approved
@@ -98,7 +98,7 @@ class Register extends Component {
                                 toast.dismiss(termsToastId);
                             }
                             window.recaptchaVerifier.clear();
-                            this.props.userLoggingIn(false);
+                            this.props.setIsLoggingIn(false);
                         });
                 },
                 'expired-callback': () => {

@@ -254,6 +254,13 @@ function App() {
                 });
                 
             } else {
+                if(unsubUser.current){
+                    unsubUser?.current();
+                }
+                if(unsubReadOnlyFlags.current){
+                    unsubReadOnlyFlags?.current();
+                }
+                
                 // No user signed in
                 setLoading(prevState => ({
                     ...prevState,
@@ -273,18 +280,6 @@ function App() {
             }
         };
     }, [site]);
-
-    // These userLogging functions are to clean up, but 
-    // mainly we needed to "wake up" the parent component by changing the state.
-    // Might be a better way to do this... tbd
-    const userLoggingOut = () => {
-        unsubUser?.current();
-        unsubReadOnlyFlags?.current();
-
-        setFireUser("");
-        setUser("");
-        setReadOnlyFlags("")
-    }
     
     if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
         return (
@@ -325,11 +320,13 @@ function App() {
                                     pauseOnHover
                                 />
                                 <Views 
+                                    site={site}
                                     fireUser={fireUser} 
                                     user={user} 
-                                    site={site}
                                     readOnlyFlags={readOnlyFlags}
-                                    userLoggingOut={userLoggingOut} 
+                                    setFireUser={setFireUser}
+                                    setUser={setUser}
+                                    setReadOnlyFlags={setReadOnlyFlags}
                                     setIsLoggingIn={setIsLoggingIn} 
                                     isLoggingIn={isLoggingIn}
                                 />

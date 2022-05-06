@@ -17,7 +17,7 @@ class LoggingIn extends Component {
     redirectTo = () => {
         this.timer = setTimeout(() => {
             this.props.navigate("/dashboard");
-            this.props.userLoggingIn(false);
+            this.props.setIsLoggingIn(false);
         }, 2000);
     }
     
