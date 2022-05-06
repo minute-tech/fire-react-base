@@ -253,14 +253,7 @@ function App() {
                     }
                 });
                 
-            } else {
-                if(unsubUser.current){
-                    unsubUser?.current();
-                }
-                if(unsubReadOnlyFlags.current){
-                    unsubReadOnlyFlags?.current();
-                }
-                
+            } else {                
                 // No user signed in
                 setLoading(prevState => ({
                     ...prevState,
