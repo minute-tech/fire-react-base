@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
@@ -18,7 +18,7 @@ import Header from './components/misc/Header';
 import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 import { auth, firestore } from './Fire';
-import { ACTIONS, DEFAULT_SITE, SCHEMES } from './utils/constants.js';
+import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
@@ -35,6 +35,31 @@ function App() {
     const [user, setUser] = useState();
 
     const [fireUser, setFireUser] = useState("");
+
+    const [theme, setTheme] = useState({
+        value:  DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+        colors: {
+            primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+            secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+            tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+            red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+            green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+            yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+            blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+            grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+            lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+            font: {
+                heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+            },
+            background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+        },
+        fonts: {
+            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+            body: DEFAULT_SITE.THEME.FONTS.BODY,
+        },
+    });
 
     const [readOnlyFlags, setReadOnlyFlags] = useState("");
 
@@ -113,13 +138,13 @@ function App() {
     });
 
     // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
-    function currentThemeReducer(currentTheme, action){
+    useEffect(() => {
         let themeObject = {};
         let isDarkScheme = false;
         
-        if(action.type === ACTIONS.CURRENT_THEME.USER_CHANGE){
+        if(user){
             // User signed in, so grab their currently set preference
-            if((action.payload.user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
+            if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
                 isDarkScheme = true
             }
         } else {
@@ -128,66 +153,34 @@ function App() {
                 isDarkScheme = true
             }
         }
-
-        console.log("action: ")
-        console.log(action)
-
-        
-        // console.log("currentTheme: ")
-        // console.log(currentTheme)
         
         themeObject = { 
-            value: isDarkScheme ? action.payload.site.theme.schemes.dark.value : action.payload.site.theme.schemes.light.value,
+            value: isDarkScheme ? site.theme.schemes.dark.value : site.theme.schemes.light.value,
             colors: {
-                primary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.primary : action.payload.site.theme.schemes.light.colors.primary,
-                secondary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.secondary : action.payload.site.theme.schemes.light.colors.secondary,
-                tertiary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.tertiary : action.payload.site.theme.schemes.light.colors.tertiary,
-                red: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.red : action.payload.site.theme.schemes.light.colors.red,
-                green: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.green : action.payload.site.theme.schemes.light.colors.green,
-                yellow: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.yellow : action.payload.site.theme.schemes.light.colors.yellow,
-                blue: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.blue : action.payload.site.theme.schemes.light.colors.blue,
-                grey: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.grey : action.payload.site.theme.schemes.light.colors.grey,
-                lightGrey: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.lightGrey : action.payload.site.theme.schemes.light.colors.lightGrey,
+                primary: isDarkScheme ? site.theme.schemes.dark.colors.primary : site.theme.schemes.light.colors.primary,
+                secondary: isDarkScheme ? site.theme.schemes.dark.colors.secondary : site.theme.schemes.light.colors.secondary,
+                tertiary: isDarkScheme ? site.theme.schemes.dark.colors.tertiary : site.theme.schemes.light.colors.tertiary,
+                red: isDarkScheme ? site.theme.schemes.dark.colors.red : site.theme.schemes.light.colors.red,
+                green: isDarkScheme ? site.theme.schemes.dark.colors.green : site.theme.schemes.light.colors.green,
+                yellow: isDarkScheme ? site.theme.schemes.dark.colors.yellow : site.theme.schemes.light.colors.yellow,
+                blue: isDarkScheme ? site.theme.schemes.dark.colors.blue : site.theme.schemes.light.colors.blue,
+                grey: isDarkScheme ? site.theme.schemes.dark.colors.grey : site.theme.schemes.light.colors.grey,
+                lightGrey: isDarkScheme ? site.theme.schemes.dark.colors.lightGrey : site.theme.schemes.light.colors.lightGrey,
                 font: {
-                    heading: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.heading : action.payload.site.theme.schemes.light.colors.font.heading,
-                    body: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.body : action.payload.site.theme.schemes.light.colors.font.body,
-                    link: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.link : action.payload.site.theme.schemes.light.colors.font.link,
+                    heading: isDarkScheme ? site.theme.schemes.dark.colors.font.heading : site.theme.schemes.light.colors.font.heading,
+                    body: isDarkScheme ? site.theme.schemes.dark.colors.font.body : site.theme.schemes.light.colors.font.body,
+                    link: isDarkScheme ? site.theme.schemes.dark.colors.font.link : site.theme.schemes.light.colors.font.link,
                 },
-                background: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.background : action.payload.site.theme.schemes.light.colors.background,
+                background: isDarkScheme ? site.theme.schemes.dark.colors.background : site.theme.schemes.light.colors.background,
             },
             fonts: {
-                heading: action.payload.site.theme.fonts.heading,
-                body: action.payload.site.theme.fonts.body
+                heading: site.theme.fonts.heading,
+                body: site.theme.fonts.body
             },
         }
 
-        return themeObject;
-    }
-
-    const [currentTheme, dispatchCurrentTheme] = useReducer(currentThemeReducer, {
-        value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
-        colors: {
-            primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-            secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-            tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-            red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-            green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-            yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-            blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-            grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-            lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
-            font: {
-                heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
-            },
-            background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
-        },
-        fonts: {
-            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-            body: DEFAULT_SITE.THEME.FONTS.BODY,
-        },
-    })
+        setTheme(themeObject)
+    }, [user, site])
 
     useEffect(() => {
         return onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
@@ -198,7 +191,6 @@ function App() {
                     ...prevState,
                     site: false
                 }));
-                dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.SITE_EXISTS, payload: { site: siteData } });
             } else {
                 console.log("No custom site set, using theme defaults in setSite.")
                 setLoading(prevState => ({
@@ -235,7 +227,6 @@ function App() {
                             ...prevState,
                             user: false
                         }))
-                        dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.USER_CHANGE, payload: { site: site } });
                     } else {
                         console.log("No user exists.")
                         setLoading(prevState => ({
@@ -264,7 +255,6 @@ function App() {
                 
             } else {
                 // No user signed in
-                dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.USER_CHANGE, payload: { site: site }  });
                 setLoading(prevState => ({
                     ...prevState,
                     fireUser: false,
@@ -309,7 +299,7 @@ function App() {
                     <title>{site.name ? `${site.name}` : "Fire React Base"}</title>
                 </Helmet>
                 <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
-                    <ThemeProvider theme={currentTheme}>
+                    <ThemeProvider theme={theme}>
                         <BodyWrapper>
                             <BrowserRouter>
                                 <GlobalStyle /> 
@@ -328,7 +318,7 @@ function App() {
                                     autoClose={4000}
                                     hideProgressBar={false}
                                     newestOnTop={false}
-                                    theme={currentTheme.value}
+                                    theme={theme.value}
                                     closeOnClick
                                     rtl={false}
                                     pauseOnFocusLoss
