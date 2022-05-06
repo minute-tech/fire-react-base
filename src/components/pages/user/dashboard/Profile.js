@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { doc, updateDoc } from "firebase/firestore";
 import { withTheme } from "styled-components";
 import { FaMoon, FaSun } from "react-icons/fa";
-import { CgClose, CgAttachment } from "react-icons/cg";
+import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
 import { updateProfile } from "firebase/auth";
 
@@ -128,8 +128,6 @@ class Profile extends Component {
     }
 
     render() {
-        console.log("this.props.fireUser: ")
-        console.log(this.props.fireUser)
         return (
             <>
                 <Helmet>

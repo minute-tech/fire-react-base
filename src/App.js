@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
@@ -18,7 +18,7 @@ import Header from './components/misc/Header';
 import Views from "./Views";
 import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
 import { auth, firestore } from './Fire';
-import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
+import { ACTIONS, DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
@@ -32,7 +32,7 @@ function App() {
 
     const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-    const [user, setUser] = useState("");
+    const [user, setUser] = useState();
 
     const [fireUser, setFireUser] = useState("");
 
@@ -112,7 +112,59 @@ function App() {
         },
     });
 
-    const [currentTheme, setCurrentTheme] = useState({
+    // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
+    function currentThemeReducer(currentTheme, action){
+        let themeObject = {};
+        let isDarkScheme = false;
+        
+        if(action.type === ACTIONS.CURRENT_THEME.USER_CHANGE){
+            // User signed in, so grab their currently set preference
+            if((action.payload.user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
+                isDarkScheme = true
+            }
+        } else {
+            // No user signed in yet, so just grab the user's OS preference
+            if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
+                isDarkScheme = true
+            }
+        }
+
+        console.log("action: ")
+        console.log(action)
+
+        
+        // console.log("currentTheme: ")
+        // console.log(currentTheme)
+        
+        themeObject = { 
+            value: isDarkScheme ? action.payload.site.theme.schemes.dark.value : action.payload.site.theme.schemes.light.value,
+            colors: {
+                primary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.primary : action.payload.site.theme.schemes.light.colors.primary,
+                secondary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.secondary : action.payload.site.theme.schemes.light.colors.secondary,
+                tertiary: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.tertiary : action.payload.site.theme.schemes.light.colors.tertiary,
+                red: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.red : action.payload.site.theme.schemes.light.colors.red,
+                green: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.green : action.payload.site.theme.schemes.light.colors.green,
+                yellow: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.yellow : action.payload.site.theme.schemes.light.colors.yellow,
+                blue: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.blue : action.payload.site.theme.schemes.light.colors.blue,
+                grey: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.grey : action.payload.site.theme.schemes.light.colors.grey,
+                lightGrey: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.lightGrey : action.payload.site.theme.schemes.light.colors.lightGrey,
+                font: {
+                    heading: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.heading : action.payload.site.theme.schemes.light.colors.font.heading,
+                    body: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.body : action.payload.site.theme.schemes.light.colors.font.body,
+                    link: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.font.link : action.payload.site.theme.schemes.light.colors.font.link,
+                },
+                background: isDarkScheme ? action.payload.site.theme.schemes.dark.colors.background : action.payload.site.theme.schemes.light.colors.background,
+            },
+            fonts: {
+                heading: action.payload.site.theme.fonts.heading,
+                body: action.payload.site.theme.fonts.body
+            },
+        }
+
+        return themeObject;
+    }
+
+    const [currentTheme, dispatchCurrentTheme] = useReducer(currentThemeReducer, {
         value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
         colors: {
             primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
@@ -137,69 +189,17 @@ function App() {
         },
     })
 
-    const unsubPublicSite = useRef();
-    const unsubAuth = useRef();
-    const unsubUser = useRef();
-    const unsubReadOnlyFlags = useRef();
-
     useEffect(() => {
-        let siteData = "";
-        // Properly assemble the theme object to be passed to styled-components Theme based on the current scheme preference.
-        const assembleThemeObject = () => {
-            let themeObject = {};
-            let isDarkScheme = false;
-
-            if(user){
-                // User signed in, so grab their currently set preference
-                if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
-                    isDarkScheme = true
-                }
-            } else {
-                // No user signed in yet, so just grab the user's OS preference
-                if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
-                    isDarkScheme = true
-                }
-            }
-            
-            themeObject = { 
-                value: isDarkScheme ? site.theme.schemes.dark.value : site.theme.schemes.light.value,
-                colors: {
-                    primary: isDarkScheme ? site.theme.schemes.dark.colors.primary : site.theme.schemes.light.colors.primary,
-                    secondary: isDarkScheme ? site.theme.schemes.dark.colors.secondary : site.theme.schemes.light.colors.secondary,
-                    tertiary: isDarkScheme ? site.theme.schemes.dark.colors.tertiary : site.theme.schemes.light.colors.tertiary,
-                    red: isDarkScheme ? site.theme.schemes.dark.colors.red : site.theme.schemes.light.colors.red,
-                    green: isDarkScheme ? site.theme.schemes.dark.colors.green : site.theme.schemes.light.colors.green,
-                    yellow: isDarkScheme ? site.theme.schemes.dark.colors.yellow : site.theme.schemes.light.colors.yellow,
-                    blue: isDarkScheme ? site.theme.schemes.dark.colors.blue : site.theme.schemes.light.colors.blue,
-                    grey: isDarkScheme ? site.theme.schemes.dark.colors.grey : site.theme.schemes.light.colors.grey,
-                    lightGrey: isDarkScheme ? site.theme.schemes.dark.colors.lightGrey : site.theme.schemes.light.colors.lightGrey,
-                    font: {
-                        heading: isDarkScheme ? site.theme.schemes.dark.colors.font.heading : site.theme.schemes.light.colors.font.heading,
-                        body: isDarkScheme ? site.theme.schemes.dark.colors.font.body : site.theme.schemes.light.colors.font.body,
-                        link: isDarkScheme ? site.theme.schemes.dark.colors.font.link : site.theme.schemes.light.colors.font.link,
-                    },
-                    background: isDarkScheme ? site.theme.schemes.dark.colors.background : site.theme.schemes.light.colors.background,
-                },
-                fonts: {
-                    heading: site.theme.fonts.heading,
-                    body: site.theme.fonts.body
-                },
-            }
-            setCurrentTheme(themeObject)
-        }
-
-        unsubPublicSite.current = onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
+        return onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
             if(siteDoc.exists()){
-                siteData = siteDoc.data();
+                let siteData = siteDoc.data();
                 setSite(siteData)
                 setLoading(prevState => ({
                     ...prevState,
                     site: false
                 }));
-                assembleThemeObject();
+                dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.SITE_EXISTS, payload: { site: siteData } });
             } else {
-                // TODO: why does this keep triggering like crazy?
-                // AM I USING REFS correcT?! I tried without and decalrign them in useEffect (commenting out usage outside useEffect) still didnt work:/
                 console.log("No custom site set, using theme defaults in setSite.")
                 setLoading(prevState => ({
                     ...prevState,
@@ -207,8 +207,15 @@ function App() {
                 }));
             }
         });
+    }, [])
 
-        unsubAuth.current = onAuthStateChanged(auth, (fireUserData) => {
+    const unsubUser = useRef();
+    const unsubReadOnlyFlags = useRef();
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (fireUserData) => {
+            // console.log("fireUserData: ")
+            // console.log(fireUserData)
             if (fireUserData) {
                 setFireUser(fireUserData)
                 setLoading(prevState => ({
@@ -216,20 +223,19 @@ function App() {
                     fireUser: false
                 }))
 
-                unsubUser.current = onSnapshot(doc(firestore, "users", fireUser.uid), (userDoc) => {
+                unsubUser.current = onSnapshot(doc(firestore, "users", fireUserData.uid), (userDoc) => {
                     if(userDoc.exists()){
                         // User exists
                         const docWithMore = Object.assign({}, userDoc.data());
                         docWithMore.id = userDoc.id;
-
-                        setUser({
-                            user: docWithMore,
-                        });
+                        console.log("user docWithMore: ")
+                        console.log(docWithMore)
+                        setUser(docWithMore);
                         setLoading(prevState => ({
                             ...prevState,
                             user: false
                         }))
-                        assembleThemeObject();
+                        dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.USER_CHANGE, payload: { site: site } });
                     } else {
                         console.log("No user exists.")
                         setLoading(prevState => ({
@@ -240,7 +246,7 @@ function App() {
                 });
 
                 // For seeing if admin
-                unsubReadOnlyFlags.current = onSnapshot(doc(firestore, "users", fireUser.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
+                unsubReadOnlyFlags.current = onSnapshot(doc(firestore, "users", fireUserData.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
                     if(readOnlyFlagsDoc.exists()){
                         setReadOnlyFlags(readOnlyFlagsDoc.data());
                         setLoading(prevState => ({
@@ -258,7 +264,7 @@ function App() {
                 
             } else {
                 // No user signed in
-                assembleThemeObject();
+                dispatchCurrentTheme({ type: ACTIONS.CURRENT_THEME.USER_CHANGE, payload: { site: site }  });
                 setLoading(prevState => ({
                     ...prevState,
                     fireUser: false,
@@ -269,9 +275,6 @@ function App() {
         });
 
         return () => {
-            if(unsubPublicSite.current){
-                unsubPublicSite?.current();
-            }
             if(unsubUser.current){
                 unsubUser?.current();
             }
@@ -279,7 +282,7 @@ function App() {
                 unsubReadOnlyFlags?.current();
             }
         };
-    }, [unsubPublicSite, unsubAuth, unsubUser, unsubReadOnlyFlags, site, user, fireUser]);
+    }, [site]);
 
     // These userLogging functions are to clean up, but 
     // mainly we needed to "wake up" the parent component by changing the state.
@@ -350,8 +353,6 @@ function App() {
             </HelmetProvider>
         );
     }
-
-    // return (<h1>hi</h1>)
 }
 
 export default App;

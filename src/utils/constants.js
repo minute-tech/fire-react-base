@@ -149,3 +149,11 @@ export const ANIMAL_GALLERY = [
         alt: "zelda cat desk"
     },
 ]
+
+
+export const ACTIONS = {
+    CURRENT_THEME: {
+        SITE_EXISTS: "site-exists",
+        USER_CHANGE: "user-change"
+    }
+}
