@@ -1,10 +1,53 @@
-// ** font constants and colors only used as defaults if nothing loaded
-// ** to import custom local font under globalStyle since I will always have to hardcode the font constant because not a default html font nor a Google font if importing from webfontloader library
+// Front-end only //
 export const BTYPES = {
     INVERTED: "inverted",
     TEXTED: "texted",
 }
 
+export const ANIMAL_GALLERY = [
+    {
+        src: require("../assets/images/misc/animals/1.png"),
+        alt: "link cat couch"
+    },
+    {
+        src: require("../assets/images/misc/animals/2.png"),
+        alt: "zelda cat couch"
+    },
+    {
+        src: require("../assets/images/misc/animals/3.png"),
+        alt: "link cat laundry"
+    },
+    {
+        src: require("../assets/images/misc/animals/4.png"),
+        alt: "goergie dog sunglasses"
+    },
+    {
+        src: require("../assets/images/misc/animals/5.png"),
+        alt: "zelda cat sleeping"
+    },
+    {
+        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F6.png?alt=media&token=665c362c-716e-46fd-8aa9-c0582a897dd1",
+        alt: "link cat table"
+    },
+    {
+        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F7.png?alt=media&token=be7179dd-bf38-44e2-837d-54d4a445d383",
+        alt: "zelda cat lap"
+    },
+    {
+        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F8.png?alt=media&token=265e4b18-35ab-45c5-9b7a-066469e0383e",
+        alt: "georgie dog couch"
+    },
+    {
+        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F9.png?alt=media&token=0ba93d22-580a-436c-8818-510f7f98bfae",
+        alt: "zelda cat desk"
+    },
+    {
+        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F10.png?alt=media&token=0cb38dd8-60d2-416c-8608-f70adb4a2844",
+        alt: "zelda cat desk"
+    },
+]
+
+/////////////////// Back-end Only //////////////////////
 export const PLACEHOLDER = {
     FIRST_NAME: "Taylor",
     LAST_NAME: "Doe",
@@ -12,7 +55,7 @@ export const PLACEHOLDER = {
     PHONE: "+1 (123) 456-7890",
     BODY: "Detail what you want to say here.",
     PASSWORD: "*********************",
-}
+};
 
 export const SIZES = {
     XS: "xs",
@@ -106,46 +149,3 @@ export const SCHEMES = {
     LIGHT: "light",
     DARK: "dark",
 };
-
-export const ANIMAL_GALLERY = [
-    {
-        src: require("../assets/images/misc/animals/1.png"),
-        alt: "link cat couch"
-    },
-    {
-        src: require("../assets/images/misc/animals/2.png"),
-        alt: "zelda cat couch"
-    },
-    {
-        src: require("../assets/images/misc/animals/3.png"),
-        alt: "link cat laundry"
-    },
-    {
-        src: require("../assets/images/misc/animals/4.png"),
-        alt: "goergie dog sunglasses"
-    },
-    {
-        src: require("../assets/images/misc/animals/5.png"),
-        alt: "zelda cat sleeping"
-    },
-    {
-        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F6.png?alt=media&token=665c362c-716e-46fd-8aa9-c0582a897dd1",
-        alt: "link cat table"
-    },
-    {
-        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F7.png?alt=media&token=be7179dd-bf38-44e2-837d-54d4a445d383",
-        alt: "zelda cat lap"
-    },
-    {
-        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F8.png?alt=media&token=265e4b18-35ab-45c5-9b7a-066469e0383e",
-        alt: "georgie dog couch"
-    },
-    {
-        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F9.png?alt=media&token=0ba93d22-580a-436c-8818-510f7f98bfae",
-        alt: "zelda cat desk"
-    },
-    {
-        src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F10.png?alt=media&token=0cb38dd8-60d2-416c-8608-f70adb4a2844",
-        alt: "zelda cat desk"
-    },
-]

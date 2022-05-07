@@ -1,8 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 import { toast } from 'react-toastify';
-
-import { withRouter } from './utils/hocs';
 
 // Pages //
 // Misc
@@ -25,190 +23,185 @@ import ManageMessages from './components/pages/user/admin/ManageMessages';
 import ManageUsers from './components/pages/user/admin/ManageUsers';
 import { Wrapper } from './utils/styles/misc';
 
-class Views extends Component {
-    render() {
-        return (
-            <Routes>
-                {/* Anyone routes */}
-                <Route 
-                    index 
-                    path="/" 
-                    element={<ErrorBoundary><Home site={this.props.site} /></ErrorBoundary>}
-                />
+function Views(props) {
+    return (
+        <Routes>
+            {/* Anyone routes */}
+            <Route 
+                index 
+                path="/" 
+                element={<ErrorBoundary><Home site={props.site} /></ErrorBoundary>}
+            />
 
-                <Route 
-                    path="/about" 
-                    element={<ErrorBoundary><About site={this.props.site} /></ErrorBoundary>}
-                />
+            <Route 
+                path="/about" 
+                element={<ErrorBoundary><About site={props.site} /></ErrorBoundary>}
+            />
 
-                <Route 
-                    path="/credits" 
-                    element={<ErrorBoundary><Credits site={this.props.site} /></ErrorBoundary>}
-                />
+            <Route 
+                path="/credits" 
+                element={<ErrorBoundary><Credits site={props.site} /></ErrorBoundary>}
+            />
 
-                <Route 
-                    path="/privacy-policy" 
-                    element={<ErrorBoundary><PrivacyPolicy site={this.props.site} /></ErrorBoundary>}
-                />
+            <Route 
+                path="/privacy-policy" 
+                element={<ErrorBoundary><PrivacyPolicy site={props.site} /></ErrorBoundary>}
+            />
 
-                <Route 
-                    path="/terms-conditions" 
-                    element={<ErrorBoundary><TermsConditions site={this.props.site} /></ErrorBoundary>}
-                />
+            <Route 
+                path="/terms-conditions" 
+                element={<ErrorBoundary><TermsConditions site={props.site} /></ErrorBoundary>}
+            />
 
+            <Route 
+                path="/logging-in" 
+                element={
+                    <ErrorBoundary>
+                        <LoggingIn
+                            site={props.site} 
+                            fireUser={props.fireUser}
+                            setIsLoggingIn={props.setIsLoggingIn}  
+                        />
+                    </ErrorBoundary>
+                }
+            />
+            
+            {/* Visitor ONLY routes */}
+            <Route 
+                element={
+                    <ErrorBoundary>
+                        <VisitorRoutes 
+                            site={props.site} 
+                            isUser={props.fireUser} 
+                            isLoggingIn={props.isLoggingIn} 
+                        />
+                    </ErrorBoundary>
+                }
+            >
                 <Route 
-                    path="/logging-in" 
+                    path="/register" 
                     element={
-                        <ErrorBoundary>
-                            <LoggingIn
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser}
-                                setIsLoggingIn={this.props.setIsLoggingIn}  
-                            />
-                        </ErrorBoundary>
+                        <Register 
+                            site={props.site} 
+                            fireUser={props.fireUser}
+                            setIsLoggingIn={props.setIsLoggingIn}
+                        />
                     }
                 />
-                
-                {/* Visitor ONLY routes */}
                 <Route 
+                    path="/login"
                     element={
-                        <ErrorBoundary>
-                            <VisitorRoutes 
-                                site={this.props.site} 
-                                isUser={this.props.fireUser} 
-                                isLoggingIn={this.props.isLoggingIn} 
-                            />
-                        </ErrorBoundary>
+                        <Login 
+                            site={props.site} 
+                            fireUser={props.fireUser}
+                            setIsLoggingIn={props.setIsLoggingIn}
+                        />
+                    }
+                />
+            </Route>
+            
+            {/* User ONLY routes */}
+            {/* isNotMFA={props.fireUser?.multiFactor?.enrolledFactors && props.fireUser.multiFactor.enrolledFactors.length === 0} */}
+            <Route 
+                element={
+                    <ErrorBoundary>
+                        <UserRoutes 
+                            site={props.site} 
+                            isUser={props.fireUser} 
+                            isLoggingIn={props.isLoggingIn} 
+                        />
+                    </ErrorBoundary>
+                }
+            >
+                <Route 
+                    path="dashboard"
+                    element={  
+                        <Wrapper>
+                            <Outlet />
+                        </Wrapper> 
                     }
                 >
                     <Route 
-                        path="/register" 
+                        index
                         element={
-                            <Register 
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser}
-                                setIsLoggingIn={this.props.setIsLoggingIn}
+                            <Dashboard 
+                                site={props.site} 
+                                fireUser={props.fireUser} 
+                                user={props.user}
+                                readOnlyFlags={props.readOnlyFlags}
+                                cleanUpLogout={props.cleanUpLogout}
                             />
                         }
                     />
                     <Route 
-                        path="/login"
+                        path="profile" 
                         element={
-                            <Login 
-                                site={this.props.site} 
-                                fireUser={this.props.fireUser}
-                                setIsLoggingIn={this.props.setIsLoggingIn}
+                            <Profile 
+                                site={props.site} 
+                                fireUser={props.fireUser} 
+                                readOnlyFlags={props.readOnlyFlags}
+                                user={props.user}
                             />
                         }
                     />
-                </Route>
-                
-                {/* User ONLY routes */}
-                {/* isNotMFA={this.props.fireUser?.multiFactor?.enrolledFactors && this.props.fireUser.multiFactor.enrolledFactors.length === 0} */}
-                <Route 
-                    element={
-                        <ErrorBoundary>
-                            <UserRoutes 
-                                site={this.props.site} 
-                                isUser={this.props.fireUser} 
-                                isLoggingIn={this.props.isLoggingIn} 
-                            />
-                        </ErrorBoundary>
-                    }
-                >
+                    {/* Admin ONLY routes */}
                     <Route 
-                        path="dashboard"
-                        element={  
-                            <Wrapper>
-                                <Outlet />
-                            </Wrapper> 
+                        element={
+                            <ErrorBoundary>
+                                <AdminRoutes 
+                                    site={props.site} 
+                                    isAdmin={props?.readOnlyFlags?.isAdmin} 
+                                    isLoggingIn={props.isLoggingIn} 
+                                />
+                            </ErrorBoundary>
                         }
                     >
                         <Route 
-                            index
-                            element={
-                                <Dashboard 
-                                    site={this.props.site} 
-                                    fireUser={this.props.fireUser} 
-                                    user={this.props.user}
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    
-                                    setFireUser={this.props.setFireUser}
-                                    setUser={this.props.setUser}
-                                    setReadOnlyFlags={this.props.setReadOnlyFlags}
-                                />
-                            }
-                        />
-                        <Route 
-                            path="profile" 
-                            element={
-                                <Profile 
-                                    site={this.props.site} 
-                                    fireUser={this.props.fireUser} 
-                                    readOnlyFlags={this.props.readOnlyFlags}
-                                    user={this.props.user}
-                                />
-                            }
-                        />
-                        {/* Admin ONLY routes */}
-                        <Route 
-                            element={
-                                <ErrorBoundary>
-                                    <AdminRoutes 
-                                        site={this.props.site} 
-                                        isAdmin={this.props?.readOnlyFlags?.isAdmin} 
-                                        isLoggingIn={this.props.isLoggingIn} 
-                                    />
-                                </ErrorBoundary>
-                            }
+                            path="admin" 
+                            element={ <Outlet /> }
                         >
                             <Route 
-                                path="admin" 
-                                element={ <Outlet /> }
-                            >
-                                <Route 
-                                    index
-                                    element={
-                                        <AdminDashboard
-                                            site={this.props.site} 
-                                            fireUser={this.props.fireUser} 
-                                            readOnlyFlags={this.props.readOnlyFlags}
-                                            user={this.props.user}
-                                        />
-                                    }
-                                />
-                                <Route 
-                                    path="messages" 
-                                    element={
-                                        <ManageMessages
-                                            site={this.props.site} 
-                                            fireUser={this.props.fireUser} 
-                                            readOnlyFlags={this.props.readOnlyFlags}
-                                            user={this.props.user}
-                                        />
-                                    }
-                                />
-                                <Route 
-                                    path="users" 
-                                    element={
-                                        <ManageUsers
-                                            site={this.props.site} 
-                                            fireUser={this.props.fireUser} 
-                                            readOnlyFlags={this.props.readOnlyFlags}
-                                            user={this.props.user}
-                                        />
-                                    }
-                                />
-                            </Route>
+                                index
+                                element={
+                                    <AdminDashboard
+                                        site={props.site} 
+                                        fireUser={props.fireUser} 
+                                        readOnlyFlags={props.readOnlyFlags}
+                                        user={props.user}
+                                    />
+                                }
+                            />
+                            <Route 
+                                path="messages" 
+                                element={
+                                    <ManageMessages
+                                        site={props.site} 
+                                        fireUser={props.fireUser} 
+                                        readOnlyFlags={props.readOnlyFlags}
+                                        user={props.user}
+                                    />
+                                }
+                            />
+                            <Route 
+                                path="users" 
+                                element={
+                                    <ManageUsers
+                                        site={props.site} 
+                                        fireUser={props.fireUser} 
+                                        readOnlyFlags={props.readOnlyFlags}
+                                        user={props.user}
+                                    />
+                                }
+                            />
                         </Route>
                     </Route>
-                    
                 </Route>
+                
+            </Route>
 
-                <Route path="*" element={<ErrorBoundary><Page404 site={this.props.site} /></ErrorBoundary>} />
-            </Routes>
-        )
-    }
+            <Route path="*" element={<ErrorBoundary><Page404 site={props.site} /></ErrorBoundary>} />
+        </Routes>
+    )
 }
 
 function VisitorRoutes({ isUser, isLoggingIn }) {
@@ -256,4 +249,4 @@ function AdminRoutes({ isAdmin, isLoggingIn }) {
 
 
 
-export default withRouter(Views);
+export default Views;

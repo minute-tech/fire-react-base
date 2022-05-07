@@ -7,6 +7,8 @@ import {DEFAULT_SITE} from "./constants";
 
 admin.initializeApp(functions.config().firebase);
 sgMail.setApiKey(functions.config().sendgrid_api.key);
+const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG ?? "");
+const projectId = adminConfig.projectId ?? "fire-react-base";
 
 export const onMessageCreated = functions.firestore
     .document("messages/{messageId}")
@@ -30,7 +32,78 @@ export const onMessageCreated = functions.firestore
                     publicSiteData = docWithMore;
                 } else {
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
-                    publicSiteData = DEFAULT_SITE;
+                    publicSiteData = {
+                        name: DEFAULT_SITE.NAME,
+                        projectId: projectId,
+                        logo: {
+                            width: DEFAULT_SITE.LOGO.WIDTH,
+                            url: DEFAULT_SITE.LOGO.URL,
+                            showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+                        },
+                        emails: {
+                            support: DEFAULT_SITE.EMAILS.SUPPORT,
+                            noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+                        },
+                        hero: {
+                            heading: DEFAULT_SITE.HERO.HEADING,
+                            body: DEFAULT_SITE.HERO.BODY,
+                            cta: {
+                                link: DEFAULT_SITE.HERO.CTA.LINK,
+                                text: DEFAULT_SITE.HERO.CTA.TEXT,
+                                size: DEFAULT_SITE.HERO.CTA.SIZE,
+                                color: DEFAULT_SITE.HERO.CTA.COLOR,
+                            },
+                            banner: DEFAULT_SITE.HERO.BANNER,
+                        },
+                        theme: {
+                            schemes: {
+                                light: {
+                                    value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+                                    colors: {
+                                        primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
+                                        secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
+                                        tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
+                                        red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
+                                        green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
+                                        yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
+                                        blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
+                                        grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
+                                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+                                        font: {
+                                            heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
+                                            body: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
+                                            link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                                        },
+                                        background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+                                    },
+                                },
+                                dark: {
+                                    value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
+                                    colors: {
+                                        primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
+                                        secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
+                                        tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
+                                        red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
+                                        green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
+                                        yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
+                                        blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
+                                        grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
+                                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
+                                        font: {
+                                            heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
+                                            body: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
+                                            link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
+                                        },
+                                        background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
+                                    },
+                                },
+                            },
+                            fonts: {
+                                heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+                                body: DEFAULT_SITE.THEME.FONTS.BODY,
+                            },
+                        },
+                    };
                 }
             }).catch((error) => {
                 console.log("Error getting site public document:", error);
@@ -49,21 +122,10 @@ export const onMessageCreated = functions.firestore
                 console.log("Error getting site sensitive document:", error);
             });
 
-            const htmlEmail =
+            const heading = "New Website Contact Message!";
+            const body =
             `
-            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif" color: black !important;>
-                <div style="text-align: center;">
-                        <img 
-                            alt="${publicSiteData.name} logo"
-                            src="${publicSiteData.logo.url}"
-                            width="${publicSiteData.logo.width}px" 
-                            height="auto"
-                        />
-                </div>
-                <h1 style="margin: 20px 0 0 0; text-align: center; color: ${publicSiteData.theme.schemes.light.colors.primary} !important;">${publicSiteData.name}</h1>
-                <div style="margin: auto; width: 70%; padding: 1%;">
-                    <h2>New Website Contact Message!</h2>
-                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData.theme.schemes.light.colors.primary};" role="separator">&#8202;</div>
+                <div>
                     <h3>Message Details:</h3>
                     <p><b>Name</b>: ${newValues.name}</p>
                     <p><b>Email</b>: ${newValues.email}</p>
@@ -72,16 +134,11 @@ export const onMessageCreated = functions.firestore
                         <br/>
                         ${newValues.body}
                     </p>
-                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData.theme.schemes.light.colors.primary};" role="separator">&#8202;</div>
+                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData?.theme?.schemes?.light?.colors?.primary ?? "black"};" role="separator">&#8202;</div>
                     <p>
                         You can reply directly to this email to continue the email thread with the user who sent the message.
                     </p>
-                    <p>
-                        Feel free to reach out to <a href="mailto:${publicSiteData.emails.support}">${publicSiteData.emails.support}</a> if you have any questions!
-                    </p>
-                    <p style="text-align: center; margin: 50px 0;"><a href="https://minute.tech">Powered by Minute.tech</a></p>
                 </div>
-            </div>
             `;
 
             // Pack It
@@ -91,9 +148,21 @@ export const onMessageCreated = functions.firestore
                 replyTo: `${newValues.email}`,
                 cc: "",
                 bcc: [],
-                subject: `New "${publicSiteData.name}" Contact Message`,
+                // Create this template on SendGrid: https://mc.sendgrid.com/dynamic-templates
+                templateId: "d-3ce711fad081476c91fdad7cf33deb49",
+                dynamicTemplateData: {
+                    subject: `New "${publicSiteData.name}" Contact Message`,
+                    siteName: publicSiteData.name,
+                    logoUrl: publicSiteData.logo.url,
+                    logoWidth: publicSiteData.logo.width,
+                    heading: heading,
+                    body: body,
+                    colors: publicSiteData?.theme?.schemes?.light?.colors ?? "black",
+                    emails: publicSiteData.emails,
+                    ppUrl: `${publicSiteData.projectId}.web.app/privacy-policy`,
+                    termsUrl: `${publicSiteData.projectId}.web.app/terms`,
+                },
                 text: `${newValues.name} <${newValues.email}>: ${newValues.body}`,
-                html: htmlEmail,
             };
 
             // Send it
@@ -168,12 +237,11 @@ export const onUserCreated = functions.firestore
                     );
                 } else {
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
-
                     // Set default site public data like theme, logo, etc
                     allPromises.push(
                         admin.firestore().collection("site").doc("public").set({
                             name: DEFAULT_SITE.NAME,
-                            projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID, // TODO: get this from firebase somehow
+                            projectId: projectId,
                             logo: {
                                 width: DEFAULT_SITE.LOGO.WIDTH,
                                 url: DEFAULT_SITE.LOGO.URL,

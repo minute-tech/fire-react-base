@@ -1,8 +1,3 @@
-export const BTYPES = {
-    INVERTED: "inverted",
-    TEXTED: "texted",
-};
-
 export const PLACEHOLDER = {
     FIRST_NAME: "Taylor",
     LAST_NAME: "Doe",
@@ -24,6 +19,7 @@ export const SIZES = {
 
 export const DEFAULT_SITE = {
     NAME: "Fire React Base",
+    PROJECT_ID: "fire-react-base",
     LOGO: {
         WIDTH: 100,
         URL: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Flogo192.png?alt=media&token=d327bc99-6ee8-496e-86c7-0206244b837b",

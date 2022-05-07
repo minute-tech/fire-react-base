@@ -273,6 +273,20 @@ function App() {
             }
         };
     }, [site]);
+
+    const cleanUpLogout = () => {
+        
+        if(unsubUser.current){
+            unsubUser?.current();
+        }
+        if(unsubReadOnlyFlags.current){
+            unsubReadOnlyFlags?.current();
+        }
+
+        setFireUser("");
+        setUser("");
+        setReadOnlyFlags("")
+    }
     
     if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
         return (
@@ -321,6 +335,7 @@ function App() {
                                     setUser={setUser}
                                     setReadOnlyFlags={setReadOnlyFlags}
                                     setIsLoggingIn={setIsLoggingIn} 
+                                    cleanUpLogout={cleanUpLogout}
                                     isLoggingIn={isLoggingIn}
                                 />
                                 <Footer

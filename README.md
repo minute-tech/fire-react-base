@@ -83,7 +83,21 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 
 **99. Extra Config**
    - If custom domain, add it to the authorized domain in Firebase console > Authentication > Sign in Method 
-       - Make sure to add `sitename.com` and `www.sitename.com`
+       - Make sure to add `appname.com` and `www.appname.com`
+       - You can add a redirect from `appname.web.app` & `appname.firebaseapp.com` to your custom domain by adding to `firebase.json`:
+       ```
+        "hosting": {
+            "public": "build",
+            "redirects": [
+                    {
+                    "source": "/",
+                    "destination": "https://www.website.com/",
+                    "type": 301
+                    }
+                ],
+            ....
+        }
+        ```
    - For extra security, limit your API keys to certain functions, domains, etc
        - https://console.cloud.google.com/apis/credentials
 
