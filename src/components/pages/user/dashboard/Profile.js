@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Grid, Row, Col } from "react-flexbox-grid";
 import { Form, Formik } from "formik";
 import { FaChevronLeft } from "react-icons/fa";
@@ -7,7 +7,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
-import { updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
 
 import { updateProfileSchema } from "../../../../utils/formSchemas";
@@ -19,6 +19,9 @@ import FormError from "../../../misc/FormError.js";
 import { BTYPES, PLACEHOLDER, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore } from "../../../../Fire";
 import FileUpload from "../../../misc/FileUpload";
+import { readTimestamp } from "../../../../utils/misc";
+import { AiOutlineReload } from "react-icons/ai";
+import { BiCheck } from "react-icons/bi";
 
 function Profile(props) {
     const theme = useTheme();
@@ -36,6 +39,13 @@ function Profile(props) {
     });
 
     const [shownModals, setShownModals] = useState([false]); 
+    const [emailVerifySent, setEmailVerifySent] = useState(false); 
+    const [refreshButtonShown, setRefreshButtonShown] = useState(false); 
+    const verifyEmailTimer = useRef();
+
+    useEffect(() => {
+        return clearTimeout(verifyEmailTimer.current);
+    }, [])
 
     const updateUserProfile = (values) => {
         updateDoc(doc(firestore, "users", props.fireUser.uid), {
@@ -127,6 +137,22 @@ function Profile(props) {
             }));
         });
     }
+
+    const sendEmailVerifyLink = () => {
+        sendEmailVerification(auth.currentUser).then(() => {
+            console.log(`Successfully sent a verification email to ${props.fireUser.email}.`);
+            setEmailVerifySent(true)
+            verifyEmailTimer.current = setTimeout(() => {
+                console.log("time up")
+                setRefreshButtonShown(true)
+            }, 8000);
+        }).catch((error) => {
+            console.error(error);
+        });
+
+
+
+    }
     
     const toggleModal = (newStatus, index) => {
         let tempShownModals = [...shownModals]
@@ -165,13 +191,13 @@ function Profile(props) {
                 {formProps => (
                 <Form>
                     <Grid fluid>
-                        <Row center="xs">
+                        <Row center="xs" style={{ height: "200px" }}>
                             <Col xs={12}>
                                 <Img 
-                                    src={props.user.avatar}
+                                    src={props.user.avatar || require("../../../../assets/images/misc/user.png")}
                                     rounded
                                     alt={`${props.user.firstName} profile picture`}
-                                    width={"300px"}
+                                    width={"200px"}
                                 />
                             </Col>
                         </Row>
@@ -184,6 +210,7 @@ function Profile(props) {
                                     onClick={() => toggleModal(true, 0)}>
                                         update picture
                                 </Button>
+                        <Hr/>
                                 {shownModals[0] && (
                                     <ModalContainer onClick={() => toggleModal(false, 0)}>
                                         <ModalCard onClick={(e) => e.stopPropagation()}>
@@ -343,34 +370,66 @@ function Profile(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row center="xs">
-                            <Col xs={12}>
-                                <Button
-                                    type="submit"
-                                    disabled={submitting.updateUser || !formProps.dirty}
+                        {formProps.dirty && (
+                            <Row center="xs">
+                                <Col xs={12}>
+                                    <Button
+                                        type="submit"
+                                        disabled={submitting.updateUser}
+                                    >
+                                        Submit changes
+                                    </Button>
+                                </Col>
+                            </Row>
+                        )}
+                        <Hr/>
+                        
+                        {console.log(props.fireUser)}
+                        <Row center="xs" middle="xs">
+                            <Col sm={12} md={4}>
+                                <Button 
+                                    type="button"
+                                    color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
+                                    btype={BTYPES.INVERTED}
+                                    onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
                                 >
-                                    Submit
+                                    Switch to&nbsp;
+                                    {
+                                        props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
+                                        <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
+                                        <span>{SCHEMES.DARK} mode <FaMoon /></span>
+                                    }
                                 </Button>
                             </Col>
+                            <Col sm={12} md={4}>
+                                <Label>Account created:&nbsp;</Label> 
+                                <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
+                            </Col>
+                            <Col sm={12} md={4}>
+                                {!props.fireUser.emailVerified && !emailVerifySent && (
+                                    <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
+                                        Verify Email
+                                    </Button>
+                                )}
+                                {emailVerifySent && !refreshButtonShown && (
+                                    <Body color={theme.colors.yellow}>Email sent, check your email inbox!</Body>
+                                )}
+                                {emailVerifySent && refreshButtonShown && (
+                                    <Button type="button" onClick={() => window.location.reload()} btype={BTYPES.INVERTED} color={theme.colors.green}>
+                                       <AiOutlineReload /> Reload page
+                                    </Button>
+                                )}
+                                {props.fireUser.emailVerified && (
+                                    <Body color={theme.colors.green}><BiCheck /> Email verified!</Body>
+                                )}
+                            </Col>
+                          
                         </Row>
                     </Grid>
                 </Form>
                 )}
             </Formik>
-            <Hr />
-            <Button 
-                type="button"
-                color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
-                btype={BTYPES.INVERTED}
-                onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
-            >
-                Switch to&nbsp;
-                {
-                    props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
-                    <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
-                    <span>{SCHEMES.DARK} mode <FaMoon /></span>
-                }
-            </Button>
+            
                 
         </>
     )

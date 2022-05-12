@@ -17,9 +17,13 @@ export const BrandContainer = styled.div`
 `;
 
 export const BrandLink = styled(NavLink)`
-        display: inline-flex;
-        align-items: center;
-        text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    height: 100px;
+    max-height: 100px;  
+    white-space: nowrap;
+    overflow: hidden;
 `;
 
 export const NavLogo = styled.img`

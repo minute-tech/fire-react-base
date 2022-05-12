@@ -15,9 +15,7 @@ function LoggingIn(props) {
             props.setIsLoggingIn(false);
         }, 2000);
 
-        return () => {
-            clearTimeout(timer.current);
-        }
+        return clearTimeout(timer.current);
     })
     
     return (
