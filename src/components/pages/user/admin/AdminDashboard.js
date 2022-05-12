@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { withTheme } from 'styled-components'
+import React from 'react'
+import { useTheme } from 'styled-components'
 import { BiMessageCheck } from "react-icons/bi"
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
@@ -12,8 +12,10 @@ import { H1, LLink } from '../../../../utils/styles/text'
 import { BTYPES, DEFAULT_SITE } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 
-class AdminDashboard extends Component {
-    createCustomSite = async () => {
+function AdminDashboard(props) {
+    const theme = useTheme();
+
+    const createCustomSite = async () => {
         const publicRef = doc(firestore, "site", "public");
         const publicDocSnap = await getDoc(publicRef);
 
@@ -114,7 +116,7 @@ class AdminDashboard extends Component {
         }
     }
 
-    createDefaultCustomSite = async () => {
+    const createDefaultCustomSite = async () => {
         const publicRef = doc(firestore, "site", "public");
         const publicDocSnap = await getDoc(publicRef);
 
@@ -215,45 +217,43 @@ class AdminDashboard extends Component {
         }
     }
 
-    render() {
-        return (
-            <>
-                <Helmet>
-                    <title>Admin Dashboard {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
-                </Helmet>
-                <LLink to="/dashboard">
-                    <Button>
-                        <FaChevronLeft />
-                        &nbsp; Back to User Dashboard
+    return (
+        <>
+            <Helmet>
+                <title>Admin Dashboard {props.site.name ? `| ${props.site.name}` : ""}</title>
+            </Helmet>
+            <LLink to="/dashboard">
+                <Button type="button">
+                    <FaChevronLeft />
+                    &nbsp; Back to User Dashboard
+                </Button>
+            </LLink>
+            <H1>Admin Dashboard</H1>
+            <LLink to={`/dashboard/admin/users`}> 
+                <Button type="button">
+                    Manage Users <FaUserAlt />
+                </Button>
+            </LLink>
+            <LLink to={`/dashboard/admin/messages`}> 
+                <Button type="button" color={theme.colors.green}>
+                    Manage Messages <BiMessageCheck size={18} />
+                </Button>
+            </LLink>
+            <Hr />
+            {props.site.unset && (
+                <>
+                    <Button type="button" color="#4FBFE0" btype={BTYPES.INVERTED} onClick={() => createCustomSite()}>
+                        Create Minute.tech Site <FaPlus />
                     </Button>
-                </LLink>
-                <H1>Admin Dashboard</H1>
-                <LLink to={`/dashboard/admin/users`}> 
-                    <Button>
-                        Manage Users <FaUserAlt />
-                    </Button>
-                </LLink>
-                <LLink to={`/dashboard/admin/messages`}> 
-                    <Button color={this.props.theme.colors.green}>
-                        Manage Messages <BiMessageCheck size={18} />
-                    </Button>
-                </LLink>
-                <Hr />
-                {this.props.site.unset && (
-                    <>
-                        <Button color="#4FBFE0" btype={BTYPES.INVERTED} onClick={() => this.createCustomSite()}>
-                            Create Minute.tech Site <FaPlus />
-                        </Button>
-                    
-                        <Button color={this.props.theme.colors.green} btype={BTYPES.INVERTED} onClick={() => this.createDefaultCustomSite()}>
-                            Create Default Site <FaPlus />
-                        </Button>
-                    </>
-                )}
                 
-            </>
-        )
-    }
+                    <Button type="button" color={theme.colors.green} btype={BTYPES.INVERTED} onClick={() => createDefaultCustomSite()}>
+                        Create Default Site <FaPlus />
+                    </Button>
+                </>
+            )}
+            
+        </>
+    )
 }
 
-export default withTheme(AdminDashboard)
+export default AdminDashboard;

@@ -178,7 +178,7 @@ class ManageMessages extends Component {
                         <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
                     <LLink to="/dashboard/admin">
-                        <Button>
+                        <Button type="button">
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
                         </Button>
@@ -214,6 +214,7 @@ class ManageMessages extends Component {
                                                 </Td>
                                                 <Td>
                                                     <Button
+                                                        type="button"
                                                         btype={BTYPES.TEXTED} 
                                                         size={SIZES.SM}
                                                         onClick={() => this.toggleModal(true, i)}         
@@ -227,6 +228,7 @@ class ManageMessages extends Component {
                                                                 <Body margin="0" size={SIZES.SM}><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
                                                                 <Body>{message.body}</Body>
                                                                 <Button 
+                                                                    type="button"
                                                                     size={SIZES.SM} 
                                                                     onClick={() => this.toggleModal(false, i)}
                                                                 >
@@ -248,7 +250,7 @@ class ManageMessages extends Component {
                             <Row center="xs" middle="xs">
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== 1 && (
-                                        <Button onClick={() => this.getPrevPage()}>
+                                        <Button type="button" onClick={() => this.getPrevPage()}>
                                             <FaChevronLeft /> Previous page    
                                         </Button>
                                     )}
@@ -258,7 +260,7 @@ class ManageMessages extends Component {
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage) && (
-                                        <Button onClick={() => this.getNextPage()}>
+                                        <Button type="button" onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>
                                     )}

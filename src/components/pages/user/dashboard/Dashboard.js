@@ -37,19 +37,20 @@ function Dashboard(props) {
             <H1>Dashboard</H1>
             <H3>Hi, {props?.fireUser?.displayName}!</H3>
             <LLink to={`/dashboard/profile`}> 
-                <Button>
+                <Button type="button">
                     Edit your profile <FaUserEdit size={20} />
                 </Button>
             </LLink>
             <Hr/>
             {props.readOnlyFlags?.isAdmin && (
                 <LLink to={`/dashboard/admin`}> 
-                    <Button>
+                    <Button type="button">
                         Admin Dashboard <FaCog /> 
                     </Button>
                 </LLink>
             )}
             <Button 
+                type="button"
                 color={theme.colors.red}
                 onClick={() =>         
                     confirmAlert({

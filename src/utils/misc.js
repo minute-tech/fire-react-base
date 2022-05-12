@@ -48,8 +48,6 @@ export function mobileCheck() {
     return check;
 };
 
-
-
 // Date and Time //
 export function readTimestamp(timestamp) {
     const dateObject = new Date(timestamp);
@@ -80,7 +78,7 @@ export function readTimestamp(timestamp) {
     };
 }
   
-  export function renderTimeDiff(current, previous) {
+export function renderTimeDiff(current, previous) {
     var msPerMinute = 60 * 1000;
     var msPerHour = msPerMinute * 60;
     var msPerDay = msPerHour * 24;
@@ -119,4 +117,4 @@ export const moreThanXDaysAgo = (date, numDays = 1) => {
     const daysAgo = Date.now() - days;
 
     return date < daysAgo;
-}
+};

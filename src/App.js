@@ -203,7 +203,7 @@ function App() {
 
     const unsubUser = useRef();
     const unsubReadOnlyFlags = useRef();
-
+    
     useEffect(() => {
         onAuthStateChanged(auth, (fireUserData) => {
             // console.log("fireUserData: ")
@@ -220,8 +220,6 @@ function App() {
                         // User exists
                         const docWithMore = Object.assign({}, userDoc.data());
                         docWithMore.id = userDoc.id;
-                        console.log("user docWithMore: ")
-                        console.log(docWithMore)
                         setUser(docWithMore);
                         setLoading(prevState => ({
                             ...prevState,
@@ -275,7 +273,6 @@ function App() {
     }, [site]);
 
     const cleanUpLogout = () => {
-        
         if(unsubUser.current){
             unsubUser?.current();
         }

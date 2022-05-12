@@ -38,7 +38,7 @@ class ErrorBoundary extends React.Component {
                 </Body>
                 <Hr/>
                 <Centered margin="25px 0">
-                    <Button onClick={() => window.location.reload()}><AiOutlineReload /> Reload page</Button>
+                    <Button type="button" onClick={() => window.location.reload()}><AiOutlineReload /> Reload page</Button>
                 </Centered>
             </Wrapper>
           </div>

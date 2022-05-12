@@ -255,6 +255,7 @@ class ManageUsers extends Component {
         } else {
             return (
                 <Button
+                    type="button"
                     color={this.props.theme.colors.yellow}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
@@ -291,6 +292,7 @@ class ManageUsers extends Component {
             // Already admin, but not super admin yet
             return (
                 <Button
+                    type="button"
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
@@ -338,6 +340,7 @@ class ManageUsers extends Component {
             // Is admin but not on email list
             return (
                 <Button
+                    type="button"
                     color={this.props.theme.colors.green}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
@@ -370,6 +373,7 @@ class ManageUsers extends Component {
             // Is admin and already receiving emails, but prompted to remove
             return (
                 <Button
+                    type="button"
                     color={this.props.theme.colors.red}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
@@ -417,7 +421,7 @@ class ManageUsers extends Component {
                         <title>Manage Users {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
                     </Helmet>
                     <LLink to="/dashboard/admin">
-                        <Button>
+                        <Button type="button">
                             <FaChevronLeft />
                             &nbsp; Back to Admin Dashboard
                         </Button>
@@ -464,6 +468,7 @@ class ManageUsers extends Component {
                                                 </Td>
                                                 <Td>
                                                     <Button
+                                                        type="button"
                                                         btype={BTYPES.TEXTED} 
                                                         size={SIZES.SM}
                                                         onClick={() => this.toggleModal(true, i)}         
@@ -484,6 +489,7 @@ class ManageUsers extends Component {
                                                                 
                                                                 <Hr/>
                                                                 <Button 
+                                                                    type="button"
                                                                     size={SIZES.SM} 
                                                                     onClick={() => this.toggleModal(false, i)}
                                                                 >
@@ -504,7 +510,7 @@ class ManageUsers extends Component {
                             <Row center="xs" middle="xs">
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== 1 && (
-                                        <Button onClick={() => this.getPrevPage()}>
+                                        <Button type="button" onClick={() => this.getPrevPage()}>
                                             <FaChevronLeft /> Previous page    
                                         </Button>
                                     )}
@@ -514,7 +520,7 @@ class ManageUsers extends Component {
                                 </Col>
                                 <Col xs={12} sm={4}>
                                     {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage) && (
-                                        <Button onClick={() => this.getNextPage()}>
+                                        <Button type="button" onClick={() => this.getNextPage()}>
                                             Next page <FaChevronRight /> 
                                         </Button>
                                     )}

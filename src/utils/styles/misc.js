@@ -1,12 +1,12 @@
 import styled, { createGlobalStyle }  from 'styled-components';
 import { rgb, rgba } from 'polished'
 import { FaSpinner } from 'react-icons/fa';
-import { keyframes } from 'styled-components';
 
 // Importing font into CSS global for use around app
 // import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 // import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
-import { BodyFont, HeadingFont } from './text';
+import { Body, BodyFont, HeadingFont } from './text';
+import { spin } from './animations';
 
 
 export const GlobalStyle = createGlobalStyle`
@@ -70,17 +70,6 @@ export const BodyWrapper = styled.div`
         --toastify-color-progress-error: var(--toastify-color-error);
     }
 `;
-
-const spin = keyframes`
-    0% {
-        -webkit-transform: rotate(0deg);
-                transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(359deg);
-                transform: rotate(359deg);
-    }
-`
 
 export const Spinner = styled(FaSpinner)`
     animation-name: ${spin};
@@ -368,13 +357,22 @@ export const VerticalAlign = styled.span`
 `;
 
 export const DevAlert = styled.div`
-    background-color: ${props => props.theme?.colors?.red || "darkred"};
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    top: 0;
+    background-color: ${props => rgba(props.theme?.colors?.red, 0.7) || rgba("darkred", 0.7)};
     text-align: center;
-    padding: 3px 0;
+    padding: 5px 0;
     color: white;
-    font-size: 0.6rem;
+    font-size: 8px;
     font-family: ${props => props.theme?.fonts?.body || 'Arial'};
     letter-spacing: 2px;
+    opacity: 1;
+    transition: opacity 0.5s;
+    &:hover {
+        opacity: 0;
+    }
 `
 
 // Modal
@@ -385,7 +383,6 @@ export const ModalCard = styled.div`
     border-radius: 5px;
     transition: 0.3s;
     padding: 30px 60px;
-    position: relative;
     width: 40%;
     z-index: 10;
     margin: 0;
@@ -426,5 +423,37 @@ export const ModalContainer = styled.div`
     height: 100%;
     background-color: ${props => rgba(props.theme.colors.grey, 0.7)};
 `;
+
+// Progress bar
+export const Progress = styled.div`
+    margin: 20px auto;
+    padding: 0;
+    width: 90%;
+    height: 30px;
+    overflow: hidden;
+    background: ${props => props.theme.colors.lightGrey};
+    border-radius: 4px;
+
+    div {
+        transition: all 0.5s linear;
+        position: relative;
+        float: left;
+        min-width: 1%;
+        width: ${props => `${props.uploadProgress}%`};
+        height: 100%;
+        background: ${props => props.uploadProgress !== 100 ? props.theme.colors.primary : props.theme.colors.green};
+    }
+
+    p {
+        ${Body};
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        margin: 0;
+        font-size: 10px;
+        color: white;
+    }
+`
 
 

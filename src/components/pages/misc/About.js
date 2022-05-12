@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { withTheme } from 'styled-components';
 
 import { ANIMAL_GALLERY } from '../../../utils/constants';
 import { Centered, Hr, Img, Wrapper } from '../../../utils/styles/misc';
@@ -8,12 +7,11 @@ import { ALink, Body, H1, H3 } from '../../../utils/styles/text';
 import ContactForm from '../../misc/ContactForm';
 import PhotoGallery from '../../misc/PhotoGallery';
 
-class About extends Component {
-  render() {
+function About(props){
     return (
         <Wrapper>
             <Helmet>
-                <title>About {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
+                <title>About {props.site.name ? `| ${props.site.name}` : ""}</title>
             </Helmet>
             <H1>About</H1>
             <Body>
@@ -63,7 +61,6 @@ class About extends Component {
             <ContactForm />
         </Wrapper>
     );
-  }
 }
 
-export default withTheme(About)
+export default About;

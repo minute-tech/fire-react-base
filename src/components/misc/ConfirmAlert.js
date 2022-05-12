@@ -25,6 +25,7 @@ class ConfirmAlert extends Component {
                 <H2 theme={this.props.theme}>{this.props.headingText}</H2>
                 <Body theme={this.props.theme}>{this.props.body}</Body>
                 <Button 
+                    type="button"
                     size={SIZES.SM}
                     theme={this.props.theme}
                     color={this.props.theme.colors.green}
@@ -33,6 +34,7 @@ class ConfirmAlert extends Component {
                     {this.props.yesText}
                 </Button>
                 <Button
+                    type="button"
                     size={SIZES.SM}
                     theme={this.props.theme}
                     color={this.props.theme.colors.red}

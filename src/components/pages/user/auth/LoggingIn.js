@@ -30,4 +30,4 @@ function LoggingIn(props) {
     )
 }
 
-export default (LoggingIn)
+export default (LoggingIn);
