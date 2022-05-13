@@ -199,7 +199,7 @@ function Views(props) {
                 
             </Route>
 
-            <Route path="*" element={<ErrorBoundary><Page404 site={props.site} /></ErrorBoundary>} />
+            <Route path="*" element={<Page404 site={props.site} />} />
         </Routes>
     )
 }

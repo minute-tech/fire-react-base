@@ -3,7 +3,7 @@ import { useTheme } from 'styled-components'
 import { BiMessageCheck } from "react-icons/bi"
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
-import { FaChevronLeft, FaPlus, FaUserAlt } from 'react-icons/fa'
+import { FaChevronLeft, FaPlus, FaSitemap, FaUserAlt } from 'react-icons/fa'
 import { Helmet } from 'react-helmet-async'
 
 import { Button } from '../../../../utils/styles/buttons'
@@ -229,14 +229,19 @@ function AdminDashboard(props) {
                 </Button>
             </LLink>
             <H1>Admin Dashboard</H1>
-            <LLink to={`/dashboard/admin/users`}> 
+            <LLink to={`/dashboard/admin/site`}> 
                 <Button type="button">
+                    Manage Site <FaSitemap />
+                </Button>
+            </LLink>
+            <LLink to={`/dashboard/admin/users`}> 
+                <Button type="button" color={theme.colors.secondary}>
                     Manage Users <FaUserAlt />
                 </Button>
             </LLink>
             <LLink to={`/dashboard/admin/messages`}> 
-                <Button type="button" color={theme.colors.green}>
-                    Manage Messages <BiMessageCheck size={18} />
+                <Button type="button" color={theme.colors.tertiary}>
+                    Manage Messages <BiMessageCheck />
                 </Button>
             </LLink>
             <Hr />
