@@ -9,7 +9,7 @@ import { FaCheck } from "react-icons/fa"
 import { firestore } from "../../Fire";
 import { CField, FField } from '../../utils/styles/forms';
 import { contactFormSchema } from '../../utils/formSchemas';
-import FormError from '../misc/FormError';
+import { FormError } from '../misc/Misc';
 import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
 import { Button } from '../../utils/styles/buttons.js';
 import { Centered, Hr } from '../../utils/styles/misc.js';

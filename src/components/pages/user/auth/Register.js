@@ -14,7 +14,7 @@ import { Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
 import { CField, FField } from '../../../../utils/styles/forms.js';
 import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js';
 import { Button } from '../../../../utils/styles/buttons';
-import FormError from '../../../misc/FormError.js';
+import { FormError } from '../../../misc/Misc.js';
 import { PLACEHOLDER, SCHEMES, SIZES } from '../../../../utils/constants.js';
 
 function Register(props) {

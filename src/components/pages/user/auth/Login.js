@@ -15,7 +15,7 @@ import { LgContainer, ModalCard, ModalContainer, Recaptcha, Wrapper } from '../.
 import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 import { FField, Input } from '../../../../utils/styles/forms.js';
 import { Button } from '../../../../utils/styles/buttons.js';
-import FormError from '../../../misc/FormError';
+import { FormError } from '../../../misc/Misc';
 import { PLACEHOLDER, SIZES } from '../../../../utils/constants.js';
 
 function UserLogin(props) {

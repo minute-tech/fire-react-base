@@ -30,7 +30,7 @@ function Footer(props) {
         }));;
     }, [])
     
-    const scrollTop = () => {
+    const backToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -68,7 +68,7 @@ function Footer(props) {
                     <ColC xs={12} sm={4} $deviceWidth={windowDims.width}>
                         <Row end={SIZES.SM}>
                             <Col xs={12}>
-                                <SLink onClick={() => scrollTop()}>
+                                <SLink onClick={() => backToTop()}>
                                     Back to top <FaChevronUp /> 
                                 </SLink>
                             </Col>   

@@ -9,19 +9,19 @@ import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
+import { AiOutlineReload } from "react-icons/ai";
+import { BiCheck } from "react-icons/bi";
 
 import { updateProfileSchema } from "../../../../utils/formSchemas";
 import { Hr, Img, ModalCard, ModalContainer } from "../../../../utils/styles/misc.js";
 import { FField } from "../../../../utils/styles/forms.js";
 import { Body, H1, Label, LLink } from "../../../../utils/styles/text.js";
 import { Button } from "../../../../utils/styles/buttons.js";
-import FormError from "../../../misc/FormError.js";
+import { FormError } from "../../../misc/Misc.js";
 import { BTYPES, PLACEHOLDER, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore } from "../../../../Fire";
 import FileUpload from "../../../misc/FileUpload";
 import { readTimestamp } from "../../../../utils/misc";
-import { AiOutlineReload } from "react-icons/ai";
-import { BiCheck } from "react-icons/bi";
 
 function Profile(props) {
     const theme = useTheme();

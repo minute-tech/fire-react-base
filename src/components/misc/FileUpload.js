@@ -9,7 +9,7 @@ import {  FileInput, FileInputLabel } from "../../utils/styles/forms.js";
 import { Body, Label } from '../../utils/styles/text';
 import { Img, Progress } from '../../utils/styles/misc';
 import { Button } from '../../utils/styles/buttons';
-import FormError from './FormError';
+import { FormError } from './Misc';
 import { SIZES } from '../../utils/constants';
 
 function FileUpload(props) {

@@ -16,7 +16,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import Footer from './components/misc/Footer';
 import Header from './components/misc/Header';
 import Views from "./Views";
-import { FirebaseAnalytics } from './components/misc/FirebaseAnalytics';
+import { FirebaseAnalytics, StartAtTop } from './components/misc/Misc';
 import { auth, firestore } from './Fire';
 import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
@@ -297,12 +297,14 @@ function App() {
                 <Helmet>
                     <title>{site.name ? `${site.name}` : "Fire React Base"}</title>
                 </Helmet>
+                {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
                 <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
                     <ThemeProvider theme={theme}>
                         <BodyWrapper>
                             <BrowserRouter>
                                 <GlobalStyle /> 
                                 <FirebaseAnalytics />
+                                <StartAtTop />
                                 {process.env.NODE_ENV === 'development' && (
                                     <DevAlert>
                                         LOCAL SERVER
