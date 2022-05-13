@@ -29,7 +29,8 @@ function Register(props) {
         lastName: "",
         email: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "", 
+        policyAccept: "",
     }); 
 
     const registerUser = (values) => {        
@@ -45,11 +46,15 @@ function Register(props) {
                 register: false
             }));
         } else if(!values.policyAccept){
-            termsToastId = toast.warn("Please accept our Privacy Policy and Terms & Conditions.");
+            termsToastId = toast.warn("Please read and accept our Privacy Policy and Terms & Conditions below.");
             setSubmitting(prevState => ({
                 ...prevState,
                 register: false
             }));
+            setErrors(prevState => ({
+                ...prevState,
+                policyAccept: "Please accept the policies by checking the box above.",
+            }));   
         } else {
             const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
@@ -323,17 +328,33 @@ function Register(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row center="xs" style={{margin:"10px 0"}}>
+                        <Row 
+                            center="xs" 
+                            style={{margin:"10px 0"}}
+                                onKeyUp={() => 
+                                    setErrors(prevState => ({
+                                        ...prevState,
+                                        policyAccept: ""
+                                    }))
+                                }
+                                onClick={() => 
+                                    setErrors(prevState => ({
+                                        ...prevState,
+                                        policyAccept: ""
+                                    }))
+                                }
+                            >
                             <Col>
                                 <CField
                                     type="checkbox"
                                     name="policyAccept"
                                 />
-                                <Body display="inline">
+                                <Body display="inline-block" margin="0 0 10px 0">
                                     I accept the&nbsp;
                                     <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
                                     <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
                                 </Body>
+                                <FormError stateError={errors?.policyAccept} /> 
                             </Col>
                         </Row>
                         <Row center="xs">

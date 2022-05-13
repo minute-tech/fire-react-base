@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { collection, addDoc } from "firebase/firestore"; 
-import { withTheme } from 'styled-components';
 import { toast } from 'react-toastify';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
 import { FaCheck } from "react-icons/fa"
+import { useTheme } from 'styled-components';
 
 import { firestore } from "../../Fire";
 import { CField, FField } from '../../utils/styles/forms';
@@ -15,25 +15,36 @@ import { Button } from '../../utils/styles/buttons.js';
 import { Centered, Hr } from '../../utils/styles/misc.js';
 import { PLACEHOLDER } from '../../utils/constants.js';
 
-class ContactForm extends Component {
-    constructor(props) {
-        super(props)
+function ContactForm(props) {
+    const theme = useTheme();
+    const [messageSent, setMessageSent] = useState(false);
+    const [submitting, setSubmitting] = useState({ 
+        message: false,
+    }); 
 
-        this.state = {
-            messageSubmitted: false,
-            submittingMessage: false
-        }
-    }
+    const [errors, setErrors] = useState({ 
+        name: "",
+        email: "",
+        body: "",
+        policyAccept: ""
+    }); 
 
-    submitMessage = (values, resetForm) => {
-        this.setState({
-            submittingMessage: true
-        })
+    const submitMessage = (values, resetForm) => {      
+        let termsToastId = "";
+        setSubmitting(prevState => ({
+            ...prevState,
+            message: true
+        }));
         if(!values.policyAccept){
-            toast.warn('Please accept our Privacy Policy and Terms & Conditions.');
-            this.setState({
-                submittingMessage: false
-            })
+            termsToastId = toast.warn("Please read and accept our Privacy Policy and Terms & Conditions below.");
+            setErrors(prevState => ({
+                ...prevState,
+                policyAccept: "Please accept the policies by checking the box above.",
+            }));   
+            setSubmitting(prevState => ({
+                ...prevState,
+                message: false
+            }));
         } else {
             toast.dismiss();
             addDoc(collection(firestore, "messages"), {
@@ -41,154 +52,202 @@ class ContactForm extends Component {
                 email: values.email,
                 body: values.body,
                 timestamp: Date.now(),
-            }).then((doc) => {
-                console.log("doc: ");
-                console.log(doc);
-                this.setState({
-                    messageSubmitted: true,
-                    submittingMessage: false
-                })
+            }).then(() => {
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    message: false
+                }));
+                if(termsToastId){
+                    toast.dismiss(termsToastId);
+                }
+                setMessageSent(true);
                 toast.success(`Message submitted successfully, thanks!`);
                 resetForm();
             }).catch(error => {
                 toast.error(`Error submitting message: ${error}`);
-                this.setState({
-                    submittingMessage: false
-                })
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    message: false
+                }));
             });
         }
        
     }
 
-    render() {
-        if(this.state.messageSubmitted){
-            return (
-                <>
+    if(messageSent){
+        return (
+            <>
+            <H1>Contact Form</H1>
+            <Centered>
+                <H3 color={theme.colors.green}><FaCheck /> Submitted.</H3>
+            </Centered>
+            </>
+        )
+    } else {
+        return (
+            <>
                 <H1>Contact Form</H1>
-                <Centered>
-                    <H3 color={this.props.theme.colors.green}><FaCheck /> Submitted.</H3>
-                </Centered>
-                </>
-            )
-        } else {
-            return (
-                <>
-                    <H1>Contact Form</H1>
-                    <Formik
-                        initialValues={{
-                            name: "",
-                            email: "",
-                            body: "",
-                            policyAccept: false,
-                        }}
-                        onSubmit={(values, actions) => {
-                            this.setState({ submittingMessage: true })
-                            this.submitMessage(values, actions.resetForm);
-                        }}
-                        enableReinitialize={true}
-                        validationSchema={contactFormSchema}
-                    >
-                        {props => (
-                            <Form>
-                                <Grid fluid>
-                                    <Row>
-                                        <Col sm={12} md={6}>
-                                            <Label>Name:</Label>
-                                            <br/>
-                                            <FField
-                                                type="text"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder={`${PLACEHOLDER.FIRST_NAME} ${PLACEHOLDER.LAST_NAME}`}
-                                                name="name"
-                                                value={props.values.name || ''}
-                                                onKeyUp={() => this.setState({ errors: { name: false } })}
-                                                onClick={() => this.setState({ errors: { name: false } })}
-                                                error={ ((props.errors.name && props.touched.name) || this.state?.errors?.name) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.name}
-                                                formikTouched={props.touched.name}
-                                                stateError={this.state?.errors?.name}
-                                            /> 
-                                        </Col>
-                                        <Col sm={12} md={6}>
-                                            <Label>Email:</Label>&nbsp;
-                                            <br/>
-                                            <FField
-                                                type="text"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder={PLACEHOLDER.EMAIL}
-                                                onKeyUp={() => this.setState({ errors: { email: false } })}
-                                                onClick={() => this.setState({ errors: { email: false } })}
-                                                name="email"
-                                                value={props.values.email || ''}
-                                                error={ ((props.errors.email && props.touched.email) || this.state?.errors?.email) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.email}
-                                                formikTouched={props.touched.email}
-                                                stateError={this.state?.errors?.email}
-                                            /> 
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Col xs={12}>
-                                            <Label>Message:</Label>&nbsp;
-                                            <br/>
-                                            <FField
-                                                component="textarea"
-                                                required
-                                                onChange={props.handleChange}
-                                                placeholder={PLACEHOLDER.BODY}
-                                                onKeyUp={() => this.setState({ errors: { body: false } })}
-                                                onClick={() => this.setState({ errors: { body: false } })}
-                                                name="body"
-                                                value={props.values.body || ''}
-                                                error={ ((props.errors.body && props.touched.body) || this.state?.errors?.body) ? 1 : 0 }
-                                            />
-                                            <FormError
-                                                yupError={props.errors.body}
-                                                formikTouched={props.touched.body}
-                                                stateError={this.state?.errors?.body}
-                                            /> 
-                                        </Col>
-                                    </Row>
-                                    <Hr/>
-                                    <Row center="xs">
-                                        <Col>
-                                            <CField
-                                                type="checkbox"
-                                                name="policyAccept"
-                                            />
-                                            <Body display="inline">
-                                                I accept the&nbsp;
-                                                <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
-                                                <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
-                                            </Body>
-                                        </Col>
-                                    </Row>
-                                    <br/>
-                                    <Row center="xs">
-                                        <Col xs={12}>
-                                            <Button 
-                                                type="submit" 
-                                                disabled={this.state.submittingMessage}
-                                            >
-                                                Submit
-                                            </Button>
-                                        </Col>
-                                    </Row>
-                                </Grid>
-                            </Form>
-                        )}
-                    </Formik>
-                </>
-            )
-        }
-       
+                <Formik
+                    initialValues={{
+                        name: "",
+                        email: "",
+                        body: "",
+                        policyAccept: false,
+                    }}
+                    onSubmit={(values, actions) => {
+                        setSubmitting(prevState => ({
+                            ...prevState,
+                            message: true
+                        }));
+                        submitMessage(values, actions.resetForm);
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={contactFormSchema}
+                >
+                    {formProps => (
+                        <Form>
+                            <Grid fluid>
+                                <Row>
+                                    <Col sm={12} md={6}>
+                                        <Label>Name:</Label>
+                                        <br/>
+                                        <FField
+                                            type="text"
+                                            required
+                                            onChange={formProps.handleChange}
+                                            placeholder={`${PLACEHOLDER.FIRST_NAME} ${PLACEHOLDER.LAST_NAME}`}
+                                            name="name"
+                                            value={formProps.values.name || ''}
+                                            onKeyUp={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    name: ""
+                                                }))
+                                            }
+                                            onClick={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    name: ""
+                                                }))
+                                            }
+                                            error={ ((formProps.errors.name && formProps.touched.name) || errors?.name) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={formProps.errors.name}
+                                            formikTouched={formProps.touched.name}
+                                            stateError={errors?.name}
+                                        /> 
+                                    </Col>
+                                    <Col sm={12} md={6}>
+                                        <Label>Email:</Label>&nbsp;
+                                        <br/>
+                                        <FField
+                                            type="text"
+                                            required
+                                            onChange={formProps.handleChange}
+                                            placeholder={PLACEHOLDER.EMAIL}
+                                            onKeyUp={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    email: ""
+                                                }))
+                                            }
+                                            onClick={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    email: ""
+                                                }))
+                                            }
+                                            name="email"
+                                            value={formProps.values.email || ''}
+                                            error={ ((formProps.errors.email && formProps.touched.email) || errors?.email) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={formProps.errors.email}
+                                            formikTouched={formProps.touched.email}
+                                            stateError={errors?.email}
+                                        /> 
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col xs={12}>
+                                        <Label>Message:</Label>&nbsp;
+                                        <br/>
+                                        <FField
+                                            component="textarea"
+                                            required
+                                            onChange={formProps.handleChange}
+                                            placeholder={PLACEHOLDER.BODY}
+                                            onKeyUp={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    body: ""
+                                                }))
+                                            }
+                                            onClick={() => 
+                                                setErrors(prevState => ({
+                                                    ...prevState,
+                                                    body: ""
+                                                }))
+                                            }
+                                            name="body"
+                                            value={formProps.values.body || ''}
+                                            error={ ((formProps.errors.body && formProps.touched.body) || errors?.body) ? 1 : 0 }
+                                        />
+                                        <FormError
+                                            yupError={formProps.errors.body}
+                                            formikTouched={formProps.touched.body}
+                                            stateError={errors?.body}
+                                        /> 
+                                    </Col>
+                                </Row>
+                                <Hr/>
+                                <Row 
+                                    center="xs"                                            
+                                    onKeyUp={() => 
+                                        setErrors(prevState => ({
+                                            ...prevState,
+                                            policyAccept: ""
+                                        }))
+                                    }
+                                    onClick={() => 
+                                        setErrors(prevState => ({
+                                            ...prevState,
+                                            policyAccept: ""
+                                        }))
+                                    }
+                                >
+                                    <Col>
+                                        <CField
+                                            type="checkbox"
+                                            name="policyAccept"
+                                        />
+                                        <Body display="inline-block" margin="0 0 10px 0">
+                                            I accept the&nbsp;
+                                            <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
+                                            <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
+                                        </Body>
+                                        <FormError stateError={errors?.policyAccept} /> 
+                                    </Col>
+                                </Row>
+                                <br/>
+                                <Row center="xs">
+                                    <Col xs={12}>
+                                        <Button 
+                                            type="submit" 
+                                            disabled={submitting.message}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Grid>
+                        </Form>
+                    )}
+                </Formik>
+            </>
+        )
     }
 }
 
-export default withTheme(ContactForm)
+export default ContactForm;

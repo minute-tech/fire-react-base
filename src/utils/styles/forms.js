@@ -65,7 +65,7 @@ export const RField = styled(Field)`
 `;
 
 export const CField = styled(Field)`
-    transform: scale(1.25);
+    transform: scale(1.5);
     margin: 15px 15px 0 0;
 `;
 
