@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState} from 'react'
 import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast } from "firebase/firestore";  
 import { FaChevronLeft, FaChevronRight,  } from 'react-icons/fa';
 import { CgClose } from 'react-icons/cg';
-import { withTheme } from 'styled-components';
+import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { Col, Grid, Row } from 'react-flexbox-grid';
 
@@ -14,36 +14,35 @@ import { readTimestamp } from '../../../../utils/misc';
 import { BTYPES, SIZES } from '../../../../utils/constants.js';
 
 
-class ManageMessages extends Component {
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-            messages: "",
-            currentPage: 0,
-            beginCursor: "",
-            finalCursor: "",
-            loadingMessages: true,
-            loadingCounts: true,
-            messageCount: 0,
-            messagesPerPage: 10,
-            shownModals: []
-        }
-    }
-    
-    componentDidMount = async () =>{
-        this.unsubCounts = onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
+function ManageMessages(props) {
+    const theme = useTheme();
+    const [loading, setLoading] = useState({ 
+        counts: true,
+        items: true
+    }); 
+    const [itemCount, setItemCount] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [items, setItems] = useState([]);
+    const [beginCursor, setBeginCursor] = useState("");
+    const [finalCursor, setFinalCursor] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [shownModals, setShownModals] = useState([false]); 
+
+    useEffect(() => {
+        const unsubCounts = onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
             if(countsDoc.exists()){
                 let countsData = countsDoc.data();
-                this.setState({
-                    messageCount: countsData.messages,
-                    loadingCounts: false
-                });
+                setLoading(prevState => ({
+                    ...prevState,
+                    counts: false
+                }));
+                setItemCount(countsData.messages);
             } else {
                 console.log("No custom site set, can't properly count messages.")
-                this.setState({
-                    loadingCounts: false
-                });
+                setLoading(prevState => ({
+                    ...prevState,
+                    counts: false
+                }));
             }
         });
 
@@ -51,231 +50,230 @@ class ManageMessages extends Component {
         const currentPageQuery = query(
             collection(firestore, "messages"), 
             orderBy("timestamp", "desc"), 
-            limit(this.state.messagesPerPage)
+            limit(itemsPerPage)
         );
-        const pageDocSnaps = await getDocs(currentPageQuery);
+
+        const pageDocSnaps = getDocs(currentPageQuery);
         // Get the last visible document cursor so we can reference it for the next page
-        const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+        const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
 
         // Get content from each doc on this page 
-        let messages = [];
-        let shownModals = []
+        let tempItems = [];
+        let tempShownModals = []
         pageDocSnaps.forEach((doc) => {
             const docWithMore = Object.assign({}, doc.data());
             docWithMore.id = doc.id;
-            messages.push(docWithMore);
-            shownModals.push(false)
+            tempItems.push(docWithMore);
+            tempShownModals.push(false)
         });
 
-        this.setState({
-            messages: messages,
-            finalCursor: finalCursor,
-            currentPage: 1,
-            loadingMessages: false,
-            shownModals: shownModals
-        })
-    }
+        setItems(tempItems);
+        setFinalCursor(tempFinalCursor);
+        setCurrentPage(1);
+        setShownModals(tempShownModals);
+        setLoading(prevState => ({
+            ...prevState,
+            items: false
+        }));
 
-    componentWillUnmount(){
-        if(this.unsubCounts){
-            this.unsubCounts();
-        }
-    }
-    
-    getPrevPage = async () => {
-        if(this.state.currentPage !== 1){
-            this.setState({
-                loadingMessages: true
-            })
+        return unsubCounts();
+    }, [itemsPerPage]);
+
+    const getPrevPage = async () => {
+        if(currentPage !== 1){
+            setLoading(prevState => ({
+                ...prevState,
+                items: true
+            }));
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "messages"), 
                 orderBy("timestamp", "desc"),
-                endAt(this.state.beginCursor),
-                limitToLast(this.state.messagesPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
+                endAt(beginCursor),
+                limitToLast(itemsPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
-            const beginCursor = pageDocSnaps.docs[ 0 ];
-            const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-            const prevPage = this.state.currentPage - 1;
+            const tempBeginCursor = pageDocSnaps.docs[ 0 ];
+            const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            const prevPage = currentPage - 1;
 
             // Set data in docs to state
-            let messages = [];
-            let shownModals = []
+            let tempItems = [];
+            let tempShownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
-                messages.push(docWithMore);
-                shownModals.push(false)
+                tempItems.push(docWithMore);
+                tempShownModals.push(false)
             });
 
-            this.setState({
-                messages: messages,
-                beginCursor: beginCursor,
-                finalCursor: finalCursor,
-                currentPage: prevPage,
-                loadingMessages: false,
-            })
+            setItems(tempItems);
+            setFinalCursor(tempFinalCursor);
+            setBeginCursor(tempBeginCursor);
+            setCurrentPage(prevPage);
+            setShownModals(tempShownModals);
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
         }
     }
 
-    getNextPage = async () => {
-        if(this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage)){
-            this.setState({
-                loadingMessages: true
-            })
+    const getNextPage = async () => {
+        if(currentPage !== Math.ceil(itemCount/itemsPerPage)){
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "messages"), 
                 orderBy("timestamp", "desc"),
-                startAfter(this.state.finalCursor),
-                limit(this.state.messagesPerPage)
+                startAfter(finalCursor),
+                limit(itemsPerPage)
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
-            const beginCursor = pageDocSnaps.docs[ 0 ];
-            const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-            const nextPage = this.state.currentPage + 1;
+            const tempBeginCursor = pageDocSnaps.docs[ 0 ];
+            const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            const nextPage = currentPage + 1;
 
             // Set data in docs to state
-            let messages = [];
-            let shownModals = []
+            let tempItems = [];
+            let tempShownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
-                messages.push(docWithMore);
-                shownModals.push(false)
+                tempItems.push(docWithMore);
+                tempShownModals.push(false)
             });
 
-            this.setState({
-                messages: messages,
-                beginCursor: beginCursor,
-                finalCursor: finalCursor,
-                currentPage: nextPage,
-                loadingMessages: false,
-            })
+            setItems(tempItems);
+            setFinalCursor(tempFinalCursor);
+            setBeginCursor(tempBeginCursor);
+            setCurrentPage(nextPage);
+            setShownModals(tempShownModals);
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
         }
-    }
+    };
 
-    toggleModal = (newStatus, index) => {
-        let tempShownModals = this.state.shownModals
+        
+    const toggleModal = (newStatus, index) => {
+        let tempShownModals = [...shownModals]
         tempShownModals[index] = newStatus
-        this.setState({
-            shownModals: tempShownModals
-        })
-    }
+        setShownModals(tempShownModals);
+    };
 
-    render() {
-        if(this.state.loadingMessages && this.state.loadingCounts){
-            return (
-                <>
-                    <H2>Loading... <Spinner /> </H2> 
-                </>
-            )
-        } else {
-            return (
-                <>
-                    <Helmet>
-                        <title>Contact Messages {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
-                    </Helmet>
-                    <LLink to="/dashboard/admin">
-                        <Button type="button">
-                            <FaChevronLeft />
-                            &nbsp; Back to Admin Dashboard
-                        </Button>
-                    </LLink>
-                    <H1>Contact Messages: {this.state.messageCount}</H1>
-                    {this.state.messageCount === 0 && (
-                        <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No messages yet!</Body>
-                    )}
-                    {this.state.messageCount !== 0 && (
-                        <>
-                        <OverflowXAuto>
-                            <Table>
-                                <Thead>
-                                    <Tr>
-                                        <Th>Timestamp</Th>
-                                        <Th>Name</Th>
-                                        <Th>Email</Th>
-                                        <Th>Actions</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    { this.state.messages.length !== 0 && this.state.messages.map((message, i) => {
-                                        return (
-                                            <Tr key={i}>
-                                                <Td>
-                                                    {readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}
-                                                </Td>
-                                                <Td>
-                                                    {message.name}
-                                                </Td>
-                                                <Td>
-                                                    {message.email}
-                                                </Td>
-                                                <Td>
-                                                    <Button
-                                                        type="button"
-                                                        btype={BTYPES.TEXTED} 
-                                                        size={SIZES.SM}
-                                                        onClick={() => this.toggleModal(true, i)}         
-                                                    >
-                                                        View message
-                                                    </Button>
-                                                    {this.state.shownModals[i] && (
-                                                        <ModalContainer onClick={() => this.toggleModal(false, i)}>
-                                                            <ModalCard onClick={(e) => e.stopPropagation()}>
-                                                                <Label>{message.name}</Label> <ALink href={`mailto:${message.email}`}>&lt;{message.email}&gt;</ALink>
-                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(message.timestamp).date} @ {readTimestamp(message.timestamp).time}</i></Body>
-                                                                <Body>{message.body}</Body>
-                                                                <Button 
-                                                                    type="button"
-                                                                    size={SIZES.SM} 
-                                                                    onClick={() => this.toggleModal(false, i)}
-                                                                >
-                                                                   <CgClose /> Close 
-                                                                </Button>
-                                                            </ModalCard>
-                                                        </ModalContainer>
-                                                        
-                                                    )}
-                                                </Td>
-                                            </Tr>
-                                        )
-                                    })}
-                                </Tbody>
-                            </Table>
-                        </OverflowXAuto>
-                        <Hr/>
-                        <Grid fluid>
-                            <Row center="xs" middle="xs">
-                                <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== 1 && (
-                                        <Button type="button" onClick={() => this.getPrevPage()}>
-                                            <FaChevronLeft /> Previous page    
-                                        </Button>
-                                    )}
-                                </Col>
-                                <Col xs={12} sm={4}>
-                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.messageCount/this.state.messagesPerPage)}</Body>
-                                </Col>
-                                <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== Math.ceil(this.state.messageCount/this.state.messagesPerPage) && (
-                                        <Button type="button" onClick={() => this.getNextPage()}>
-                                            Next page <FaChevronRight /> 
-                                        </Button>
-                                    )}
-                                
-                                </Col>
-                            </Row>
-                        </Grid>
-                        </>
-                    )}
-                </>
-            ) 
-        }
-        
-        
+    if(loading.items && loading.counts){
+        return (
+            <>
+                <H2>Loading... <Spinner /> </H2> 
+            </>
+        )
+    } else {
+        return (
+            <>
+                <Helmet>
+                    <title>Contact Messages {props.site.name ? `| ${props.site.name}` : ""}</title>
+                </Helmet>
+                <LLink to="/dashboard/admin">
+                    <Button type="button">
+                        <FaChevronLeft />
+                        &nbsp; Back to Admin Dashboard
+                    </Button>
+                </LLink>
+                <H1>Contact Messages: {itemCount}</H1>
+                {itemCount === 0 && (
+                    <Body color={theme.colors.red} bold size={SIZES.LG}>No messages yet!</Body>
+                )}
+                {itemCount !== 0 && (
+                    <>
+                    <OverflowXAuto>
+                        <Table>
+                            <Thead>
+                                <Tr>
+                                    <Th>Timestamp</Th>
+                                    <Th>Name</Th>
+                                    <Th>Email</Th>
+                                    <Th>Actions</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                { items.length !== 0 && items.map((item, i) => {
+                                    return (
+                                        <Tr key={i}>
+                                            <Td>
+                                                {readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}
+                                            </Td>
+                                            <Td>
+                                                {item.name}
+                                            </Td>
+                                            <Td>
+                                                {item.email}
+                                            </Td>
+                                            <Td>
+                                                <Button
+                                                    type="button"
+                                                    btype={BTYPES.TEXTED} 
+                                                    size={SIZES.SM}
+                                                    onClick={() => toggleModal(true, i)}         
+                                                >
+                                                    View message
+                                                </Button>
+                                                {shownModals[i] && (
+                                                    <ModalContainer onClick={() => toggleModal(false, i)}>
+                                                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                                                            <Label>{item.name}</Label> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
+                                                            <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
+                                                            <Body>{item.body}</Body>
+                                                            <Button 
+                                                                type="button"
+                                                                size={SIZES.SM} 
+                                                                onClick={() => toggleModal(false, i)}
+                                                            >
+                                                                <CgClose /> Close 
+                                                            </Button>
+                                                        </ModalCard>
+                                                    </ModalContainer>
+                                                    
+                                                )}
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })}
+                            </Tbody>
+                        </Table>
+                    </OverflowXAuto>
+                    <Hr/>
+                    <Grid fluid>
+                        <Row center="xs" middle="xs">
+                            <Col xs={12} sm={4}>
+                                {currentPage !== 1 && (
+                                    <Button type="button" onClick={() => getPrevPage()}>
+                                        <FaChevronLeft /> Previous page    
+                                    </Button>
+                                )}
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                <Body size={SIZES.LG}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
+                                    <Button type="button" onClick={() => getNextPage()}>
+                                        Next page <FaChevronRight /> 
+                                    </Button>
+                                )}
+                            
+                            </Col>
+                        </Row>
+                    </Grid>
+                    </>
+                )}
+            </>
+        ) 
     }
 }
 
-export default withTheme(ManageMessages)
+export default ManageMessages;
