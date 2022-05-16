@@ -45,7 +45,15 @@ export const ANIMAL_GALLERY = [
         src: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fmisc%2F10.png?alt=media&token=0cb38dd8-60d2-416c-8608-f70adb4a2844",
         alt: "zelda cat desk"
     },
-]
+];
+
+export const PAGE_SIZES = [
+    { value: 10, label: 10 },
+    { value: 25, label: 25 },
+    { value: 50, label: 50 },
+    { value: 100, label: 100 },
+  ];
+  
 
 /////////////////// Back-end Only //////////////////////
 export const PLACEHOLDER = {

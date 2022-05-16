@@ -191,7 +191,12 @@ export const Th = styled.th`
     border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
     /* border-right: 1px solid ${props => props.theme.colors.lightGrey}; */
     text-align: center;
-    color: white;
+    color: ${props => props.active ? props.theme.colors.yellow : "white"};
+
+    &:hover {
+        cursor: pointer;
+        color: ${props => props.theme.colors.yellow};
+    }
 `;
 
 export const Tr = styled.tr`
