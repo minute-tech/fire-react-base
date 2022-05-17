@@ -1,198 +1,279 @@
-import React, { Component } from 'react'
+
+
+
+
+
+
+import React, { useEffect, useState} from 'react'
 import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast, addDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";  
 import { FaChevronLeft, FaChevronRight, FaShieldAlt, FaShieldVirus } from 'react-icons/fa';
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
-import { withTheme } from 'styled-components';
+import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { confirmAlert } from 'react-confirm-alert';
 import { Col, Grid, Row } from 'react-flexbox-grid';
-import { toast } from 'react-toastify';
 
 import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div } from '../../../../utils/styles/misc'
 import { ALink, Body, H1, H2, Label, LLink } from '../../../../utils/styles/text'
 import { firestore } from '../../../../Fire';
 import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
-import { BTYPES, SIZES } from '../../../../utils/constants.js';
+import { BTYPES, SIZES, PAGE_SIZES } from '../../../../utils/constants.js';
+import { PageSelect } from '../../../../utils/styles/forms';
+import { ColChevron } from '../../../misc/Misc';
+import { toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 
-class ManageUsers extends Component {
-    constructor(props) {
-        super(props)
+function ManageUsers(props) {
+    const theme = useTheme();
+    const [loading, setLoading] = useState({ 
+        counts: true,
+        sensitive: true,
+        items: true,
+    }); 
+    const [itemCount, setItemCount] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0].value);
+    const [items, setItems] = useState([]);
+    const [beginCursor, setBeginCursor] = useState("");
+    const [finalCursor, setFinalCursor] = useState("");
+    const [currentPage, setCurrentPage] = useState(0);
+    const [shownModals, setShownModals] = useState([false]); 
+
     
-        this.state = {
-            users: [],
-            admins: [],
-            superAdmins: [],
-            messengerEmails: [],
-            currentPage: 0,
-            beginCursor: "",
-            finalCursor: "",
-            loadingUsers: true,
-            loadingSensitive: true,
-            loadingCounts: true,
-            userCount: 0,
-            usersPerPage: 10,
-            shownModals: []
-        }
-    }
-    componentDidMount = async () =>{
-        this.unsubCounts = onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
+    const [admins, setAdmins] = useState([]);
+    const [superAdmins, setSuperAdmins] = useState([]);
+    const [messengerEmails, setMessengerEmails] = useState([]);
+
+    const [tableCols, setTableCols] = useState([
+        {
+            label: "Timestamp",
+            value: "timestamp",
+            direction: "desc",
+            active: true
+        },
+        {
+            label: "First Name",
+            value: "firstName",
+            direction: "",
+            active: false
+        },
+        {
+            label: "Last Name",
+            value: "lastName",
+            direction: "",
+            active: false
+        },
+        {
+            label: "Email",
+            value: "email",
+            direction: "",
+            active: false
+        },
+        {
+            label: "Phone",
+            value: "phone",
+            direction: "",
+            active: false
+        },
+    ]);
+
+    useEffect(() => {
+        return onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
             if(countsDoc.exists()){
                 let countsData = countsDoc.data();
-                this.setState({
-                    userCount: countsData.users,
-                    loadingCounts: false
-                });
+                setLoading(prevState => ({
+                    ...prevState,
+                    counts: false
+                }));
+                setItemCount(countsData.users);
             } else {
-                console.log("No custom site set, can't properly count users.")
-                this.setState({
-                    loadingCounts: false
-                });
+                console.log("No custom site set, can't properly count users.");
+                setLoading(prevState => ({
+                    ...prevState,
+                    counts: false
+                }));
             }
         });
+    }, []);
 
-        this.unsubSensitive = onSnapshot(doc(firestore, "site", "sensitive"), (sensitiveDoc) => {
+    useEffect(() => {
+        return onSnapshot(doc(firestore, "site", "sensitive"), (sensitiveDoc) => {
             if(sensitiveDoc.exists()){
                 let sensitiveData = sensitiveDoc.data();
-                this.setState({
-                    admins: sensitiveData.admins || [],
-                    superAdmins: sensitiveData.superAdmins || [],
-                    messengerEmails: sensitiveData.messengers || [],
-                    loadingSensitive: false
-                });
+                setAdmins(sensitiveData.admins);
+                setSuperAdmins(sensitiveData.superAdmins);
+                setMessengerEmails(sensitiveData.messengers);
+
+                setLoading(prevState => ({
+                    ...prevState,
+                    sensitive: false
+                }));
             } else {
                 console.log("No custom site set, can't properly find sensitives.")
-                this.setState({
-                    loadingSensitive: false
-                });
+                setLoading(prevState => ({
+                    ...prevState,
+                    sensitive: false
+                }));
             }
         });
+    }, []);
 
-        // Get first page of users
+    useEffect(() => {
+        // Get first page of items
         const currentPageQuery = query(
             collection(firestore, "users"), 
-            orderBy("timestamp", "desc"), 
-            limit(this.state.usersPerPage)
+            orderBy(
+                tableCols.find(column => {return column.active;}).value, 
+                tableCols.find(column => {return column.active;}).direction
+            ),
+            limit(itemsPerPage)
         );
-        const pageDocSnaps = await getDocs(currentPageQuery);
-        // Get the last visible document cursor so we can reference it for the next page
-        const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-        
-        // Get content from each doc on this page 
-        let users = [];
-        let shownModals = []
-        pageDocSnaps.forEach((doc) => {
-            const docWithMore = Object.assign({}, doc.data());
-            docWithMore.id = doc.id;
-            users.push(docWithMore);
-            shownModals.push(false)
-        });
 
-        this.setState({
-            users: users,
-            finalCursor: finalCursor,
-            currentPage: 1,
-            loadingUsers: false,
-            shownModals: shownModals
-        })
-    }
-
-    componentWillUnmount(){
-        if(this.unsubCounts){
-            this.unsubCounts();
-        }
-
-        if(this.unsubSensitive){
-            this.unsubSensitive();
-        }
-    }
+        async function fetchItems() {
+            const pageDocSnaps = await getDocs(currentPageQuery);
+            // Get the last visible document cursor so we can reference it for the next page
+            const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            
+            // Get content from each doc on this page 
+            let tempItems = [];
+            let tempShownModals = [];
+            pageDocSnaps.forEach((doc) => {
+                const docWithMore = Object.assign({}, doc.data());
+                docWithMore.id = doc.id;
+                tempItems.push(docWithMore);
+                tempShownModals.push(false)
+            });
     
-    getPrevPage = async () => {
-        if(this.state.currentPage !== 1){
-            this.setState({
-                loadingUsers: true
-            })
+            setItems(tempItems);
+            setFinalCursor(tempFinalCursor);
+            setCurrentPage(1);
+            setShownModals(tempShownModals);
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
+        };
+
+        fetchItems();
+    }, [itemsPerPage, tableCols]);
+
+    const getPrevPage = async () => {
+        if(currentPage !== 1){
+            setLoading(prevState => ({
+                ...prevState,
+                items: true
+            }));
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "users"), 
-                orderBy("timestamp", "desc"),
-                endAt(this.state.beginCursor),
-                limitToLast(this.state.usersPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
+                orderBy(
+                    tableCols.find(column => {return column.active;}).value, 
+                    tableCols.find(column => {return column.active;}).direction
+                ),
+                endAt(beginCursor),
+                limitToLast(itemsPerPage) // Adding this seemed to solve the going abck issue, but now everything is jumbled when going back
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
-            const beginCursor = pageDocSnaps.docs[ 0 ];
-            const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-            const prevPage = this.state.currentPage - 1;
+            const tempBeginCursor = pageDocSnaps.docs[ 0 ];
+            const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            const prevPage = currentPage - 1;
 
             // Set data in docs to state
-            let users = [];
-            let shownModals = []
+            let tempItems = [];
+            let tempShownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
-                users.push(docWithMore);
-                shownModals.push(false)
+                tempItems.push(docWithMore);
+                tempShownModals.push(false)
             });
 
-            this.setState({
-                users: users,
-                beginCursor: beginCursor,
-                finalCursor: finalCursor,
-                currentPage: prevPage,
-                loadingUsers: false,
-            })
+            setItems(tempItems);
+            setFinalCursor(tempFinalCursor);
+            setBeginCursor(tempBeginCursor);
+            setCurrentPage(prevPage);
+            setShownModals(tempShownModals);
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
         }
-    }
+    };
 
-    getNextPage = async () => {
-        if(this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage)){
-            this.setState({
-                loadingUsers: true
-            })
+    const getNextPage = async () => {
+        if(currentPage !== Math.ceil(itemCount/itemsPerPage)){
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
             // Construct a new query starting at this document,
             const currentPageQuery = query(
                 collection(firestore, "users"), 
-                orderBy("timestamp", "desc"),
-                startAfter(this.state.finalCursor),
-                limit(this.state.usersPerPage)
+                orderBy(
+                    tableCols.find(column => {return column.active;}).value, 
+                    tableCols.find(column => {return column.active;}).direction
+                ),
+                startAfter(finalCursor),
+                limit(itemsPerPage)
             );
             const pageDocSnaps = await getDocs(currentPageQuery);
-            const beginCursor = pageDocSnaps.docs[ 0 ];
-            const finalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
-            const nextPage = this.state.currentPage + 1;
+            const tempBeginCursor = pageDocSnaps.docs[ 0 ];
+            const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
+            const nextPage = currentPage + 1;
 
             // Set data in docs to state
-            let users = [];
-            let shownModals = []
+            let tempItems = [];
+            let tempShownModals = []
             pageDocSnaps.forEach((doc) => {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
-                users.push(docWithMore);
-                shownModals.push(false)
+                tempItems.push(docWithMore);
+                tempShownModals.push(false)
             });
 
-            this.setState({
-                users: users,
-                beginCursor: beginCursor,
-                finalCursor: finalCursor,
-                currentPage: nextPage,
-                loadingUsers: false,
-            })
+            setItems(tempItems);
+            setFinalCursor(tempFinalCursor);
+            setBeginCursor(tempBeginCursor);
+            setCurrentPage(nextPage);
+            setShownModals(tempShownModals);
+            setLoading(prevState => ({
+                ...prevState,
+                items: false
+            }));
         }
-    }
+    };
 
-    toggleModal = (newStatus, index) => {
-        let tempShownModals = this.state.shownModals
+    const toggleCol = (column, index) => {
+        let tempCol = column;
+        let tempTableCols = [...tableCols];
+        const prevActiveColIndex = tableCols.findIndex(column => {return column.active;});
+        if(prevActiveColIndex !== index){
+            // De-active the old column if not same as before
+            tempTableCols[prevActiveColIndex].active = false;
+            tempTableCols[prevActiveColIndex].direction = "";
+        }
+
+        // Set new column stuff
+        tempCol.active = true;
+        if(!tempCol.direction || tempCol.direction === "asc"){
+            tempCol.direction = "desc";
+        } else {
+            tempCol.direction = "asc";
+        }
+        tempTableCols[index] = tempCol;
+        setTableCols(tempTableCols);
+    }
+        
+    const toggleModal = (newStatus, index) => {
+        let tempShownModals = [...shownModals]
         tempShownModals[index] = newStatus
-        this.setState({
-            shownModals: tempShownModals
-        })
-    }
+        setShownModals(tempShownModals);
+    };
 
-    submitNewAdmin = (id, email, name) => {
+    /// Non-default functions ///
+    const submitNewAdmin = (id, email, name) => {
         // Write to the current newAdmins collection to be verified on the backend.
-        addDoc(collection(firestore, "users", this.props.user.id, "newAdmins"), {
+        addDoc(collection(firestore, "users", props.user.id, "newAdmins"), {
             id: id,
             email: email,
             name: name,
@@ -204,11 +285,11 @@ class ManageUsers extends Component {
             console.error("Error adding newAdmins doc: ", error);
             toast.error(`Error setting newAdmins doc: ${error}`);
         });
-    }
+    };
 
-    submitNewSuperAdmin = (id, email, name) => {
+    const submitNewSuperAdmin = (id, email, name) => {
         // Write to the current newAdmins collection to be verified on the backend.
-        addDoc(collection(firestore, "users", this.props.user.id, "newAdmins"), {
+        addDoc(collection(firestore, "users", props.user.id, "newAdmins"), {
             id: id,
             email: email,
             name: name,
@@ -221,42 +302,42 @@ class ManageUsers extends Component {
             console.error("Error adding newAdmins doc: ", error);
             toast.error(`Error setting newAdmins doc: ${error}`);
         });
-    }
+    };
 
-    addMessenger = (email) => {
+    const addMessenger = (email) => {
         // Write to the current newAdmins collection to be verified on the backend.
         updateDoc(doc(firestore, "site", "sensitive"), {
             "messengers": arrayUnion(email)
         }).then(() => {
-            console.log("Successful add of email to get contact messages doc to Firestore.");
-            toast.success("Successful add of a new email to get contact messages.");
+            console.log("Successful add of email to get contact users doc to Firestore.");
+            toast.success("Successful add of a new email to get contact users.");
         }).catch((error) => {
             console.error("Error updating sensitive doc: ", error);
             toast.error(`Error updating sensitive doc: ${error}`);
         });
-    }
+    };
 
-    removeMessenger = (email) => {
+    const removeMessenger = (email) => {
         // Write to the current newAdmins collection to be verified on the backend.
         updateDoc(doc(firestore, "site", "sensitive"), {
             "messengers": arrayRemove(email)
         }).then(() => {
-            console.log("Successfully removed email from contact messages doc to Firestore.");
-            toast.success("Successfully removed email from contact messages.");
+            console.log("Successfully removed email from contact users doc to Firestore.");
+            toast.success("Successfully removed email from contact users.");
         }).catch((error) => {
             console.error("Error updating sensitive doc: ", error);
             toast.error(`Error updating sensitive doc: ${error}`);
         });
-    }
+    };
 
-    renderAdminBadges = (user) => {
-        if(this.state.admins.some(admin => admin.id === user.id)){
-            <Body margin="0" display="inline-block" color={this.props.theme.colors.red}><FaShieldAlt /> Admin</Body>
+    const renderAdminBadge = (user) => {
+        if(admins.some(admin => admin.id === user.id)){
+            <Body margin="0" display="inline-block" color={theme.colors.red}><FaShieldAlt /> Admin</Body>
         } else {
             return (
                 <Button
                     type="button"
-                    color={this.props.theme.colors.yellow}
+                    color={theme.colors.yellow}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
                     onClick={() =>         
@@ -264,11 +345,11 @@ class ManageUsers extends Component {
                             customUI: ({ onClose }) => {
                                 return (
                                     <ConfirmAlert
-                                        theme={this.props.theme}
+                                        theme={theme}
                                         onClose={onClose} 
                                         headingText={`Add Admin`}
                                         body={`Are you sure you want to upgrade <${user.email}> to be an Admin?`}
-                                        yesFunc={() => this.submitNewAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
+                                        yesFunc={() => submitNewAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
                                         yesText={`Yes`} 
                                         noFunc={function () {}} 
                                         noText={`No`}   
@@ -282,18 +363,18 @@ class ManageUsers extends Component {
             )
             
         }
-    }
+    };
 
-    renderSuperAdminBadges = (user) => {
+    const renderSuperAdminBadge = (user) => {
         if(
-            !this.state.superAdmins.some(superAdmin => superAdmin.id === user.id) && 
-            this.state.admins.some(admin => admin.id === user.id)
+            !superAdmins.some(superAdmin => superAdmin.id === user.id) && 
+            admins.some(admin => admin.id === user.id)
         ){
             // Already admin, but not super admin yet
             return (
                 <Button
                     type="button"
-                    color={this.props.theme.colors.red}
+                    color={theme.colors.red}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
                     onClick={() =>         
@@ -301,11 +382,11 @@ class ManageUsers extends Component {
                             customUI: ({ onClose }) => {
                                 return (
                                     <ConfirmAlert
-                                        theme={this.props.theme}
+                                        theme={theme}
                                         onClose={onClose} 
                                         headingText={`Add Super Admin`}
                                         body={`Are you sure you want to upgrade <${user.email}> to be a SUPER Admin?`}
-                                        yesFunc={() => this.submitNewSuperAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
+                                        yesFunc={() => submitNewSuperAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
                                         yesText={`Yes`}
                                         noFunc={function () {}} 
                                         noText={`Cancel`}   
@@ -318,10 +399,10 @@ class ManageUsers extends Component {
                 </Button> 
             )
             
-        } else if (this.state.superAdmins.some(superAdmin => superAdmin.id === user.id)) {
+        } else if (superAdmins.some(superAdmin => superAdmin.id === user.id)) {
             // Already superAdmin
             return (
-                <Body margin="0" display="inline-block" color={this.props.theme.colors.red}><FaShieldVirus /> Super Admin</Body>
+                <Body margin="0" display="inline-block" color={theme.colors.red}><FaShieldVirus /> Super Admin</Body>
             )
             
         } else {
@@ -330,18 +411,18 @@ class ManageUsers extends Component {
                 ""
             )
         }
-    }
+    };
 
-    renderMessengerBadges = (user) => {
+    const renderMessengerBadge = (user) => {
         if(
-            !this.state.messengerEmails.some(email => email === user.email) && 
-            this.state.admins.some(admin => admin.id === user.id)
+            !messengerEmails.some(email => email === user.email) && 
+            admins.some(admin => admin.id === user.id)
         ){
             // Is admin but not on email list
             return (
                 <Button
                     type="button"
-                    color={this.props.theme.colors.green}
+                    color={theme.colors.green}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
                     onClick={() =>         
@@ -349,11 +430,11 @@ class ManageUsers extends Component {
                             customUI: ({ onClose }) => {
                                 return (
                                     <ConfirmAlert
-                                        theme={this.props.theme}
+                                        theme={theme}
                                         onClose={onClose} 
                                         headingText={`Add Contact Messenger`}
                                         body={`Are you sure you want to add <${user.email}> to be a recipient of all incoming contact messages?`}
-                                        yesFunc={() => this.addMessenger(user.email)} 
+                                        yesFunc={() => addMessenger(user.email)} 
                                         yesText={`Yes`}
                                         noFunc={function () {}} 
                                         noText={`Cancel`}   
@@ -367,14 +448,14 @@ class ManageUsers extends Component {
             )
             
         } else if (
-            this.state.messengerEmails.some(email => email === user.email) && 
-            this.state.admins.some(admin => admin.id === user.id)
+            messengerEmails.some(email => email === user.email) && 
+            admins.some(admin => admin.id === user.id)
         ) {
             // Is admin and already receiving emails, but prompted to remove
             return (
                 <Button
                     type="button"
-                    color={this.props.theme.colors.red}
+                    color={theme.colors.red}
                     btype={BTYPES.INVERTED}
                     size={SIZES.SM}
                     onClick={() =>         
@@ -382,11 +463,11 @@ class ManageUsers extends Component {
                             customUI: ({ onClose }) => {
                                 return (
                                     <ConfirmAlert
-                                        theme={this.props.theme}
+                                        theme={theme}
                                         onClose={onClose} 
                                         headingText={`Remove Messenger`}
                                         body={`Are you sure you want to remove <${user.email}> so the user will no longer receive contact messages?`}
-                                        yesFunc={() => this.removeMessenger(user.email)} 
+                                        yesFunc={() => removeMessenger(user.email)} 
                                         yesText={`Yes`}
                                         noFunc={function () {}} 
                                         noText={`Cancel`}   
@@ -405,135 +486,176 @@ class ManageUsers extends Component {
                 ""
             )
         }
-    }
+    };
 
-    render() {
-        if(this.state.loadingUsers && this.state.loadingCounts && this.state.loadingSensitive){
-            return (
-                <>
-                    <H2>Loading... <Spinner /> </H2> 
-                </>
-            )
-        } else { 
-            return (
-                <>
-                    <Helmet>
-                        <title>Manage Users {this.props.site.name ? `| ${this.props.site.name}` : ""}</title>
-                    </Helmet>
-                    <LLink to="/dashboard/admin">
-                        <Button type="button">
-                            <FaChevronLeft />
-                            &nbsp; Back to Admin Dashboard
-                        </Button>
-                    </LLink>
-                    <H1>Manage Users: {this.state.userCount}</H1>
-                    {this.state.userCount === 0 && (
-                        <Body color={this.props.theme.colors.red} bold size={SIZES.LG}>No users yet!</Body>
-                    )}
-                    {this.state.userCount !== 0 && (
-                        <>
-                        <OverflowXAuto>
-                            <Table>
-                                <Thead>
-                                    <Tr>
-                                        <Th>Timestamp</Th>
-                                        <Th>Name</Th>
-                                        <Th>Email</Th>
-                                        <Th>Phone</Th>
-                                        <Th>Actions</Th>
-                                    </Tr>
-                                </Thead>
-                                <Tbody>
-                                    { this.state.users.length !== 0 && this.state.users.map((user, i) => {
-                                        return (
-                                            <Tr key={i}>
-                                                <Td>
-                                                    {readTimestamp(user.timestamp).date} @ {readTimestamp(user.timestamp).time}
-                                                </Td>
-                                                <Td>
-                                                    {user.firstName} {user.lastName}
-                                                </Td>
-                                                <Td>
-                                                    {user.email}&nbsp;
-                                                    {   
-                                                        (user.email.toLowerCase() === this.props.user.email) 
-                                                        ? 
-                                                        <Body display="inline" color={this.props.theme.colors.green}>(You!)</Body> 
-                                                        : 
-                                                        ""
-                                                    }
-                                                </Td>
-                                                <Td>
-                                                    {user.phone}
-                                                </Td>
-                                                <Td>
-                                                    <Button
-                                                        type="button"
-                                                        btype={BTYPES.TEXTED} 
-                                                        size={SIZES.SM}
-                                                        onClick={() => this.toggleModal(true, i)}         
-                                                    >
-                                                        View full details
-                                                    </Button>
+    if(loading.items && loading.counts && loading.sensitive){
+        return (
+            <>
+                <H2>Loading... <Spinner /> </H2> 
+            </>
+        )
+    } else {
+        return (
+            <>
+                <Helmet>
+                    <title>Users {props.site.name ? `| ${props.site.name}` : ""}</title>
+                </Helmet>
+                <LLink to="/dashboard/admin">
+                    <Button type="button">
+                        <FaChevronLeft />
+                        &nbsp; Back to Admin Dashboard
+                    </Button>
+                </LLink>
+                <H1>Users: {itemCount}</H1>
+                {itemCount === 0 && (
+                    <Body color={theme.colors.red} bold size={SIZES.LG}>No users yet!</Body>
+                )}
+                {itemCount !== 0 && (
+                    <>
+                    <OverflowXAuto>
+                        <Table>
+                            <Thead>
+                                <Tr>
+                                    {
+                                        tableCols.map((column, c) => {
+                                            return (
+                                                <Th 
+                                                    key={c} 
+                                                    onClick={() => toggleCol(column, c)}
+                                                    active={column.active}
+                                                >
+                                                    {column.label} <ColChevron column={column} />
+                                                </Th>
+                                            )
+                                        })
+                                    }
+                                    <Th>Actions</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                { items.length !== 0 && items.map((item, i) => {
+                                    return (
+                                        <Tr key={i}>
+                                            <Td>
+                                                {readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}
+                                            </Td>
+                                            <Td>
+                                                {item.firstName}
+                                            </Td>
+                                            <Td>
+                                                {item.lastName}
+                                            </Td>
+                                            <Td>
+                                                {item.email}&nbsp;
+                                                {   
+                                                    (item.email.toLowerCase() === props.user.email) 
+                                                    ? 
+                                                    <Body display="inline" color={theme.colors.green}>(You!)</Body> 
+                                                    : 
+                                                    ""
+                                                }
+                                            </Td>
+                                            <Td>
+                                                {item.phone}
+                                            </Td>
+                                            <Td>
+                                                <Button
+                                                    type="button"
+                                                    btype={BTYPES.TEXTED} 
+                                                    size={SIZES.SM}
+                                                    onClick={() => toggleModal(true, i)}         
+                                                >
+                                                    View full details
+                                                </Button>
 
-                                                    {this.state.shownModals[i] && (
-                                                        <ModalContainer onClick={() => this.toggleModal(false, i)}>
-                                                            <ModalCard onClick={(e) => e.stopPropagation()}>
-                                                                <Label>{user.firstName} {user.lastName}</Label> <ALink href={`mailto:${user.email}`}>&lt;{user.email}&gt;</ALink>
-                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(user.timestamp).date} @ {readTimestamp(user.timestamp).time}</i></Body>
-                                                                <Div margin="10px 30px 0 0">
-                                                                    { this.renderAdminBadges(user) }
-                                                                    { this.renderSuperAdminBadges(user) }
-                                                                    { this.renderMessengerBadges(user) }
-                                                                </Div> 
-                                                                
-                                                                <Hr/>
-                                                                <Button 
-                                                                    type="button"
-                                                                    size={SIZES.SM} 
-                                                                    onClick={() => this.toggleModal(false, i)}
-                                                                >
-                                                                    <CgClose /> Close
-                                                                </Button>
-                                                            </ModalCard>
-                                                        </ModalContainer>
-                                                        
-                                                    )}
-                                                </Td>
-                                            </Tr>
-                                        )
-                                    })}
-                                </Tbody>
-                            </Table>
-                        </OverflowXAuto>
-                        <Grid fluid>
-                            <Row center="xs" middle="xs">
-                                <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== 1 && (
-                                        <Button type="button" onClick={() => this.getPrevPage()}>
-                                            <FaChevronLeft /> Previous page    
-                                        </Button>
-                                    )}
-                                </Col>
-                                <Col xs={12} sm={4}>
-                                    <Body size={SIZES.LG}>Page {this.state.currentPage} of {Math.ceil(this.state.userCount/this.state.usersPerPage)}</Body>
-                                </Col>
-                                <Col xs={12} sm={4}>
-                                    {this.state.currentPage !== Math.ceil(this.state.userCount/this.state.usersPerPage) && (
-                                        <Button type="button" onClick={() => this.getNextPage()}>
-                                            Next page <FaChevronRight /> 
-                                        </Button>
-                                    )}
+                                                {shownModals[i] && (
+                                                    <ModalContainer onClick={() => toggleModal(false, i)}>
+                                                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                                                            <Label>{item.firstName} {item.lastName}</Label> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
+                                                            <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
+                                                            <Div margin="10px 30px 0 0">
+                                                                { renderAdminBadge(item) }
+                                                                { renderSuperAdminBadge(item) }
+                                                                { renderMessengerBadge(item) }
+                                                            </Div> 
+                                                            
+                                                            <Hr/>
+                                                            <Button 
+                                                                type="button"
+                                                                size={SIZES.SM} 
+                                                                onClick={() => toggleModal(false, i)}
+                                                            >
+                                                                <CgClose /> Close
+                                                            </Button>
+                                                        </ModalCard>
+                                                    </ModalContainer>
+                                                    
+                                                )}
+                                            </Td>
+                                        </Tr>
+                                    )
+                                })}
+                            </Tbody>
+                        </Table>
+                    </OverflowXAuto>
+                    <Hr/>
+                    <Grid fluid>
+                        <Row center="xs" middle="xs">
+                            <Col xs={12} sm={4}>
+                                {currentPage !== 1 && (
+                                    <Button 
+                                        size={SIZES.SM}
+                                        type="button" 
+                                        onClick={() => getPrevPage()}
+                                    >
+                                        <FaChevronLeft /> Previous page    
+                                    </Button>
+                                )}
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
                                 
-                                </Col>
-                            </Row>
-                        </Grid>
-                        </>
-                    )}
-                </>
-            )
-        }
+                                    <Body margin="10px 0" size={SIZES.SM}>
+                                        
+                                        {/* Don't show page size selector if itemCount is less than the second page size selection */}
+                                        {itemCount > PAGE_SIZES[1].value && (
+                                            <>
+                                            <PageSelect
+                                                value={itemsPerPage}
+                                                onChange={(e) => setItemsPerPage(e.target.value)} 
+                                            >
+                                                { 
+                                                    PAGE_SIZES.map((size) => {
+                                                        return (
+                                                            <option key={size.value} value={size.value}>{size.label}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </PageSelect>
+                                            &nbsp; items per page
+                                            </>
+                                        )}
+                                    </Body>
+                            </Col>
+                            <Col xs={12} sm={4}>
+                                {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
+                                    <Button 
+                                        size={SIZES.SM}
+                                        type="button" 
+                                        onClick={() => getNextPage()}
+                                    >
+                                        Next page <FaChevronRight /> 
+                                    </Button>
+                                )}
+                            
+                            </Col>
+                        </Row>
+                    </Grid>
+                    </>
+                )}
+            </>
+        ) 
     }
 }
 
-export default withTheme(ManageUsers)
+export default ManageUsers;

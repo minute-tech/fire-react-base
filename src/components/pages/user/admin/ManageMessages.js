@@ -13,7 +13,7 @@ import { Button } from '../../../../utils/styles/buttons';
 import { readTimestamp } from '../../../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../../../utils/constants.js';
 import { PageSelect } from '../../../../utils/styles/forms';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { ColChevron } from '../../../misc/Misc';
 
 function ManageMessages(props) {
     const theme = useTheme();
@@ -70,7 +70,7 @@ function ManageMessages(props) {
     }, [])
 
     useEffect(() => {
-        // Get first page of messages
+        // Get first page of items
         const currentPageQuery = query(
             collection(firestore, "messages"), 
             orderBy(
@@ -195,7 +195,6 @@ function ManageMessages(props) {
     };
 
     const toggleCol = (column, index) => {
-        
         let tempCol = column;
         let tempTableCols = [...tableCols];
         const prevActiveColIndex = tableCols.findIndex(column => {return column.active;});
@@ -221,21 +220,6 @@ function ManageMessages(props) {
         tempShownModals[index] = newStatus
         setShownModals(tempShownModals);
     };
-
-    const renderColChevron = (column) => {
-        if(column.direction === "desc"){
-            return (
-                <BiChevronDown style={{paddingBottom: "0%"}} />
-            )
-        } else if(column.direction === "asc") {
-            return (
-                <BiChevronUp style={{paddingBottom: "0%"}} />
-            )
-        } else {
-            return (<></>)
-        }
-
-    }
 
     if(loading.items && loading.counts){
         return (
@@ -273,7 +257,7 @@ function ManageMessages(props) {
                                                     onClick={() => toggleCol(column, c)}
                                                     active={column.active}
                                                 >
-                                                    {column.label} {renderColChevron(column)}
+                                                    {column.label} <ColChevron column={column} />
                                                 </Th>
                                             )
                                         })
