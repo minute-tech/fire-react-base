@@ -117,7 +117,7 @@ function ContactForm(props) {
                                             onChange={formProps.handleChange}
                                             placeholder={`${PLACEHOLDER.FIRST_NAME} ${PLACEHOLDER.LAST_NAME}`}
                                             name="name"
-                                            value={formProps.values.name || ''}
+                                            value={formProps.values.name || ""}
                                             onKeyUp={() => 
                                                 setErrors(prevState => ({
                                                     ...prevState,
@@ -159,7 +159,7 @@ function ContactForm(props) {
                                                 }))
                                             }
                                             name="email"
-                                            value={formProps.values.email || ''}
+                                            value={formProps.values.email || ""}
                                             error={ ((formProps.errors.email && formProps.touched.email) || errors?.email) ? 1 : 0 }
                                         />
                                         <FormError
@@ -191,7 +191,7 @@ function ContactForm(props) {
                                                 }))
                                             }
                                             name="body"
-                                            value={formProps.values.body || ''}
+                                            value={formProps.values.body || ""}
                                             error={ ((formProps.errors.body && formProps.touched.body) || errors?.body) ? 1 : 0 }
                                         />
                                         <FormError

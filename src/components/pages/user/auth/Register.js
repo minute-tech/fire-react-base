@@ -180,7 +180,7 @@ function Register(props) {
                                     onChange={formProps.handleChange}
                                     placeholder={PLACEHOLDER.FIRST_NAME}
                                     name="firstName"
-                                    value={formProps.values.firstName || ''}
+                                    value={formProps.values.firstName || ""}
                                     onKeyUp={() => 
                                         setErrors(prevState => ({
                                             ...prevState,
@@ -210,7 +210,7 @@ function Register(props) {
                                     onChange={formProps.handleChange}
                                     placeholder={PLACEHOLDER.LAST_NAME}
                                     name="lastName"
-                                    value={formProps.values.lastName || ''}
+                                    value={formProps.values.lastName || ""}
                                     onKeyUp={() => 
                                         setErrors(prevState => ({
                                             ...prevState,
@@ -242,7 +242,7 @@ function Register(props) {
                                     onChange={formProps.handleChange}
                                     placeholder={PLACEHOLDER.EMAIL}
                                     name="email"
-                                    value={formProps.values.email || ''}
+                                    value={formProps.values.email || ""}
                                     onKeyUp={() => 
                                         setErrors(prevState => ({
                                             ...prevState,

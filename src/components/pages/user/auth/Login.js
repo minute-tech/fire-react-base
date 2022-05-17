@@ -145,7 +145,7 @@ function UserLogin(props) {
                                         onChange={formProps.handleChange}
                                         placeholder={PLACEHOLDER.EMAIL}
                                         name="email"
-                                        value={formProps.values.email || ''}
+                                        value={formProps.values.email || ""}
                                         onKeyUp={() => 
                                             setErrors(prevState => ({
                                                 ...prevState,

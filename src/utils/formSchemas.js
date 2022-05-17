@@ -84,3 +84,10 @@ export const signInSchema = yup.object().shape({
         .max(50, "Password can be a maximum of 50 characters.")
         .min(6, "Password must be a minimum than 6 characters."),
 });
+
+export const searchSchema = yup.object().shape({
+    term: yup
+        .string()       
+        .max(30,"The search term can be at most 30 characters long.")
+        .min(2,"The search term must be at least 2 characters long."),
+});

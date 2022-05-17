@@ -7,7 +7,6 @@ export const FField = styled(Field)`
     ${BodyFont}
     width: ${props => props.width ? props.width : "100%"};
     padding: 10px;
-    margin: 0 0 5px 0;
     box-sizing: border-box;
     border: 1px solid black;
     border-radius: 2px;
@@ -69,8 +68,14 @@ export const CField = styled(Field)`
     margin: 15px 15px 0 0;
 `;
 
+export const SField = styled(Field)`
+    padding: 12px;
+    option {
+        ${BodyFont};
+    }
+`;
+
 export const PageSelect = styled.select`
-    /* max-width: 75px; */
     option {
         ${BodyFont};
         font-size: 12px;
@@ -88,6 +93,30 @@ export const FileInputLabel = styled.label`
     margin: 25px 0px;
     ${BodyFont};
 `;
+
 export const FileInput = styled.input`
     display: none;
+`;
+
+// Search
+export const SearchContainer = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+        position: absolute;
+        top: 17px;
+        left: 15px;
+    }
+
+    input {
+        padding-left: 40px;  
+    }
+
+    @media (max-width: 900px) {
+        #search-field {
+            display: block;
+        }
+    }
 `;
