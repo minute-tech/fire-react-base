@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Helmet } from 'react-helmet-async';
+import { FaInfoCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { useTheme } from 'styled-components';
 
@@ -8,9 +9,11 @@ import { BTYPES, SIZES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../../utils/styles/text';
+import { Tooltip } from '../../misc/Misc.js';
 
 function Home(props){
     const theme = useTheme();
+
     const sendAlert = (alertType) => {
         toast[alertType]('🦄 Wow so easy to send an alert!');
     }
@@ -55,7 +58,7 @@ function Home(props){
             </BgMediaContainer>
             <Wrapper>
                 <H1>Buttons</H1>
-                <Button>Default</Button>
+                <Button>Default button</Button>
                 <Button size={SIZES.LG} onClick={() => sendAlert("info")} type="button">Primary Large Normal Button</Button>
                 <Button color={theme.colors.secondary} size={SIZES.MD} btype={BTYPES.INVERTED} onClick={() => sendAlert("warn")} type="button">Secondary Medium Inverted Button</Button>
                 <Button color={theme.colors.red} size={SIZES.SM} btype={BTYPES.TEXTED} onClick={() => sendAlert("error")} type="button">Red Small Texted Button</Button>
@@ -80,6 +83,9 @@ function Home(props){
                     </Row>
                 </Grid>
                 <Hr />
+                <Tooltip text="Add more information to an element here!">
+                    <Button>Tooltip button <FaInfoCircle /></Button>
+                </Tooltip>
             </Wrapper>
         </>
     );

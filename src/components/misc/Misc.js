@@ -3,6 +3,7 @@ import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { useLocation } from "react-router-dom";
 
 import { ErrorText } from '../../utils/styles/text'
+import { TooltipContainer } from '../../utils/styles/misc'
 import { analytics } from "../../Fire";
 
 export function FirebaseAnalytics() {
@@ -58,3 +59,17 @@ export function ColChevron(props) {
         return (<></>)
     }
 };
+
+export const Tooltip = ({ children, text, ...rest }) => {
+    return (
+        <TooltipContainer>
+            <div>
+                {text}
+                <span />
+            </div>
+            <div {...rest}>
+                {children}
+            </div>
+        </TooltipContainer>
+    );
+  };

@@ -461,4 +461,34 @@ export const Progress = styled.div`
     }
 `
 
+// Tooltip
+export const TooltipContainer = styled.div`
+    position: relative;
+    display: inline-block;
+    // TODO: would be nice if this tooltip could extend pass it's child... might pose an issue in the future.
+    div:first-child  {
+        ${BodyFont};
+        position: absolute;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        top: calc(100% + 5px);
+        display: none;
+    }
+
+    &:hover div:first-child {
+        display: block;
+    }
+
+    span {
+        /* Arrow */
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
+    }
+`;
 
