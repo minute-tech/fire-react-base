@@ -85,13 +85,7 @@ function UserLogin(props) {
         }, auth);
         window.recaptchaVerifier.render(); 
     }
-
-    const handleChange = (event) => {
-        setForgotEmail({
-            forgotEmail: event.target.value
-        });
-    }    
-
+    
     const toggleModal = () => {
         setForgotEmail("");
         setForgotExpanded(!forgotExpanded);
@@ -239,7 +233,7 @@ function UserLogin(props) {
                             <Input 
                                 type="text"
                                 placeholder={PLACEHOLDER.EMAIL}
-                                onChange={handleChange} 
+                                onChange={(e) => setForgotEmail(e.target.value)} 
                                 value={forgotEmail}
                             />
                             <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>

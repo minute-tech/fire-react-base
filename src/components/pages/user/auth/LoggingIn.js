@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,15 +7,14 @@ import { H2 } from '../../../../utils/styles/text';
 
 function LoggingIn(props) {
     const navigate = useNavigate();
-    const timer = useRef();
     
     useEffect(() => {
-        timer.current = setTimeout(() => {
+        let timer = setTimeout(() => {
             navigate("/dashboard");
             props.setIsLoggingIn(false);
         }, 2000);
 
-        return clearTimeout(timer.current);
+        return () => {clearTimeout(timer)};
     })
     
     return (
