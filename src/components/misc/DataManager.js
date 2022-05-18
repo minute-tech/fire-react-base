@@ -567,8 +567,8 @@ export default function DataManager(props) {
                     {formProps => (
                         <Form>
                             <Grid fluid>
-                                <Row>
-                                    <Col sm={12}>
+                                <Row middle="xs">
+                                    <Col md={12} lg={8}>
                                         <SearchContainer>
                                             <FaSearch />
                                             <FField
@@ -592,36 +592,38 @@ export default function DataManager(props) {
                                                 }
                                                 error={ ((formProps.errors.term && formProps.touched.term) || errors?.term) ? 1 : 0 }
                                             />
-                                            <Button 
-                                                type="submit" 
-                                                disabled={submitting.search}
-                                            >
-                                                Search 
-                                            </Button>
-                                            <SField
-                                                name="column"
-                                                component="select"
-                                                onChange={formProps.handleChange}
-                                            >
-                                                {
-                                                    props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
-                                                        return (
-                                                            <option key={column.value} value={column.value}>{column.label}</option>
-                                                        )
-                                                    })
-                                                }
-                                            </SField>
-                                            {search.term && (
-                                                <Button 
-                                                    type="button"
-                                                    btype={BTYPES.INVERTED}
-                                                    color={theme.colors.yellow}
-                                                    onClick={() => clearSearch(formProps.resetForm)}
-                                                >
-                                                    Clear
-                                                </Button>
-                                            )}
                                         </SearchContainer>
+                                    </Col>
+                                    <Col md={12} lg={4}>
+                                        <Button 
+                                            type="submit" 
+                                            disabled={submitting.search}
+                                        >
+                                            Search 
+                                        </Button>
+                                        <SField
+                                            name="column"
+                                            component="select"
+                                            onChange={formProps.handleChange}
+                                        >
+                                            {
+                                                props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
+                                                    return (
+                                                        <option key={column.value} value={column.value}>{column.label}</option>
+                                                    )
+                                                })
+                                            }
+                                        </SField>
+                                        {search.term && (
+                                            <Button 
+                                                type="button"
+                                                btype={BTYPES.INVERTED}
+                                                color={theme.colors.yellow}
+                                                onClick={() => clearSearch(formProps.resetForm)}
+                                            >
+                                                Clear
+                                            </Button>
+                                        )}
                                     </Col>
                                 </Row>
                                 <Row center="xs">

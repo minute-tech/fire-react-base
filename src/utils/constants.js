@@ -52,8 +52,41 @@ export const PAGE_SIZES = [
     { value: 25, label: 25 },
     { value: 50, label: 50 },
     { value: 100, label: 100 },
-  ];
-  
+];
+
+export const APHORISMS = [
+    "The world is your oyster.",
+    "You can do anything you set your mind to.",
+    "Nothing is impossible to a willing heart.",
+    // "The best things in life are free.",
+    "Don't pursue happiness - create it.",
+    "The real kindness comes from within you.",
+    "The usefulness of a cup can be in its emptiness.",
+    "Big journeys begin with a single step.",
+    "Happiness isn't an outside job, it's an inside job.",
+    "You are beautiful inside and out.",
+    "A lifetime of happiness lies ahead of you.",
+    "A pleasant surprise is waiting for you.",
+    "Adventure can be real happiness.",
+    "Allow compassion to guide your decisions.",
+    "Believe it can be done.",
+    "Courtesy is contagious.",
+    "Every flower blooms in time.",
+    "Have a wonderful day.",
+    "Love is a warm fire to keep the soul warm.",
+    "Miles are covered one step at a time.",
+    "You are in good hands today.",
+    "You are talented in many ways.",
+    "Practice makes perfect.",
+    "Love lights up the world.",
+    "You look like a million bucks today.",
+    "A stranger is a friend you have not spoken to yet.",
+    "Everyone agrees. You are the best.",
+    "Now is the time to try something new.",
+    // "Sometimes you just need to lay on the floor.",
+    "The greatest risk is not taking one.",
+    "You can create happiness."
+];
 
 /////////////////// Back-end Only //////////////////////
 export const PLACEHOLDER = {
@@ -144,37 +177,3 @@ export const SCHEMES = {
     LIGHT: "light",
     DARK: "dark",
 };
-
-export const APHORISMS = [
-    "The world is your oyster.",
-    "You can do anything you set your mind to.",
-    "Nothing is impossible to a willing heart.",
-    // "The best things in life are free.",
-    "Don't pursue happiness - create it.",
-    "The real kindness comes from within you.",
-    "The usefulness of a cup can be in its emptiness.",
-    "Big journeys begin with a single step.",
-    "Happiness isn't an outside job, it's an inside job.",
-    "You are beautiful inside and out.",
-    "A lifetime of happiness lies ahead of you.",
-    "A pleasant surprise is waiting for you.",
-    "Adventure can be real happiness.",
-    "Allow compassion to guide your decisions.",
-    "Believe it can be done.",
-    "Courtesy is contagious.",
-    "Every flower blooms in time.",
-    "Have a wonderful day.",
-    "Love is a warm fire to keep the soul warm.",
-    "Miles are covered one step at a time.",
-    "You are in good hands today.",
-    "You are talented in many ways.",
-    "Practice makes perfect.",
-    "Love lights up the world.",
-    "You look like a million bucks today.",
-    "A stranger is a friend you have not spoken to yet.",
-    "Everyone agrees. You are the best.",
-    "Now is the time to try something new.",
-    // "Sometimes you just need to lay on the floor.",
-    "The greatest risk is not taking one.",
-    "You can create happiness."
-]

@@ -32,7 +32,7 @@ function App() {
 
     const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-    const [user, setUser] = useState();
+    const [user, setUser] = useState({});
 
     const [fireUser, setFireUser] = useState("");
 

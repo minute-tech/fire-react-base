@@ -50,48 +50,35 @@ export const DEFAULT_SITE = {
             BODY: "Roboto Regular",
             HEADING: "Roboto Bold",
         },
-        SCHEMES: {
-            LIGHT: {
-                VALUE: "light",
-                COLORS: {
-                    PRIMARY: "dodgerblue",
-                    SECONDARY: "hotpink",
-                    TERTIARY: "tomato",
-                    RED: "firebrick",
-                    GREEN: "green",
-                    YELLOW: "gold",
-                    GREY: "grey",
-                    LIGHT_GREY: "lightgrey",
-                    BLUE: "navy",
-                    FONT: {
-                        HEADING: "black",
-                        BODY: "black",
-                        LINK: "navy",
-                    },
-                    BACKGROUND: "white",
+        COLORS: {
+            PRIMARY: "dodgerblue",
+            SECONDARY: "hotpink",
+            TERTIARY: "tomato",
+            RED: "firebrick",
+            GREEN: "green",
+            YELLOW: "gold",
+            GREY: "grey",
+            LIGHT_GREY: "lightgrey",
+            BLUE: "navy",
+            FONT: {
+                HEADING: {
+                    LIGHT: "black",
+                    DARK: "white",
+                },
+                BODY: {
+                    LIGHT: "black",
+                    DARK: "white",
+                },
+                LINK: {
+                    LIGHT: "navy",
+                    DARK: "lightblue",
                 },
             },
-            DARK: {
-                VALUE: "dark",
-                COLORS: {
-                    PRIMARY: "dodgerblue",
-                    SECONDARY: "hotpink",
-                    TERTIARY: "tomato",
-                    RED: "firebrick",
-                    GREEN: "green",
-                    YELLOW: "gold",
-                    GREY: "grey",
-                    LIGHT_GREY: "lightgrey",
-                    BLUE: "navy",
-                    FONT: {
-                        HEADING: "white",
-                        BODY: "white",
-                        LINK: "lightblue",
-                    },
-                    BACKGROUND: "#242423",
-                },
+            BACKGROUND: {
+                LIGHT: "white",
+                DARK: "black"
             },
-        },
+        }
     },
 };
 

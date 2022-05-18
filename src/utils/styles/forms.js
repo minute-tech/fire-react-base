@@ -102,21 +102,13 @@ export const FileInput = styled.input`
 export const SearchContainer = styled.div`
     position: relative;
     display: flex;
-    justify-content: center;
-    align-items: center;
     svg {
         position: absolute;
-        top: 17px;
+        top: 14px;
         left: 15px;
     }
 
     input {
-        padding-left: 40px;  
-    }
-
-    @media (max-width: 900px) {
-        #search-field {
-            display: block;
-        }
+        padding-left: 40px; 
     }
 `;
