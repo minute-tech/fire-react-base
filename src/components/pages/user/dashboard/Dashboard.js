@@ -12,7 +12,7 @@ import { LLink, H1, H3, Body } from '../../../../utils/styles/text.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import { Hr } from '../../../../utils/styles/misc.js';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
-import { APHORISMS } from '../../../../utils/constants.js';
+import { APHORISMS, SCHEMES } from '../../../../utils/constants.js';
 
 function Dashboard(props) {
     const theme = useTheme();
@@ -38,7 +38,7 @@ function Dashboard(props) {
             </Helmet>
             <H1>{props?.user.firstName}'s Dashboard</H1>
             <H3 margin="0"></H3>
-            <Body color={theme.colors.lightGrey} margin="5px 0 15px 0">{quote}</Body>
+            <Body color={theme.value === SCHEMES.DARK ? theme.colors.lightGrey : theme.colors.grey} margin="5px 0 15px 0">{quote}</Body>
             <LLink to={`/dashboard/profile`}> 
                 <Button type="button">
                     Edit your profile <FaUserEdit size={20} />

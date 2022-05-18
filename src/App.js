@@ -37,23 +37,23 @@ function App() {
     const [fireUser, setFireUser] = useState("");
 
     const [theme, setTheme] = useState({
-        value:  DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
+        value: SCHEMES.LIGHT,
         colors: {
-            primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-            secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-            tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-            red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-            green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-            yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-            blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-            grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-            lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
+            primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
+            secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
+            tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
+            red: DEFAULT_SITE.THEME.COLORS.RED,
+            green: DEFAULT_SITE.THEME.COLORS.GREEN,
+            yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
+            blue: DEFAULT_SITE.THEME.COLORS.BLUE,
+            grey: DEFAULT_SITE.THEME.COLORS.GREY,
+            lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
             font: {
-                heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
+                heading: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
+                body:DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
+                link: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
             },
-            background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+            background: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
         },
         fonts: {
             heading: DEFAULT_SITE.THEME.FONTS.HEADING,
@@ -92,46 +92,33 @@ function App() {
                 heading: DEFAULT_SITE.THEME.FONTS.HEADING,
                 body: DEFAULT_SITE.THEME.FONTS.BODY,
             },
-            schemes: {
-                light: {
-                    value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
-                    colors: {
-                        primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-                        secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-                        tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-                        red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-                        green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-                        yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-                        blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-                        grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
-                        font: {
-                            heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                            body:DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                            link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
-                        },
-                        background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
+            colors: {
+                primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
+                secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
+                tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
+                red: DEFAULT_SITE.THEME.COLORS.RED,
+                green: DEFAULT_SITE.THEME.COLORS.GREEN,
+                yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
+                blue: DEFAULT_SITE.THEME.COLORS.BLUE,
+                grey: DEFAULT_SITE.THEME.COLORS.GREY,
+                lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
+                font: {
+                    heading: {
+                        light: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
+                        dark: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.DARK,
+                    },
+                    body: {
+                        light: DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
+                        dark: DEFAULT_SITE.THEME.COLORS.FONT.BODY.DARK,
+                    },
+                    link: {
+                        light: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
+                        dark: DEFAULT_SITE.THEME.COLORS.FONT.LINK.DARK,
                     },
                 },
-                dark: {
-                    value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
-                    colors: {
-                        primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
-                        secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
-                        tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
-                        red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
-                        green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
-                        yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
-                        blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
-                        grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
-                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
-                        font: {
-                            heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
-                            body:DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
-                            link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
-                        },
-                        background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
-                    },
+                background: {
+                    light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
+                    dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
                 },
             },
         },
@@ -154,24 +141,25 @@ function App() {
             }
         }
         
+        // Note: the extra logic of checking if the .light value of a color is taken is so this can be expanded to potentially accept a light and dark "red" for example.
         themeObject = { 
-            value: isDarkScheme ? site.theme.schemes.dark.value : site.theme.schemes.light.value,
+            value: isDarkScheme ? SCHEMES.DARK : SCHEMES.LIGHT,
             colors: {
-                primary: isDarkScheme ? site.theme.schemes.dark.colors.primary : site.theme.schemes.light.colors.primary,
-                secondary: isDarkScheme ? site.theme.schemes.dark.colors.secondary : site.theme.schemes.light.colors.secondary,
-                tertiary: isDarkScheme ? site.theme.schemes.dark.colors.tertiary : site.theme.schemes.light.colors.tertiary,
-                red: isDarkScheme ? site.theme.schemes.dark.colors.red : site.theme.schemes.light.colors.red,
-                green: isDarkScheme ? site.theme.schemes.dark.colors.green : site.theme.schemes.light.colors.green,
-                yellow: isDarkScheme ? site.theme.schemes.dark.colors.yellow : site.theme.schemes.light.colors.yellow,
-                blue: isDarkScheme ? site.theme.schemes.dark.colors.blue : site.theme.schemes.light.colors.blue,
-                grey: isDarkScheme ? site.theme.schemes.dark.colors.grey : site.theme.schemes.light.colors.grey,
-                lightGrey: isDarkScheme ? site.theme.schemes.dark.colors.lightGrey : site.theme.schemes.light.colors.lightGrey,
+                primary: !site.theme.colors.primary.light ? site.theme.colors.primary : (isDarkScheme ? site.theme.colors.primary.dark : site.theme.colors.primary.light),
+                secondary: !site.theme.colors.secondary.light ? site.theme.colors.secondary : (isDarkScheme ? site.theme.colors.secondary.dark : site.theme.colors.secondary.light),
+                tertiary: !site.theme.colors.tertiary.light ? site.theme.colors.tertiary : (isDarkScheme ? site.theme.colors.tertiary.dark : site.theme.colors.tertiary.light),
+                red: !site.theme.colors.red.light ? site.theme.colors.red : (isDarkScheme ? site.theme.colors.red.dark : site.theme.colors.red.light),
+                green: !site.theme.colors.green.light ? site.theme.colors.green : (isDarkScheme ? site.theme.colors.green.dark : site.theme.colors.green.light),
+                yellow: !site.theme.colors.yellow.light ? site.theme.colors.yellow : (isDarkScheme ? site.theme.colors.yellow.dark : site.theme.colors.yellow.light),
+                blue: !site.theme.colors.blue.light ? site.theme.colors.blue : (isDarkScheme ? site.theme.colors.blue.dark : site.theme.colors.blue.light),
+                grey: !site.theme.colors.grey.light ? site.theme.colors.grey : (isDarkScheme ? site.theme.colors.grey.dark : site.theme.colors.grey.light),
+                lightGrey: !site.theme.colors.lightGrey.light ? site.theme.colors.lightGrey : (isDarkScheme ? site.theme.colors.lightGrey.dark : site.theme.colors.lightGrey.light),
                 font: {
-                    heading: isDarkScheme ? site.theme.schemes.dark.colors.font.heading : site.theme.schemes.light.colors.font.heading,
-                    body: isDarkScheme ? site.theme.schemes.dark.colors.font.body : site.theme.schemes.light.colors.font.body,
-                    link: isDarkScheme ? site.theme.schemes.dark.colors.font.link : site.theme.schemes.light.colors.font.link,
+                    heading: !site.theme.colors.font.heading.light ? site.theme.colors.font.heading : (isDarkScheme ? site.theme.colors.font.heading.dark : site.theme.colors.font.heading.light),
+                    body: !site.theme.colors.font.body.light ? site.theme.colors.font.body : (isDarkScheme ? site.theme.colors.font.body.dark : site.theme.colors.font.body.light),
+                    link: !site.theme.colors.font.link.light ? site.theme.colors.font.link : (isDarkScheme ? site.theme.colors.font.link.dark : site.theme.colors.font.link.light),
                 },
-                background: isDarkScheme ? site.theme.schemes.dark.colors.background : site.theme.schemes.light.colors.background,
+                background: !site.theme.colors.background.light ? site.theme.colors.primary : (isDarkScheme ? site.theme.colors.background.dark : site.theme.colors.background.light),
             },
             fonts: {
                 heading: site.theme.fonts.heading,
