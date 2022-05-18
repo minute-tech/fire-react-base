@@ -22,6 +22,7 @@ import AdminDashboard from './components/pages/user/admin/AdminDashboard';
 import ManageMessages from './components/pages/user/admin/ManageMessages';
 import ManageUsers from './components/pages/user/admin/ManageUsers';
 import { Wrapper } from './utils/styles/misc';
+import ManageSite from './components/pages/user/admin/ManageSite';
 
 function Views(props) {
     return (
@@ -164,6 +165,17 @@ function Views(props) {
                                 index
                                 element={
                                     <AdminDashboard
+                                        site={props.site} 
+                                        fireUser={props.fireUser} 
+                                        readOnlyFlags={props.readOnlyFlags}
+                                        user={props.user}
+                                    />
+                                }
+                            />
+                            <Route 
+                                path="site" 
+                                element={
+                                    <ManageSite
                                         site={props.site} 
                                         fireUser={props.fireUser} 
                                         readOnlyFlags={props.readOnlyFlags}

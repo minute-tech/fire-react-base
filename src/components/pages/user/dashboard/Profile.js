@@ -22,9 +22,11 @@ import { BTYPES, PLACEHOLDER, SCHEMES, SIZES } from "../../../../utils/constants
 import { auth, firestore } from "../../../../Fire";
 import FileUpload from "../../../misc/FileUpload";
 import { readTimestamp } from "../../../../utils/misc";
+import { useNavigate } from "react-router-dom";
 
 function Profile(props) {
     const theme = useTheme();
+    const navigate = useNavigate()
     const [submitting, setSubmitting] = useState({ 
         updateUser: false,
         file: false
@@ -383,8 +385,6 @@ function Profile(props) {
                             </Row>
                         )}
                         <Hr/>
-                        
-                        {console.log(props.fireUser)}
                         <Row center="xs" middle="xs">
                             <Col sm={12} md={4}>
                                 <Button 
@@ -415,7 +415,7 @@ function Profile(props) {
                                     <Body color={theme.colors.yellow}>Email sent, check your email inbox!</Body>
                                 )}
                                 {emailVerifySent && refreshButtonShown && (
-                                    <Button type="button" onClick={() => window.location.reload()} btype={BTYPES.INVERTED} color={theme.colors.green}>
+                                    <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
                                        <AiOutlineReload /> Reload page
                                     </Button>
                                 )}
@@ -423,7 +423,6 @@ function Profile(props) {
                                     <Body color={theme.colors.green}><BiCheck /> Email verified!</Body>
                                 )}
                             </Col>
-                          
                         </Row>
                     </Grid>
                 </Form>
