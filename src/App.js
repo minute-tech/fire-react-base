@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { IconContext } from 'react-icons';
+import { ScreenClassProvider, setConfiguration } from 'react-grid-system';
 
 // CSS
 import "./assets/css/App.css";
@@ -22,6 +23,15 @@ import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
 import { H2 } from './utils/styles/text';
 
+
+setConfiguration({ 
+    // sm, md, lg, xl, xxl, xxxl
+    breakpoints: [576, 768, 992, 1200, 1600, 1920],
+    containerWidths: [540, 740, 960, 1140, 1540, 1810],
+    defaultScreenClass: 'sm', 
+    gutterWidth: 25 
+});
+
 function App() {
     const [loading, setLoading] = useState({ 
         user: true,
@@ -32,7 +42,7 @@ function App() {
 
     const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState();
 
     const [fireUser, setFireUser] = useState("");
 
@@ -280,58 +290,63 @@ function App() {
             </Wrapper>
         )
     } else {
+        console.log("user: ")
+        console.log(user)
         return (
             <HelmetProvider>
                 <Helmet>
                     <title>{site.name ? `${site.name}` : "Fire React Base"}</title>
                 </Helmet>
-                {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
-                <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
-                    <ThemeProvider theme={theme}>
-                        <BodyWrapper>
-                            <BrowserRouter>
-                                <GlobalStyle /> 
-                                <FirebaseAnalytics />
-                                <StartAtTop />
-                                {process.env.NODE_ENV === 'development' && (
-                                    <DevAlert>
-                                        LOCAL SERVER
-                                    </DevAlert>
-                                )}      
-                                <Header 
-                                    site={site}
-                                    user={user} 
-                                />
-                                <ToastContainer
-                                    position="top-center"
-                                    autoClose={4000}
-                                    hideProgressBar={false}
-                                    newestOnTop={false}
-                                    theme={theme.value}
-                                    closeOnClick
-                                    rtl={false}
-                                    pauseOnFocusLoss
-                                    pauseOnHover
-                                />
-                                <Views 
-                                    site={site}
-                                    fireUser={fireUser} 
-                                    user={user} 
-                                    readOnlyFlags={readOnlyFlags}
-                                    setFireUser={setFireUser}
-                                    setUser={setUser}
-                                    setReadOnlyFlags={setReadOnlyFlags}
-                                    setIsLoggingIn={setIsLoggingIn} 
-                                    cleanUpLogout={cleanUpLogout}
-                                    isLoggingIn={isLoggingIn}
-                                />
-                                <Footer
-                                    site={site} 
-                                />
-                            </BrowserRouter>
-                        </BodyWrapper>
-                    </ThemeProvider>
-                </IconContext.Provider>
+                <ScreenClassProvider>
+                    {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
+                    <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
+                        <ThemeProvider theme={theme}>
+                            <BodyWrapper>
+                                <BrowserRouter>
+                                    <GlobalStyle /> 
+                                    <FirebaseAnalytics />
+                                    <StartAtTop />
+                                    {process.env.NODE_ENV === 'development' && (
+                                        <DevAlert>
+                                            LOCAL SERVER
+                                        </DevAlert>
+                                    )}      
+                                    <Header 
+                                        site={site}
+                                        user={user} 
+                                    />
+                                    <ToastContainer
+                                        position="top-center"
+                                        autoClose={4000}
+                                        hideProgressBar={false}
+                                        newestOnTop={false}
+                                        theme={theme.value}
+                                        closeOnClick
+                                        rtl={false}
+                                        pauseOnFocusLoss
+                                        pauseOnHover
+                                    />
+                                    <Views 
+                                        site={site}
+                                        fireUser={fireUser} 
+                                        user={user} 
+                                        readOnlyFlags={readOnlyFlags}
+                                        setFireUser={setFireUser}
+                                        setUser={setUser}
+                                        setReadOnlyFlags={setReadOnlyFlags}
+                                        setIsLoggingIn={setIsLoggingIn} 
+                                        cleanUpLogout={cleanUpLogout}
+                                        isLoggingIn={isLoggingIn}
+                                    />
+                                    <Footer
+                                        site={site} 
+                                    />
+                                </BrowserRouter>
+                            </BodyWrapper>
+                        </ThemeProvider>
+                    </IconContext.Provider>
+                </ScreenClassProvider>
+                
             </HelmetProvider>
         );
     }

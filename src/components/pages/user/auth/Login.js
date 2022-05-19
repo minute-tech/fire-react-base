@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet-async';
 import { CgClose } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
+import { Container, Row, Col } from 'react-grid-system';
 
 import { auth } from "../../../../Fire.js";
 import { signInSchema } from "../../../../utils/formSchemas"
@@ -127,8 +128,8 @@ function UserLogin(props) {
                 >
                     {formProps => (
                     <Form>
-                        {/* <Grid fluid>
-                            <Row>
+                        <Container fluid>
+                            <Row style={{ marginBottom:"10px" }}>
                                 <Col xs={12}>
                                     <Label>Email:</Label>&nbsp;
                                     <br/>
@@ -160,7 +161,7 @@ function UserLogin(props) {
                                     /> 
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row style={{ marginBottom:"10px" }}>
                                 <Col xs={12}>
                                     <Label>Password: </Label>
                                     <FField
@@ -191,7 +192,7 @@ function UserLogin(props) {
                                     /> 
                                 </Col>
                             </Row>
-                            <Row center="xs">
+                            <Row style={{ marginBottom: "10px", textAlign: "center" }}>
                                 <Col xs={12}>
                                     <Button 
                                         type="submit"
@@ -201,25 +202,25 @@ function UserLogin(props) {
                                     </Button>
                                 </Col>
                             </Row>
-                            <Row center="xs" style={{margin:"10px 0"}}>
+                            <Row style={{ marginBottom: "10px", textAlign: "center" }}>
                                 <Col xs={12}>
                                     <LLink margin="20px 0" to="/register">
                                         Don't have an account?
                                     </LLink>
                                 </Col>
                             </Row>
-                            <Row center="xs" style={{margin:"10px 0"}}>
+                            <Row style={{ marginBottom:"10px", textAlign: "center" }}>
                                 <Col xs={12}>
                                     <SLink onClick={() => toggleModal()}>Forgot password?</SLink>
                                 </Col>
                             </Row>
-                            <Row center="xs">
+                            <Row style={{ textAlign: "center" }}>
                                 <Col xs={12}>
                                     <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                     <Recaptcha id="recaptcha" />
                                 </Col>
                             </Row>
-                        </Grid> */}
+                        </Container>
                     </Form>
                     )}
                 </Formik>

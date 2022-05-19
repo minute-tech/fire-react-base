@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Form, Formik } from 'formik';
 import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
+import { Container, Row, Col } from 'react-grid-system';
 
 import { firestore } from "../../Fire";
 import { CField, FField } from '../../utils/styles/forms';
@@ -105,8 +106,8 @@ function ContactForm(props) {
                 >
                     {formProps => (
                         <Form>
-                            {/* <Grid fluid>
-                                <Row>
+                            <Container fluid>
+                                <Row style={{marginBottom: "10px"}}>
                                     <Col sm={12} md={6}>
                                         <Label>Name:</Label>
                                         <br/>
@@ -201,8 +202,7 @@ function ContactForm(props) {
                                     </Col>
                                 </Row>
                                 <Hr/>
-                                <Row 
-                                    center="xs"                                            
+                                <Row                                        
                                     onKeyUp={() => 
                                         setErrors(prevState => ({
                                             ...prevState,
@@ -216,7 +216,7 @@ function ContactForm(props) {
                                         }))
                                     }
                                 >
-                                    <Col>
+                                    <Col style={{textAlign: "center" }}>
                                         <CField
                                             type="checkbox"
                                             name="policyAccept"
@@ -240,7 +240,7 @@ function ContactForm(props) {
                                         </Button>
                                     </Col>
                                 </Row>
-                            </Grid> */}
+                            </Container>
                         </Form>
                     )}
                 </Formik>

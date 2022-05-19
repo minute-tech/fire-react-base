@@ -10,6 +10,7 @@ import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
 import { AiOutlineReload } from "react-icons/ai";
 import { BiCheck } from "react-icons/bi";
+import { Container, Row, Col } from 'react-grid-system';
 
 import { updateProfileSchema } from "../../../../utils/formSchemas";
 import { Hr, Img, ModalCard, ModalContainer } from "../../../../utils/styles/misc.js";
@@ -191,8 +192,8 @@ function Profile(props) {
             >
                 {formProps => (
                 <Form>
-                    {/* <Grid fluid>
-                        <Row center="xs" style={{ height: "200px" }}>
+                    <Container fluid>
+                        <Row style={{ height: "200px", textAlign: "center" }}>
                             <Col xs={12}>
                                 <Img 
                                     src={props.user.avatar || require("../../../../assets/images/misc/user.png")}
@@ -202,7 +203,7 @@ function Profile(props) {
                                 />
                             </Col>
                         </Row>
-                        <Row center="xs">
+                        <Row style={{ textAlign: "center" }}>
                             <Col xs={12}>
                                 <Button 
                                     type="button"
@@ -211,7 +212,7 @@ function Profile(props) {
                                     onClick={() => toggleModal(true, 0)}>
                                         update picture
                                 </Button>
-                        <Hr/>
+                                <Hr/>
                                 {shownModals[0] && (
                                     <ModalContainer onClick={() => toggleModal(false, 0)}>
                                         <ModalCard onClick={(e) => e.stopPropagation()}>
@@ -241,12 +242,9 @@ function Profile(props) {
                                         </ModalCard>
                                     </ModalContainer>
                                 )}
-                                    
-                                    
                             </Col>
-                            
                         </Row>
-                        <Row>
+                        <Row style={{ marginBottom: "10px" }}>
                             <Col sm={12} md={6}>
                                 <Label>First name:</Label>
                                 <br/>
@@ -308,7 +306,7 @@ function Profile(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{ marginBottom: "10px" }}>
                             <Col xs={12}>
                                 <Label>Email:</Label>&nbsp;
                                 <br/>
@@ -340,7 +338,7 @@ function Profile(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{ marginBottom: "10px" }}>
                             <Col xs={12}>
                                 <Label>Phone:</Label>
                                 <br/>
@@ -384,7 +382,7 @@ function Profile(props) {
                             </Row>
                         )}
                         <Hr/>
-                        <Row center="xs" middle="xs">
+                        <Row align="center" style={{ marginBottom: "10px", textAlign: "center" }}>
                             <Col sm={12} md={4}>
                                 <Button 
                                     type="button"
@@ -423,7 +421,7 @@ function Profile(props) {
                                 )}
                             </Col>
                         </Row>
-                    </Grid> */}
+                    </Container>
                 </Form>
                 )}
             </Formik>

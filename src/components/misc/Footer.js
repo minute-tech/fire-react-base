@@ -1,80 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import { FaChevronUp } from 'react-icons/fa';
-import { SIZES } from '../../utils/constants';
+import { Container, Row, Col } from 'react-grid-system';
 
-import { ColA, ColB, ColC, FooterContainer } from "../../utils/styles/footer";
+import { SIZES } from '../../utils/constants';
+import { FooterContainer } from "../../utils/styles/footer";
 import { LLink, SLink} from "../../utils/styles/text";
 
 
 function Footer(props) {
     const year = new Date().getFullYear();
-    const [windowDims, setWindowDims] = useState({
-        height: "",
-        width: ""
-    });
-
-    useEffect(() => {
-        setWindowDims({ 
-            deviceWidth: window.innerWidth, 
-            deviceHeight: window.innerHeight 
-        });
-
-        window.addEventListener('resize', setWindowDims({ 
-            deviceWidth: window.innerWidth, 
-            deviceHeight: window.innerHeight 
-        }));
-        return window.removeEventListener('resize', setWindowDims({ 
-            deviceWidth: window.innerWidth, 
-            deviceHeight: window.innerHeight 
-        }));
-    }, [])
     
     const backToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
-        <FooterContainer deviceWidth={windowDims.width}>
-            {/* <Grid fluid>
-                <Row middle="xs">
-                    <ColA xs={12} sm={4} $deviceWidth={windowDims.width}>
-                        <Row start={SIZES.SM}>
-                            <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
+        <FooterContainer>
+            <Container fluid>
+                <Row justify="between">
+                    <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        <Row>
+                            <Col lg={12} xl={4}>
                                 <LLink to="/privacy-policy">Privacy Policy</LLink>
                             </Col>  
-                            <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
+                            <Col lg={12} xl={4}>
                                 <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>
                             </Col>  
-                            <Col lg={12} xl={4} style={{margin:"2.5px 0"}}>
+                            <Col lg={12} xl={4}>
                                 <LLink to="/credits">Credits</LLink>
                             </Col>  
-                            
                         </Row>
-                    </ColA>
-                    <ColB xs={12} sm={4} $deviceWidth={windowDims.width}>
-                        <Row center="xs">
-                            <Col xs={12}>
-                                <SLink>
-                                    {props?.site?.name ?? ""}
-                                    {' '}
-                                    &copy;
-                                    {' '}
-                                    {year}
-                                </SLink>
-                            </Col>
-                        </Row>
-                    </ColB>
-                    <ColC xs={12} sm={4} $deviceWidth={windowDims.width}>
-                        <Row end={SIZES.SM}>
-                            <Col xs={12}>
-                                <SLink onClick={() => backToTop()}>
-                                    Back to top <FaChevronUp /> 
-                                </SLink>
-                            </Col>   
-                        </Row>
-                    </ColC>
+                    </Col>
+                    <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        <SLink>
+                            {props?.site?.name ?? ""}
+                            {' '}
+                            &copy;
+                            {' '}
+                            {year}
+                        </SLink>
+                    </Col>
+                    <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        <SLink onClick={() => backToTop()}>
+                            Back to top <FaChevronUp /> 
+                        </SLink>
+                    </Col>
                 </Row>    
-            </Grid> */}
+            </Container>
         </FooterContainer>
     )
 }

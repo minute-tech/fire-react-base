@@ -12,6 +12,8 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
     * JavaScript CSS styling
 * react-helmet-async
     * Dynamic page meta data, such as page title
+* react-grid-system
+    * Responsive grid system
 * react-image-lightbox
     * Enlarging images for easy viewing mobile and desktop
 * formik

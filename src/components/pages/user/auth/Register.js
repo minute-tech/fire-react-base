@@ -6,6 +6,7 @@ import { FaChevronLeft } from 'react-icons/fa';
 import { doc, setDoc } from 'firebase/firestore';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col } from 'react-grid-system';
 
 import { firestore, auth } from "../../../../Fire.js";
 import { userRegisterSchema } from "../../../../utils/formSchemas"
@@ -168,8 +169,8 @@ function Register(props) {
             >
                 {formProps => (
                 <Form>
-                    {/* <Grid fluid>
-                        <Row>
+                    <Container fluid>
+                        <Row style={{ marginBottom:"10px" }}>
                             <Col sm={12} md={6}>
                                 <Label>First name:</Label>
                                 <br/>
@@ -231,7 +232,7 @@ function Register(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{ marginBottom:"10px" }}>
                             <Col xs={12}>
                                 <Label>Email:</Label>&nbsp;
                                 <br/>
@@ -263,7 +264,7 @@ function Register(props) {
                                 /> 
                             </Col>
                         </Row>
-                        <Row>
+                        <Row style={{ marginBottom:"10px" }}>
                             <Col xs={12} md={6}>
                                 <Label>Password: </Label>
                                 <FField
@@ -328,21 +329,20 @@ function Register(props) {
                             </Col>
                         </Row>
                         <Row 
-                            center="xs" 
-                            style={{margin:"10px 0"}}
-                                onKeyUp={() => 
-                                    setErrors(prevState => ({
-                                        ...prevState,
-                                        policyAccept: ""
-                                    }))
-                                }
-                                onClick={() => 
-                                    setErrors(prevState => ({
-                                        ...prevState,
-                                        policyAccept: ""
-                                    }))
-                                }
-                            >
+                            style={{ marginBottom: "10px", textAlign: "center" }}
+                            onKeyUp={() => 
+                                setErrors(prevState => ({
+                                    ...prevState,
+                                    policyAccept: ""
+                                }))
+                            }
+                            onClick={() => 
+                                setErrors(prevState => ({
+                                    ...prevState,
+                                    policyAccept: ""
+                                }))
+                            }
+                        >
                             <Col>
                                 <CField
                                     type="checkbox"
@@ -356,7 +356,7 @@ function Register(props) {
                                 <FormError stateError={errors?.policyAccept} /> 
                             </Col>
                         </Row>
-                        <Row center="xs">
+                        <Row style={{ marginBottom: "10px", textAlign: "center" }}>
                             <Col xs={12}>
                                 <Button 
                                     type="submit"
@@ -366,20 +366,20 @@ function Register(props) {
                                 </Button>
                             </Col>
                         </Row>
-                        <Row center="xs" style={{margin:"10px 0"}}>
+                        <Row style={{ marginBottom: "10px", textAlign: "center" }}>
                             <Col xs={12}>
                                 <LLink to="/login">
                                     Already have an account?
                                 </LLink>
                             </Col>
                         </Row>
-                        <Row center="xs">
+                        <Row style={{ textAlign: "center" }}>
                             <Col xs={12}>
                                 <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                 <Recaptcha id="recaptcha" />
                             </Col>
                         </Row>
-                    </Grid> */}
+                    </Container>
                 </Form>
                 )}
             </Formik>

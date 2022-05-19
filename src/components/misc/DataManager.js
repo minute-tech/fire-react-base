@@ -6,6 +6,8 @@ import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
+import { Container, Row, Col } from 'react-grid-system';
+import { confirmAlert } from 'react-confirm-alert';
 
 import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div } from '../../utils/styles/misc';
 import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
@@ -18,7 +20,6 @@ import { PageSelect } from '../../utils/styles/forms';
 import { ColChevron, FormError } from '../misc/Misc';
 import { searchSchema } from '../../utils/formSchemas';
 import ConfirmAlert from './ConfirmAlert';
-import { confirmAlert } from 'react-confirm-alert';
 
 export default function DataManager(props) {
     const theme = useTheme();
@@ -565,8 +566,8 @@ export default function DataManager(props) {
                 >
                     {formProps => (
                         <Form>
-                            {/* <Grid fluid>
-                                <Row middle="xs">
+                            <Container fluid>
+                                <Row align="center" nogutter>
                                     <Col md={12} lg={8}>
                                         <SearchContainer>
                                             <FaSearch />
@@ -625,8 +626,8 @@ export default function DataManager(props) {
                                         )}
                                     </Col>
                                 </Row>
-                                <Row center="xs">
-                                    <Col xs={12}>
+                                <Row>
+                                    <Col xs={12} style={{textAlign: "center"}}>
                                         <FormError
                                             yupError={formProps.errors.term}
                                             formikTouched={formProps.touched.term}
@@ -634,7 +635,7 @@ export default function DataManager(props) {
                                         /> 
                                     </Col>
                                 </Row>
-                            </Grid> */}
+                            </Container>
                         </Form>
                     )}
                 </Formik>
@@ -769,7 +770,57 @@ export default function DataManager(props) {
                         </Table>
                     </OverflowXAuto>
                     <Hr/>
-                    {/* <Grid fluid> */}
+                    <Container fluid>
+                        <Row align="center" justify="center">
+                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                                {currentPage !== 1 && (
+                                    <Button 
+                                        size={SIZES.SM}
+                                        type="button" 
+                                        onClick={() => getPrevPage()}
+                                    >
+                                        <FaChevronLeft /> Previous page    
+                                    </Button>
+                                )}
+                            </Col>
+                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                                <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
+                                <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
+                                <Body margin="10px 0" size={SIZES.SM}>
+                                    {/* Don't show page size selector if itemCount is less than the second page size selection */}
+                                    {itemCount > PAGE_SIZES[1].value && (
+                                        <>
+                                        <PageSelect
+                                            value={itemsPerPage}
+                                            onChange={(e) => setItemsPerPage(e.target.value)} 
+                                        >
+                                            { 
+                                                PAGE_SIZES.map((size) => {
+                                                    return (
+                                                        <option key={size.value} value={size.value}>{size.label}</option>
+                                                    )
+                                                })
+                                            }
+                                        </PageSelect>
+                                        &nbsp; items per page
+                                        </>
+                                    )}
+                                </Body>
+                            </Col>
+                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                                {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
+                                    <Button 
+                                        size={SIZES.SM}
+                                        type="button" 
+                                        onClick={() => getNextPage()}
+                                    >
+                                        Next page <FaChevronRight /> 
+                                    </Button>
+                                )}
+                            
+                            </Col>
+                        </Row>
+                    </Container>
                         
                     </>
                 )}

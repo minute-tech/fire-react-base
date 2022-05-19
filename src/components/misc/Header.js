@@ -5,7 +5,8 @@ import { FullWidthLine } from '../../utils/styles/misc';
 
 function Header(props) {
     const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
-
+console.log("props.user: ")
+console.log(props.user)
     return (
         <>
         <HeaderContainer>
@@ -22,7 +23,6 @@ function Header(props) {
                     {props.site.logo.showTitle && (<NavTitle removeActiveStyle>{props?.site?.name ?? ""}</NavTitle>)}
                 </BrandLink>
             </BrandContainer>
-            
 
             {/* Desktop menu */}
             <NavMenuContainer>
