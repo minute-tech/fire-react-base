@@ -4,7 +4,6 @@ import { FaChevronLeft, FaChevronRight, FaSearch, FaShieldAlt, FaShieldVirus, Fa
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
 import { toast } from 'react-toastify';
 
@@ -566,7 +565,7 @@ export default function DataManager(props) {
                 >
                     {formProps => (
                         <Form>
-                            <Grid fluid>
+                            {/* <Grid fluid>
                                 <Row middle="xs">
                                     <Col md={12} lg={8}>
                                         <SearchContainer>
@@ -635,7 +634,7 @@ export default function DataManager(props) {
                                         /> 
                                     </Col>
                                 </Row>
-                            </Grid>
+                            </Grid> */}
                         </Form>
                     )}
                 </Formik>
@@ -770,57 +769,8 @@ export default function DataManager(props) {
                         </Table>
                     </OverflowXAuto>
                     <Hr/>
-                    <Grid fluid>
-                        <Row center="xs" middle="xs">
-                            <Col xs={12} sm={4}>
-                                {currentPage !== 1 && (
-                                    <Button 
-                                        size={SIZES.SM}
-                                        type="button" 
-                                        onClick={() => getPrevPage()}
-                                    >
-                                        <FaChevronLeft /> Previous page    
-                                    </Button>
-                                )}
-                            </Col>
-                            <Col xs={12} sm={4}>
-                                <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
-                                <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
-                                <Body margin="10px 0" size={SIZES.SM}>
-                                    {/* Don't show page size selector if itemCount is less than the second page size selection */}
-                                    {itemCount > PAGE_SIZES[1].value && (
-                                        <>
-                                        <PageSelect
-                                            value={itemsPerPage}
-                                            onChange={(e) => setItemsPerPage(e.target.value)} 
-                                        >
-                                            { 
-                                                PAGE_SIZES.map((size) => {
-                                                    return (
-                                                        <option key={size.value} value={size.value}>{size.label}</option>
-                                                    )
-                                                })
-                                            }
-                                        </PageSelect>
-                                        &nbsp; items per page
-                                        </>
-                                    )}
-                                </Body>
-                            </Col>
-                            <Col xs={12} sm={4}>
-                                {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
-                                    <Button 
-                                        size={SIZES.SM}
-                                        type="button" 
-                                        onClick={() => getNextPage()}
-                                    >
-                                        Next page <FaChevronRight /> 
-                                    </Button>
-                                )}
-                            
-                            </Col>
-                        </Row>
-                    </Grid>
+                    {/* <Grid fluid> */}
+                        
                     </>
                 )}
             </>

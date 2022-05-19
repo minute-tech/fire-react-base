@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { collection, addDoc } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
-import { Col, Grid, Row } from 'react-flexbox-grid';
 import { Form, Formik } from 'formik';
 import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
@@ -106,7 +105,7 @@ function ContactForm(props) {
                 >
                     {formProps => (
                         <Form>
-                            <Grid fluid>
+                            {/* <Grid fluid>
                                 <Row>
                                     <Col sm={12} md={6}>
                                         <Label>Name:</Label>
@@ -241,7 +240,7 @@ function ContactForm(props) {
                                         </Button>
                                     </Col>
                                 </Row>
-                            </Grid>
+                            </Grid> */}
                         </Form>
                     )}
                 </Formik>

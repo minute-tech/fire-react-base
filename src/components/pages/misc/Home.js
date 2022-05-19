@@ -1,5 +1,4 @@
 import React from 'react';
-import { Grid, Row, Col } from 'react-flexbox-grid';
 import { Helmet } from 'react-helmet-async';
 import { FaInfoCircle } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -9,6 +8,7 @@ import { BTYPES, SIZES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/buttons';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Hr, Wrapper } from '../../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../../utils/styles/text';
+import { Grid, Col } from '../../../utils/styles/misc';
 import { Tooltip } from '../../misc/Misc.js';
 
 function Home(props){
@@ -66,21 +66,132 @@ function Home(props){
                 <Button color={theme.colors.yellow} size={SIZES.MD} btype={BTYPES.INVERTED} type="button">Yellow Rounded Inverted Button</Button>
                 <Button color={theme.colors.lightGrey} size={SIZES.SM} btype={BTYPES.TEXTED} type="button">Red Small Texted Button</Button>
                 <Hr />
-                <Grid fluid>
-                    <Row center="xs">
-                        <Col xs={12} sm={3}>
-                            <H3>First Column</H3>
-                            <Body>More information below</Body>
-                        </Col>
-                        <Col xs={12} sm={3}>
-                            <H3>Second Column</H3>
-                            <Body>More information below</Body>
-                        </Col>
-                        <Col xs={12} sm={3}>
-                            <H3>Third Column</H3>
-                            <Body>More information below</Body>
-                        </Col>
-                    </Row>
+                <Grid 
+                    cellPadding="15px"
+                    rowGap="15px"
+                    colGap="10px"
+                >
+                    <Col textAlign="center"  bgColor={theme.colors.lightGrey} xs={12}>
+                        <H3>Column 1</H3>
+                        <Body>More information below</Body>
+                    </Col>
+
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6}>
+                        <H3>Column 2</H3>
+                        <Body>More information below, but in this cell we are going to have longer text.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12}  md={6}>
+                        <H3>Column 3</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={4}>
+                        <H3>Column 4</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
+                            More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={4}>
+                        <H3>Column 5</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={4}>
+                        <H3>Column 6</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
+                            More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={3}>
+                        <H3>Column 7</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={3}>
+                        <H3>Column 8</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={3}>
+                        <H3>Column 9</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
+                            More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={3}>
+                        <H3>Column 10</H3>
+                        <Body>More information below</Body>
+                    </Col>
+
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 11</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 12</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. .</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 13</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 14</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 15</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating her.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={12} md={6} lg={2}>
+                        <H3>Column 16</H3>
+                        <Body>More information below</Body>
+                    </Col>
+
+                    {/* <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={6} lg={2} xl={1}>
+                        <H3>Column 17</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 18</H3>
+                        <Body>More information below, but in this cell we are going to have longer text.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 19</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 20</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
+                            More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 21</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 22</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 23</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 24</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 25</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 26</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4} lg={2} xl={1}>
+                        <H3>Column 27</H3>
+                        <Body>More information below</Body>
+                    </Col>
+                    <Col textAlign="center" bgColor={theme.colors.lightGrey} sm={6} md={4}  lg={2} xl={1}>
+                        <H3>Column 28</H3>
+                        <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. .</Body>
+                    </Col> */}
                 </Grid>
                 <Hr />
                 <Tooltip text="Add more information to an element here!">

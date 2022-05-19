@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Grid, Row } from 'react-flexbox-grid';
 import { FaChevronUp } from 'react-icons/fa';
 import { SIZES } from '../../utils/constants';
 
@@ -27,7 +26,7 @@ function Footer(props) {
         return window.removeEventListener('resize', setWindowDims({ 
             deviceWidth: window.innerWidth, 
             deviceHeight: window.innerHeight 
-        }));;
+        }));
     }, [])
     
     const backToTop = () => {
@@ -36,7 +35,7 @@ function Footer(props) {
 
     return (
         <FooterContainer deviceWidth={windowDims.width}>
-            <Grid fluid>
+            {/* <Grid fluid>
                 <Row middle="xs">
                     <ColA xs={12} sm={4} $deviceWidth={windowDims.width}>
                         <Row start={SIZES.SM}>
@@ -75,7 +74,7 @@ function Footer(props) {
                         </Row>
                     </ColC>
                 </Row>    
-            </Grid>
+            </Grid> */}
         </FooterContainer>
     )
 }

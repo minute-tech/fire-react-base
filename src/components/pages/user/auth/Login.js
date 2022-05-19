@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Form, Formik } from "formik";
-import { Grid, Row, Col } from 'react-flexbox-grid';
 import { toast } from 'react-toastify';
 import { RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { FaChevronLeft } from 'react-icons/fa';
@@ -128,7 +127,7 @@ function UserLogin(props) {
                 >
                     {formProps => (
                     <Form>
-                        <Grid fluid>
+                        {/* <Grid fluid>
                             <Row>
                                 <Col xs={12}>
                                     <Label>Email:</Label>&nbsp;
@@ -220,7 +219,7 @@ function UserLogin(props) {
                                     <Recaptcha id="recaptcha" />
                                 </Col>
                             </Row>
-                        </Grid>
+                        </Grid> */}
                     </Form>
                     )}
                 </Formik>

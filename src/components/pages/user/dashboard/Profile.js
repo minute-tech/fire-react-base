@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Grid, Row, Col } from "react-flexbox-grid";
 import { Form, Formik } from "formik";
 import { FaChevronLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -192,7 +191,7 @@ function Profile(props) {
             >
                 {formProps => (
                 <Form>
-                    <Grid fluid>
+                    {/* <Grid fluid>
                         <Row center="xs" style={{ height: "200px" }}>
                             <Col xs={12}>
                                 <Img 
@@ -424,7 +423,7 @@ function Profile(props) {
                                 )}
                             </Col>
                         </Row>
-                    </Grid>
+                    </Grid> */}
                 </Form>
                 )}
             </Formik>

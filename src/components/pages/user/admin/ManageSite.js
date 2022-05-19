@@ -201,7 +201,7 @@ export default function ManageSite(props) {
         }).catch((error) => {
             console.error("Error deleting site: ", error);
             toast.error(`Error deleting site: ${error}`);
-        });;
+        });
     }
 
     return (
