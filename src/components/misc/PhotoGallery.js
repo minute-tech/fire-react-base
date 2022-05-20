@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
-import { GalleryImg } from "../../utils/styles/misc";
+import { GalleryImg } from "../../utils/styles/images";
 
 export default function PhotoGallery(props) {
     const [currentImage, setCurrentImage] = useState(0);

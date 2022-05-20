@@ -157,7 +157,7 @@ export const Label = styled.label`
     display: ${props => props.br ? "block" : "inline-block"};
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: ${props => props.$marginBottom ? props.$marginBottom : "5px"};
+    margin: ${props => props.margin ? props.margin : "0 0 5px 0"};
 `;
 
 export const ErrorText = styled.div`

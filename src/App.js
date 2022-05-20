@@ -20,7 +20,8 @@ import Views from "./Views";
 import { FirebaseAnalytics, StartAtTop } from './components/misc/Misc';
 import { auth, firestore } from './Fire';
 import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
-import { BodyWrapper, DevAlert, GlobalStyle, Spinner, Wrapper } from './utils/styles/misc';
+import { BodyWrapper, DevAlert, GlobalStyle, Wrapper } from './utils/styles/misc';
+import { Spinner } from './utils/styles/images';
 import { H2 } from './utils/styles/text';
 
 

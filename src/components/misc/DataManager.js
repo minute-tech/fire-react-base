@@ -8,7 +8,8 @@ import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { confirmAlert } from 'react-confirm-alert';
 
-import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div, Grid, Column, Row } from '../../utils/styles/misc';
+import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div, Grid, Column, Row } from '../../utils/styles/misc';
+import { Spinner } from '../../utils/styles/images';
 import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { Button } from '../../utils/styles/buttons';

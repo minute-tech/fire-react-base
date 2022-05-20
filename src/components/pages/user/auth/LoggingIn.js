@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 
-import { Spinner, Wrapper } from '../../../../utils/styles/misc';
+import { Wrapper } from '../../../../utils/styles/misc';
+import { Spinner } from '../../../../utils/styles/images';
 import { H2 } from '../../../../utils/styles/text';
 
 function LoggingIn(props) {

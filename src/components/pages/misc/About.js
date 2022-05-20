@@ -2,7 +2,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { ANIMAL_GALLERY } from '../../../utils/constants';
-import { Centered, Hr, Img, Wrapper } from '../../../utils/styles/misc';
+import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
+import { Img } from '../../../utils/styles/images';
 import { ALink, Body, H1, H3 } from '../../../utils/styles/text';
 import ContactForm from '../../misc/ContactForm';
 import PhotoGallery from '../../misc/PhotoGallery';

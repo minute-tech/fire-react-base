@@ -2,13 +2,11 @@ import styled, { createGlobalStyle }  from 'styled-components';
 import { rgb, rgba } from 'polished'
 import { Container, Col } from 'react-grid-system';
 import { Row as GRow } from 'react-grid-system';
-import { FaSpinner } from 'react-icons/fa';
 
 // Importing font into CSS global for use around app
 // import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 // import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { Body, BodyFont, HeadingFont } from './text';
-import { spin } from './animations';
 
 export const GlobalStyle = createGlobalStyle`
     // Try to stay away from using this Global Styling mainly for load times 
@@ -72,18 +70,8 @@ export const BodyWrapper = styled.div`
     }
 `;
 
-export const Spinner = styled(FaSpinner)`
-    animation-name: ${spin};
-    animation-duration: 3s;
-    animation-iteration-count: infinite;
-    transform-origin: center;
-    padding: 0 !important;
-    animation-timing-function: ease-in-out;
-`;
-
 // Alignment //
 export const Wrapper = styled.div`
-
     margin: 0 auto;
     width: 75%;
     padding: 3% 0;
@@ -126,7 +114,6 @@ export const LgContainer = styled.div`
     }
 `;
 
-
 // Widths
 export const SmWidth = styled.div`
     width: 50%;
@@ -149,30 +136,6 @@ export const LgWidth = styled.div`
 
     @media (max-width: 992px) {
         width: 90% !important;
-    }
-`;
-
-// Images (always responsive) //
-export const Img = styled.img`
-    width: 100%;
-    margin: ${props => props.margin ? props.margin : "0"};
-    height: auto;
-    border-radius: ${props => props.rounded ? "50%" : "0"};
-    float: ${props => props.float || "none"};
-    max-width: ${props => props.width || "100px"};
-`;
-
-export const InlineIcon = styled.span`
-    font-size: ${props => props.size || "1 em"};
-    display: ${props => props.display || "inline"};
-    margin: ${props => props.margin || "0"};
-`;
-
-export const GalleryImg = styled(Img)`
-    position: relative;
-    cursor: pointer;
-    &:hover {
-        opacity: .6;
     }
 `;
 
@@ -242,9 +205,9 @@ export const Row = styled(GRow)`
 
 export const Column = styled(Col)`
     text-align: ${props => props.align ? props.align : "left"};
-    margin-bottom: ${props => props.$marginBottom ? props.$marginBottom : "10px"};
-    background: ${props => props.$bgColor ? props.$bgColor : "none"};
-    background-clip: ${props => props.$bgColor ? "content-box" : "none"};
+    margin: ${props => props.margin ? props.margin : "0 0 10px 0"};
+    background: ${props => props.background ? props.background : "none"};
+    background-clip: ${props => props.background ? "content-box" : "none"};
 `;
 
 // Background with text
@@ -320,84 +283,6 @@ export const BgMediaBody = styled.div`
         margin: 5px;
     }
 `;
-
-// Misc Misc //
-export const Centered = styled.div`
-    width: 100%;
-    margin: auto;
-    text-align: center;
-`;
-
-export const MiddleDiv = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
-
-export const Hr = styled.div`
-    border-bottom: 2px solid ${props => props.theme?.colors?.primary || "black"};
-    margin: ${props => props.margin ? props.margin : "15px 0"};
-    width: ${props => props.width ? props.width : "100%"};
-    float: ${props => props.selected ? props.selected : "none"};
-`;
-
-export const FullWidthLine = styled.div`
-    background-color: ${props => props.color ? props.color : props.theme.colors.primary};
-    height: ${props => props.height ? props.height : "5px"};
-    padding: ${props => props.padding ? props.padding : "0"};
-`;
-
-export const FullWidthHeader = styled.div`
-    width: 100%;
-    height: 200px;
-    margin-bottom: 50px;
-    background-image: url(${props => props.src});
-    background-position: 50% 50%; // change me around to move up and down!
-    background-size: cover;
-`;
-
-export const Recaptcha = styled.div`
-    position: relative;
-    max-width: 304px;
-    margin: 10px auto;
-    
-`;
-
-export const OverflowXAuto = styled.div`
-    overflow-x: auto;
-`;
-
-export const Div = styled.div`
-    margin: ${props => props.margin ? props.margin : "0"};
-`;
-
-export const VerticalAlign = styled.span`
-    text-align: center;
-    position: relative;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    transform: translateY(-50%);
-`;
-
-export const DevAlert = styled.div`
-    position: fixed;
-    width: 100%;
-    z-index: 10;
-    top: 0;
-    background-color: ${props => rgba(props.theme?.colors?.red, 0.7) || rgba("darkred", 0.7)};
-    text-align: center;
-    padding: 5px 0;
-    color: white;
-    font-size: 8px;
-    font-family: ${props => props.theme?.fonts?.body || 'Arial'};
-    letter-spacing: 2px;
-    opacity: 1;
-    transition: opacity 0.5s;
-    &:hover {
-        opacity: 0;
-    }
-`
 
 // Modal
 export const ModalCard = styled.div`
@@ -484,7 +369,7 @@ export const Progress = styled.div`
 export const TooltipContainer = styled.div`
     position: relative;
     display: inline-block;
-    // TODO: would be nice if this tooltip could extend pass it's child... might pose an issue in the future.
+    // TODO: would be nice if this tooltip could extend past it's child... might pose an issue in the future.
     div:first-child  {
         ${BodyFont};
         position: absolute;
@@ -510,3 +395,80 @@ export const TooltipContainer = styled.div`
         border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
     }
 `;
+
+// Misc Misc //
+export const Centered = styled.div`
+    width: 100%;
+    margin: auto;
+    text-align: center;
+`;
+
+export const MiddleDiv = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
+
+export const VerticalAlign = styled.span`
+    text-align: center;
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+`;
+
+export const Div = styled.div`
+    margin: ${props => props.margin ? props.margin : "0"};
+`;
+
+export const Hr = styled.div`
+    border-bottom: 2px solid ${props => props.theme?.colors?.primary || "black"};
+    margin: ${props => props.margin ? props.margin : "15px 0"};
+    width: ${props => props.width ? props.width : "100%"};
+    float: ${props => props.selected ? props.selected : "none"};
+`;
+
+export const FullWidthLine = styled.div`
+    background-color: ${props => props.color ? props.color : props.theme.colors.primary};
+    height: ${props => props.height ? props.height : "5px"};
+    padding: ${props => props.padding ? props.padding : "0"};
+`;
+
+export const FullWidthHeader = styled.div`
+    width: 100%;
+    height: 200px;
+    margin-bottom: 50px;
+    background-image: url(${props => props.src});
+    background-position: 50% 50%; // change me around to move up and down!
+    background-size: cover;
+`;
+
+export const Recaptcha = styled.div`
+    position: relative;
+    max-width: 304px;
+    margin: 10px auto;
+`;
+
+export const OverflowXAuto = styled.div`
+    overflow-x: auto;
+`;
+
+export const DevAlert = styled.div`
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    top: 0;
+    background-color: ${props => rgba(props.theme?.colors?.red, 0.7) || rgba("darkred", 0.7)};
+    text-align: center;
+    padding: 5px 0;
+    color: white;
+    font-size: 8px;
+    font-family: ${props => props.theme?.fonts?.body || 'Arial'};
+    letter-spacing: 2px;
+    opacity: 1;
+    transition: opacity 0.5s;
+    &:hover {
+        opacity: 0;
+    }
+`
