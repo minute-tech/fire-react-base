@@ -64,7 +64,7 @@ export const NavMenuContainer = styled.nav`
 `;
 
 export const NavLinks = styled.span`
-    ${BodyFont}
+    ${BodyFont};
     float: right;
     padding-right: 25px;
 `;
@@ -184,7 +184,7 @@ export const BurgerNavLink = styled(NavLink)`
     padding: 2rem 0;
     font-weight: bold;
     letter-spacing: 0.5rem;
-    color: ${props => props.color ? props.color : props.theme.colors.font.body};
+    color: ${props => props.color ? props.color : props.theme.colors.font.body} !important;
     text-decoration: none;
     transition: all 0.3s linear;
 

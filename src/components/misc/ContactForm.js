@@ -48,7 +48,7 @@ function ContactForm(props) {
             }));
             setMessageSent(true);
             toast.success(`Message submitted successfully, thanks!`);
-            contactForm.reset(); // TODO: do we need to pass value?
+            contactForm.reset();
         }).catch(error => {
             toast.error(`Error submitting message: ${error}`);
             setSubmitting(prevState => ({
@@ -78,6 +78,7 @@ function ContactForm(props) {
                                 <Label htmlFor={INPUT.NAME.VALUE} br>{INPUT.NAME.LABEL}:</Label>
                                 <TextInput 
                                     type="text" 
+                                    error={contactForm.formState.errors[INPUT.NAME.VALUE]}
                                     placeholder={`${INPUT.NAME.PLACEHOLDER}`} 
                                     { 
                                         ...contactForm.register(INPUT.NAME.VALUE, {
@@ -99,6 +100,7 @@ function ContactForm(props) {
                                 <Label htmlFor={INPUT.EMAIL.VALUE} br>{INPUT.EMAIL.LABEL}:</Label>
                                 <TextInput 
                                     type="text" 
+                                    error={contactForm.formState.errors[INPUT.EMAIL.VALUE]}
                                     placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                     {
                                         ...contactForm.register(INPUT.EMAIL.VALUE, { 
@@ -116,9 +118,10 @@ function ContactForm(props) {
                         </Row>
                         <Row>
                             <Column xs={12}>
-                                <Label htmlFor={INPUT.BODY.VALUE} br>Body Message:</Label>
+                                <Label htmlFor={INPUT.BODY.VALUE} br>{INPUT.BODY.LABEL}:</Label>
                                 <TextAreaInput 
                                     placeholder={INPUT.BODY.PLACEHOLDER}  
+                                    error={contactForm.formState.errors[INPUT.BODY.VALUE]}
                                     {
                                         ...contactForm.register(INPUT.BODY.VALUE, {
                                             required: INPUT.BODY.ERRORS.REQUIRED,
@@ -140,6 +143,7 @@ function ContactForm(props) {
                             <Column xs={12} align="center">
                                 <CheckboxInput 
                                     type="checkbox"
+                                    error={contactForm.formState.errors.policyAccept}
                                     {
                                         ...contactForm.register("policyAccept", {
                                             required: "Please accept the policies by checking the box above.",

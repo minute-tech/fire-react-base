@@ -3,8 +3,8 @@ import { BodyFont } from './text';
 
 export const TextInput = styled.input`
     font-size: 16px;
-    ${BodyFont}
-    color: black;
+    ${BodyFont};
+    color: black !important;
     width: ${props => props.width ? props.width : "100%"};
     padding: 10px;
     box-sizing: border-box;
@@ -28,8 +28,8 @@ export const TextInput = styled.input`
 
 export const TextAreaInput = styled.textarea`
     font-size: 16px;
-    ${BodyFont}
-    color: black;
+    ${BodyFont};
+    color: black !important;
     width: ${props => props.width ? props.width : "100%"};
     height: 150px;
     padding: 10px;
@@ -38,7 +38,11 @@ export const TextAreaInput = styled.textarea`
     border-radius: 2px;
     background-color: white;
     resize: none;
-    
+
+    /* Set focus if error */
+    outline-color: ${props => props.error ? props.theme.colors.red : "none"};
+    box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
+
     &:focus {
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
@@ -52,11 +56,18 @@ export const TextAreaInput = styled.textarea`
 export const RadioInput = styled.input`
     transform: scale(1.25);
     margin: 15px 15px 0 0;
+    
+    /* Set focus if error */
+    outline-color: ${props => props.error ? props.theme.colors.red : "none"};
+    box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
 `;
 
 export const CheckboxInput = styled.input`
     transform: scale(1.5);
     margin: 15px 15px 0 0;
+    /* Set focus if error */
+    outline-color: ${props => props.error ? props.theme.colors.red : "none"};
+    box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
 `;
 
 export const CheckboxLabel = styled.label`
@@ -69,15 +80,19 @@ export const SelectInput = styled.select`
     padding: 12px;
     option {
         ${BodyFont};
-        color: black;
+        color: black !important;
     }
+    
+    /* Set focus if error */
+    outline-color: ${props => props.error ? props.theme.colors.red : "none"};
+    box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
 `;
 
 export const PageSelectInput = styled.select`
     option {
         ${BodyFont};
         font-size: 12px;
-        color: black;
+        color: black !important;
     }
 `;
 

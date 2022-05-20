@@ -180,7 +180,7 @@ export const GalleryImg = styled(Img)`
 export const Table = styled.table`
     border-collapse: collapse;
     width: 100%;
-    ${BodyFont}
+    ${BodyFont};
 `;
 
 export const Thead = styled.thead`
@@ -489,7 +489,7 @@ export const TooltipContainer = styled.div`
         ${BodyFont};
         position: absolute;
         background: rgba(0, 0, 0, 0.7);
-        color: #fff;
+        color: white !important;
         padding: 10px;
         border-radius: 5px;
         top: calc(100% + 5px);

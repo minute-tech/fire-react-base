@@ -4,12 +4,12 @@ import { SIZES } from '../constants';
 // import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
+    color: ${props => props.theme?.colors?.font?.heading ?? "black"};
     font-family: ${props => props.theme?.fonts?.heading ?? "Arial, Helvetica, sans-serif"};
 `;
 
 export const BodyFont = css`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? "black")};
+    color: ${props => props.theme?.colors?.font?.body ?? "black"};
     font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"};
 `;
 
@@ -63,6 +63,10 @@ export const Body = styled.p`
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 
+    ${(props) => (props.color) && `
+        color: ${props.color} !important;
+    `};
+
     ${(props) => (props.size === SIZES.SM) && `
         font-size: 12px;
         @media (max-width: 992px) {
@@ -101,9 +105,9 @@ export const Body = styled.p`
 
 // Links
 export const ALink = styled.a`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")};
     cursor: pointer;
-    ${BodyFont}
+    ${BodyFont};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")} !important;
     text-decoration: none;
     transition: color 0.15s linear;
     margin: ${props => props.margin ? props.margin : "0"};
@@ -114,9 +118,9 @@ export const ALink = styled.a`
 `;
 
 export const LLink = styled(Link)`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link || "navy")};
+    ${BodyFont};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link || "navy")} !important;
     cursor: pointer;
-    ${BodyFont}
     margin: ${props => props.margin ? props.margin : "0"};
     text-decoration: none;
     transition: color 0.15s linear;
@@ -127,9 +131,9 @@ export const LLink = styled(Link)`
 `;
 
 export const SLink = styled.span`
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")};
+    ${BodyFont};
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")} !important;
     cursor: pointer;
-    ${BodyFont}
     text-decoration: none;
     transition: color 0.15s linear;
     margin: ${props => props.margin ? props.margin : "0"};
@@ -149,22 +153,22 @@ export const Anchor = styled.a`
 
 //  Misc
 export const Label = styled.label`
+    ${BodyFont};
     display: ${props => props.br ? "block" : "inline-block"};
     font-size: 20px;
     font-weight: 700;
     margin-bottom: ${props => props.$marginBottom ? props.$marginBottom : "5px"};
-    ${BodyFont};
 `;
 
 export const ErrorText = styled.div`
-    color: ${props => (props.theme?.colors?.red ?? "firebrick")};
+    ${BodyFont};
+    color: ${props => (props.theme?.colors?.red ?? "firebrick")} !important;
     margin: ${props => props.margin ? props.margin : "5px 0 0 0"};
-    ${BodyFont}
     font-weight: 900;
 `;
 
 export const Ol = styled.ol`
-    ${BodyFont}
+    ${BodyFont};
 `;
 
 export const Ul = styled.ul`
