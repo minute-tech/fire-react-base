@@ -19,7 +19,7 @@ export const H1 = styled.h1`
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 35px;
     }
 `;
@@ -30,7 +30,7 @@ export const H2 = styled.h2`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 25px;
         /* margin-bottom: 15px; */
     }
@@ -42,7 +42,7 @@ export const H3 = styled.h3`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 20px;
     }
 `;
@@ -53,7 +53,7 @@ export const H4 = styled.h4`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 18px;
     }
 `;
@@ -68,28 +68,28 @@ export const Body = styled.p`
 
     ${(props) => (props.size === SIZES.SM) && `
         font-size: 12px;
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             font-size: 10px;
         }
     `};
 
     ${(props) => (props.size === SIZES.MD) && `
         font-size: 16px;
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             font-size: 14px;
         }
     `};
 
     ${(props) => (props.size === SIZES.LG) && `
         font-size: 20px;
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             font-size: 18px;
         }
     `};
 
     ${(props) => (props.size === SIZES.XL) && `
         font-size: 28px;
-        @media (max-width: 900px) {
+        @media (max-width: 992px) {
             font-size: 24px;
         }
     `};
@@ -166,10 +166,10 @@ export const Anchor = styled.a`
 
 //  Misc
 export const Label = styled.label`
+    display: ${props => props.br ? "block" : "inline-block"};
     font-size: 20px;
     font-weight: 700;
-    margin-bottom: 2px;
-    display: inline-block;
+    margin-bottom: ${props => props.marginBottom ? props.marginBottom : "5px"};
     ${BodyFont};
     color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;

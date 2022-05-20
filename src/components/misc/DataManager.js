@@ -4,7 +4,7 @@ import { FaChevronLeft, FaChevronRight, FaSearch, FaShieldAlt, FaShieldVirus, Fa
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-import { Form, Formik } from 'formik';
+
 import { toast } from 'react-toastify';
 import { Container, Row, Col } from 'react-grid-system';
 import { confirmAlert } from 'react-confirm-alert';

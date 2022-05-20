@@ -32,7 +32,7 @@ export const NavLogo = styled.img`
     max-width: ${props => props.width ? `${props.width}px` : "150px"}; 
     margin: 15px 10px;
     
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         max-width: ${props => props.width ? `${props.width * .8}px` : "100px"}; 
     }
 `;
@@ -49,7 +49,7 @@ export const NavTitle = styled.span`
         color: ${props => props.theme.colors.secondary};
     }
     
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 1.8em;
     }
 `;
@@ -58,7 +58,7 @@ export const NavTitle = styled.span`
 export const NavMenuContainer = styled.nav`
     display: inline;
     
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         display: none;
     }
 `;
@@ -88,7 +88,7 @@ export const NavLLink = styled(NavLink)`
         color: ${props => props.theme.colors.secondary};
     };
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 14px;
     }
 
@@ -110,7 +110,7 @@ export const BgOverlay = styled.div`
 export const BurgerNavContainer = styled.span`
     display: none;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         display: inline;
     }
 `;
@@ -172,7 +172,7 @@ export const BurgerNav = styled.nav`
     z-index: 8;
     transition: transform 0.3s ease-in-out;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 100%;
     }
 `;
@@ -188,7 +188,7 @@ export const BurgerNavLink = styled(NavLink)`
     text-decoration: none;
     transition: all 0.3s linear;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         font-size: 1.5rem;
         text-align: center;
     }

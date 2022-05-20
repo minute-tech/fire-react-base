@@ -4,7 +4,6 @@ import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
-import { Container, Row, Col } from 'react-grid-system';
 
 import { firestore } from "../../Fire";
 import { CheckboxInput, TextAreaInput, TextInput } from '../../utils/styles/forms';
@@ -12,7 +11,7 @@ import { contactFormSchema } from '../../utils/formSchemas';
 import { FormError } from '../misc/Misc';
 import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
 import { Button } from '../../utils/styles/buttons.js';
-import { Centered, Hr } from '../../utils/styles/misc.js';
+import { Centered, Column, Grid, Hr, Row } from '../../utils/styles/misc.js';
 import { PLACEHOLDER, REGEX } from '../../utils/constants.js';
 
 function ContactForm(props) {
@@ -82,11 +81,10 @@ function ContactForm(props) {
             <>
                 <H1>Contact Form</H1>
                 <form onSubmit={ contactForm.handleSubmit(submitMessage) }>
-                    <Container fluid>
-                        <Row style={{marginBottom: "10px"}}>
-                            <Col sm={12} md={6}>
-                                <Label htmlFor="name">Name:</Label>
-                                <br/>
+                    <Grid fluid>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor="name" br>Name:</Label>
                                 <TextInput 
                                     type="text" 
                                     placeholder={`${PLACEHOLDER.FIRST_NAME} ${PLACEHOLDER.LAST_NAME}`} 
@@ -106,10 +104,9 @@ function ContactForm(props) {
                                 />
                         
                                 <FormError error={contactForm.formState.errors.name} /> 
-                            </Col>
-                            <Col sm={12} md={6}>
-                                <Label htmlFor="email">Email:</Label>&nbsp;
-                                <br/>
+                            </Column>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor="email" br>Email:</Label>
                                 <TextInput 
                                     type="text" 
                                     placeholder={PLACEHOLDER.EMAIL} 
@@ -125,12 +122,11 @@ function ContactForm(props) {
                                     } 
                                 />
                                 <FormError error={contactForm.formState.errors.email} /> 
-                            </Col>
+                            </Column>
                         </Row>
                         <Row>
-                            <Col xs={12}>
-                                <Label htmlFor="body">Body Message:</Label>&nbsp;
-                                <br/>
+                            <Column xs={12}>
+                                <Label htmlFor="body" br>Body Message:</Label>
                                 <TextAreaInput 
                                     placeholder={PLACEHOLDER.BODY}  
                                     {
@@ -149,11 +145,10 @@ function ContactForm(props) {
                                 />
                                 
                                 <FormError error={contactForm.formState.errors.body} /> 
-                            </Col>
+                            </Column>
                         </Row>
-                        <Hr/>
                         <Row>
-                            <Col style={{ textAlign: "center" }}>
+                            <Column xs={12} align="center">
                                 <CheckboxInput 
                                     type="checkbox"
                                     {
@@ -168,20 +163,19 @@ function ContactForm(props) {
                                     <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
                                 </Body>
                                 <FormError error={contactForm.formState.errors.policyAccept} /> 
-                            </Col>
+                            </Column>
                         </Row>
-                        <br/>
-                        <Row center="xs">
-                            <Col xs={12}>
+                        <Row>
+                            <Column xs={12} align="center">
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.message}
                                 >
                                     Submit
                                 </Button>
-                            </Col>
+                            </Column>
                         </Row>
-                    </Container>
+                    </Grid>
                 </form>
 
                 

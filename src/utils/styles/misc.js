@@ -1,5 +1,7 @@
 import styled, { createGlobalStyle }  from 'styled-components';
 import { rgb, rgba } from 'polished'
+import { Container, Col } from 'react-grid-system';
+import { Row as GRow } from 'react-grid-system';
 import { FaSpinner } from 'react-icons/fa';
 
 // Importing font into CSS global for use around app
@@ -30,7 +32,7 @@ export const BodyWrapper = styled.div`
     /* Overflow hidden so side nav can stay hidden, but transition-able */
     overflow-x: hidden;
     
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         padding-bottom: 10rem; 
     }
 
@@ -86,7 +88,7 @@ export const Wrapper = styled.div`
     width: 75%;
     padding: 3% 0;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 85%;
     }
 `;
@@ -97,7 +99,7 @@ export const SmContainer = styled.div`
     width: 25%;
     padding: 1%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 70%;
     }
 `;
@@ -107,7 +109,7 @@ export const MdContainer = styled.div`
     width: 50%;
     padding: 1%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 80%;
     }
 `;
@@ -117,7 +119,7 @@ export const LgContainer = styled.div`
     width: 90%;
     padding: 1%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         margin: auto;
         width: 90%;
         padding: 1%;
@@ -129,7 +131,7 @@ export const LgContainer = styled.div`
 export const SmWidth = styled.div`
     width: 50%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 70%;
     }
 `;
@@ -137,7 +139,7 @@ export const SmWidth = styled.div`
 export const MdWidth = styled.div`
     width: 75%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 80%;
     }
 `;
@@ -145,7 +147,7 @@ export const MdWidth = styled.div`
 export const LgWidth = styled.div`
     width: 80%;
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         width: 90% !important;
     }
 `;
@@ -229,6 +231,23 @@ export const Tbody = styled.tbody`
     }
 `;
 
+// Grid
+export const Grid = styled(Container)`
+    background-color: ${props => props.bgColor ? props.bgColor : "none"};
+    /* Add custom styles here */
+`;
+
+export const Row = styled(GRow)`
+    background-color: ${props => props.bgColor ? props.bgColor : "none"};
+    /* Add custom styles here */
+`;
+
+export const Column = styled(Col)`
+    text-align: ${props => props.align ? props.align : "left"};
+    margin-bottom: ${props => props.marginBottom ? props.marginBottom : "10px"};
+    background-color: ${props => props.bgColor ? props.bgColor : "none"};
+`;
+
 // Background with text
 export const BgMediaContainer = styled.div`
     height: 100%;
@@ -247,7 +266,7 @@ export const BgMedia = styled.img`
     height: 70vh;
     object-fit: cover;
     /* filter: blur(1px); */
-    @media (max-width: 900px), (max-height: 900px) {
+    @media (max-width: 992px), (max-height: 992px) {
         height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
@@ -258,7 +277,7 @@ export const BgColor = styled.div`
     width: 100vw;
     height: 70vh;
     background-color: ${props => props.bgColor ? props.bgColor : props.theme.colors.primary};
-    @media (max-width: 900px), (max-height: 900px) {
+    @media (max-width: 992px), (max-height: 992px) {
         height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
 `;
@@ -275,7 +294,7 @@ export const BgMediaModal = styled.div`
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
-    @media (max-width: 900px), (max-height: 900px) {
+    @media (max-width: 992px), (max-height: 992px) {
         max-width: 80%;
         padding: 10px 25px 25px 25px;
     }
@@ -285,7 +304,7 @@ export const BgMediaHeading = styled.h1`
     font-size: 35px;
     ${HeadingFont}
     margin-bottom: 1%;
-    @media (max-width: 900px), (max-height: 900px) {
+    @media (max-width: 992px), (max-height: 992px) {
         font-size: 30px
     }
 `;
@@ -295,7 +314,7 @@ export const BgMediaBody = styled.div`
     line-height: 1.6;
     text-align: left;
     margin: 20px;
-    @media (max-width: 900px), (max-height: 900px) {
+    @media (max-width: 992px), (max-height: 992px) {
         font-size: 16px;
         margin: 5px;
     }
@@ -395,7 +414,7 @@ export const ModalCard = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
 
-    @media (max-width: 900px) {
+    @media (max-width: 992px) {
         padding: 15px 30px;
         width: 80%;
     }
