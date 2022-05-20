@@ -7,6 +7,7 @@ export const FooterContainer = styled.footer`
     width: 100%;
     margin: auto;
     font-size: 14px;
+    /* background-color: ${props => props.theme.colors.primary}; */
     div {
         text-align: center;
     }
