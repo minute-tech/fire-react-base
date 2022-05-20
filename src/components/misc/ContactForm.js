@@ -6,7 +6,7 @@ import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
 
 import { firestore } from "../../Fire";
-import { CheckboxInput, TextAreaInput, TextInput } from '../../utils/styles/forms';
+import { CheckboxInput, CheckboxLabel, TextAreaInput, TextInput } from '../../utils/styles/forms';
 import { contactFormSchema } from '../../utils/formSchemas';
 import { FormError } from '../misc/Misc';
 import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
@@ -102,7 +102,6 @@ function ContactForm(props) {
                                         })
                                     } 
                                 />
-                        
                                 <FormError error={contactForm.formState.errors.name} /> 
                             </Column>
                             <Column sm={12} md={6}>
@@ -143,7 +142,6 @@ function ContactForm(props) {
                                         })
                                     } 
                                 />
-                                
                                 <FormError error={contactForm.formState.errors.body} /> 
                             </Column>
                         </Row>
@@ -157,11 +155,11 @@ function ContactForm(props) {
                                         })
                                     } 
                                 />
-                                <Body display="inline-block" margin="0 0 10px 0">
+                                <CheckboxLabel>
                                     I accept the&nbsp;
                                     <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
                                     <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
-                                </Body>
+                                </CheckboxLabel>
                                 <FormError error={contactForm.formState.errors.policyAccept} /> 
                             </Column>
                         </Row>

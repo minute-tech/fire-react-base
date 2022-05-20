@@ -233,19 +233,18 @@ export const Tbody = styled.tbody`
 
 // Grid
 export const Grid = styled(Container)`
-    background-color: ${props => props.bgColor ? props.bgColor : "none"};
     /* Add custom styles here */
 `;
 
 export const Row = styled(GRow)`
-    background-color: ${props => props.bgColor ? props.bgColor : "none"};
     /* Add custom styles here */
 `;
 
 export const Column = styled(Col)`
     text-align: ${props => props.align ? props.align : "left"};
     margin-bottom: ${props => props.marginBottom ? props.marginBottom : "10px"};
-    background-color: ${props => props.bgColor ? props.bgColor : "none"};
+    background: ${props => props.$bgColor ? props.$bgColor : "none"};
+    background-clip: ${props => props.$bgColor ? "content-box" : "none"};
 `;
 
 // Background with text
@@ -303,6 +302,7 @@ export const BgMediaModal = styled.div`
 export const BgMediaHeading = styled.h1`
     font-size: 35px;
     ${HeadingFont}
+    color: ${props => props.color ? props.color : "black"};
     margin-bottom: 1%;
     @media (max-width: 992px), (max-height: 992px) {
         font-size: 30px
@@ -311,8 +311,9 @@ export const BgMediaHeading = styled.h1`
 
 export const BgMediaBody = styled.div`
     font-size: 18px;
+    color: ${props => props.color ? props.color : "black"};
     line-height: 1.6;
-    text-align: left;
+    text-align: ${props => props.textAlign ? props.textAlign : "left"};
     margin: 20px;
     @media (max-width: 992px), (max-height: 992px) {
         font-size: 16px;

@@ -4,10 +4,12 @@ import { SIZES } from '../constants';
 // import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     font-family: ${props => props.theme?.fonts?.heading ?? "Arial, Helvetica, sans-serif"};
 `;
 
 export const BodyFont = css`
+    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? "black")};
     font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"};
 `;
 
@@ -15,7 +17,6 @@ export const BodyFont = css`
 export const H1 = styled.h1`
     font-size: 50px;
     ${HeadingFont}
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
@@ -27,7 +28,6 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
     font-size: 40px;
     ${HeadingFont}
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {
@@ -39,7 +39,6 @@ export const H2 = styled.h2`
 export const H3 = styled.h3`
     font-size: 30px;
     ${HeadingFont}
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {
@@ -50,7 +49,6 @@ export const H3 = styled.h3`
 export const H4 = styled.h4`
     font-size: 24px;
     ${HeadingFont}
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.heading ?? "black")};
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {
@@ -62,7 +60,6 @@ export const H4 = styled.h4`
 export const Body = styled.p`
     margin: ${props => props.margin ? props.margin : "1em 0"};
     display: ${props => props.display ? props.display : "block"};
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.body ?? "black")};
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 
@@ -99,10 +96,8 @@ export const Body = styled.p`
             color: ${props.hoverColor};
             cursor: pointer;
         }
-    `};
-    
+    `};  
 `;
-
 
 // Links
 export const ALink = styled.a`
@@ -130,18 +125,6 @@ export const LLink = styled(Link)`
         text-decoration: none;
     }
 `;
-
-// export const HLink = styled(HashLink)`
-//     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? 'navy')};
-//     cursor: pointer;
-//     ${BodyFont}
-//     text-decoration: none;
-//     transition: color 0.15s linear;
-//     &:hover {
-//         color: ${props => (props.theme?.colors?.yellow ?? 'gold')};
-//         text-decoration: none;
-//     }
-// `;
 
 export const SLink = styled.span`
     color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")};
@@ -171,7 +154,6 @@ export const Label = styled.label`
     font-weight: 700;
     margin-bottom: ${props => props.marginBottom ? props.marginBottom : "5px"};
     ${BodyFont};
-    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const ErrorText = styled.div`
@@ -183,16 +165,13 @@ export const ErrorText = styled.div`
 
 export const Ol = styled.ol`
     ${BodyFont}
-    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const Ul = styled.ul`
     ${BodyFont};
     margin: ${props => props.margin ? props.margin : "0px"};
-    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;
 
 export const Li = styled.li`
     ${BodyFont}
-    color: ${props => (props.theme?.colors?.font?.body ?? "black")};
 `;

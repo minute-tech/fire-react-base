@@ -57,6 +57,12 @@ export const CheckboxInput = styled.input`
     margin: 15px 15px 0 0;
 `;
 
+export const CheckboxLabel = styled.label`
+    ${BodyFont};
+    margin: 0 0 10px 0;
+    display: inline-block;
+`;
+
 export const SelectInput = styled.select`
     padding: 12px;
     option {
