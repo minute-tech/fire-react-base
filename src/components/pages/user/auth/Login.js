@@ -6,16 +6,15 @@ import { Helmet } from 'react-helmet-async';
 import { CgClose } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'styled-components';
-import { Container, Row, Col } from 'react-grid-system';
+import { useForm } from "react-hook-form";
 
 import { auth } from "../../../../Fire.js";
-import { signInSchema } from "../../../../utils/formSchemas"
 import { LgContainer, ModalCard, ModalContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
 import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 // import { FField, Input } from '../../../../utils/styles/forms.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import { FormError } from '../../../misc/Misc';
-import { PLACEHOLDER, SIZES } from '../../../../utils/constants.js';
+import { SIZES } from '../../../../utils/constants.js';
 
 function UserLogin(props) {
     const navigate = useNavigate();
@@ -26,10 +25,14 @@ function UserLogin(props) {
         login: false,
     }); 
     
-    const [errors, setErrors] = useState({ 
-        email: "",
-        password: ""
-    }); 
+    const loginForm = useForm({
+        defaultValues: {
+            name: "",
+            email: "",
+            body: "",
+            policyAccept: false
+        }
+    });
 
     // ** Usage **
     // setSubmitting(prevState => ({
@@ -114,6 +117,64 @@ function UserLogin(props) {
             </LLink>
             <LgContainer>
                 <H1>Login</H1>
+                {/* <form onSubmit={ contactForm.handleSubmit(submitMessage) }>
+                    <Grid fluid>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor="email" br>Email:</Label>
+                                <TextInput 
+                                    type="text" 
+                                    placeholder={PLACEHOLDER.EMAIL} 
+                                    {
+                                        ...contactForm.register("email", { 
+                                                required: "An email is required!",
+                                                pattern: {
+                                                    value: REGEX.EMAIL,
+                                                    message: "This doesn't look like a valid email address."
+                                                },
+                                            }
+                                        )
+                                    } 
+                                />
+                                <FormError error={contactForm.formState.errors.email} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor="password" br>Password:</Label>
+                                <TextInput 
+                                    type="password" 
+                                    placeholder={PLACEHOLDER.PASSWORD} 
+                                    { 
+                                        ...contactForm.register("password", {
+                                            required: "A password is required!",
+                                            maxLength: {
+                                                value: 50,
+                                                message: "The password can only be 150 characters long."
+                                            },
+                                            minLength: {
+                                                value: 6,
+                                                message: "The password must be at least 2 characters long."
+                                            },
+                                        })
+                                    } 
+                                />
+                                <FormError error={contactForm.formState.errors.password} /> 
+                            </Column>
+                            
+                        </Row>
+                        <Row>
+                            <Column xs={12} align="center">
+                                <Button 
+                                    type="submit" 
+                                    disabled={submitting.login}
+                                >
+                                    Submit
+                                </Button>
+                            </Column>
+                        </Row>
+                    </Grid>
+                </form> */}
                 {/* <Formik
                     initialValues={{email: "", password: ""}}
                     validationSchema={signInSchema}

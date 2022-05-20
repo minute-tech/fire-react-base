@@ -4,12 +4,11 @@ import { FaChevronLeft, FaChevronRight, FaSearch, FaShieldAlt, FaShieldVirus, Fa
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
-
 import { toast } from 'react-toastify';
-import { Container, Row, Col } from 'react-grid-system';
+import { useForm } from "react-hook-form";
 import { confirmAlert } from 'react-confirm-alert';
 
-import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div } from '../../utils/styles/misc';
+import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div, Grid, Column, Row } from '../../utils/styles/misc';
 import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { Button } from '../../utils/styles/buttons';
@@ -18,7 +17,6 @@ import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
 import { PageSelectInput } from '../../utils/styles/forms';
 import { ColChevron, FormError } from '../misc/Misc';
-import { searchSchema } from '../../utils/formSchemas';
 import ConfirmAlert from './ConfirmAlert';
 
 export default function DataManager(props) {
@@ -770,9 +768,9 @@ export default function DataManager(props) {
                         </Table>
                     </OverflowXAuto>
                     <Hr/>
-                    <Container fluid>
+                    <Grid fluid>
                         <Row align="center" justify="center">
-                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
                                 {currentPage !== 1 && (
                                     <Button 
                                         size={SIZES.SM}
@@ -782,8 +780,8 @@ export default function DataManager(props) {
                                         <FaChevronLeft /> Previous page    
                                     </Button>
                                 )}
-                            </Col>
-                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                            </Column>
+                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
                                 <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
                                 <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
                                 <Body margin="10px 0" size={SIZES.SM}>
@@ -806,8 +804,8 @@ export default function DataManager(props) {
                                         </>
                                     )}
                                 </Body>
-                            </Col>
-                            <Col xs={12} sm={4} style={{textAlign: "center"}}>
+                            </Column>
+                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
                                 {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
                                     <Button 
                                         size={SIZES.SM}
@@ -818,9 +816,9 @@ export default function DataManager(props) {
                                     </Button>
                                 )}
                             
-                            </Col>
+                            </Column>
                         </Row>
-                    </Container>
+                    </Grid>
                         
                     </>
                 )}

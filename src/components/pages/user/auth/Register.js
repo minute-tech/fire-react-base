@@ -6,10 +6,9 @@ import { FaChevronLeft } from 'react-icons/fa';
 import { doc, setDoc } from 'firebase/firestore';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-grid-system';
+import { useForm } from "react-hook-form";
 
 import { firestore, auth } from "../../../../Fire.js";
-import { userRegisterSchema } from "../../../../utils/formSchemas"
 import { Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
 import { CField, FField } from '../../../../utils/styles/forms.js';
 import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js';

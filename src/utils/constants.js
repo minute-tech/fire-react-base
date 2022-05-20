@@ -89,14 +89,132 @@ export const APHORISMS = [
 ];
 
 /////////////////// Back-end Only //////////////////////
-export const PLACEHOLDER = {
-    FIRST_NAME: "Taylor",
-    LAST_NAME: "Doe",
-    EMAIL: "taylor_doe@email.com",
-    PHONE: "+1 (123) 456-7890",
-    BODY: "Detail what you want to say here.",
-    PASSWORD: "*********************",
-};
+export const INPUT = {
+    EMAIL: {
+        VALUE: "email",
+        LABEL: "Email",
+        PLACEHOLDER: "taylor_doe@email.com",
+        ERRORS: {
+            REQUIRED: "An email is required!",
+            PATTERN: {
+                MESSAGE: "This doesn't look like a valid email address.",
+                VALUE: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            }
+        }
+    },
+    PHONE: {
+        VALUE: "phone",
+        LABEL: "Phone",
+        PLACEHOLDER: "+1 (123) 456-7890",
+        ERRORS: {
+            REQUIRED: "A phone number is required!",
+            MAX: {
+                MESSAGE: "The phone can only be 25 characters long.",
+                VALUE: 25
+            },
+            MIN: {
+                MESSAGE: "The password must be at least 4 characters long.",
+                VALUE: 4
+            }
+        }
+    },
+    PASSWORD: {
+        VALUE: "password",
+        LABEL: "Password",
+        PLACEHOLDER: "*********************",
+        ERRORS: {
+            REQUIRED: "A password is required!",
+            MAX: {
+                MESSAGE: "The password can only be 50 characters long.",
+                VALUE: 50
+            },
+            MIN: {
+                MESSAGE: "The password must be at least 6 characters long.",
+                VALUE: 6
+            }
+        }
+    },
+    CONFIRM_PASSWORD: {
+        VALUE: "confirmPassword",
+        LABEL: "Confirm password",
+        PLACEHOLDER: "*********************",
+        ERRORS: {
+            REQUIRED: "The password must be confirmed!",
+            MAX: {
+                MESSAGE: "The password can only be 50 characters long.",
+                VALUE: 50
+            },
+            MIN: {
+                MESSAGE: "The password must be at least 6 characters long.",
+                VALUE: 6
+            }
+        }
+    },
+    FIRST_NAME: {
+        VALUE: "firstName",
+        LABEL: "First name",
+        PLACEHOLDER: "Taylor",
+        ERRORS: {
+            REQUIRED: "A first name is required!",
+            MAX: {
+                MESSAGE: "The first name can only be 150 characters long.",
+                VALUE: 150
+            },
+            MIN: {
+                MESSAGE: "The first name must be at least 1 characters long.",
+                VALUE: 1
+            }
+        }
+    },
+    LAST_NAME: {
+        VALUE: "lastName",
+        LABEL: "Last name",
+        PLACEHOLDER: "Doe",
+        ERRORS: {
+            REQUIRED: "A last name is required!",
+            MAX: {
+                MESSAGE: "The last name can only be 150 characters long.",
+                VALUE: 150
+            },
+            MIN: {
+                MESSAGE: "The last name must be at least 1 characters long.",
+                VALUE: 1
+            }
+        }
+    },    
+    NAME: {
+        VALUE: "name",
+        LABEL: "Name",
+        PLACEHOLDER: "Taylor Doe",
+        ERRORS: {
+            REQUIRED: "A name is required!",
+            MAX: {
+                MESSAGE: "The name can only be 150 characters long.",
+                VALUE: 150
+            },
+            MIN: {
+                MESSAGE: "The name must be at least 1 characters long.",
+                VALUE: 1
+            }
+        }
+    },
+    BODY: {
+        VALUE: "body",
+        LABEL: "Message body",
+        PLACEHOLDER: "Detail what you want to say here.",
+        ERRORS: {
+            REQUIRED: "A text body is required!",
+            MAX: {
+                MESSAGE: "The text body can only be 30,000 characters long.",
+                VALUE: 30000
+            },
+            MIN: {
+                MESSAGE: "The text body must be at least 10 characters long.",
+                VALUE: 10
+            }
+        }
+    },
+}
 
 export const SIZES = {
     XS: "xs",
@@ -177,7 +295,3 @@ export const SCHEMES = {
     LIGHT: "light",
     DARK: "dark",
 };
-
-export const REGEX = {
-    EMAIL: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-}

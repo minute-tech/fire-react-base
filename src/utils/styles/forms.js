@@ -4,6 +4,7 @@ import { BodyFont } from './text';
 export const TextInput = styled.input`
     font-size: 16px;
     ${BodyFont}
+    color: black;
     width: ${props => props.width ? props.width : "100%"};
     padding: 10px;
     box-sizing: border-box;
@@ -28,6 +29,7 @@ export const TextInput = styled.input`
 export const TextAreaInput = styled.textarea`
     font-size: 16px;
     ${BodyFont}
+    color: black;
     width: ${props => props.width ? props.width : "100%"};
     height: 150px;
     padding: 10px;
@@ -67,6 +69,7 @@ export const SelectInput = styled.select`
     padding: 12px;
     option {
         ${BodyFont};
+        color: black;
     }
 `;
 
@@ -74,6 +77,7 @@ export const PageSelectInput = styled.select`
     option {
         ${BodyFont};
         font-size: 12px;
+        color: black;
     }
 `;
 

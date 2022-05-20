@@ -242,7 +242,7 @@ export const Row = styled(GRow)`
 
 export const Column = styled(Col)`
     text-align: ${props => props.align ? props.align : "left"};
-    margin-bottom: ${props => props.marginBottom ? props.marginBottom : "10px"};
+    margin-bottom: ${props => props.$marginBottom ? props.$marginBottom : "10px"};
     background: ${props => props.$bgColor ? props.$bgColor : "none"};
     background-clip: ${props => props.$bgColor ? "content-box" : "none"};
 `;
