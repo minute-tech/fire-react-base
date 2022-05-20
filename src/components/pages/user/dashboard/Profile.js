@@ -173,7 +173,7 @@ function Profile(props) {
                 </Button>
             </LLink>
             <H1>Profile</H1>
-            <Formik
+            {/* <Formik
                 initialValues={{
                     firstName: props.user.firstName,
                     lastName: props.user.lastName,
@@ -424,7 +424,7 @@ function Profile(props) {
                     </Container>
                 </Form>
                 )}
-            </Formik>
+            </Formik> */}
             
                 
         </>

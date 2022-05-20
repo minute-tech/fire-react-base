@@ -147,7 +147,7 @@ function Register(props) {
                 </Button>
             </LLink>
             <H1>Register</H1>
-            <Formik
+            {/* <Formik
                 initialValues={{
                     firstName: "",
                     lastName: "",
@@ -382,7 +382,7 @@ function Register(props) {
                     </Container>
                 </Form>
                 )}
-            </Formik>
+            </Formik> */}
         </Wrapper>
     )
 }

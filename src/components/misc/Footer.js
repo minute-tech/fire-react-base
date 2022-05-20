@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FaChevronUp } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-grid-system';
 
-import { SIZES } from '../../utils/constants';
 import { FooterContainer } from "../../utils/styles/footer";
 import { LLink, SLink} from "../../utils/styles/text";
 

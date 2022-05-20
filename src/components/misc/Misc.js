@@ -22,14 +22,8 @@ export function FirebaseAnalytics() {
 export function FormError(props) {
     return (
         <div>
-            {props.stateError ? (
-                <ErrorText>{props.stateError}</ErrorText>
-            ) : (
-                ""
-            )}
-            
-            {props.yupError && props.formikTouched ? (
-                <ErrorText>{props.yupError}</ErrorText>
+            {props.error ? (
+                <ErrorText>{props.error.message}</ErrorText>
             ) : (
                 ""
             )}

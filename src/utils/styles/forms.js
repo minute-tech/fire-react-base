@@ -1,8 +1,7 @@
 import styled, { css }  from 'styled-components';
-import { Field } from "formik";
 import { BodyFont } from './text';
 
-export const FField = styled(Field)`
+export const TextInput = styled.input`
     font-size: 16px;
     ${BodyFont}
     width: ${props => props.width ? props.width : "100%"};
@@ -21,22 +20,17 @@ export const FField = styled(Field)`
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
 
-    ${props => props.component === "textarea" && css`
-        height: 150px;
-        padding: 15px;
-    `}
-
     @media (max-width: 900px) {
         width: 90%;
     }
 `;
 
-export const Input = styled.input`
+export const TextAreaInput = styled.textarea`
     font-size: 16px;
     ${BodyFont}
     width: ${props => props.width ? props.width : "100%"};
+    height: 150px;
     padding: 10px;
-    margin: 0 0 5px 0;
     box-sizing: border-box;
     border: 1px solid black;
     border-radius: 2px;
@@ -48,34 +42,29 @@ export const Input = styled.input`
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
 
-    ${props => props.component === "textarea" && css`
-        height: 150px;
-        padding: 15px;
-    `}
-    
     @media (max-width: 900px) {
         width: 90%;
     }
 `;
 
-export const RField = styled(Field)`
+export const RadioInput = styled.input`
     transform: scale(1.25);
     margin: 15px 15px 0 0;
 `;
 
-export const CField = styled(Field)`
+export const CheckboxInput = styled.input`
     transform: scale(1.5);
     margin: 15px 15px 0 0;
 `;
 
-export const SField = styled(Field)`
+export const SelectInput = styled.select`
     padding: 12px;
     option {
         ${BodyFont};
     }
 `;
 
-export const PageSelect = styled.select`
+export const PageSelectInput = styled.select`
     option {
         ${BodyFont};
         font-size: 12px;

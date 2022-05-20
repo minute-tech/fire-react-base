@@ -176,7 +176,7 @@ export const Label = styled.label`
 
 export const ErrorText = styled.div`
     color: ${props => (props.theme?.colors?.red ?? "firebrick")};
-    margin: ${props => props.margin ? props.margin : "0px"};
+    margin: ${props => props.margin ? props.margin : "5px 0 0 0"};
     ${BodyFont}
     font-weight: 900;
 `;

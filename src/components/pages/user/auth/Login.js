@@ -13,7 +13,7 @@ import { auth } from "../../../../Fire.js";
 import { signInSchema } from "../../../../utils/formSchemas"
 import { LgContainer, ModalCard, ModalContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
 import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
-import { FField, Input } from '../../../../utils/styles/forms.js';
+// import { FField, Input } from '../../../../utils/styles/forms.js';
 import { Button } from '../../../../utils/styles/buttons.js';
 import { FormError } from '../../../misc/Misc';
 import { PLACEHOLDER, SIZES } from '../../../../utils/constants.js';
@@ -115,7 +115,7 @@ function UserLogin(props) {
             </LLink>
             <LgContainer>
                 <H1>Login</H1>
-                <Formik
+                {/* <Formik
                     initialValues={{email: "", password: ""}}
                     validationSchema={signInSchema}
                     onSubmit={(values) => {
@@ -223,19 +223,19 @@ function UserLogin(props) {
                         </Container>
                     </Form>
                     )}
-                </Formik>
+                </Formik> */}
 
                 {forgotExpanded && (
                     <ModalContainer onClick={() => toggleModal()}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
                             <H2>Forgot Password</H2>
                             <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
-                            <Input 
+                            {/* <Input 
                                 type="text"
                                 placeholder={PLACEHOLDER.EMAIL}
                                 onChange={(e) => setForgotEmail(e.target.value)} 
                                 value={forgotEmail}
-                            />
+                            /> */}
                             <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>
                                 Send password reset link
                             </Button>

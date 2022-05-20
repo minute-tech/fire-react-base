@@ -290,8 +290,6 @@ function App() {
             </Wrapper>
         )
     } else {
-        console.log("user: ")
-        console.log(user)
         return (
             <HelmetProvider>
                 <Helmet>

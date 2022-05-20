@@ -7,8 +7,6 @@ import { FaSpinner } from 'react-icons/fa';
 // import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { Body, BodyFont, HeadingFont } from './text';
 import { spin } from './animations';
-import { SIZES } from '../constants';
-
 
 export const GlobalStyle = createGlobalStyle`
     // Try to stay away from using this Global Styling mainly for load times 

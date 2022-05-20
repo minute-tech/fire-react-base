@@ -13,10 +13,10 @@ import { ModalCard, Hr, OverflowXAuto, Spinner, Table, Tbody, Td, Th, Thead, Tr,
 import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { Button } from '../../utils/styles/buttons';
-import { FField, SearchContainer, SField } from '../../utils/styles/forms';
+// import { FField, SearchContainer, SField } from '../../utils/styles/forms';
 import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
-import { PageSelect } from '../../utils/styles/forms';
+import { PageSelectInput } from '../../utils/styles/forms';
 import { ColChevron, FormError } from '../misc/Misc';
 import { searchSchema } from '../../utils/formSchemas';
 import ConfirmAlert from './ConfirmAlert';
@@ -549,7 +549,7 @@ export default function DataManager(props) {
                     </Button>
                 </LLink>
                 <H1>{props.pageTitle}: {itemCount}</H1>
-                <Formik
+                {/* <Formik
                     initialValues={{
                         term: "",
                         column: "id"
@@ -638,7 +638,7 @@ export default function DataManager(props) {
                             </Container>
                         </Form>
                     )}
-                </Formik>
+                </Formik> */}
                 {itemCount === 0 && (
                     <Body color={theme.colors.red} bold size={SIZES.LG}>No items yet!</Body>
                 )}
@@ -758,7 +758,7 @@ export default function DataManager(props) {
                                                                 }
                                                             })}           
                                                     >
-                                                        <FaTrash />&nbsp; Delete
+                                                        <FaTrash />
                                                     </Button>
                                                 )}
                                                 
@@ -790,7 +790,7 @@ export default function DataManager(props) {
                                     {/* Don't show page size selector if itemCount is less than the second page size selection */}
                                     {itemCount > PAGE_SIZES[1].value && (
                                         <>
-                                        <PageSelect
+                                        <PageSelectInput
                                             value={itemsPerPage}
                                             onChange={(e) => setItemsPerPage(e.target.value)} 
                                         >
@@ -801,7 +801,7 @@ export default function DataManager(props) {
                                                     )
                                                 })
                                             }
-                                        </PageSelect>
+                                        </PageSelectInput>
                                         &nbsp; items per page
                                         </>
                                     )}
