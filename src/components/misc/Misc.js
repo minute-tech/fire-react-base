@@ -32,10 +32,26 @@ export function FormError(props) {
 }
 
 export function StartAtTop() {
-    let location = useLocation();
+    const { pathname, hash, key } = useLocation();
+    let timer = null;
     useEffect(() => {
+        // if not a hash link, scroll to top
+        if (hash === "") {
+            // ** this smooth too? 
         window.scrollTo(0, 0);
-    }, [location])
+      } else {
+        // else scroll to id
+        timer = setTimeout(() => {
+          const id = hash.replace("#", "");
+          const element = document.getElementById(id);
+          if (element) {
+            element.scrollIntoView({ behavior: "smooth"});
+          }
+        }, 500);
+      }
+
+      return timer;
+    }, [pathname, hash])
 
     return null;
 }
