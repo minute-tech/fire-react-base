@@ -12,11 +12,9 @@ import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalCon
 import { Spinner } from '../../utils/styles/images';
 import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
-import { Button } from '../../utils/styles/buttons';
-// import { FField, SearchContainer, SField } from '../../utils/styles/forms';
 import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
-import { PageSelectInput } from '../../utils/styles/forms';
+import { PageSelectInput, SearchContainer, SelectInput, TextInput, Button} from '../../utils/styles/forms';
 import { ColChevron, FormError } from '../misc/Misc';
 import ConfirmAlert from './ConfirmAlert';
 
@@ -30,9 +28,12 @@ export default function DataManager(props) {
     const [submitting, setSubmitting] = useState({ 
         search: false,
     }); 
-    const [errors, setErrors] = useState({ 
-        term: "",
-    }); 
+    const searchForm = useForm({
+        defaultValues: {
+            term: "",
+            column: "id"
+        }
+    });
     const [itemCount, setItemCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0].value);
     const [items, setItems] = useState([]);
@@ -141,20 +142,25 @@ export default function DataManager(props) {
                 ...prevState,
                 items: true
             }));
-            // Construct a new query starting at this document,
-            let currentPageQuery = query(
-                collection(firestore, props.dataName),
-                endAt(beginCursor),
-                limitToLast(itemsPerPage) // Adding this seemed to solve the going back issue, but now everything is jumbled when going back
-            );
+            // Construct a new query starting at this document depending if the user is searching or not
+            // TODO: still doenst work, may be placing the wrong cursor on next page
+            let currentPageQuery = null;
             if(search.term){
-                currentPageQuery = query(currentPageQuery, where(search.column === "id" ? "__name__" : search.column, "==", search.term));
+                currentPageQuery = query(
+                    collection(firestore, props.dataName), 
+                    where(search.column === "id" ? "__name__" : search.column, "==", search.term), endAt(beginCursor),
+                    endAt(beginCursor),
+                    limitToLast(itemsPerPage) // Adding this seemed to solve the going back issue, but now everything is jumbled when going back
+                );
             } else {
-                currentPageQuery = query(currentPageQuery,  
+                currentPageQuery = query(
+                    collection(firestore, props.dataName),  
                     orderBy(
                         props.tableCols.find(column => {return column.active;}).value, 
                         props.tableCols.find(column => {return column.active;}).direction
-                    )
+                    ),
+                    endAt(beginCursor),
+                    limitToLast(itemsPerPage) 
                 );
             }
             const pageDocSnaps = await getDocs(currentPageQuery);
@@ -190,22 +196,27 @@ export default function DataManager(props) {
                 ...prevState,
                 items: false
             }));
-            // Construct a new query starting at this document,
-            let currentPageQuery = query(
-                collection(firestore, props.dataName), 
-                startAfter(finalCursor),
-                limit(itemsPerPage)
-            );
+            // Construct a new query starting at this document depending if the user is searching or not
+            let currentPageQuery = null;
             if(search.term){
-                currentPageQuery = query(currentPageQuery, where(search.column === "id" ? "__name__" : search.column, "==", search.term));
+                currentPageQuery = query(
+                    collection(firestore, props.dataName), 
+                    where(search.column === "id" ? "__name__" : search.column, "==", search.term), 
+                    startAfter(finalCursor), 
+                    limit(itemsPerPage),
+                );
             } else {
-                currentPageQuery = query(currentPageQuery,  
+                currentPageQuery = query(
+                    collection(firestore, props.dataName),  
                     orderBy(
                         props.tableCols.find(column => {return column.active;}).value, 
                         props.tableCols.find(column => {return column.active;}).direction
-                    )
+                    ),
+                    startAfter(finalCursor),
+                    limit(itemsPerPage),
                 );
             }
+
             const pageDocSnaps = await getDocs(currentPageQuery);
             const tempBeginCursor = pageDocSnaps.docs[ 0 ];
             const tempFinalCursor = pageDocSnaps.docs[ pageDocSnaps.docs.length - 1 ];
@@ -233,11 +244,15 @@ export default function DataManager(props) {
         }
     };
 
-    const submitSearch = (values) => {
+    const submitSearch = (data) => {
+        setSubmitting(prevState => ({
+            ...prevState,
+            search: true
+        }))
         setSearch(prevState => ({
             ...prevState,
-            column: values.column,
-            term: values.term,
+            column: data.column,
+            term: data.term,
         }));
         setSubmitting(prevState => ({
             ...prevState,
@@ -245,8 +260,8 @@ export default function DataManager(props) {
         }));
     };
 
-    const clearSearch = (resetForm) => {
-        resetForm();
+    const clearSearch = () => {
+        searchForm.reset();
         setSearch(prevState => ({
             ...prevState,
             column: "",
@@ -548,96 +563,69 @@ export default function DataManager(props) {
                     </Button>
                 </LLink>
                 <H1>{props.pageTitle}: {itemCount}</H1>
-                {/* <Formik
-                    initialValues={{
-                        term: "",
-                        column: "id"
-                    }}
-                    onSubmit={(values) => {
-                        setSubmitting(prevState => ({
-                            ...prevState,
-                            search: true
-                        }))
-                        submitSearch(values);
-                    }}
-                    enableReinitialize={true}
-                    validationSchema={searchSchema}
-                >
-                    {formProps => (
-                        <Form>
-                            <Container fluid>
-                                <Row align="center" nogutter>
-                                    <Col md={12} lg={8}>
-                                        <SearchContainer>
-                                            <FaSearch />
-                                            <FField
-                                                type="text"
-                                                required
-                                                onChange={formProps.handleChange}
-                                                placeholder={`Search by a column title in the table`}
-                                                name="term"
-                                                value={formProps.values.term || ""}
-                                                onKeyUp={() => 
-                                                    setErrors(prevState => ({
-                                                        ...prevState,
-                                                        term: ""
-                                                    }))
+                <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
+                    <Grid fluid>
+                        <Row justify="center" align="center">
+                            <Column md={12} lg={8}>
+                                <SearchContainer>
+                                    <FaSearch />
+                                    <TextInput
+                                        type="text"
+                                        error={searchForm.formState.errors.search}
+                                        placeholder={`Search by a column title in the table`}
+                                        {
+                                            ...searchForm.register("search", { 
+                                                    required: "Please enter a search term!",
+                                                    maxLength: {
+                                                        value: 50,
+                                                        message: "The search term can only be 50 characters long."
+                                                    },
+                                                    minLength: {
+                                                        value: 2,
+                                                        message: "The search term must be at least 2 characters long."
+                                                    },
                                                 }
-                                                onClick={() => 
-                                                    setErrors(prevState => ({
-                                                        ...prevState,
-                                                        term: ""
-                                                    }))
-                                                }
-                                                error={ ((formProps.errors.term && formProps.touched.term) || errors?.term) ? 1 : 0 }
-                                            />
-                                        </SearchContainer>
-                                    </Col>
-                                    <Col md={12} lg={4}>
-                                        <Button 
-                                            type="submit" 
-                                            disabled={submitting.search}
-                                        >
-                                            Search 
-                                        </Button>
-                                        <SField
-                                            name="column"
-                                            component="select"
-                                            onChange={formProps.handleChange}
-                                        >
-                                            {
-                                                props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
-                                                    return (
-                                                        <option key={column.value} value={column.value}>{column.label}</option>
-                                                    )
-                                                })
-                                            }
-                                        </SField>
-                                        {search.term && (
-                                            <Button 
-                                                type="button"
-                                                btype={BTYPES.INVERTED}
-                                                color={theme.colors.yellow}
-                                                onClick={() => clearSearch(formProps.resetForm)}
-                                            >
-                                                Clear
-                                            </Button>
-                                        )}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col xs={12} style={{textAlign: "center"}}>
-                                        <FormError
-                                            yupError={formProps.errors.term}
-                                            formikTouched={formProps.touched.term}
-                                            stateError={errors?.term}
-                                        /> 
-                                    </Col>
-                                </Row>
-                            </Container>
-                        </Form>
-                    )}
-                </Formik> */}
+                                            )
+                                        } 
+                                    />
+                                </SearchContainer>
+                            </Column>
+                            <Column md={12} lg={4}>
+                                <Button 
+                                    type="submit" 
+                                    disabled={submitting.search}
+                                >
+                                    Search 
+                                </Button>
+                                <SelectInput {...searchForm.register("column", { required: true })}>
+                                    {
+                                        props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
+                                            return (
+                                                <option key={column.value} value={column.value}>{column.label}</option>
+                                            )
+                                        })
+                                    }
+                                </SelectInput>
+                                {search.term && (
+                                    <Button 
+                                        type="button"
+                                        btype={BTYPES.INVERTED}
+                                        color={theme.colors.yellow}
+                                        onClick={() => clearSearch()}
+                                    >
+                                        Clear
+                                    </Button>
+                                )}
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} align="center">
+                                <FormError error={searchForm.formState.errors.search} /> 
+                            </Column>
+                        </Row>
+                    </Grid>
+                </form>
+                
                 {itemCount === 0 && (
                     <Body color={theme.colors.red} bold size={SIZES.LG}>No items yet!</Body>
                 )}
@@ -726,6 +714,7 @@ export default function DataManager(props) {
                                                             <Button 
                                                                 type="button"
                                                                 size={SIZES.SM} 
+                                                                color={theme.colors.red}
                                                                 onClick={() => toggleModal(false, i)}
                                                             >
                                                                 <CgClose /> Close 
@@ -771,7 +760,7 @@ export default function DataManager(props) {
                     <Hr/>
                     <Grid fluid>
                         <Row align="center" justify="center">
-                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
+                            <Column sm={12} md={4} align="center">
                                 {currentPage !== 1 && (
                                     <Button 
                                         size={SIZES.SM}
@@ -782,7 +771,7 @@ export default function DataManager(props) {
                                     </Button>
                                 )}
                             </Column>
-                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
+                            <Column sm={12} md={4} align="center">
                                 <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
                                 <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
                                 <Body margin="10px 0" size={SIZES.SM}>
@@ -806,7 +795,7 @@ export default function DataManager(props) {
                                     )}
                                 </Body>
                             </Column>
-                            <Column xs={12} sm={4} style={{textAlign: "center"}}>
+                            <Column sm={12} md={4} align="center">
                                 {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
                                     <Button 
                                         size={SIZES.SM}

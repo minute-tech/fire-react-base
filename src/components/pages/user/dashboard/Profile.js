@@ -10,17 +10,17 @@ import { useTheme } from "styled-components";
 import { AiOutlineReload } from "react-icons/ai";
 import { BiCheck } from "react-icons/bi";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
-import { Hr, Img, ModalCard, ModalContainer } from "../../../../utils/styles/misc.js";
-import { FField } from "../../../../utils/styles/forms.js";
+import { Column, Grid, Hr, ModalCard, ModalContainer, Row } from "../../../../utils/styles/misc.js";
+import { Img } from "../../../../utils/styles/images.js";
+import { TextInput, Button } from "../../../../utils/styles/forms.js";
 import { Body, H1, Label, LLink } from "../../../../utils/styles/text.js";
-import { Button } from "../../../../utils/styles/buttons.js";
 import { FormError } from "../../../misc/Misc.js";
-import { BTYPES, SCHEMES, SIZES } from "../../../../utils/constants.js";
+import { BTYPES, INPUT, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore } from "../../../../Fire";
 import FileUpload from "../../../misc/FileUpload";
 import { readTimestamp } from "../../../../utils/misc";
-import { useNavigate } from "react-router-dom";
 
 function Profile(props) {
     const theme = useTheme();
@@ -30,12 +30,14 @@ function Profile(props) {
         file: false
     });
 
-    const [errors, setErrors] = useState({ 
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        file: ""
+    const updateUserForm = useForm({
+        defaultValues: {
+            firstName: props.user.firstName,
+            lastName: props.user.lastName,
+            email: props.user.email,
+            phone: props.user.phone,
+            avatar: props.user.avatar || "",
+        }
     });
 
     const [shownModals, setShownModals] = useState([false]); 
@@ -47,19 +49,18 @@ function Profile(props) {
         return clearTimeout(verifyEmailTimer.current);
     }, [])
 
-    const updateUserProfile = (values) => {
+    const updateUser = (data) => {
         updateDoc(doc(firestore, "users", props.fireUser.uid), {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            phone: values.phone
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            phone: data.phone
         }).then(() => {
             console.log("Successful update of user doc to Firestore.");
             updateProfile(auth.currentUser, {
-                displayName: `${values.firstName} ${values.lastName}`,
-                // phoneNumber: values.phone,
-                email: values.email,
-                // photoURL: "https://example.com/jane-q-user/profile.jpg"
+                displayName: `${data.firstName} ${data.lastName}`,
+                // phoneNumber: data.phone,
+                email: data.email,
             }).then(() => {
                 toast.success(`Successfully updated the user profile.`);
                 console.log("Successfully updated the user profile on firebase");
@@ -143,15 +144,11 @@ function Profile(props) {
             console.log(`Successfully sent a verification email to ${props.fireUser.email}.`);
             setEmailVerifySent(true)
             verifyEmailTimer.current = setTimeout(() => {
-                console.log("time up")
                 setRefreshButtonShown(true)
             }, 8000);
         }).catch((error) => {
             console.error(error);
         });
-
-
-
     }
     
     const toggleModal = (newStatus, index) => {
@@ -171,260 +168,206 @@ function Profile(props) {
                 </Button>
             </LLink>
             <H1>Profile</H1>
-            {/* <Formik
-                initialValues={{
-                    firstName: props.user.firstName,
-                    lastName: props.user.lastName,
-                    email: props.user.email,
-                    phone: props.user.phone
-                }}
-                enableReinitialize={true}
-                validationSchema={updateProfileSchema}
-                onSubmit={(values) => {
-                    setSubmitting(prevState => ({
-                        ...prevState,
-                        updateUser: false
-                    }));
-                    updateUserProfile(values);
-                }}
-            >
-                {formProps => (
-                <Form>
-                    <Container fluid>
-                        <Row style={{ height: "200px", textAlign: "center" }}>
-                            <Col xs={12}>
-                                <Img 
-                                    src={props.user.avatar || require("../../../../assets/images/misc/user.png")}
-                                    rounded
-                                    alt={`${props.user.firstName} profile picture`}
-                                    width={"200px"}
-                                />
-                            </Col>
-                        </Row>
-                        <Row style={{ textAlign: "center" }}>
-                            <Col xs={12}>
+            <form onSubmit={ updateUserForm.handleSubmit(updateUser) }>
+                <Grid fluid>
+                    <Row style={{ height: "200px" }}>
+                        <Column sm={12} align="center">
+                            <Img 
+                                src={props.user.avatar || require("../../../../assets/images/misc/user.png")}
+                                rounded
+                                alt={`${props.user.firstName} profile picture`}
+                                width={"200px"}
+                            />
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column sm={12} align="center">
+                            <Button 
+                                type="button"
+                                btype={BTYPES.TEXTED} 
+                                color={theme.colors.yellow}
+                                onClick={() => toggleModal(true, 0)}>
+                                    update picture
+                            </Button>
+                        </Column>
+                    </Row>
+                    <Hr/>
+                    <Row>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.FIRST_NAME.VALUE} br>First Name:</Label>
+                            <TextInput
+                                type="text" 
+                                placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
+                                error={updateUserForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
+                                {
+                                    ...updateUserForm.register(INPUT.FIRST_NAME.VALUE, { 
+                                            required: INPUT.FIRST_NAME.ERRORS.REQUIRED,
+                                            maxLength: {
+                                                value: INPUT.FIRST_NAME.ERRORS.MAX.VALUE,
+                                                message: INPUT.FIRST_NAME.ERRORS.MAX.MESSAGE
+                                            },
+                                            minLength: {
+                                                value: INPUT.FIRST_NAME.ERRORS.MIN.VALUE,
+                                                message: INPUT.FIRST_NAME.ERRORS.MIN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={updateUserForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
+                        </Column>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.LAST_NAME.VALUE} br>Last Name:</Label>
+                            <TextInput
+                                type="text" 
+                                placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
+                                error={updateUserForm.formState.errors[INPUT.LAST_NAME.VALUE]}
+                                {
+                                    ...updateUserForm.register(INPUT.LAST_NAME.VALUE, { 
+                                            required: INPUT.LAST_NAME.ERRORS.REQUIRED,
+                                            maxLength: {
+                                                value: INPUT.LAST_NAME.ERRORS.MAX.VALUE,
+                                                message: INPUT.LAST_NAME.ERRORS.MAX.MESSAGE
+                                            },
+                                            minLength: {
+                                                value: INPUT.LAST_NAME.ERRORS.MIN.VALUE,
+                                                message: INPUT.LAST_NAME.ERRORS.MIN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={updateUserForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                            <TextInput
+                                type="text" 
+                                error={updateUserForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                placeholder={INPUT.EMAIL.PLACEHOLDER} 
+                                {
+                                    ...updateUserForm.register(INPUT.EMAIL.VALUE, { 
+                                            required: INPUT.EMAIL.ERRORS.REQUIRED,
+                                            pattern: {
+                                                value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={updateUserForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                        </Column>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.PHONE.VALUE} br>Phone:</Label>
+                            <TextInput
+                                type="text" 
+                                error={updateUserForm.formState.errors[INPUT.PHONE.VALUE]}
+                                placeholder={INPUT.PHONE.PLACEHOLDER} 
+                                {
+                                    ...updateUserForm.register(INPUT.PHONE.VALUE, { 
+                                            maxLength: {
+                                                value: INPUT.PHONE.ERRORS.MAX.VALUE,
+                                                message: INPUT.PHONE.ERRORS.MAX.MESSAGE
+                                            },
+                                            minLength: {
+                                                value: INPUT.PHONE.ERRORS.MIN.VALUE,
+                                                message: INPUT.PHONE.ERRORS.MIN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={updateUserForm.formState.errors[INPUT.PHONE.VALUE]} /> 
+                        </Column>
+                    </Row>               
+                    <Row>
+                        <Column md={12} align="center">
+                            {updateUserForm.formState.isDirty && (
                                 <Button 
-                                    type="button"
-                                    btype={BTYPES.TEXTED} 
-                                    color={theme.colors.yellow}
-                                    onClick={() => toggleModal(true, 0)}>
-                                        update picture
-                                </Button>
-                                <Hr/>
-                                {shownModals[0] && (
-                                    <ModalContainer onClick={() => toggleModal(false, 0)}>
-                                        <ModalCard onClick={(e) => e.stopPropagation()}>
-                                            <Label>Update profile avatar</Label>
-                                            <Body>Select a new picture from your machine:</Body>
-                                            <FileUpload
-                                                theme={theme}
-                                                name="avatar"
-                                                selectBtn=""
-                                                accepts="image/png, image/jpg, image/jpeg" 
-                                                onUploadSuccess={updateAvatar}
-                                                user={props.user}
-                                                setSubmitting={setSubmitting}
-                                                submitting={submitting}
-                                                setErrors={setErrors}
-                                                errors={errors}
-                                            />
-                                            
-                                            <Hr />
-                                            <Button 
-                                                type="button"
-                                                size={SIZES.SM} 
-                                                onClick={() => toggleModal(false, 0)}
-                                            >
-                                                <CgClose /> Close 
-                                            </Button>
-                                        </ModalCard>
-                                    </ModalContainer>
-                                )}
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px" }}>
-                            <Col sm={12} md={6}>
-                                <Label>First name:</Label>
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.FIRST_NAME}
-                                    name="firstName"
-                                    value={formProps.values.firstName || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            firstName: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            firstName: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.firstName && formProps.touched.firstName) || errors?.firstName) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.firstName}
-                                    formikTouched={formProps.touched.firstName}
-                                    stateError={errors?.firstName}
-                                /> 
-                            </Col>
-                            <Col sm={12} md={6}>
-                                <Label>Last name:</Label>
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    name="lastName"
-                                    placeholder={PLACEHOLDER.LAST_NAME}
-                                    value={formProps.values.lastName || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            lastName: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            lastName: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.lastName && formProps.touched.lastName) || errors?.lastName) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.lastName}
-                                    formikTouched={formProps.touched.lastName}
-                                    stateError={errors?.lastName}
-                                /> 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px" }}>
-                            <Col xs={12}>
-                                <Label>Email:</Label>&nbsp;
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.EMAIL}
-                                    name="email"
-                                    value={formProps.values.email || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            email: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            email: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.email && formProps.touched.email) || errors?.email) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.email}
-                                    formikTouched={formProps.touched.email}
-                                    stateError={errors?.email}
-                                /> 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px" }}>
-                            <Col xs={12}>
-                                <Label>Phone:</Label>
-                                <br/>
-                                <FField
-                                    type="phone"
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.PHONE}
-                                    name="phone"
-                                    value={formProps.values.phone || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            phone: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            phone: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.phone && formProps.touched.phone) || errors?.phone) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.phone}
-                                    formikTouched={formProps.touched.phone}
-                                    stateError={errors?.phone}
-                                /> 
-                            </Col>
-                        </Row>
-                        {formProps.dirty && (
-                            <Row center="xs">
-                                <Col xs={12}>
-                                    <Button
-                                        type="submit"
-                                        disabled={submitting.updateUser}
-                                    >
-                                        Submit changes
-                                    </Button>
-                                </Col>
-                            </Row>
-                        )}
-                        <Hr/>
-                        <Row align="center" style={{ marginBottom: "10px", textAlign: "center" }}>
-                            <Col sm={12} md={4}>
-                                <Button 
-                                    type="button"
-                                    color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
-                                    btype={BTYPES.INVERTED}
-                                    onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
+                                    type="submit" 
+                                    disabled={submitting.updateUser}
                                 >
-                                    Switch to&nbsp;
-                                    {
-                                        props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
-                                        <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
-                                        <span>{SCHEMES.DARK} mode <FaMoon /></span>
-                                    }
+                                    Submit
                                 </Button>
-                            </Col>
-                            <Col sm={12} md={4}>
-                                <Label>Account created:&nbsp;</Label> 
-                                <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
-                            </Col>
-                            <Col sm={12} md={4}>
-                                {!props.fireUser.emailVerified && !emailVerifySent && (
-                                    <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
-                                        Verify Email
-                                    </Button>
-                                )}
-                                {emailVerifySent && !refreshButtonShown && (
-                                    <Body color={theme.colors.yellow}>Email sent, check your email inbox!</Body>
-                                )}
-                                {emailVerifySent && refreshButtonShown && (
-                                    <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
-                                       <AiOutlineReload /> Reload page
-                                    </Button>
-                                )}
-                                {props.fireUser.emailVerified && (
-                                    <Body color={theme.colors.green}><BiCheck /> Email verified!</Body>
-                                )}
-                            </Col>
-                        </Row>
-                    </Container>
-                </Form>
-                )}
-            </Formik> */}
-            
-                
+                            )}
+                        </Column>
+                    </Row>
+                    <Hr/>
+                    <Row align="center" justify="center">
+                        <Column sm={12} md={4} align="center">
+                            <Button 
+                                type="button"
+                                color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
+                                btype={BTYPES.INVERTED}
+                                onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
+                            >
+                                Switch to&nbsp;
+                                {
+                                    props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
+                                    <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
+                                    <span>{SCHEMES.DARK} mode <FaMoon /></span>
+                                }
+                            </Button>
+                        </Column>
+                        <Column sm={12} md={4} align="center">
+                            <Label>Account created:&nbsp;</Label> 
+                            <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
+                        </Column>
+                        <Column sm={12} md={4} align="center">
+                            {!props.fireUser.emailVerified && !emailVerifySent && (
+                                <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
+                                    Verify Email
+                                </Button>
+                            )}
+                            {emailVerifySent && !refreshButtonShown && (
+                                <Body color={theme.colors.yellow}>Email sent, check your email inbox!</Body>
+                            )}
+                            {emailVerifySent && refreshButtonShown && (
+                                <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
+                                    <AiOutlineReload /> Reload page
+                                </Button>
+                            )}
+                            {props.fireUser.emailVerified && (
+                                <Body color={theme.colors.green}><BiCheck /> Email verified!</Body>
+                            )}
+                        </Column>
+                    </Row>
+                </Grid>
+            </form>
+                       
+            {shownModals[0] && (
+                <ModalContainer onClick={() => toggleModal(false, 0)}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <Label>Update profile avatar</Label>
+                        <Body>Select a new picture from your machine:</Body>
+                        <FileUpload
+                            theme={theme}
+                            name="avatar"
+                            selectBtn=""
+                            accepts="image/png, image/jpg, image/jpeg" 
+                            onUploadSuccess={updateAvatar}
+                            user={props.user}
+                            setSubmitting={setSubmitting}
+                            submitting={submitting}
+                            setError={updateUserForm.setError}
+                            clearError={updateUserForm.clearErrors}
+                            error={updateUserForm.formState.errors.avatar}
+                        />
+                        
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, 0)}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
         </>
     )
 }

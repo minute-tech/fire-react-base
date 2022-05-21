@@ -9,12 +9,11 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 
 import { firestore, auth } from "../../../../Fire.js";
-import { Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
-import { CField, FField } from '../../../../utils/styles/forms.js';
+import { Column, Grid, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
+import { CheckboxInput, CheckboxLabel, TextInput, Button } from '../../../../utils/styles/forms.js';
 import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js';
-import { Button } from '../../../../utils/styles/buttons';
 import { FormError } from '../../../misc/Misc.js';
-import { PLACEHOLDER, SCHEMES, SIZES } from '../../../../utils/constants.js';
+import { INPUT, SCHEMES, SIZES } from '../../../../utils/constants.js';
 
 function Register(props) {
     const navigate = useNavigate();
@@ -23,44 +22,35 @@ function Register(props) {
         register: false,
     }); 
 
-    const [errors, setErrors] = useState({ 
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "", 
-        policyAccept: "",
-    }); 
+    const registerForm = useForm({
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            policyAccept: false
+        }
+    });
 
-    const registerUser = (values) => {        
+    const registerUser = (data) => {        
         let termsToastId = "";
-        if (values.confirmPassword !== values.password) { 
-            setErrors(prevState => ({
-                ...prevState,
-                password: "Password do not match!",
-                confirmPassword: "Password do not match!"
-            }));            
+        if (data.confirmPassword !== data.password) { 
+            registerForm.setError(INPUT.CONFIRM_PASSWORD.VALUE, { 
+                type: INPUT.CONFIRM_PASSWORD.ERRORS.NO_MATCH.TYPE, 
+                message: INPUT.CONFIRM_PASSWORD.ERRORS.NO_MATCH.MESSAGE
+            });   
             setSubmitting(prevState => ({
                 ...prevState,
                 register: false
             }));
-        } else if(!values.policyAccept){
-            termsToastId = toast.warn("Please read and accept our Privacy Policy and Terms & Conditions below.");
-            setSubmitting(prevState => ({
-                ...prevState,
-                register: false
-            }));
-            setErrors(prevState => ({
-                ...prevState,
-                policyAccept: "Please accept the policies by checking the box above.",
-            }));   
         } else {
             const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
             window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
                 'size': 'normal',
-                'callback': async (response) => {
+                'callback': async (response) => { 
                     props.setIsLoggingIn(true);
-                    await createUserWithEmailAndPassword(auth, values.email, values.password)
+                    await createUserWithEmailAndPassword(auth, data.email, data.password)
                         .then(async (userCredential) => {
                             // Register approved
                             const tempUser = userCredential.user;
@@ -69,7 +59,7 @@ function Register(props) {
 
                             // Set displayName on Firebase auth user object
                             await updateProfile(auth.currentUser, {
-                                displayName: (values.firstName + " " + values.lastName)
+                                displayName: (data.firstName + " " + data.lastName)
                             }).then(() => {
                                 console.log("Successfully added display name to Firebase.");
                             }).catch((error) => {
@@ -79,10 +69,10 @@ function Register(props) {
 
                             // Create Firestore doc
                             await setDoc(doc(firestore, "users", tempUser.uid), {
-                                firstName: values.firstName,
-                                lastName: values.lastName,
-                                email: values.email,
-                                phone: values.phone,
+                                firstName: data.firstName,
+                                lastName: data.lastName,
+                                email: data.email,
+                                phone: "",
                                 flags: {
                                     themeScheme: window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT
                                 },
@@ -102,10 +92,10 @@ function Register(props) {
                         }).catch((error) => {
                             console.log("Error: " + error.message);
                             if(error.code === "auth/email-already-in-use"){
-                                setErrors(prevState => ({
-                                    ...prevState,
-                                    email: "Email already registered! Try logging in or use another email address.",
-                                }));   
+                                registerForm.setError(INPUT.EMAIL.VALUE, { 
+                                    type: INPUT.EMAIL.ERRORS.TAKEN.TYPE, 
+                                    message: INPUT.EMAIL.ERRORS.TAKEN.MESSAGE
+                                });
                             } else {
                                 toast.error(`Error adding creating account: ${error.message}`);
                             }
@@ -146,242 +136,167 @@ function Register(props) {
                 </Button>
             </LLink>
             <H1>Register</H1>
-            {/* <Formik
-                initialValues={{
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phone: "",
-                    password: "",
-                    confirmPassword: "",
-                    policyAccept: false,
-                }}
-                onSubmit={(values) => {
-                    setSubmitting(prevState => ({
-                        ...prevState,
-                        register: true
-                    }));
-                    registerUser(values);
-                }}
-                enableReinitialize={false}
-                validationSchema={userRegisterSchema}
-            >
-                {formProps => (
-                <Form>
-                    <Container fluid>
-                        <Row style={{ marginBottom:"10px" }}>
-                            <Col sm={12} md={6}>
-                                <Label>First name:</Label>
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.FIRST_NAME}
-                                    name="firstName"
-                                    value={formProps.values.firstName || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            firstName: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            firstName: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.firstName && formProps.touched.firstName) || errors?.firstName) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.firstName}
-                                    formikTouched={formProps.touched.firstName}
-                                    stateError={errors?.firstName}
-                                /> 
-                            </Col>
-                            <Col sm={12} md={6}>
-                                <Label>Last name:</Label>
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.LAST_NAME}
-                                    name="lastName"
-                                    value={formProps.values.lastName || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            lastName: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            lastName: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.lastName && formProps.touched.lastName) || errors?.lastName) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.lastName}
-                                    formikTouched={formProps.touched.lastName}
-                                    stateError={errors?.lastName}
-                                /> 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom:"10px" }}>
-                            <Col xs={12}>
-                                <Label>Email:</Label>&nbsp;
-                                <br/>
-                                <FField
-                                    type="text"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    placeholder={PLACEHOLDER.EMAIL}
-                                    name="email"
-                                    value={formProps.values.email || ""}
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            email: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            email: ""
-                                        }))
-                                    }
-                                    error={ ((formProps.errors.email && formProps.touched.email) || errors?.email) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.email}
-                                    formikTouched={formProps.touched.email}
-                                    stateError={errors?.email}
-                                /> 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom:"10px" }}>
-                            <Col xs={12} md={6}>
-                                <Label>Password: </Label>
-                                <FField
-                                    type="password"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    name="password"
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            confirmPassword: "",
-                                            password: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            confirmPassword: "",
-                                            password: ""
-                                        }))
-                                    }
-                                    value={formProps.values.password}
-                                    placeholder={PLACEHOLDER.PASSWORD}
-                                    error={ ((formProps.errors.password && formProps.touched.password) || errors?.password) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.password}
-                                    formikTouched={formProps.touched.password}
-                                    stateError={errors?.password}
-                                /> 
-                            </Col>
-                            <Col xs={12} md={6}>
-                                <Label>Confirm Password: </Label>
-                                <FField
-                                    type="password"
-                                    required
-                                    onChange={formProps.handleChange}
-                                    name="confirmPassword"
-                                    onKeyUp={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            confirmPassword: "",
-                                            password: ""
-                                        }))
-                                    }
-                                    onClick={() => 
-                                        setErrors(prevState => ({
-                                            ...prevState,
-                                            confirmPassword: "",
-                                            password: ""
-                                        }))
-                                    }
-                                    value={formProps.values.confirmPassword}
-                                    placeholder={PLACEHOLDER.PASSWORD}
-                                    error={ ((formProps.errors.confirmPassword && formProps.touched.confirmPassword) || errors?.confirmPassword) ? 1 : 0 }
-                                />
-                                <FormError
-                                    yupError={formProps.errors.confirmPassword}
-                                    formikTouched={formProps.touched.confirmPassword}
-                                    stateError={errors?.confirmPassword}
-                                /> 
-                            </Col>
-                        </Row>
-                        <Row 
-                            style={{ marginBottom: "10px", textAlign: "center" }}
-                            onKeyUp={() => 
-                                setErrors(prevState => ({
-                                    ...prevState,
-                                    policyAccept: ""
-                                }))
-                            }
-                            onClick={() => 
-                                setErrors(prevState => ({
-                                    ...prevState,
-                                    policyAccept: ""
-                                }))
-                            }
-                        >
-                            <Col>
-                                <CField
-                                    type="checkbox"
-                                    name="policyAccept"
-                                />
-                                <Body display="inline-block" margin="0 0 10px 0">
-                                    I accept the&nbsp;
-                                    <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
-                                    <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
-                                </Body>
-                                <FormError stateError={errors?.policyAccept} /> 
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px", textAlign: "center" }}>
-                            <Col xs={12}>
-                                <Button 
-                                    type="submit"
-                                    disabled={submitting.register}
-                                >
-                                    Submit
-                                </Button>
-                            </Col>
-                        </Row>
-                        <Row style={{ marginBottom: "10px", textAlign: "center" }}>
-                            <Col xs={12}>
-                                <LLink to="/login">
-                                    Already have an account?
-                                </LLink>
-                            </Col>
-                        </Row>
-                        <Row style={{ textAlign: "center" }}>
-                            <Col xs={12}>
-                                <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
-                                <Recaptcha id="recaptcha" />
-                            </Col>
-                        </Row>
-                    </Container>
-                </Form>
-                )}
-            </Formik> */}
+            <form onSubmit={ registerForm.handleSubmit(registerUser) }>
+                <Grid fluid>
+                    <Row>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.FIRST_NAME.VALUE} br>First Name:</Label>
+                            <TextInput
+                                type="text" 
+                                placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
+                                error={registerForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
+                                {
+                                    ...registerForm.register(INPUT.FIRST_NAME.VALUE, { 
+                                            required: INPUT.FIRST_NAME.ERRORS.REQUIRED,
+                                            maxLength: {
+                                                value: INPUT.FIRST_NAME.ERRORS.MAX.VALUE,
+                                                message: INPUT.FIRST_NAME.ERRORS.MAX.MESSAGE
+                                            },
+                                            minLength: {
+                                                value: INPUT.FIRST_NAME.ERRORS.MIN.VALUE,
+                                                message: INPUT.FIRST_NAME.ERRORS.MIN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={registerForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
+                        </Column>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.LAST_NAME.VALUE} br>Last Name:</Label>
+                            <TextInput
+                                type="text" 
+                                placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
+                                error={registerForm.formState.errors[INPUT.LAST_NAME.VALUE]}
+                                {
+                                    ...registerForm.register(INPUT.LAST_NAME.VALUE, { 
+                                            required: INPUT.LAST_NAME.ERRORS.REQUIRED,
+                                            maxLength: {
+                                                value: INPUT.LAST_NAME.ERRORS.MAX.VALUE,
+                                                message: INPUT.LAST_NAME.ERRORS.MAX.MESSAGE
+                                            },
+                                            minLength: {
+                                                value: INPUT.LAST_NAME.ERRORS.MIN.VALUE,
+                                                message: INPUT.LAST_NAME.ERRORS.MIN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={registerForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column sm={12}>
+                            <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                            <TextInput
+                                type="text" 
+                                error={registerForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                placeholder={INPUT.EMAIL.PLACEHOLDER} 
+                                {
+                                    ...registerForm.register(INPUT.EMAIL.VALUE, { 
+                                            required: INPUT.EMAIL.ERRORS.REQUIRED,
+                                            pattern: {
+                                                value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
+                                            },
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={registerForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.PASSWORD.VALUE} br>Password:</Label>
+                            <TextInput
+                                type="password"
+                                placeholder={INPUT.PASSWORD.PLACEHOLDER} 
+                                error={registerForm.formState.errors[INPUT.PASSWORD.VALUE]}
+                                { 
+                                    ...registerForm.register(INPUT.PASSWORD.VALUE, {
+                                        required: INPUT.PASSWORD.ERRORS.REQUIRED,
+                                        maxLength: {
+                                            value: INPUT.PASSWORD.ERRORS.MAX.VALUE,
+                                            message: INPUT.PASSWORD.ERRORS.MAX.MESSAGE
+                                        },
+                                        minLength: {
+                                            value: INPUT.PASSWORD.ERRORS.MIN.VALUE,
+                                            message: INPUT.PASSWORD.ERRORS.MIN.MESSAGE
+                                        },
+                                    })
+                                } 
+                            />
+                            <FormError error={registerForm.formState.errors[INPUT.PASSWORD.VALUE]} /> 
+                        </Column>
+                        <Column sm={12} md={6}>
+                            <Label htmlFor={INPUT.CONFIRM_PASSWORD.VALUE} br>Confirm Password:</Label>
+                            <TextInput
+                                type="password"
+                                placeholder={INPUT.CONFIRM_PASSWORD.PLACEHOLDER} 
+                                error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.VALUE]}
+                                { 
+                                    ...registerForm.register(INPUT.CONFIRM_PASSWORD.VALUE, {
+                                        required: INPUT.CONFIRM_PASSWORD.ERRORS.REQUIRED,
+                                        maxLength: {
+                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MAX.VALUE,
+                                            message: INPUT.CONFIRM_PASSWORD.ERRORS.MAX.MESSAGE
+                                        },
+                                        minLength: {
+                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MIN.VALUE,
+                                            message: INPUT.CONFIRM_PASSWORD.ERRORS.MIN.MESSAGE
+                                        },
+                                    })
+                                } 
+                            />
+                            <FormError error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.VALUE]} /> 
+                        </Column>
+                    </Row>                        
+                    <Row>
+                        <Column sm={12} align="center">
+                            <CheckboxInput
+                                type="checkbox"
+                                error={registerForm.formState.errors.policyAccept}
+                                {
+                                    ...registerForm.register("policyAccept", {
+                                        required: "Please accept the policies by checking the box above.",
+                                    })
+                                } 
+                            />
+                            <CheckboxLabel>
+                                I accept the&nbsp;
+                                <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
+                                <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
+                            </CheckboxLabel>
+                            <FormError error={registerForm.formState.errors.policyAccept} /> 
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column md={12} align="center">
+                            <Button 
+                                type="submit" 
+                                disabled={submitting.register}
+                            >
+                                Submit
+                            </Button>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column md={12} align="center">
+                            <LLink to="/login">
+                                Already have an account?
+                            </LLink>
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column md={12} align="center">
+                            <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
+                            <Recaptcha id="recaptcha" />
+                        </Column>
+                    </Row>
+                </Grid>
+            </form>
         </Wrapper>
     )
 }

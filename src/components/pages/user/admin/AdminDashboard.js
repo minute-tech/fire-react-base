@@ -4,7 +4,7 @@ import { BiMessageCheck } from "react-icons/bi"
 import { FaChevronLeft, FaSitemap, FaUserAlt } from 'react-icons/fa'
 import { Helmet } from 'react-helmet-async'
 
-import { Button } from '../../../../utils/styles/buttons'
+import { Button } from '../../../../utils/styles/forms'
 import { Hr } from '../../../../utils/styles/misc'
 import { H1, LLink } from '../../../../utils/styles/text'
 

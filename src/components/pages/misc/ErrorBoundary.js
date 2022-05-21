@@ -1,7 +1,7 @@
 import React from 'react';
 import { AiOutlineReload } from 'react-icons/ai';
 
-import { Button } from '../../../utils/styles/buttons';
+import { Button } from '../../../utils/styles/forms';
 import { Centered, Hr, Wrapper } from '../../../utils/styles/misc';
 import { ALink, Body, H2, Label } from '../../../utils/styles/text';
 

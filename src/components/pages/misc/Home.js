@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useTheme } from 'styled-components';
 
 import { BTYPES, SIZES } from '../../../utils/constants.js';
-import { Button } from '../../../utils/styles/buttons';
+import { Button } from '../../../utils/styles/forms';
 import { HillSeparators, Path, Squiggle, Svg } from '../../../utils/styles/images.js';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Column, Grid, Hr, Wrapper, Row, Centered, FullWidthLine } from '../../../utils/styles/misc';
 import { Body, H1, H3, LLink } from '../../../utils/styles/text';
@@ -76,7 +76,7 @@ function Home(props){
             <Centered>
                 <Svg 
                     viewBox="0 0 1366 221"
-                    maxWidth="60%"
+                    maxWidth="50%"
                 >
                     <Path fill={theme.colors.primary} d={Squiggle}/>
                 </Svg>
@@ -85,7 +85,7 @@ function Home(props){
                 <H1>Grid System</H1>
                 <Grid fluid>
                     <Row>
-                        <Column xs={12} align="center" background={theme.colors.primary}>
+                        <Column sm={12} align="center" background={theme.colors.primary}>
                             <H3>Column 1</H3>
                             <Body>More information below</Body>
                         </Column>

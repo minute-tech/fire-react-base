@@ -7,7 +7,7 @@ import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'
 
-import { Button } from '../../../../utils/styles/buttons'
+import { Button } from '../../../../utils/styles/forms'
 import { BTYPES, DEFAULT_SITE } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 import { Body, H1, LLink } from '../../../../utils/styles/text'

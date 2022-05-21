@@ -5,11 +5,10 @@ import { CgAttachment } from "react-icons/cg";
 import { BiCheck } from 'react-icons/bi';
 
 import { storage } from "../../Fire";
-import {  FileInput, FileInputLabel } from "../../utils/styles/forms.js";
+import {  FileInput, FileInputLabel, Button } from "../../utils/styles/forms.js";
 import { Body, Label } from '../../utils/styles/text';
-import { Progress } from '../../utils/styles/misc';
+import { Div, Progress } from '../../utils/styles/misc';
 import { Img } from '../../utils/styles/images';
-import { Button } from '../../utils/styles/buttons';
 import { FormError } from './Misc';
 import { SIZES } from '../../utils/constants';
 
@@ -18,6 +17,7 @@ function FileUpload(props) {
     const [uploadProgress, setUploadProgress] = useState("");
 
     const handleFileSelect = (e) => {
+        props.clearError(props.name);
         let passed = true;
         const mbLimit = 5;
         console.log("files: ")
@@ -32,10 +32,10 @@ function FileUpload(props) {
                 if(passed){
                     setFiles(arr);
                 } else {
-                    props.setErrors(prevState => ({
-                        ...prevState,
-                        file: `Some files selected exceed the accept file size limit of ${mbLimit}Mb. Please only select files below this file size to continue.`
-                    }))
+                    props.setError(props.name, { 
+                        type: "big-file", 
+                        message: `Some files selected exceed the accept file size limit of ${mbLimit}Mb. Please only select files below this file size to continue.`
+                    });
                     setFiles("")
                 }
             }
@@ -101,34 +101,34 @@ function FileUpload(props) {
                             switch (error.code) {
                                 case "storage/unauthorized":
                                 console.log("User doesn't have permission to access the object");
-                                props.setErrors(prevState => ({
-                                    ...prevState,
-                                    file: "User doesn't have permission to access the object."
-                                }))
+                                props.setError(props.name, { 
+                                    type: "storage/unauthorized", 
+                                    message: "User doesn't have permission to access the object."
+                                });
                                 break;
 
                                 case "storage/canceled":
                                 console.log("User canceled the upload");
-                                props.setErrors(prevState => ({
-                                    ...prevState,
-                                    file: "User canceled the upload."
-                                }))
+                                props.setError(props.name, { 
+                                    type: "storage/canceled", 
+                                    message: "User canceled the upload."
+                                });
                                 break;
                         
                                 case "storage/unknown":
                                 console.log("Unknown error occurred, inspect error.serverResponse");
-                                props.setErrors(prevState => ({
-                                    ...prevState,
-                                    file: `Unknown error, contact ${props.site.emails.support}`
-                                }))
+                                props.setError(props.name, { 
+                                    type: "storage/unknown", 
+                                    message: `Unknown error, contact ${props.site.emails.support}`
+                                });
                                 break;
 
                                 default:
                                 console.log("Default case upload snapshot...");
-                                props.setErrors(prevState => ({
-                                    ...prevState,
-                                    file: `Default error, contact ${props.site.emails.support}`
-                                }))
+                                props.setError(props.name, { 
+                                    type: "storage/unknown", 
+                                    message: `Default error, contact ${props.site.emails.support}`
+                                });
                                 break;
                             }
                             
@@ -149,10 +149,10 @@ function FileUpload(props) {
                         }
                     );
                 } else {
-                    props.setErrors(prevState => ({
-                        ...prevState,
-                        file: `A picture selected is not a square aspect ratio. Please only select pictures that are a square. (i.e. 300px tall by 300px wide is a square)`
-                    }))
+                    props.setError(props.name, { 
+                        type: "invalid-aspect-ratio", 
+                        message: "A picture selected is not a square aspect ratio. Please only select pictures that are a square. (i.e. 300px tall by 300px wide is a square)"
+                    });
                     props.setSubmitting(prevState => ({
                         ...prevState,
                         file: false
@@ -167,18 +167,6 @@ function FileUpload(props) {
             <FileInputLabel htmlFor={props.name} selected={files.length > 0 ? true : false}>
             {props.selectBtn ? props.selectFileBtn : <><CgAttachment /> Select a new file </>}
                 <FileInput
-                    onKeyUp={() => 
-                        props.setErrors(prevState => ({
-                            ...prevState,
-                            file: ""
-                        }))
-                    }
-                    onClick={() => 
-                        props.setErrors(prevState => ({
-                            ...prevState,
-                            file: ""
-                        }))
-                    }
                     id={props.name} 
                     type="file" 
                     accept={props.accepts} 
@@ -232,19 +220,21 @@ function FileUpload(props) {
                         </div>
                     </Progress>
                 )}
-                {files.length > 0 && (
-                    <Button 
+            </FileInputLabel>
+            
+            {files.length > 0 && (
+                <Div>
+                     <Button 
                         type="button" 
                         disabled={props.submitting.file}
                         onClick={() => uploadFile(files[0])}
                     >
                         Upload &amp; Save {props.name} &nbsp;<BsCloudUpload size={20} />
                     </Button>
-                )}
-            </FileInputLabel>
-            
-            {props.errors.file && (
-                <><Body display="inline" size={SIZES.LG} color={props.theme.colors.red}><b>Error</b>:</Body> <FormError stateError={props.errors.file} /></>
+                </Div>
+            )}
+            {props.error && (
+                <><Body display="inline" size={SIZES.LG} color={props.theme.colors.red}><b>Error</b>:</Body>  <FormError error={props.error} /> </>
             )}
         </div>
     )

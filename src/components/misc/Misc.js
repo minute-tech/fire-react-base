@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import { useLocation } from "react-router-dom";
 
@@ -32,8 +32,8 @@ export function FormError(props) {
 }
 
 export function StartAtTop() {
-    const { pathname, hash, key } = useLocation();
-    let timer = null;
+    const { pathname, hash } = useLocation();
+    let hashTimer = useRef();
     useEffect(() => {
         // if not a hash link, scroll to top
         if (hash === "") {
@@ -41,16 +41,16 @@ export function StartAtTop() {
         window.scrollTo(0, 0);
       } else {
         // else scroll to id
-        timer = setTimeout(() => {
+        hashTimer.current = setTimeout(() => {
           const id = hash.replace("#", "");
           const element = document.getElementById(id);
           if (element) {
             element.scrollIntoView({ behavior: "smooth"});
           }
-        }, 500);
+        }, 100);
       }
 
-      return timer;
+      return clearTimeout(hashTimer.current);
     }, [pathname, hash])
 
     return null;

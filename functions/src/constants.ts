@@ -8,6 +8,10 @@ export const INPUT = {
             PATTERN: {
                 MESSAGE: "This doesn't look like a valid email address.",
                 VALUE: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            },
+            TAKEN: {
+                MESSAGE: "Email already registered! Try logging in or use another email address.",
+                TYPE: "taken"
             }
         }
     },
@@ -18,11 +22,11 @@ export const INPUT = {
         ERRORS: {
             REQUIRED: "A phone number is required!",
             MAX: {
-                MESSAGE: "The phone can only be 25 characters long.",
+                MESSAGE: "The phone number can only be 25 characters long.",
                 VALUE: 25
             },
             MIN: {
-                MESSAGE: "The password must be at least 4 characters long.",
+                MESSAGE: "The phone number must be at least 4 characters long.",
                 VALUE: 4
             }
         }
@@ -56,6 +60,10 @@ export const INPUT = {
             MIN: {
                 MESSAGE: "The password must be at least 6 characters long.",
                 VALUE: 6
+            },
+            NO_MATCH: {
+                TYPE: "no-match",
+                MESSAGE: "The passwords entered must match!"
             }
         }
     },

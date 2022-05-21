@@ -9,12 +9,11 @@ import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 
 import { auth } from "../../../../Fire.js";
-import { LgContainer, ModalCard, ModalContainer, Recaptcha, Wrapper } from '../../../../utils/styles/misc.js';
+import { Column, Grid, LgContainer, ModalCard, ModalContainer, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
 import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
-// import { FField, Input } from '../../../../utils/styles/forms.js';
-import { Button } from '../../../../utils/styles/buttons.js';
 import { FormError } from '../../../misc/Misc';
-import { SIZES } from '../../../../utils/constants.js';
+import { INPUT, SIZES } from '../../../../utils/constants.js';
+import { TextInput, Button } from '../../../../utils/styles/forms.js';
 
 function UserLogin(props) {
     const navigate = useNavigate();
@@ -27,28 +26,19 @@ function UserLogin(props) {
     
     const loginForm = useForm({
         defaultValues: {
-            name: "",
             email: "",
-            body: "",
-            policyAccept: false
+            password: "",
         }
     });
 
-    // ** Usage **
-    // setSubmitting(prevState => ({
-    //     ...prevState,
-    //     login: false
-    // }));
-
-
-    const loginUser = (values) => {
+    const loginUser = (data) => {
         const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
         window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
             'size': 'normal',
             'callback': (response) => {
                  // reCAPTCHA solved, allow signIn.
                  props.setIsLoggingIn(true);
-                 signInWithEmailAndPassword(auth, values.email, values.password)
+                 signInWithEmailAndPassword(auth, data.email, data.password)
                     .then((userCredential) => {
                         // Signed in 
                         const tempUser = userCredential.user;
@@ -116,55 +106,61 @@ function UserLogin(props) {
                 </Button>
             </LLink>
             <LgContainer>
-                <H1>Login</H1>
-                {/* <form onSubmit={ contactForm.handleSubmit(submitMessage) }>
+                <form onSubmit={ loginForm.handleSubmit(loginUser) }>
                     <Grid fluid>
-                        <Row>
-                            <Column sm={12} md={6}>
-                                <Label htmlFor="email" br>Email:</Label>
-                                <TextInput 
+                        <Row justify="center">
+                            <Column md={12} lg={8}>
+                                <H1>Login</H1>
+                            </Column>
+                        </Row>
+                        <Row justify="center">
+                            <Column md={12} lg={8}>
+                                <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                                <TextInput
                                     type="text" 
-                                    placeholder={PLACEHOLDER.EMAIL} 
+                                    error={loginForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                    placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                     {
-                                        ...contactForm.register("email", { 
-                                                required: "An email is required!",
+                                        ...loginForm.register(INPUT.EMAIL.VALUE, { 
+                                                required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                 pattern: {
-                                                    value: REGEX.EMAIL,
-                                                    message: "This doesn't look like a valid email address."
+                                                    value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                    message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                 },
                                             }
                                         )
                                     } 
                                 />
-                                <FormError error={contactForm.formState.errors.email} /> 
+                                <FormError error={loginForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
                             </Column>
                         </Row>
-                        <Row>
-                            <Column sm={12} md={6}>
-                                <Label htmlFor="password" br>Password:</Label>
-                                <TextInput 
-                                    type="password" 
-                                    placeholder={PLACEHOLDER.PASSWORD} 
+                        <Row justify="center">
+                            <Column md={12} lg={8}>
+                                <Label htmlFor={INPUT.PASSWORD.VALUE} br>Password:</Label>
+                                <TextInput
+                                    type="password"
+                                    error={loginForm.formState.errors[INPUT.PASSWORD.VALUE]}
+                                    placeholder={INPUT.PASSWORD.PLACEHOLDER} 
                                     { 
-                                        ...contactForm.register("password", {
-                                            required: "A password is required!",
+                                        ...loginForm.register(INPUT.PASSWORD.VALUE, {
+                                            required: INPUT.PASSWORD.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: 50,
-                                                message: "The password can only be 150 characters long."
+                                                value: INPUT.PASSWORD.ERRORS.MAX.VALUE,
+                                                message: INPUT.PASSWORD.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: 6,
-                                                message: "The password must be at least 2 characters long."
+                                                value: INPUT.PASSWORD.ERRORS.MIN.VALUE,
+                                                message: INPUT.PASSWORD.ERRORS.MIN.MESSAGE
                                             },
                                         })
                                     } 
                                 />
-                                <FormError error={contactForm.formState.errors.password} /> 
+                                <FormError error={loginForm.formState.errors[INPUT.PASSWORD.VALUE]} /> 
                             </Column>
                             
                         </Row>
                         <Row>
-                            <Column xs={12} align="center">
+                            <Column md={12} align="center">
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.login}
@@ -173,134 +169,44 @@ function UserLogin(props) {
                                 </Button>
                             </Column>
                         </Row>
+                        <Row>
+                            <Column md={12} align="center">
+                                <LLink to="/register">
+                                    Don't have an account?
+                                </LLink>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column md={12} align="center">
+                                <SLink onClick={() => toggleModal()}>Forgot password?</SLink>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column md={12} align="center">
+                                <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
+                                <Recaptcha id="recaptcha" />
+                            </Column>
+                        </Row>
                     </Grid>
-                </form> */}
-                {/* <Formik
-                    initialValues={{email: "", password: ""}}
-                    validationSchema={signInSchema}
-                    onSubmit={(values) => {
-                        setSubmitting(prevState => ({
-                            ...prevState,
-                            login: true
-                        }));
-                        loginUser(values);
-                    }}
-                >
-                    {formProps => (
-                    <Form>
-                        <Container fluid>
-                            <Row style={{ marginBottom:"10px" }}>
-                                <Col xs={12}>
-                                    <Label>Email:</Label>&nbsp;
-                                    <br/>
-                                    <FField
-                                        type="text"
-                                        required
-                                        onChange={formProps.handleChange}
-                                        placeholder={PLACEHOLDER.EMAIL}
-                                        name="email"
-                                        value={formProps.values.email || ""}
-                                        onKeyUp={() => 
-                                            setErrors(prevState => ({
-                                                ...prevState,
-                                                email: ""
-                                            }))
-                                        }
-                                        onClick={() => 
-                                            setErrors(prevState => ({
-                                                ...prevState,
-                                                email: ""
-                                            }))
-                                        }
-                                        error={ ((formProps.errors.email && formProps.touched.email) || errors?.email) ? 1 : 0 }
-                                    />
-                                    <FormError
-                                        yupError={formProps.errors.email}
-                                        formikTouched={formProps.touched.email}
-                                        stateError={errors?.email}
-                                    /> 
-                                </Col>
-                            </Row>
-                            <Row style={{ marginBottom:"10px" }}>
-                                <Col xs={12}>
-                                    <Label>Password: </Label>
-                                    <FField
-                                        type="password"
-                                        required
-                                        onChange={formProps.handleChange}
-                                        name="password"
-                                        value={formProps.values.password}
-                                        placeholder={PLACEHOLDER.PASSWORD}
-                                        onKeyUp={() => 
-                                            setErrors(prevState => ({
-                                                ...prevState,
-                                                password: ""
-                                            }))
-                                        }
-                                        onClick={() => 
-                                            setErrors(prevState => ({
-                                                ...prevState,
-                                                password: ""
-                                            }))
-                                        }
-                                        error={ ((formProps.errors.password && formProps.touched.password) || errors?.password) ? 1 : 0 }
-                                    />
-                                    <FormError
-                                        yupError={formProps.errors.password}
-                                        formikTouched={formProps.touched.password}
-                                        stateError={errors?.password}
-                                    /> 
-                                </Col>
-                            </Row>
-                            <Row style={{ marginBottom: "10px", textAlign: "center" }}>
-                                <Col xs={12}>
-                                    <Button 
-                                        type="submit"
-                                        disabled={submitting.login}
-                                    >
-                                        Log in
-                                    </Button>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginBottom: "10px", textAlign: "center" }}>
-                                <Col xs={12}>
-                                    <LLink margin="20px 0" to="/register">
-                                        Don't have an account?
-                                    </LLink>
-                                </Col>
-                            </Row>
-                            <Row style={{ marginBottom:"10px", textAlign: "center" }}>
-                                <Col xs={12}>
-                                    <SLink onClick={() => toggleModal()}>Forgot password?</SLink>
-                                </Col>
-                            </Row>
-                            <Row style={{ textAlign: "center" }}>
-                                <Col xs={12}>
-                                    <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
-                                    <Recaptcha id="recaptcha" />
-                                </Col>
-                            </Row>
-                        </Container>
-                    </Form>
-                    )}
-                </Formik> */}
+                </form>
 
                 {forgotExpanded && (
                     <ModalContainer onClick={() => toggleModal()}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
                             <H2>Forgot Password</H2>
                             <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
-                            {/* <Input 
+                            <TextInput 
                                 type="text"
-                                placeholder={PLACEHOLDER.EMAIL}
+                                placeholder={INPUT.EMAIL.PLACEHOLDER}
                                 onChange={(e) => setForgotEmail(e.target.value)} 
                                 value={forgotEmail}
-                            /> */}
+                            />
                             <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>
                                 Send password reset link
                             </Button>
                             <Button 
                                 type="button"
+                                color={theme.colors.red}
                                 size={SIZES.SM}
                                 onClick={() => toggleModal()}
                             >
@@ -308,8 +214,6 @@ function UserLogin(props) {
                             </Button>
                         </ModalCard>
                     </ModalContainer>
-
-                    
                 )}
             </LgContainer>
         </Wrapper>

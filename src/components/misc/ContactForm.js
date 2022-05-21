@@ -6,12 +6,11 @@ import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
 
 import { firestore } from "../../Fire";
-import { CheckboxInput, CheckboxLabel, TextAreaInput, TextInput } from '../../utils/styles/forms';
+import { CheckboxInput, CheckboxLabel, TextAreaInput, TextInput, Button } from '../../utils/styles/forms';
 import { FormError } from '../misc/Misc';
-import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
-import { Button } from '../../utils/styles/buttons.js';
-import { Centered, Column, Grid, Hr, Row } from '../../utils/styles/misc.js';
-import { INPUT, PLACEHOLDER, REGEX } from '../../utils/constants.js';
+import { H1, H3, Label, LLink } from '../../utils/styles/text.js';
+import { Centered, Column, Grid, Row } from '../../utils/styles/misc.js';
+import { INPUT } from '../../utils/constants.js';
 
 function ContactForm(props) {
     const theme = useTheme();
@@ -24,7 +23,6 @@ function ContactForm(props) {
         }
     });
 
-    const onSubmit = data => console.log(data);
     const [messageSent, setMessageSent] = useState(false);
     const [submitting, setSubmitting] = useState({ 
         message: false,
@@ -117,7 +115,7 @@ function ContactForm(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column xs={12}>
+                            <Column sm={12}>
                                 <Label htmlFor={INPUT.BODY.VALUE} br>{INPUT.BODY.LABEL}:</Label>
                                 <TextAreaInput 
                                     placeholder={INPUT.BODY.PLACEHOLDER}  
@@ -140,7 +138,7 @@ function ContactForm(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column xs={12} align="center">
+                            <Column sm={12} align="center">
                                 <CheckboxInput 
                                     type="checkbox"
                                     error={contactForm.formState.errors.policyAccept}
@@ -159,7 +157,7 @@ function ContactForm(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column xs={12} align="center">
+                            <Column sm={12} align="center">
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.message}

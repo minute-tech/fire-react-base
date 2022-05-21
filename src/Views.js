@@ -27,7 +27,6 @@ import ManageSite from './components/pages/user/admin/ManageSite';
 function Views(props) {
     return (
         <Routes>
-            {/* Anyone routes */}
             <Route 
                 index 
                 path="/" 

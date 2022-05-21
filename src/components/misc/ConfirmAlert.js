@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BTYPES, SIZES } from '../../utils/constants.js';
-import { Button } from '../../utils/styles/buttons'
+import { Button } from '../../utils/styles/forms'
 import { ModalCard } from '../../utils/styles/misc';
 import { Body, H2 } from '../../utils/styles/text';
 

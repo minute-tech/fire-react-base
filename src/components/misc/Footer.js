@@ -1,8 +1,8 @@
 import React from 'react';
 import { FaChevronUp } from 'react-icons/fa';
-import { Container, Row, Col } from 'react-grid-system';
 
 import { FooterContainer } from "../../utils/styles/footer";
+import { Column, Grid, Row } from '../../utils/styles/misc';
 import { LLink, SLink} from "../../utils/styles/text";
 
 function Footer(props) {
@@ -14,22 +14,22 @@ function Footer(props) {
     return (
         <>
             <FooterContainer>
-                <Container fluid>
+                <Grid fluid>
                     <Row justify="between">
-                        <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        <Column sm={12} md={4} margin="5px 0">
                             <Row>
-                                <Col lg={12} xl={4}>
+                                <Column lg={12} xl={4}>
                                     <LLink to="/privacy-policy">Privacy Policy</LLink>
-                                </Col>  
-                                <Col lg={12} xl={4}>
+                                </Column>  
+                                <Column lg={12} xl={4}>
                                     <LLink to="/terms-conditions">Terms &amp; Conditions</LLink>
-                                </Col>  
-                                <Col lg={12} xl={4}>
+                                </Column>  
+                                <Column lg={12} xl={4}>
                                     <LLink to="/credits">Credits</LLink>
-                                </Col>  
+                                </Column>  
                             </Row>
-                        </Col>
-                        <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        </Column>
+                        <Column sm={12} md={4} margin="5px 0">
                             <SLink>
                                 {props?.site?.name ?? ""}
                                 {' '}
@@ -37,14 +37,14 @@ function Footer(props) {
                                 {' '}
                                 {year}
                             </SLink>
-                        </Col>
-                        <Col xs={12} sm={4} style={{margin: "5px 0"}}>
+                        </Column>
+                        <Column sm={12} md={4} margin="5px 0">
                             <SLink onClick={() => backToTop()}>
                                 Back to top <FaChevronUp /> 
                             </SLink>
-                        </Col>
+                        </Column>
                     </Row>    
-                </Container>
+                </Grid>
             </FooterContainer>
         </>
         

@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { auth } from "../../../../Fire.js";
 import { LLink, H1, H3, Body } from '../../../../utils/styles/text.js';
-import { Button } from '../../../../utils/styles/buttons.js';
+import { Button } from '../../../../utils/styles/forms.js';
 import { Hr } from '../../../../utils/styles/misc.js';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 import { APHORISMS, SCHEMES } from '../../../../utils/constants.js';

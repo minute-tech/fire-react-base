@@ -6,6 +6,34 @@ import { FullWidthLine } from '../../utils/styles/misc';
 function Header(props) {
     const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
 
+    const navLinks = [
+        {
+            label: "Home",
+            path: "/",
+            type: ""
+        },
+        {
+            label: "About",
+            path: "/about",
+            type: ""
+        },
+        {
+            label: "Login",
+            path: "/login",
+            type: "visitor"
+        },
+        {
+            label: "Register",
+            path: "/register",
+            type: "visitor"
+        },
+        {
+            label: "Dashboard",
+            path: "/dashboard",
+            type: "user"
+        },
+    ];
+
     return (
         <>
         <HeaderContainer>
@@ -17,7 +45,6 @@ function Header(props) {
                         src={props.site.logo.url} 
                         // TODO: if logo is loading slow, just load from local folder instead of URL
                         // src={require("../../assets/images/logos/logo.png")} 
-                        // src={require("../../assets/images/logos/cc-logo.png")}  
                     />
                     {props.site.logo.showTitle && (<NavTitle removeActiveStyle>{props?.site?.name ?? ""}</NavTitle>)}
                 </BrandLink>
@@ -26,23 +53,17 @@ function Header(props) {
             {/* Desktop menu */}
             <NavMenuContainer>
                 <NavLinks>
-                    <NavLLink to='/'>Home</NavLLink>
-                    <NavLLink to='/about'>About</NavLLink>
-                    {!props.user && (
-                        <>
-                            <NavLLink to='/login'>Login</NavLLink>
-                            <NavLLink to='/register'>Register</NavLLink>
-                        </>
-                    )}
-                    {props.user && (
-                        <>
-                            <NavLLink to='/dashboard'>Dashboard</NavLLink>
-                        </>
-                    )}
+                    {navLinks.map((link, l) => {
+                        if(!link.type || (link.type === "visitor" && !props.user) || (link.type === "user" && props.user)){
+                            return (
+                                <NavLLink key={l} to={link.path}>{link.label}</NavLLink>
+                            )
+                        } else {
+                            return (null)
+                        }
+                    })}
                 </NavLinks>
             </NavMenuContainer>
-        
-            {/* Mobile menu */}
             <BurgerNavContainer>
                 <BgOverlay 
                     open={isBurgerMenuOpen} 
@@ -58,39 +79,21 @@ function Header(props) {
                 </Burger>
                 
                 <BurgerNav open={isBurgerMenuOpen}>
-                    <BurgerNavLink to="/" onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}>
-                        Home
-                    </BurgerNavLink>
-                    <BurgerNavLink to="/about" onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}>
-                        About
-                    </BurgerNavLink>
-                    
-                    {!props.user && (
-                        <>
-                            <BurgerNavLink 
-                                to="/login" 
-                                onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}
-                            >
-                                Login
-                            </BurgerNavLink>
-                            <BurgerNavLink 
-                                to="/register" 
-                                onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}
-                            >
-                                Register
-                            </BurgerNavLink>
-                        </>
-                    )}
-                    {props.user && (
-                        <>
-                            <BurgerNavLink 
-                                to='/dashboard'
-                                onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}
-                            >
-                                Dashboard
-                            </BurgerNavLink>
-                        </>
-                    )}
+                    {navLinks.map((link, l) => {
+                        if(!link.type || (link.type === "visitor" && !props.user) || (link.type === "user" && props.user)){
+                            return (
+                                <BurgerNavLink 
+                                    key={l} 
+                                    to={link.path}
+                                    onClick={() => setBurgerMenuOpen(!isBurgerMenuOpen)}
+                                >
+                                    {link.label}
+                                </BurgerNavLink>
+                            )
+                        } else {
+                            return (null)
+                        }
+                    })}
                 </BurgerNav>
             </BurgerNavContainer>
 

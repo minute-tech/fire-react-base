@@ -4,7 +4,7 @@ import { BiError } from 'react-icons/bi';
 import { FaChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-import { Button } from '../../../utils/styles/buttons';
+import { Button } from '../../../utils/styles/forms';
 import { Wrapper } from '../../../utils/styles/misc';
 import { ALink, Body, H1 } from '../../../utils/styles/text';
 
