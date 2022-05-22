@@ -9,7 +9,7 @@ import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 
 import { auth } from "../../../../Fire.js";
-import { Column, Grid, LgContainer, ModalCard, ModalContainer, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
+import { Column, Grid, Container, ModalCard, ModalContainer, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
 import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 import { FormError } from '../../../misc/Misc';
 import { INPUT, SIZES } from '../../../../utils/constants.js';
@@ -105,7 +105,7 @@ function UserLogin(props) {
                     &nbsp; Return home
                 </Button>
             </LLink>
-            <LgContainer>
+            <Container size={SIZES.LG}>
                 <form onSubmit={ loginForm.handleSubmit(loginUser) }>
                     <Grid fluid>
                         <Row justify="center">
@@ -189,33 +189,32 @@ function UserLogin(props) {
                         </Row>
                     </Grid>
                 </form>
-
-                {forgotExpanded && (
-                    <ModalContainer onClick={() => toggleModal()}>
-                        <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <H2>Forgot Password</H2>
-                            <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
-                            <TextInput 
-                                type="text"
-                                placeholder={INPUT.EMAIL.PLACEHOLDER}
-                                onChange={(e) => setForgotEmail(e.target.value)} 
-                                value={forgotEmail}
-                            />
-                            <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>
-                                Send password reset link
-                            </Button>
-                            <Button 
-                                type="button"
-                                color={theme.colors.red}
-                                size={SIZES.SM}
-                                onClick={() => toggleModal()}
-                            >
-                                <CgClose /> Cancel 
-                            </Button>
-                        </ModalCard>
-                    </ModalContainer>
-                )}
-            </LgContainer>
+            </Container>
+            {forgotExpanded && (
+                <ModalContainer onClick={() => toggleModal()}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H2>Forgot Password</H2>
+                        <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
+                        <TextInput 
+                            type="text"
+                            placeholder={INPUT.EMAIL.PLACEHOLDER}
+                            onChange={(e) => setForgotEmail(e.target.value)} 
+                            value={forgotEmail}
+                        />
+                        <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>
+                            Send password reset link
+                        </Button>
+                        <Button 
+                            type="button"
+                            color={theme.colors.red}
+                            size={SIZES.SM}
+                            onClick={() => toggleModal()}
+                        >
+                            <CgClose /> Cancel 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
         </Wrapper>
     ) 
 }

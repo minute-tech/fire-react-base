@@ -1,12 +1,14 @@
 import styled, { createGlobalStyle }  from 'styled-components';
 import { rgb, rgba } from 'polished'
-import { Container, Col } from 'react-grid-system';
+import { Col as GCol } from 'react-grid-system';
 import { Row as GRow } from 'react-grid-system';
+import { Container as GContainer } from 'react-grid-system';
 
 // Importing font into CSS global for use around app
 // import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
 // import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { Body, BodyFont, HeadingFont } from './text';
+import { SIZES } from '../constants';
 
 export const GlobalStyle = createGlobalStyle`
     // Try to stay away from using this Global Styling mainly for load times 
@@ -82,36 +84,30 @@ export const Wrapper = styled.div`
 `;
 
 // Containers
-export const SmContainer = styled.div`
+export const Container = styled.div`
     margin: auto;
-    width: 25%;
     padding: 1%;
 
-    @media (max-width: 992px) {
-        width: 70%;
-    }
-`;
+    ${(props) => (props.size === SIZES.SM) && `
+        width: 25%;
+        @media (max-width: 992px) {
+            width: 70%;
+        }
+    `};
 
-export const MdContainer = styled.div`
-    margin: auto;
-    width: 50%;
-    padding: 1%;
+    ${(props) => (props.size === SIZES.MD || !props.size) && `
+        width: 50%;
+        @media (max-width: 992px) {
+            width: 80%;
+        }
+    `};
 
-    @media (max-width: 992px) {
-        width: 80%;
-    }
-`;
-
-export const LgContainer = styled.div`
-    margin: auto;
-    width: 90%;
-    padding: 1%;
-
-    @media (max-width: 992px) {
-        margin: auto;
+    ${(props) => (props.size === SIZES.LG) && `
         width: 90%;
-        padding: 1%;
-    }
+        @media (max-width: 992px) {
+            width: 90%;
+        }
+    `};
 `;
 
 // Widths
@@ -195,7 +191,7 @@ export const Tbody = styled.tbody`
 `;
 
 // Grid
-export const Grid = styled(Container)`
+export const Grid = styled(GContainer)`
     /* Add custom styles here */
 `;
 
@@ -203,7 +199,7 @@ export const Row = styled(GRow)`
     /* Add custom styles here */
 `;
 
-export const Column = styled(Col)`
+export const Column = styled(GCol)`
     text-align: ${props => props.align ? props.align : "left"};
     margin: ${props => props.margin ? props.margin : "0 0 10px 0"};
     background: ${props => props.background ? props.background : "none"};

@@ -67,24 +67,31 @@ export const Body = styled.p`
         color: ${props.color} !important;
     `};
 
-    ${(props) => (props.size === SIZES.SM) && `
-        font-size: 12px;
+    ${(props) => (props.size === SIZES.XS) && `
+        font-size: 10px;
         @media (max-width: 992px) {
-            font-size: 10px;
+            font-size: 8px;
         }
     `};
 
-    ${(props) => (props.size === SIZES.MD) && `
-        font-size: 16px;
+    ${(props) => (props.size === SIZES.SM) && `
+        font-size: 14px;
         @media (max-width: 992px) {
-            font-size: 14px;
+            font-size: 12px;
+        }
+    `};
+
+    ${(props) => (props.size === SIZES.MD || !props.size) && `
+        font-size: 18px;
+        @media (max-width: 992px) {
+            font-size: 16px;
         }
     `};
 
     ${(props) => (props.size === SIZES.LG) && `
-        font-size: 20px;
+        font-size: 22px;
         @media (max-width: 992px) {
-            font-size: 18px;
+            font-size: 20px;
         }
     `};
 

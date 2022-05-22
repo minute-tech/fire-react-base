@@ -94,3 +94,24 @@ export const HillSeparators = {
     c-36,0-72.01-1-108,0c-14.33,0.4-28.68-0.62-43,0c-1.48,0.06-4.66,0.04-11,0c-8.91-0.06-9.98,0.01-11-1c-2.25-2.24-0.33-5.59,0-18
     c0,0,0,0,0-7c0-12.66,0-18.99,0-19c-0.03-10.72-0.46-13.95-1-27C-1.28,58.74-1.67,49.37-0.5,47.5z`
 }
+
+
+// Responsive iframe
+export const IframeContainer = styled.div`
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+`;
+
+export const Iframe = styled.iframe.attrs({ 
+    frameBorder:"0" ,
+    allowFullScreen: true,
+    allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+})`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+`;
