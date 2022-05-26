@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { FaChevronLeft } from "react-icons/fa";
+import { FaChevronLeft, FaUserShield } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { doc, updateDoc } from "firebase/firestore";
 import { FaMoon, FaSun } from "react-icons/fa";
@@ -323,7 +323,7 @@ function Profile(props) {
                                 </Button>
                             )}
                             {emailVerifySent && !refreshButtonShown && (
-                                <Body color={theme.colors.yellow}>Email sent, check your email inbox!</Body>
+                                <Body color={theme.colors.yellow} display="inline">Email sent, check your email inbox!</Body>
                             )}
                             {emailVerifySent && refreshButtonShown && (
                                 <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
@@ -331,7 +331,11 @@ function Profile(props) {
                                 </Button>
                             )}
                             {props.fireUser.emailVerified && (
-                                <Body color={theme.colors.green}><BiCheck /> Email verified!</Body>
+                                <Body display="inline" color={theme.colors.green}>
+                                    <BiCheck /> Email verified!
+                                    <br/>
+                                    <Button size={SIZES.SM} btype={BTYPES.TEXTED} color={theme.colors.green}>Now secure account with a phone number <FaUserShield /></Button>
+                                </Body>
                             )}
                         </Column>
                     </Row>

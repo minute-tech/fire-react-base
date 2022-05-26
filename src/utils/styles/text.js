@@ -59,7 +59,7 @@ export const H4 = styled.h4`
 export const Body = styled.p`
     margin: ${props => props.margin ? props.margin : "1em 0"};
     display: ${props => props.display ? props.display : "block"};
-    text-align: ${props => props.textAlign ? props.textAlign : "left"};
+    text-align: ${props => props.textAlign ? props.textAlign : ""};
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 
@@ -119,7 +119,7 @@ export const ALink = styled.a`
     transition: color 0.15s linear;
     margin: ${props => props.margin ? props.margin : "0"};
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow || "gold")};
+        color: ${props => (props.theme?.colors?.yellow || "gold")} !important;
         text-decoration: none;
     }
 `;
@@ -132,7 +132,7 @@ export const LLink = styled(Link)`
     text-decoration: none;
     transition: color 0.15s linear;
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow ?? "gold")};
+        color: ${props => (props.theme?.colors?.yellow ?? "gold")} !important;
         text-decoration: none;
     }
 `;
@@ -145,7 +145,7 @@ export const SLink = styled.span`
     transition: color 0.15s linear;
     margin: ${props => props.margin ? props.margin : "0"};
     &:hover {
-        color: ${props => (props.theme?.colors?.yellow ?? "gold")};
+        color: ${props => (props.theme?.colors?.yellow ?? "gold")} !important;
         text-decoration: none;
     }
 `;

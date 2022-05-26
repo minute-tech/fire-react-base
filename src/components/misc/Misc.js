@@ -50,7 +50,7 @@ export function StartAtTop() {
         }, 100);
       }
 
-      return clearTimeout(hashTimer.current);
+      return () => clearTimeout(hashTimer.current);
     }, [pathname, hash])
 
     return null;

@@ -179,7 +179,7 @@ function App() {
                     name: "",
                     url: "",
                     color: (isDarkScheme ? site.theme.fonts.link.dark : site.theme.fonts.link.light),
-                }
+                },
             },
         }
 

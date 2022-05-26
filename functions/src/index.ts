@@ -35,8 +35,24 @@ const defaultPublicSiteData = {
     },
     theme: {
         fonts: {
-            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-            body: DEFAULT_SITE.THEME.FONTS.BODY,
+            heading: {
+                name: DEFAULT_SITE.THEME.FONTS.HEADING.NAME,
+                url: DEFAULT_SITE.THEME.FONTS.HEADING.URL,
+                light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
+            },
+            body: {
+                name: DEFAULT_SITE.THEME.FONTS.BODY.NAME,
+                url: DEFAULT_SITE.THEME.FONTS.BODY.URL,
+                light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
+            },
+            link: {
+                name: DEFAULT_SITE.THEME.FONTS.LINK.NAME,
+                url: DEFAULT_SITE.THEME.FONTS.LINK.URL,
+                light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
+            },
         },
         colors: {
             primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
@@ -48,20 +64,6 @@ const defaultPublicSiteData = {
             blue: DEFAULT_SITE.THEME.COLORS.BLUE,
             grey: DEFAULT_SITE.THEME.COLORS.GREY,
             lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-            font: {
-                heading: {
-                    light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
-                },
-                body: {
-                    light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
-                },
-                link: {
-                    light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
-                },
-            },
             background: {
                 light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
                 dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
@@ -174,7 +176,7 @@ export const onMessageCreated = functions.firestore
                 })
             );
 
-            // // **v9 not ready it seems
+            // **v9 not ready it seems
             // await updateDoc(doc(admin, "site", "sensitive"), {
             //     body: increment(1)
             // }).then(() => {
@@ -247,40 +249,53 @@ export const onUserCreated = functions.firestore
                         })
                     );
 
-                    // Set default email recipient for contact messages
                     allPromises.push(
-                        admin.firestore().collection("site").doc("sensitive").set({
-                            messengers: DEFAULT_SITE.EMAILS.MESSENGERS,
-                            // ** Not 100% sure if I should be setting this here or by passing firstUser: true to the newAdmins instead?
-                            admins: [{
-                                id: context.params.userId,
-                                email: newValues.email,
-                                name: `${newValues.firstName} ${newValues.lastName}`,
-                            }],
-                            superAdmins: [{
-                                id: context.params.userId,
-                                email: newValues.email,
-                                name: `${newValues.firstName} ${newValues.lastName}`,
-                            }],
-                        }, {merge: true}).then(() => {
-                            console.log("Successful write of sensitive doc to Firestore.");
+                        admin.firestore().collection("users").limit(2).get().then((usersQuerySnap) => {
+                            // Verify only 1 user on firestore right now!
+                            if (usersQuerySnap.size === 1) {
+                                // Since only user, set them as the super admin
+                                allPromises.push(
+                                    admin.firestore().collection("users").doc(context.params.userId).collection("newAdmins").add({
+                                        id: context.params.userId,
+                                        email: newValues.email,
+                                        name: `${newValues.firstName} ${newValues.lastName}`,
+                                        superAdmin: true,
+                                        timestamp: Date.now(),
+                                    }).then(() => {
+                                        console.log("Successful add of new super admin doc to Firestore.");
+                                    }).catch((error: any) => {
+                                        console.error("Error adding document: ", error);
+                                    })
+                                );
+
+                                // Set default email recipient for contact messages
+                                allPromises.push(
+                                    admin.firestore().collection("site").doc("sensitive").set({
+                                        messengers: DEFAULT_SITE.EMAILS.MESSENGERS,
+                                        // ** Not 100% sure if I should be setting this here or by passing firstUser: true to the newAdmins instead?
+                                        admins: [{
+                                            id: context.params.userId,
+                                            email: newValues.email,
+                                            name: `${newValues.firstName} ${newValues.lastName}`,
+                                        }],
+                                        superAdmins: [{
+                                            id: context.params.userId,
+                                            email: newValues.email,
+                                            name: `${newValues.firstName} ${newValues.lastName}`,
+                                        }],
+                                    }, {merge: true}).then(() => {
+                                        console.log("Successful write of sensitive doc to Firestore.");
+                                    }).catch((error) => {
+                                        console.error("Error adding sensitive document: ", error);
+                                    })
+                                );
+                            } else {
+                                console.error("Uh oh... might be a nefarious action...");
+                            }
                         }).catch((error) => {
-                            console.error("Error adding sensitive document: ", error);
+                            console.log("Error getting site document:", error);
                         })
                     );
-
-                    // Since only user, set them as the super admin
-                    admin.firestore().collection("users").doc(context.params.userId).collection("newAdmins").add({
-                        id: context.params.userId,
-                        email: newValues.email,
-                        name: `${newValues.firstName} ${newValues.lastName}`,
-                        superAdmin: true,
-                        timestamp: Date.now(),
-                    }).then(() => {
-                        console.log("Successful add of new super admin doc to Firestore.");
-                    }).catch((error: any) => {
-                        console.error("Error adding document: ", error);
-                    });
                 }
             }).catch((error) => {
                 console.log("Error getting site document:", error);

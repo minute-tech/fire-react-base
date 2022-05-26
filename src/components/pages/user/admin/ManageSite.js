@@ -142,8 +142,24 @@ export default function ManageSite(props) {
                 },
                 theme: { 
                     fonts: {
-                        heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                        body: DEFAULT_SITE.THEME.FONTS.BODY,
+                        heading: {
+                            name: DEFAULT_SITE.THEME.FONTS.HEADING.NAME,
+                            url: DEFAULT_SITE.THEME.FONTS.HEADING.URL,
+                            light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
+                        },
+                        body: {
+                            name: DEFAULT_SITE.THEME.FONTS.BODY.NAME,
+                            url: DEFAULT_SITE.THEME.FONTS.BODY.URL,
+                            light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
+                        },
+                        link: {
+                            name: DEFAULT_SITE.THEME.FONTS.LINK.NAME,
+                            url: DEFAULT_SITE.THEME.FONTS.LINK.URL,
+                            light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
+                        },
                     },
                     colors: {
                         primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
@@ -155,20 +171,6 @@ export default function ManageSite(props) {
                         blue: DEFAULT_SITE.THEME.COLORS.BLUE,
                         grey: DEFAULT_SITE.THEME.COLORS.GREY,
                         lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-                        font: {
-                            heading: {
-                                light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
-                                dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
-                            },
-                            body: {
-                                light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
-                                dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
-                            },
-                            link: {
-                                light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
-                                dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
-                            },
-                        },
                         background: {
                             light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
                             dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
