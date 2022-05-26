@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react'
-import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, endAt, limitToLast, where, addDoc, arrayRemove, arrayUnion, updateDoc, deleteDoc, increment } from "firebase/firestore";  
+import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, limitToLast, where, addDoc, arrayRemove, arrayUnion, updateDoc, deleteDoc, increment, endBefore } from "firebase/firestore";  
 import { FaChevronLeft, FaChevronRight, FaSearch, FaShieldAlt, FaShieldVirus, FaTrash,  } from 'react-icons/fa';
 import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
 import { useTheme } from 'styled-components';
@@ -95,17 +95,22 @@ export default function DataManager(props) {
     useEffect(() => {
         let currentPageQuery = query(
             collection(firestore, props.dataName),
-            limit(itemsPerPage)
         );
         if(search.term){
             // __name__ is synonymous with the doc.id we need to query for
-            currentPageQuery = query(currentPageQuery, where(search.column === "id" ? "__name__" : search.column, "==", search.term));
+            // No limit set on items per page
+            currentPageQuery = query(
+                currentPageQuery, 
+                where(search.column === "id" ? "__name__" : search.column, "==", search.term),
+            );
         } else {
-            currentPageQuery = query(currentPageQuery,  
+            currentPageQuery = query(
+                currentPageQuery,  
                 orderBy(
                     props.tableCols.find(column => {return column.active;}).value, 
                     props.tableCols.find(column => {return column.active;}).direction
-                )
+                ),
+                limit(itemsPerPage)
             );
         }
         async function fetchItems() {
@@ -143,24 +148,25 @@ export default function DataManager(props) {
                 items: true
             }));
             // Construct a new query starting at this document depending if the user is searching or not
-            // TODO: still doenst work, may be placing the wrong cursor on next page
-            let currentPageQuery = null;
+            let currentPageQuery = query(
+                collection(firestore, props.dataName)
+            );
             if(search.term){
+                // __name__ is synonymous with the doc.id we need to query for
                 currentPageQuery = query(
-                    collection(firestore, props.dataName), 
-                    where(search.column === "id" ? "__name__" : search.column, "==", search.term), endAt(beginCursor),
-                    endAt(beginCursor),
-                    limitToLast(itemsPerPage) // Adding this seemed to solve the going back issue, but now everything is jumbled when going back
+                    currentPageQuery, 
+                    where(search.column === "id" ? "__name__" : search.column, "==", search.term),
+                    endBefore(beginCursor),
                 );
             } else {
                 currentPageQuery = query(
-                    collection(firestore, props.dataName),  
+                    currentPageQuery,  
                     orderBy(
                         props.tableCols.find(column => {return column.active;}).value, 
                         props.tableCols.find(column => {return column.active;}).direction
                     ),
-                    endAt(beginCursor),
-                    limitToLast(itemsPerPage) 
+                    endBefore(beginCursor),
+                    limitToLast(itemsPerPage)
                 );
             }
             const pageDocSnaps = await getDocs(currentPageQuery);
@@ -194,25 +200,27 @@ export default function DataManager(props) {
         if(currentPage !== Math.ceil(itemCount/itemsPerPage)){
             setLoading(prevState => ({
                 ...prevState,
-                items: false
+                items: true
             }));
             // Construct a new query starting at this document depending if the user is searching or not
-            let currentPageQuery = null;
+            let currentPageQuery = query(
+                collection(firestore, props.dataName),
+            );
             if(search.term){
+                // __name__ is synonymous with the doc.id we need to query for
                 currentPageQuery = query(
-                    collection(firestore, props.dataName), 
-                    where(search.column === "id" ? "__name__" : search.column, "==", search.term), 
-                    startAfter(finalCursor), 
-                    limit(itemsPerPage),
+                    currentPageQuery, 
+                    where(search.column === "id" ? "__name__" : search.column, "==", search.term),
+                    startAfter(finalCursor),
                 );
             } else {
                 currentPageQuery = query(
-                    collection(firestore, props.dataName),  
+                    currentPageQuery,  
                     orderBy(
                         props.tableCols.find(column => {return column.active;}).value, 
                         props.tableCols.find(column => {return column.active;}).direction
                     ),
-                    startAfter(finalCursor),
+                    startAfter(finalCursor), 
                     limit(itemsPerPage),
                 );
             }
@@ -245,15 +253,16 @@ export default function DataManager(props) {
     };
 
     const submitSearch = (data) => {
+        console.log("submit searching")
+        console.log(data)
         setSubmitting(prevState => ({
             ...prevState,
             search: true
         }))
-        setSearch(prevState => ({
-            ...prevState,
+        setSearch({ 
             column: data.column,
             term: data.term,
-        }));
+        });
         setSubmitting(prevState => ({
             ...prevState,
             search: false
@@ -262,11 +271,10 @@ export default function DataManager(props) {
 
     const clearSearch = () => {
         searchForm.reset();
-        setSearch(prevState => ({
-            ...prevState,
+        setSearch({ 
             column: "",
             term: "",
-        }));
+        });
     };
 
     const toggleCol = (column, index) => {
@@ -544,7 +552,7 @@ export default function DataManager(props) {
         }
     };
 
-    if(loading.counts || loading.sensitive || loading.items){
+    if(loading.counts || loading.sensitive){
         return (
             <>
                 <H2>Loading... <Spinner /> </H2> 
@@ -571,10 +579,10 @@ export default function DataManager(props) {
                                     <FaSearch />
                                     <TextInput
                                         type="text"
-                                        error={searchForm.formState.errors.search}
+                                        error={searchForm.formState.errors.term}
                                         placeholder={`Search by a column title in the table`}
                                         {
-                                            ...searchForm.register("search", { 
+                                            ...searchForm.register("term", { 
                                                     required: "Please enter a search term!",
                                                     maxLength: {
                                                         value: 50,
@@ -591,12 +599,6 @@ export default function DataManager(props) {
                                 </SearchContainer>
                             </Column>
                             <Column md={12} lg={4}>
-                                <Button 
-                                    type="submit" 
-                                    disabled={submitting.search}
-                                >
-                                    Search 
-                                </Button>
                                 <SelectInput {...searchForm.register("column", { required: true })}>
                                     {
                                         props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
@@ -606,6 +608,12 @@ export default function DataManager(props) {
                                         })
                                     }
                                 </SelectInput>
+                                <Button 
+                                    type="submit" 
+                                    disabled={submitting.search}
+                                >
+                                    Search 
+                                </Button>
                                 {search.term && (
                                     <Button 
                                         type="button"
@@ -620,7 +628,7 @@ export default function DataManager(props) {
                         </Row>
                         <Row>
                             <Column sm={12} align="center">
-                                <FormError error={searchForm.formState.errors.search} /> 
+                                <FormError error={searchForm.formState.errors.term} /> 
                             </Column>
                         </Row>
                     </Grid>
@@ -659,7 +667,14 @@ export default function DataManager(props) {
                                         </Td>
                                     </Tr>
                                 )}
-                                { items.length !== 0 && items.map((item, i) => {
+                                { loading.items && (
+                                    <Tr>
+                                        <Td colSpan={props.tableCols.length + 1} style={{textAlign:"center"}}>
+                                            <Body color={theme.colors.green}>Loading... <Spinner /></Body>
+                                        </Td>
+                                    </Tr>
+                                )}
+                                { !loading.items && items.length !== 0 && items.map((item, i) => {
                                     return (
                                         <Tr key={i}>
                                             {
@@ -749,7 +764,6 @@ export default function DataManager(props) {
                                                         <FaTrash />
                                                     </Button>
                                                 )}
-                                                
                                             </Td>
                                         </Tr>
                                     )
@@ -773,10 +787,10 @@ export default function DataManager(props) {
                             </Column>
                             <Column sm={12} md={4} align="center">
                                 <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
-                                <Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>
+                                {!search.term && (<Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>)}
                                 <Body margin="10px 0" size={SIZES.SM}>
                                     {/* Don't show page size selector if itemCount is less than the second page size selection */}
-                                    {itemCount > PAGE_SIZES[1].value && (
+                                    {(!search.term && itemCount > PAGE_SIZES[1].value) && (
                                         <>
                                         <PageSelectInput
                                             value={itemsPerPage}
@@ -796,7 +810,7 @@ export default function DataManager(props) {
                                 </Body>
                             </Column>
                             <Column sm={12} md={4} align="center">
-                                {currentPage !== Math.ceil(itemCount/itemsPerPage) && (
+                                {(currentPage !== Math.ceil(itemCount/itemsPerPage) && !search.term) && (
                                     <Button 
                                         size={SIZES.SM}
                                         type="button" 

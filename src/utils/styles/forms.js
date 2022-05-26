@@ -78,7 +78,7 @@ export const CheckboxLabel = styled.label`
 `;
 
 export const SelectInput = styled.select`
-    padding: 14px;
+    padding: 12px;
     option {
         ${BodyFont};
         color: black !important;
