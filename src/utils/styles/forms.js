@@ -101,7 +101,7 @@ export const PageSelectInput = styled.select`
 export const FileInputLabel = styled.label`
     display: block;
     cursor: pointer;
-    color: ${props => props.selected ? props.theme.colors.red : props.theme.colors.font.body};
+    color: ${props => props.selected ? props.theme.colors.red : props.theme.fonts.body.color};
     border: 2px solid ${props => props.selected ? props.theme.colors.red : props.theme.colors.primary};
     font-size: 18px;
     padding: 20px;
@@ -129,10 +129,10 @@ export const SearchContainer = styled.div`
 `;
 
 export const Button = styled.button`
-    ${BodyFont}
+    ${BodyFont};
     transition: background-color 0.15s linear, color 0.15s linear, border 0.15s linear;
     margin: 5px;
-    color: ${props => props.btype !== BTYPES.INVERTED ? (props.btype !== BTYPES.TEXTED ? "white" : props.theme.colors.font.body) : (props.color ?? props.theme.colors.primary)};
+    color: ${props => props.btype !== BTYPES.INVERTED ? (props.btype !== BTYPES.TEXTED ? "white" : props.theme.fonts.body.color) : (props.color ?? props.theme.colors.primary)};
     border: ${props => (props.btype !== BTYPES.INVERTED && props.btype === BTYPES.TEXTED) ? "transparent" : (props.color ?? props.theme.colors.primary)} solid 2px; 
     border-radius: ${props => !props.rounded ? "0px" : "20px"};
     background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? (props.color ?? props.theme.colors.primary) : "transparent"};

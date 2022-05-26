@@ -1,5 +1,6 @@
 import React from 'react'
 import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
+import { useTheme } from 'styled-components';
 import { toast } from 'react-toastify';
 
 // Pages //
@@ -25,8 +26,37 @@ import { Wrapper } from './utils/styles/misc';
 import ManageSite from './components/pages/user/admin/ManageSite';
 
 function Views(props) {
+    const theme = useTheme();
+
+    // Loading the font as an inline style here, instead of in the Global variable for styled-components 
+    // prevents the flashing of the font every load
+    // If the value is a URL for either of the fonts, then load from URL
+    let css = ``;
+    if(theme.fonts.heading.url.includes("https://") && theme.fonts.body.url.includes("https://")){
+        console.log("grabbing fonts: ")
+        console.log(theme.fonts.heading)
+        console.log(theme.fonts.body)
+        css = `
+            @font-face {
+                font-family: ${theme.fonts.heading.name ? theme.fonts.heading.name : "Arial, Helvetica, sans-serif"};
+                src: url(${theme.fonts.heading.url}) format("truetype");
+            }
+
+            @font-face {
+                font-family: ${theme.fonts.body.name ? theme.fonts.body.name : "Arial, Helvetica, sans-serif"};
+                src: url(${theme.fonts.body.url}) format("truetype");
+            }
+        `
+    }
+    
     return (
+        <>
+        {css && (<>
+            <style>{css}</style>
+        </>
+        )}
         <Routes>
+            
             <Route 
                 index 
                 path="/" 
@@ -212,6 +242,8 @@ function Views(props) {
 
             <Route path="*" element={<Page404 site={props.site} />} />
         </Routes>
+        </>
+        
     )
 }
 

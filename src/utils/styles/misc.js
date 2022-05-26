@@ -3,10 +3,6 @@ import { rgb, rgba } from 'polished'
 import { Col as GCol } from 'react-grid-system';
 import { Row as GRow } from 'react-grid-system';
 import { Container as GContainer } from 'react-grid-system';
-
-// Importing font into CSS global for use around app
-// import RobotoRegular from '../../assets/fonts/roboto/Roboto-Regular.ttf';
-// import RobotoBold from '../../assets/fonts/roboto/Roboto-Bold.ttf';
 import { Body, BodyFont, HeadingFont } from './text';
 import { SIZES } from '../constants';
 
@@ -16,10 +12,6 @@ export const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
     }
-
-     // ** Loading the font from the file is where the font-face was taking to long to load and flashing times new roman issue is arising from
-    // Maybe try and use this lib to load in fonts from Google, etc: https://thabo-ambrose.medium.com/prevent-text-font-flickering-caused-by-using-a-custom-font-family-983c4b8d548d
-    // SOLUTION: For now, we will just have to manually load them instead of from the site public doc
 `;
 
 export const BodyWrapper = styled.div`
@@ -53,14 +45,14 @@ export const BodyWrapper = styled.div`
         --toastify-toast-background: #fff;
         --toastify-toast-min-height: 64px;
         --toastify-toast-max-height: 800px;
-        --toastify-font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"} !important;
+        --toastify-font-family: "Body" !important;
         --toastify-z-index: 9999;
-        --toastify-text-color-dark: ${props => props.theme?.colors?.font?.body ?? "white"};
-        --toastify-text-color-light: ${props => props.theme?.colors?.font?.body ?? "black"};
-        --toastify-text-color-info: ${props => props.theme?.colors?.font?.body ?? "black"};
-        --toastify-text-color-success: ${props => props.theme?.colors?.font?.body ?? "black"};
-        --toastify-text-color-warning: ${props => props.theme?.colors?.font?.body ?? "black"};
-        --toastify-text-color-error: ${props => props.theme?.colors?.font?.body ?? "black"};
+        --toastify-text-color-dark: ${props => props.theme?.fonts?.body?.color ?? "white"};
+        --toastify-text-color-light: ${props => props.theme?.fonts?.body?.color ?? "black"};
+        --toastify-text-color-info: ${props => props.theme?.fonts?.body?.color ?? "black"};
+        --toastify-text-color-success: ${props => props.theme?.fonts?.body?.color ?? "black"};
+        --toastify-text-color-warning: ${props => props.theme?.fonts?.body?.color ?? "black"};
+        --toastify-text-color-error: ${props => props.theme?.fonts?.body?.color ?? "black"};
         --toastify-spinner-color: #616161;
         --toastify-spinner-color-empty-area: #e0e0e0;
         --toastify-color-progress-dark: #bb86fc;
@@ -160,7 +152,7 @@ export const Th = styled.th`
 `;
 
 export const Tr = styled.tr`
-    color: ${props => props.theme.colors.font.body};
+    color: ${props => props.theme.fonts.body.color};
 `;
 
 export const Td = styled.td`
@@ -460,7 +452,7 @@ export const DevAlert = styled.div`
     padding: 5px 0;
     color: white;
     font-size: 8px;
-    font-family: ${props => props.theme?.fonts?.body || 'Arial'};
+    font-family: "Body";
     letter-spacing: 2px;
     opacity: 1;
     transition: opacity 0.5s;

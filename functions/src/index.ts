@@ -10,6 +10,66 @@ sgMail.setApiKey(functions.config().sendgrid_api.key);
 const adminConfig = JSON.parse(process.env.FIREBASE_CONFIG ?? "");
 const projectId = adminConfig.projectId ?? "fire-react-base";
 
+const defaultPublicSiteData = {
+    name: DEFAULT_SITE.NAME,
+    projectId: projectId,
+    logo: {
+        width: DEFAULT_SITE.LOGO.WIDTH,
+        url: DEFAULT_SITE.LOGO.URL,
+        showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+    },
+    emails: {
+        support: DEFAULT_SITE.EMAILS.SUPPORT,
+        noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+    },
+    hero: {
+        heading: DEFAULT_SITE.HERO.HEADING,
+        body: DEFAULT_SITE.HERO.BODY,
+        cta: {
+            link: DEFAULT_SITE.HERO.CTA.LINK,
+            text: DEFAULT_SITE.HERO.CTA.TEXT,
+            size: DEFAULT_SITE.HERO.CTA.SIZE,
+            color: DEFAULT_SITE.HERO.CTA.COLOR,
+        },
+        banner: DEFAULT_SITE.HERO.BANNER,
+    },
+    theme: {
+        fonts: {
+            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
+            body: DEFAULT_SITE.THEME.FONTS.BODY,
+        },
+        colors: {
+            primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
+            secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
+            tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
+            red: DEFAULT_SITE.THEME.COLORS.RED,
+            green: DEFAULT_SITE.THEME.COLORS.GREEN,
+            yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
+            blue: DEFAULT_SITE.THEME.COLORS.BLUE,
+            grey: DEFAULT_SITE.THEME.COLORS.GREY,
+            lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
+            font: {
+                heading: {
+                    light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
+                },
+                body: {
+                    light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
+                },
+                link: {
+                    light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
+                },
+            },
+            background: {
+                light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
+                dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
+            },
+        },
+    },
+};
+
 export const onMessageCreated = functions.firestore
     .document("messages/{messageId}")
     .onCreate(async (snap: DocumentSnapshot, context: functions.EventContext) => {
@@ -32,78 +92,7 @@ export const onMessageCreated = functions.firestore
                     publicSiteData = docWithMore;
                 } else {
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
-                    publicSiteData = {
-                        name: DEFAULT_SITE.NAME,
-                        projectId: projectId,
-                        logo: {
-                            width: DEFAULT_SITE.LOGO.WIDTH,
-                            url: DEFAULT_SITE.LOGO.URL,
-                            showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
-                        },
-                        emails: {
-                            support: DEFAULT_SITE.EMAILS.SUPPORT,
-                            noreply: DEFAULT_SITE.EMAILS.NOREPLY,
-                        },
-                        hero: {
-                            heading: DEFAULT_SITE.HERO.HEADING,
-                            body: DEFAULT_SITE.HERO.BODY,
-                            cta: {
-                                link: DEFAULT_SITE.HERO.CTA.LINK,
-                                text: DEFAULT_SITE.HERO.CTA.TEXT,
-                                size: DEFAULT_SITE.HERO.CTA.SIZE,
-                                color: DEFAULT_SITE.HERO.CTA.COLOR,
-                            },
-                            banner: DEFAULT_SITE.HERO.BANNER,
-                        },
-                        theme: {
-                            schemes: {
-                                light: {
-                                    value: DEFAULT_SITE.THEME.SCHEMES.LIGHT.VALUE,
-                                    colors: {
-                                        primary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.PRIMARY,
-                                        secondary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.SECONDARY,
-                                        tertiary: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.TERTIARY,
-                                        red: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.RED,
-                                        green: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREEN,
-                                        yellow: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.YELLOW,
-                                        blue: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BLUE,
-                                        grey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.GREY,
-                                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.LIGHT_GREY,
-                                        font: {
-                                            heading: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.HEADING,
-                                            body: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.BODY,
-                                            link: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.FONT.LINK,
-                                        },
-                                        background: DEFAULT_SITE.THEME.SCHEMES.LIGHT.COLORS.BACKGROUND,
-                                    },
-                                },
-                                dark: {
-                                    value: DEFAULT_SITE.THEME.SCHEMES.DARK.VALUE,
-                                    colors: {
-                                        primary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.PRIMARY,
-                                        secondary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.SECONDARY,
-                                        tertiary: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.TERTIARY,
-                                        red: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.RED,
-                                        green: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREEN,
-                                        yellow: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.YELLOW,
-                                        blue: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BLUE,
-                                        grey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.GREY,
-                                        lightGrey: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.LIGHT_GREY,
-                                        font: {
-                                            heading: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.HEADING,
-                                            body: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.BODY,
-                                            link: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.FONT.LINK,
-                                        },
-                                        background: DEFAULT_SITE.THEME.SCHEMES.DARK.COLORS.BACKGROUND,
-                                    },
-                                },
-                            },
-                            fonts: {
-                                heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                                body: DEFAULT_SITE.THEME.FONTS.BODY,
-                            },
-                        },
-                    };
+                    publicSiteData = defaultPublicSiteData;
                 }
             }).catch((error) => {
                 console.log("Error getting site public document:", error);
@@ -239,65 +228,7 @@ export const onUserCreated = functions.firestore
                     console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
                     // Set default site public data like theme, logo, etc
                     allPromises.push(
-                        admin.firestore().collection("site").doc("public").set({
-                            name: DEFAULT_SITE.NAME,
-                            projectId: projectId,
-                            logo: {
-                                width: DEFAULT_SITE.LOGO.WIDTH,
-                                url: DEFAULT_SITE.LOGO.URL,
-                                showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
-                            },
-                            emails: {
-                                support: DEFAULT_SITE.EMAILS.SUPPORT,
-                                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
-                            },
-                            hero: {
-                                heading: DEFAULT_SITE.HERO.HEADING,
-                                body: DEFAULT_SITE.HERO.BODY,
-                                cta: {
-                                    link: DEFAULT_SITE.HERO.CTA.LINK,
-                                    text: DEFAULT_SITE.HERO.CTA.TEXT,
-                                    size: DEFAULT_SITE.HERO.CTA.SIZE,
-                                    color: DEFAULT_SITE.HERO.CTA.COLOR,
-                                },                    
-                                banner: DEFAULT_SITE.HERO.BANNER,
-                            },
-                            theme: { 
-                                fonts: {
-                                    heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                                    body: DEFAULT_SITE.THEME.FONTS.BODY,
-                                },
-                                colors: {
-                                    primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
-                                    secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
-                                    tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
-                                    red: DEFAULT_SITE.THEME.COLORS.RED,
-                                    green: DEFAULT_SITE.THEME.COLORS.GREEN,
-                                    yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
-                                    blue: DEFAULT_SITE.THEME.COLORS.BLUE,
-                                    grey: DEFAULT_SITE.THEME.COLORS.GREY,
-                                    lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-                                    font: {
-                                        heading: {
-                                            light: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
-                                            dark: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.DARK,
-                                        },
-                                        body: {
-                                            light: DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
-                                            dark: DEFAULT_SITE.THEME.COLORS.FONT.BODY.DARK,
-                                        },
-                                        link: {
-                                            light: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
-                                            dark: DEFAULT_SITE.THEME.COLORS.FONT.LINK.DARK,
-                                        },
-                                    },
-                                    background: {
-                                        light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
-                                        dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
-                                    },
-                                },
-                            },
-                        }, {merge: true}).then(() => {
+                        admin.firestore().collection("site").doc("public").set(defaultPublicSiteData, {merge: true}).then(() => {
                             console.log("Successful write of site public doc to Firestore.");
                         }).catch((error) => {
                             console.error("Error adding public document: ", error);

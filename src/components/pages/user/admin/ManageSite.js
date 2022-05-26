@@ -52,8 +52,24 @@ export default function ManageSite(props) {
                 },
                 theme: { 
                     fonts: {
-                        heading: "Lato Black",
-                        body: "Lato Regular",
+                        heading: {
+                            name: "Lato Black",
+                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Black.ttf?alt=media&token=cd887b00-055e-4a9d-a55b-3dda0ecd9e7b",
+                            light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
+                        },
+                        body: {
+                            name: "Lato Regular",
+                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Regular.ttf?alt=media&token=f2f37502-4d69-4224-ba6b-c9426ea22c20",
+                            light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
+                        },
+                        link: {
+                            name: "",
+                            url: "",
+                            light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                            dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
+                        },
                     },
                     colors: {
                         primary: "#4FBFE0",
@@ -65,20 +81,6 @@ export default function ManageSite(props) {
                         blue: DEFAULT_SITE.THEME.COLORS.BLUE,
                         grey: DEFAULT_SITE.THEME.COLORS.GREY,
                         lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-                        font: {
-                            heading: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.DARK,
-                            },
-                            body: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.BODY.DARK,
-                            },
-                            link: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.LINK.DARK,
-                            },
-                        },
                         background: {
                             light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
                             dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
@@ -155,16 +157,16 @@ export default function ManageSite(props) {
                         lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
                         font: {
                             heading: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.DARK,
+                                light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                                dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
                             },
                             body: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.BODY.DARK,
+                                light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                                dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
                             },
                             link: {
-                                light: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
-                                dark: DEFAULT_SITE.THEME.COLORS.FONT.LINK.DARK,
+                                light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                                dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
                             },
                         },
                         background: {
@@ -219,11 +221,11 @@ export default function ManageSite(props) {
             {props.site.unset && (
                 <>
                 <Body color={theme.colors.yellow}>No site doc set yet.</Body>
+                <Button type="button" btype={BTYPES.INVERTED} onClick={() => createDefaultSite()}>
+                    Create Fire React Base default site <FaPlus />
+                </Button>
                 <Button type="button" color="#4FBFE0" btype={BTYPES.INVERTED} onClick={() => createCustomSite()}>
                     Create Minute.tech example site <FaPlus />
-                </Button>
-                <Button type="button" color="#4FBFE0" btype={BTYPES.INVERTED} onClick={() => createDefaultSite()}>
-                    Create Fire React Base default site <FaPlus />
                 </Button>
                 </>
             )}

@@ -59,11 +59,6 @@ function App() {
             blue: DEFAULT_SITE.THEME.COLORS.BLUE,
             grey: DEFAULT_SITE.THEME.COLORS.GREY,
             lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-            font: {
-                heading: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
-                body:DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
-                link: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
-            },
             background: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
         },
         fonts: {
@@ -100,8 +95,24 @@ function App() {
         },
         theme: { 
             fonts: {
-                heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-                body: DEFAULT_SITE.THEME.FONTS.BODY,
+                heading: {
+                    name: DEFAULT_SITE.THEME.FONTS.HEADING.NAME,
+                    url: DEFAULT_SITE.THEME.FONTS.HEADING.URL,
+                    light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
+                },
+                body: {
+                    name: DEFAULT_SITE.THEME.FONTS.BODY.NAME,
+                    url: DEFAULT_SITE.THEME.FONTS.BODY.URL,
+                    light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
+                },
+                link: {
+                    name: DEFAULT_SITE.THEME.FONTS.LINK.NAME,
+                    url: DEFAULT_SITE.THEME.FONTS.LINK.URL,
+                    light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
+                    dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
+                },
             },
             colors: {
                 primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
@@ -113,20 +124,6 @@ function App() {
                 blue: DEFAULT_SITE.THEME.COLORS.BLUE,
                 grey: DEFAULT_SITE.THEME.COLORS.GREY,
                 lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-                font: {
-                    heading: {
-                        light: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.LIGHT,
-                        dark: DEFAULT_SITE.THEME.COLORS.FONT.HEADING.DARK,
-                    },
-                    body: {
-                        light: DEFAULT_SITE.THEME.COLORS.FONT.BODY.LIGHT,
-                        dark: DEFAULT_SITE.THEME.COLORS.FONT.BODY.DARK,
-                    },
-                    link: {
-                        light: DEFAULT_SITE.THEME.COLORS.FONT.LINK.LIGHT,
-                        dark: DEFAULT_SITE.THEME.COLORS.FONT.LINK.DARK,
-                    },
-                },
                 background: {
                     light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
                     dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
@@ -165,16 +162,24 @@ function App() {
                 blue: !site.theme.colors.blue.light ? site.theme.colors.blue : (isDarkScheme ? site.theme.colors.blue.dark : site.theme.colors.blue.light),
                 grey: !site.theme.colors.grey.light ? site.theme.colors.grey : (isDarkScheme ? site.theme.colors.grey.dark : site.theme.colors.grey.light),
                 lightGrey: !site.theme.colors.lightGrey.light ? site.theme.colors.lightGrey : (isDarkScheme ? site.theme.colors.lightGrey.dark : site.theme.colors.lightGrey.light),
-                font: {
-                    heading: !site.theme.colors.font.heading.light ? site.theme.colors.font.heading : (isDarkScheme ? site.theme.colors.font.heading.dark : site.theme.colors.font.heading.light),
-                    body: !site.theme.colors.font.body.light ? site.theme.colors.font.body : (isDarkScheme ? site.theme.colors.font.body.dark : site.theme.colors.font.body.light),
-                    link: !site.theme.colors.font.link.light ? site.theme.colors.font.link : (isDarkScheme ? site.theme.colors.font.link.dark : site.theme.colors.font.link.light),
-                },
                 background: !site.theme.colors.background.light ? site.theme.colors.primary : (isDarkScheme ? site.theme.colors.background.dark : site.theme.colors.background.light),
             },
             fonts: {
-                heading: site.theme.fonts.heading,
-                body: site.theme.fonts.body
+                heading: {
+                    name: site.theme.fonts.heading.name,
+                    url: site.theme.fonts.heading.url,
+                    color: (isDarkScheme ? site.theme.fonts.heading.dark : site.theme.fonts.heading.light),
+                },
+                body: {
+                    name: site.theme.fonts.body.name,
+                    url: site.theme.fonts.body.url,
+                    color: (isDarkScheme ? site.theme.fonts.body.dark : site.theme.fonts.body.light),
+                },
+                link: {
+                    name: "",
+                    url: "",
+                    color: (isDarkScheme ? site.theme.fonts.link.dark : site.theme.fonts.link.light),
+                }
             },
         }
 
@@ -283,7 +288,7 @@ function App() {
         setUser("");
         setReadOnlyFlags("")
     }
-    
+
     if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
         return (
             <Wrapper>

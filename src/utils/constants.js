@@ -48,9 +48,9 @@ export const ANIMAL_GALLERY = [
 ];
 
 export const PAGE_SIZES = [
-    { value: 1, label: 1 },
-    { value: 2, label: 2 },
-    { value: 5, label: 5 },
+    // { value: 1, label: 1 },
+    // { value: 2, label: 2 },
+    // { value: 5, label: 5 },
     { value: 10, label: 10 },
     { value: 25, label: 25 },
     { value: 50, label: 50 },
@@ -84,10 +84,10 @@ export const APHORISMS = [
     "Love lights up the world.",
     "You look like a million bucks today.",
     "A stranger is a friend you have not spoken to yet.",
-    "Everyone agrees. You are the best.",
+    // "Everyone agrees. You are the best.",
     "Now is the time to try something new.",
     // "Sometimes you just need to lay on the floor.",
-    "The greatest risk is not taking one.",
+    // "The greatest risk is not taking one.",
     "You can create happiness."
 ];
 
@@ -101,13 +101,13 @@ export const INPUT = {
             REQUIRED: "An email is required!",
             PATTERN: {
                 MESSAGE: "This doesn't look like a valid email address.",
-                VALUE: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                VALUE: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             },
             TAKEN: {
                 MESSAGE: "Email already registered! Try logging in or use another email address.",
-                TYPE: "taken"
-            }
-        }
+                TYPE: "taken",
+            },
+        },
     },
     PHONE: {
         VALUE: "phone",
@@ -117,13 +117,13 @@ export const INPUT = {
             REQUIRED: "A phone number is required!",
             MAX: {
                 MESSAGE: "The phone number can only be 25 characters long.",
-                VALUE: 25
+                VALUE: 25,
             },
             MIN: {
                 MESSAGE: "The phone number must be at least 4 characters long.",
-                VALUE: 4
-            }
-        }
+                VALUE: 4,
+            },
+        },
     },
     PASSWORD: {
         VALUE: "password",
@@ -133,13 +133,13 @@ export const INPUT = {
             REQUIRED: "A password is required!",
             MAX: {
                 MESSAGE: "The password can only be 50 characters long.",
-                VALUE: 50
+                VALUE: 50,
             },
             MIN: {
                 MESSAGE: "The password must be at least 6 characters long.",
-                VALUE: 6
-            }
-        }
+                VALUE: 6,
+            },
+        },
     },
     CONFIRM_PASSWORD: {
         VALUE: "confirmPassword",
@@ -149,17 +149,17 @@ export const INPUT = {
             REQUIRED: "The password must be confirmed!",
             MAX: {
                 MESSAGE: "The password can only be 50 characters long.",
-                VALUE: 50
+                VALUE: 50,
             },
             MIN: {
                 MESSAGE: "The password must be at least 6 characters long.",
-                VALUE: 6
+                VALUE: 6,
             },
             NO_MATCH: {
                 TYPE: "no-match",
-                MESSAGE: "The passwords entered must match!"
-            }
-        }
+                MESSAGE: "The passwords entered must match!",
+            },
+        },
     },
     FIRST_NAME: {
         VALUE: "firstName",
@@ -169,13 +169,13 @@ export const INPUT = {
             REQUIRED: "A first name is required!",
             MAX: {
                 MESSAGE: "The first name can only be 150 characters long.",
-                VALUE: 150
+                VALUE: 150,
             },
             MIN: {
                 MESSAGE: "The first name must be at least 1 characters long.",
-                VALUE: 1
-            }
-        }
+                VALUE: 1,
+            },
+        },
     },
     LAST_NAME: {
         VALUE: "lastName",
@@ -185,14 +185,14 @@ export const INPUT = {
             REQUIRED: "A last name is required!",
             MAX: {
                 MESSAGE: "The last name can only be 150 characters long.",
-                VALUE: 150
+                VALUE: 150,
             },
             MIN: {
                 MESSAGE: "The last name must be at least 1 characters long.",
-                VALUE: 1
-            }
-        }
-    },    
+                VALUE: 1,
+            },
+        },
+    },
     NAME: {
         VALUE: "name",
         LABEL: "Name",
@@ -201,13 +201,13 @@ export const INPUT = {
             REQUIRED: "A name is required!",
             MAX: {
                 MESSAGE: "The name can only be 150 characters long.",
-                VALUE: 150
+                VALUE: 150,
             },
             MIN: {
                 MESSAGE: "The name must be at least 1 characters long.",
-                VALUE: 1
-            }
-        }
+                VALUE: 1,
+            },
+        },
     },
     BODY: {
         VALUE: "body",
@@ -217,13 +217,13 @@ export const INPUT = {
             REQUIRED: "A text body is required!",
             MAX: {
                 MESSAGE: "The text body can only be 30,000 characters long.",
-                VALUE: 30000
+                VALUE: 30000,
             },
             MIN: {
                 MESSAGE: "The text body must be at least 10 characters long.",
-                VALUE: 10
-            }
-        }
+                VALUE: 10,
+            },
+        },
     },
 };
 
@@ -267,8 +267,24 @@ export const DEFAULT_SITE = {
     },
     THEME: {
         FONTS: {
-            BODY: "Roboto Regular",
-            HEADING: "Roboto Bold",
+            HEADING: {
+                NAME: "Roboto Bold",
+                URL: "",
+                LIGHT: "black",
+                DARK: "white",
+            },
+            BODY: {
+                NAME: "Roboto Regular",
+                URL: "",
+                LIGHT: "black",
+                DARK: "white",
+            },
+            LINK: {
+                NAME: "",
+                URL: "",
+                LIGHT: "navy",
+                DARK: "lightblue",
+            },
         },
         COLORS: {
             PRIMARY: "dodgerblue",
@@ -280,25 +296,11 @@ export const DEFAULT_SITE = {
             GREY: "grey",
             LIGHT_GREY: "lightgrey",
             BLUE: "navy",
-            FONT: {
-                HEADING: {
-                    LIGHT: "black",
-                    DARK: "white",
-                },
-                BODY: {
-                    LIGHT: "black",
-                    DARK: "white",
-                },
-                LINK: {
-                    LIGHT: "navy",
-                    DARK: "lightblue",
-                },
-            },
             BACKGROUND: {
                 LIGHT: "white",
-                DARK: "black"
+                DARK: "black",
             },
-        }
+        },
     },
 };
 

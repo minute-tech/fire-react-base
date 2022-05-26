@@ -1,16 +1,15 @@
 import styled, { css }  from 'styled-components';
 import { Link } from "react-router-dom";
 import { SIZES } from '../constants';
-// import { HashLink } from 'react-router-hash-link'; // ** hash links with react-router v6?
 
 export const HeadingFont = css`
-    color: ${props => props.theme?.colors?.font?.heading ?? "black"};
-    font-family: ${props => props.theme?.fonts?.heading ?? "Arial, Helvetica, sans-serif"};
+    color: ${props => props.theme?.fonts?.heading?.color ?? "black"};
+    font-family: ${props => props.theme?.fonts?.heading.name ?? "Arial, Helvetica, sans-serif"};
 `;
 
 export const BodyFont = css`
-    color: ${props => props.theme?.colors?.font?.body ?? "black"};
-    font-family: ${props => props.theme?.fonts?.body ?? "Arial, Helvetica, sans-serif"};
+    color: ${props => props.theme?.fonts?.body?.color ?? "black"};
+    font-family: ${props => props.theme?.fonts?.body.name ?? "Arial, Helvetica, sans-serif"};
 `;
 
 // Headings //
@@ -114,7 +113,7 @@ export const Body = styled.p`
 export const ALink = styled.a`
     cursor: pointer;
     ${BodyFont};
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")} !important;
+    color: ${props => props.color ? props.color : (props.theme?.fonts?.link?.color ?? "navy")} !important;
     text-decoration: none;
     transition: color 0.15s linear;
     margin: ${props => props.margin ? props.margin : "0"};
@@ -126,7 +125,7 @@ export const ALink = styled.a`
 
 export const LLink = styled(Link)`
     ${BodyFont};
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link || "navy")} !important;
+    color: ${props => props.color ? props.color : (props.theme?.fonts?.link?.color || "navy")} !important;
     cursor: pointer;
     margin: ${props => props.margin ? props.margin : "0"};
     text-decoration: none;
@@ -139,7 +138,7 @@ export const LLink = styled(Link)`
 
 export const SLink = styled.span`
     ${BodyFont};
-    color: ${props => props.color ? props.color : (props.theme?.colors?.font?.link ?? "navy")} !important;
+    color: ${props => props.color ? props.color : (props.theme?.fonts?.link?.color ?? "navy")} !important;
     cursor: pointer;
     text-decoration: none;
     transition: color 0.15s linear;

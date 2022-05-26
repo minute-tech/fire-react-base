@@ -184,7 +184,7 @@ export const BurgerNavLink = styled(NavLink)`
     padding: 2rem 0;
     font-weight: bold;
     letter-spacing: 0.5rem;
-    color: ${props => props.color ? props.color : props.theme.colors.font.body} !important;
+    color: ${props => props.color ? props.color : props.theme.fonts.body.color} !important;
     text-decoration: none;
     transition: all 0.3s linear;
 
