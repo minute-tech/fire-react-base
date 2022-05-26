@@ -98,11 +98,18 @@ export const PageSelectInput = styled.select`
 `;
 
 // File input
+export const FileDragForm = styled.form`
+    transition: all 0.3s linear;
+    max-width: 100%;
+    position: relative;
+    background-color: ${props => props.dragActive ? props.theme.colors.primary : "transparent"};
+`;
+
 export const FileInputLabel = styled.label`
     display: block;
     cursor: pointer;
-    color: ${props => props.selected ? props.theme.colors.red : props.theme.fonts.body.color};
-    border: 2px solid ${props => props.selected ? props.theme.colors.red : props.theme.colors.primary};
+    color: ${props => props.selected ? props.theme.colors.green : props.theme.fonts.body.color};
+    border: 2px solid ${props => props.selected ? props.theme.colors.green : props.theme.colors.primary};
     font-size: 18px;
     padding: 20px;
     margin: 25px 0px;
@@ -111,6 +118,17 @@ export const FileInputLabel = styled.label`
 
 export const FileInput = styled.input`
     display: none;
+`;
+
+export const FileDragBox = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 1rem;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
 `;
 
 // Search

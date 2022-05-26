@@ -33,9 +33,6 @@ function Views(props) {
     // If the value is a URL for either of the fonts, then load from URL
     let css = ``;
     if(theme.fonts.heading.url.includes("https://") && theme.fonts.body.url.includes("https://")){
-        console.log("grabbing fonts: ")
-        console.log(theme.fonts.heading)
-        console.log(theme.fonts.body)
         css = `
             @font-face {
                 font-family: ${theme.fonts.heading.name ? theme.fonts.heading.name : "Arial, Helvetica, sans-serif"};

@@ -42,7 +42,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - Run `npm install` in the terminal window in main directory
    - Navigate to functions directory with `cd ./functions/` then run `npm install` there as well, then back to main directory `cd ../`
 
-**5. Set new Firebase project aliases:**
+**5. Set new Firebase project aliases**
    - Delete file `.firebaserc`
    - $ `firebase use --add` once for each 'live' and 'test'
 
@@ -54,7 +54,9 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 - Enable multi-factor authentication (MFA) for this new project: https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity?project=test-fire-react-base
 - Add a test phone number with a test code to use for ever login (like +11234567890 and 123123) AND add the authorized domain if custom domain. -->
 
-<!-- Add this to readme to setup font/other external resources? https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin -->
+**8. Set `cors.json` to include relevant domains**
+   - This is needed to load fonts from the URL they are store under
+   - See https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin 
 
 **8. Search for TODOs around code**
    - "Fire React Base" / "fire-react-base" usages replaced by your app name in some places

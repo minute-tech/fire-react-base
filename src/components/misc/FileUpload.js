@@ -1,28 +1,32 @@
 import React, { useState } from 'react'
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { BsCloudUpload } from "react-icons/bs";
-import { CgAttachment } from "react-icons/cg";
+import { CgSoftwareUpload } from "react-icons/cg";
 import { BiCheck } from 'react-icons/bi';
+import { useTheme } from 'styled-components';
 
 import { storage } from "../../Fire";
-import {  FileInput, FileInputLabel, Button } from "../../utils/styles/forms.js";
+import {  FileInput, FileInputLabel, Button, FileDragBox, FileDragForm } from "../../utils/styles/forms.js";
 import { Body, Label } from '../../utils/styles/text';
-import { Div, Progress } from '../../utils/styles/misc';
+import { Div, Hr, Progress } from '../../utils/styles/misc';
 import { Img } from '../../utils/styles/images';
 import { FormError } from './Misc';
 import { SIZES } from '../../utils/constants';
+import { toast } from 'react-toastify';
 
 function FileUpload(props) {
+    const theme = useTheme();
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState("");
+    const [dragActive, setDragActive] = useState(false);
 
-    const handleFileSelect = (e) => {
+    const handleFileSelect = (files) => {
         props.clearError(props.name);
         let passed = true;
         const mbLimit = 5;
         console.log("files: ")
-        console.log(e.target.files)
-        Array.from(e.target.files).forEach((tempFile, key, arr) => {
+        console.log(files)
+        Array.from(files).forEach((tempFile, key, arr) => {
             const fileSizeMb = (tempFile.size / (1024 ** 2)).toFixed(2);
             if(fileSizeMb > mbLimit){
                 passed = false;
@@ -39,8 +43,37 @@ function FileUpload(props) {
                     setFiles("")
                 }
             }
-          });
+        });
     }
+
+    const handleFileClick = (e) => {
+        handleFileSelect(e.target.files);
+    }
+    
+    const handleDrag = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if(e.type === "dragenter" || e.type === "dragover") {
+            setDragActive(true);
+        } else if(e.type === "dragleave") {
+            setDragActive(false);
+        }
+    };
+    
+    const handleDrop = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDragActive(false);
+        console.log("e.dataTransfer.files: ")
+        console.log(e.dataTransfer.files)
+        if(e.dataTransfer.files && e.dataTransfer.files[0]) {
+            if(!props.multiple && e.dataTransfer.files.length > 1){
+                toast.error("Sorry, but you can only add 1 file to this selection!")
+            } else {
+                handleFileSelect(e.dataTransfer.files);
+            }
+        }
+    };
 
     const uploadFile = async (file) => {
         props.setSubmitting(prevState => ({
@@ -161,70 +194,84 @@ function FileUpload(props) {
             }
         })
     }
-    
     return (
-        <div>
-            <FileInputLabel htmlFor={props.name} selected={files.length > 0 ? true : false}>
-            {props.selectBtn ? props.selectFileBtn : <><CgAttachment /> Select a new file </>}
-                <FileInput
-                    id={props.name} 
-                    type="file" 
-                    accept={props.accepts} 
-                    // multiple
-                    onChange={handleFileSelect} 
-                />
-                {files.length > 0 && Array.from(files).map((file, f) => {
-                    const fileSizeMb = (file.size / (1024 ** 2)).toFixed(2);
-                    if(files.length > 1){
-                        return (
-                            <div key={f} style={{ margin: "15px 0" }}>
-                                <Body>{f + 1}. {file.name} <i>({fileSizeMb}Mb)</i></Body>
-                            </div>
-                        )
-                    } else {
-                        if(file.type.includes("image")){
-                            return (
-                                <div key={f} style={{ margin: "15px 0" }}>
-                                    <Body>{file.name} <i>({fileSizeMb}Mb)</i></Body>
-                                    <br />
-                                    <Img
-                                        width="300px"
-                                        className={props.name}
-                                        alt="file preview"
-                                        src={URL.createObjectURL(file)}
-                                    />
-                                </div>
-                                
-                            );
-                        } else {
-                            return (
-                                <div key={f} style={{ margin: "15px 0" }}>
-                                    <Label>{file.name} <i>{fileSizeMb}Mb</i></Label>
-                                    <br />
-                                    <embed 
-                                        key={f}
-                                        width="100%"
-                                        height="auto"
-                                        src={URL.createObjectURL(file)}
-                                    />
-                                </div>
-                                
-                            );
-                        }
+        <>
+            <FileDragForm dragActive={dragActive} selected={files.length > 0} onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+                <FileInputLabel htmlFor={props.name} selected={files.length > 0}>
+                    {
+                        (files.length === 0) 
+                        ? 
+                        <Body textAlign="center"><CgSoftwareUpload size={60} /><br/> Drag and drop your file{props.multiple ? "s" : ""} here, <br/>or simply click to browse and select file{props.multiple ? "s" : ""}.</Body> 
+                        : 
+                        <Body textAlign="center" color={theme.colors.red}><CgSoftwareUpload size={60}  /><br/>Change file selection</Body>
                     }
-                })}
-                {uploadProgress > 0 && (
-                    <Progress uploadProgress={uploadProgress}>
-                        <div>
-                            <Body>{uploadProgress > 15 ? `${Math.trunc(uploadProgress)}%` : ""}{uploadProgress === 100 ? <BiCheck /> : ""}</Body>
-                        </div>
-                    </Progress>
-                )}
-            </FileInputLabel>
-            
+                    <FileInput
+                        id={props.name} 
+                        type="file" 
+                        accept={props.accepts} 
+                        multiple={props.multiple ? true : false}
+                        onChange={handleFileClick} 
+                    />
+                    
+                    {files.length > 0 && (
+                        <>
+                        <Hr color={theme.colors.green}/>
+                        <Label margin="0">Selected file{props.multiple ? "s" : ""}:</Label> 
+                        </>
+                    )}
+                    {files.length > 0 && Array.from(files).map((file, f) => {
+                        const fileSizeMb = (file.size / (1024 ** 2)).toFixed(2);
+                        if(files.length > 1){
+                            return (
+                                <div key={f}>
+                                    <Body margin="10px 0">{f + 1}. {file.name} <i>({fileSizeMb}Mb)</i></Body>
+                                </div>
+                            )
+                        } else {
+                            if(file.type.includes("image")){
+                                return (
+                                    <div key={f}>
+                                        <Body margin="10px 0">{file.name} <i>({fileSizeMb}Mb)</i></Body>
+                                        <Img
+                                            style={{border: `2px solid ${theme.colors.green}`}}
+                                            width="300px"
+                                            className={props.name}
+                                            alt="file preview"
+                                            src={URL.createObjectURL(file)}
+                                        />
+                                    </div>
+                                    
+                                );
+                            } else {
+                                return (
+                                    <div key={f}>
+                                        <Body margin="10px 0">{file.name} <i>{fileSizeMb}Mb</i></Body>
+                                        <embed 
+                                            style={{border: `2px solid ${theme.colors.green}`}}
+                                            key={f}
+                                            width="100%"
+                                            height="auto"
+                                            src={URL.createObjectURL(file)}
+                                        />
+                                    </div>
+                                    
+                                );
+                            }
+                        }
+                    })}
+                    {uploadProgress > 0 && (
+                        <Progress uploadProgress={uploadProgress}>
+                            <div>
+                                <Body>{uploadProgress > 15 ? `${Math.trunc(uploadProgress)}%` : ""}{uploadProgress === 100 ? <BiCheck /> : ""}</Body>
+                            </div>
+                        </Progress>
+                    )}
+                </FileInputLabel>
+                { dragActive && <FileDragBox onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop}></FileDragBox> }
+            </FileDragForm>
             {files.length > 0 && (
                 <Div>
-                     <Button 
+                    <Button 
                         type="button" 
                         disabled={props.submitting.file}
                         onClick={() => uploadFile(files[0])}
@@ -236,7 +283,7 @@ function FileUpload(props) {
             {props.error && (
                 <><Body display="inline" size={SIZES.LG} color={props.theme.colors.red}><b>Error</b>:</Body>  <FormError error={props.error} /> </>
             )}
-        </div>
+        </>
     )
 }
 

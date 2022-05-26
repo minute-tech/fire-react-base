@@ -342,11 +342,9 @@ function Profile(props) {
                 <ModalContainer onClick={() => toggleModal(false, 0)}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
                         <Label>Update profile avatar</Label>
-                        <Body>Select a new picture from your machine:</Body>
                         <FileUpload
                             theme={theme}
                             name="avatar"
-                            selectBtn=""
                             accepts="image/png, image/jpg, image/jpeg" 
                             onUploadSuccess={updateAvatar}
                             user={props.user}

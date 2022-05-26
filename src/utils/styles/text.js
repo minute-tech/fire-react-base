@@ -59,6 +59,7 @@ export const H4 = styled.h4`
 export const Body = styled.p`
     margin: ${props => props.margin ? props.margin : "1em 0"};
     display: ${props => props.display ? props.display : "block"};
+    text-align: ${props => props.textAlign ? props.textAlign : "left"};
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};
 

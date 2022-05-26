@@ -411,7 +411,7 @@ export const Div = styled.div`
 `;
 
 export const Hr = styled.div`
-    border-bottom: 2px solid ${props => props.theme?.colors?.primary || "black"};
+    border-bottom: 2px solid ${props => props.color ? props.color : (props.theme?.colors?.primary || "black")};
     margin: ${props => props.margin ? props.margin : "15px 0"};
     width: ${props => props.width ? props.width : "100%"};
     float: ${props => props.selected ? props.selected : "none"};
