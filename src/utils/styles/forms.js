@@ -1,3 +1,4 @@
+import { transparentize } from 'polished';
 import styled from 'styled-components';
 import { BTYPES, SIZES } from '../constants.js';
 import { BodyFont } from './text';
@@ -106,6 +107,7 @@ export const FileDragForm = styled.form`
 `;
 
 export const FileInputLabel = styled.label`
+    transition: all 0.3s linear;
     display: block;
     cursor: pointer;
     color: ${props => props.selected ? props.theme.colors.green : props.theme.fonts.body.color};
@@ -114,6 +116,10 @@ export const FileInputLabel = styled.label`
     padding: 20px;
     margin: 25px 0px;
     ${BodyFont};
+
+    &:hover {
+        background-color: ${props => transparentize(0.6, props.selected ? props.theme.colors.green : props.theme.colors.primary)};
+    }
 `;
 
 export const FileInput = styled.input`

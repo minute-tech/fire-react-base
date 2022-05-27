@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { BsCloudUpload } from "react-icons/bs";
 import { CgSoftwareUpload } from "react-icons/cg";
@@ -11,11 +11,13 @@ import { Body, Label } from '../../utils/styles/text';
 import { Div, Hr, Progress } from '../../utils/styles/misc';
 import { Img } from '../../utils/styles/images';
 import { FormError } from './Misc';
-import { SIZES } from '../../utils/constants';
+import { BTYPES, SIZES } from '../../utils/constants';
 import { toast } from 'react-toastify';
+import { FaTrash } from 'react-icons/fa';
 
 function FileUpload(props) {
     const theme = useTheme();
+    const formRef = useRef();
     const [files, setFiles] = useState([]);
     const [uploadProgress, setUploadProgress] = useState("");
     const [dragActive, setDragActive] = useState(false);
@@ -40,7 +42,7 @@ function FileUpload(props) {
                         type: "big-file", 
                         message: `Some files selected exceed the accept file size limit of ${mbLimit}Mb. Please only select files below this file size to continue.`
                     });
-                    setFiles("")
+                    setFiles([])
                 }
             }
         });
@@ -73,6 +75,11 @@ function FileUpload(props) {
                 handleFileSelect(e.dataTransfer.files);
             }
         }
+    };
+
+    const deleteFileSelection = () => {
+        formRef.current.value = ""
+        setFiles([]);
     };
 
     const uploadFile = async (file) => {
@@ -206,6 +213,7 @@ function FileUpload(props) {
                         <Body textAlign="center" color={theme.colors.red}><CgSoftwareUpload size={60}  /><br/>Change file selection</Body>
                     }
                     <FileInput
+                        ref={formRef}
                         id={props.name} 
                         type="file" 
                         accept={props.accepts} 
@@ -277,6 +285,15 @@ function FileUpload(props) {
                         onClick={() => uploadFile(files[0])}
                     >
                         Upload &amp; Save {props.name} &nbsp;<BsCloudUpload size={20} />
+                    </Button>
+                    <Button 
+                        type="button" 
+                        color={theme.colors.red}
+                        size={SIZES.SM}
+                        btype={BTYPES.INVERTED}
+                        onClick={() => deleteFileSelection()}
+                    >
+                        Remove file selection &nbsp;<FaTrash size={20} />
                     </Button>
                 </Div>
             )}
