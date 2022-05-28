@@ -20,15 +20,15 @@ export const BrandLink = styled(NavLink)`
     display: inline-flex;
     align-items: center;
     text-decoration: none;
-    height: 100px;
-    max-height: 100px;  
+    height: ${props => props.height ? `${props.height}px` : ""};
+    max-height: ${props => props.height ? `${props.height}px` : ""};  
     white-space: nowrap;
     overflow: hidden;
 `;
 
 export const NavLogo = styled.img`
     width: 100%;
-    height: auto;
+    height: ${props => props.height ? `${props.height}px` : "auto"};
     max-width: ${props => props.width ? `${props.width}px` : "150px"}; 
     margin: 15px 10px;
     

@@ -192,8 +192,13 @@ export const Row = styled(GRow)`
 `;
 
 export const Column = styled(GCol)`
-    text-align: ${props => props.align ? props.align : "left"};
+    transition: all 0.3s linear;
+    /* Forced to label this as not camelcase because of some weird react console error  */
+    /* Error: React does not recognize the textAlign prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, 
+    spell it as lowercase textalign instead. If you accidentally passed it from a parent component, remove it from the DOM element. */
+    text-align: ${props => props.textalign ? props.textalign : "left"};
     margin: ${props => props.margin ? props.margin : "0 0 10px 0"};
+    opacity: ${props => props.hidden ? 0 : 1};
     background: ${props => props.background ? props.background : "none"};
     background-clip: ${props => props.background ? "content-box" : "none"};
 `;

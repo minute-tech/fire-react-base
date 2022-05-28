@@ -8,6 +8,7 @@ export const Img = styled.img`
     margin: ${props => props.margin ? props.margin : "0"};
     height: auto;
     border-radius: ${props => props.rounded ? "50%" : "0"};
+    border: ${props => props.border ? props.border : "none"};
     float: ${props => props.float || "none"};
     max-width: ${props => props.width || "100px"};
 `;

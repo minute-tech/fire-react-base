@@ -55,16 +55,20 @@ export const TextAreaInput = styled.textarea`
     }
 `;
 
-export const RadioInput = styled.input`
+export const RadioInput = styled.input.attrs({ 
+    type: "radio"
+})`
     transform: scale(1.25);
-    margin: 15px 15px 0 0;
+    margin: 10px;
     
     /* Set focus if error */
     outline-color: ${props => props.error ? props.theme.colors.red : "none"};
     box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
 `;
 
-export const CheckboxInput = styled.input`
+export const CheckboxInput = styled.input.attrs({ 
+    type: "checkbox"
+})`
     transform: scale(1.5);
     margin: 15px 15px 0 0;
     /* Set focus if error */
@@ -122,7 +126,9 @@ export const FileInputLabel = styled.label`
     }
 `;
 
-export const FileInput = styled.input`
+export const FileInput = styled.input.attrs({ 
+    type: "file"
+})`
     display: none;
 `;
 
@@ -160,6 +166,7 @@ export const Button = styled.button`
     border: ${props => (props.btype !== BTYPES.INVERTED && props.btype === BTYPES.TEXTED) ? "transparent" : (props.color ?? props.theme.colors.primary)} solid 2px; 
     border-radius: ${props => !props.rounded ? "0px" : "20px"};
     background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? (props.color ?? props.theme.colors.primary) : "transparent"};
+    display: ${props => props.hidden ? "none" : "inline"};
     cursor: pointer;
     a {
         text-decoration: none; 

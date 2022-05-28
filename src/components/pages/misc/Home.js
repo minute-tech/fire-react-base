@@ -85,33 +85,33 @@ function Home(props){
                 <H1>Grid System</H1>
                 <Grid fluid>
                     <Row>
-                        <Column sm={12} align="center" background={theme.colors.primary}>
+                        <Column sm={12} textalign="center" background={theme.colors.primary}>
                             <H3>Column 1</H3>
                             <Body>More information below</Body>
                         </Column>
                     </Row>
                     
                     <Row>
-                        <Column sm={12} md={6} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} textalign="center" background={theme.colors.primary}>
                             <H3>Column 2</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={6} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} textalign="center" background={theme.colors.primary}>
                             <H3>Column 3</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
                     </Row>
 
                     <Row>
-                        <Column sm={12} md={4} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={4} textalign="center" background={theme.colors.primary}>
                             <H3>Column 4</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={4} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={4} textalign="center" background={theme.colors.primary}>
                             <H3>Column 5</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={4} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={4} textalign="center" background={theme.colors.primary}>
                             <H3>Column 6</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
@@ -119,20 +119,20 @@ function Home(props){
                     </Row>
 
                     <Row>
-                        <Column sm={12} md={6} lg={3} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={3} textalign="center" background={theme.colors.primary}>
                             <H3>Column 7</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={3} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={3} textalign="center" background={theme.colors.primary}>
                             <H3>Column 8</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={3} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={3} textalign="center" background={theme.colors.primary}>
                             <H3>Column 9</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={3} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={3} textalign="center" background={theme.colors.primary}>
                             <H3>Column 9</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
@@ -140,30 +140,30 @@ function Home(props){
                     </Row>
 
                     <Row>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 10</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 11</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 12</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 13</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 14</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} textalign="center" background={theme.colors.primary}>
                             <H3>Column 15</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
@@ -171,58 +171,58 @@ function Home(props){
                     </Row>
                     
                     <Row>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary} padding="10px">
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary} padding="10px">
                             <H3>Column 16</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 17</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 18</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 19</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 20</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 21</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 22</H3>
                             <Body>More information below, but in this cell we are going to have longer text.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 23</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 24</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 25</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 26</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>
                         </Column>
-                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} align="center" background={theme.colors.primary}>
+                        <Column sm={12} md={6} lg={4} xl={2} xxl={1} textalign="center" background={theme.colors.primary}>
                             <H3>Column 27</H3>
                             <Body>More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here. 
                             More information below, but in this cell we are going to have longer text to see what it is like if a cell has extra content relative to it's neighboring cells in the grid system that we are creating here.</Body>

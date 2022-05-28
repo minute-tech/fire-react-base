@@ -138,9 +138,8 @@ function ContactForm(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column sm={12} align="center">
+                            <Column sm={12} textalign="center">
                                 <CheckboxInput 
-                                    type="checkbox"
                                     error={contactForm.formState.errors.policyAccept}
                                     {
                                         ...contactForm.register("policyAccept", {
@@ -157,7 +156,7 @@ function ContactForm(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column sm={12} align="center">
+                            <Column sm={12} textalign="center">
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.message}

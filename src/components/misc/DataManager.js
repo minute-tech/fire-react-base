@@ -627,7 +627,7 @@ export default function DataManager(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column sm={12} align="center">
+                            <Column sm={12} textalign="center">
                                 <FormError error={searchForm.formState.errors.term} /> 
                             </Column>
                         </Row>
@@ -774,7 +774,7 @@ export default function DataManager(props) {
                     <Hr/>
                     <Grid fluid>
                         <Row align="center" justify="center">
-                            <Column sm={12} md={4} align="center">
+                            <Column sm={12} md={4} textalign="center">
                                 {currentPage !== 1 && (
                                     <Button 
                                         size={SIZES.SM}
@@ -785,7 +785,7 @@ export default function DataManager(props) {
                                     </Button>
                                 )}
                             </Column>
-                            <Column sm={12} md={4} align="center">
+                            <Column sm={12} md={4} textalign="center">
                                 <Body margin="0" size={SIZES.SM}>Showing {items.length} of {itemCount}</Body>
                                 {!search.term && (<Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>)}
                                 <Body margin="10px 0" size={SIZES.SM}>
@@ -809,7 +809,7 @@ export default function DataManager(props) {
                                     )}
                                 </Body>
                             </Column>
-                            <Column sm={12} md={4} align="center">
+                            <Column sm={12} md={4} textalign="center">
                                 {(currentPage !== Math.ceil(itemCount/itemsPerPage) && !search.term) && (
                                     <Button 
                                         size={SIZES.SM}

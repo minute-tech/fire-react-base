@@ -27,7 +27,7 @@ function Profile(props) {
     const navigate = useNavigate()
     const [submitting, setSubmitting] = useState({ 
         updateUser: false,
-        file: false
+        files: false
     });
 
     const updateUserForm = useForm({
@@ -111,20 +111,20 @@ function Profile(props) {
         }
     }
 
-    const updateAvatar = (url) => {
+    const updateAvatar = (urls, valueName) => {
         updateDoc(doc(firestore, "users", props.fireUser.uid), {
-            avatar: url
+            avatar: urls[0],
         }).then(() => {
             console.log("Successful update of user doc to Firestore for pic.");
             updateProfile(auth.currentUser, {
-                photoURL: url
+                photoURL: urls[0],
             }).then(() => {
                 toast.success(`Successfully updated the user profile.`);
                 console.log("Successfully updated the user profile pic on firebase");
                 toggleModal(false, 0)
                 setSubmitting(prevState => ({
                     ...prevState,
-                    file: false
+                    files: false
                 }));
             }).catch((error) => {
                 console.error(error);
@@ -134,7 +134,7 @@ function Profile(props) {
             toast.error(`Error setting users doc: ${error}`);
             setSubmitting(prevState => ({
                 ...prevState,
-                file: false
+                files: false
             }));
         });
     }
@@ -171,7 +171,7 @@ function Profile(props) {
             <form onSubmit={ updateUserForm.handleSubmit(updateUser) }>
                 <Grid fluid>
                     <Row style={{ height: "200px" }}>
-                        <Column sm={12} align="center">
+                        <Column sm={12} textalign="center">
                             <Img 
                                 src={props.user.avatar || require("../../../../assets/images/misc/user.png")}
                                 rounded
@@ -181,7 +181,7 @@ function Profile(props) {
                         </Column>
                     </Row>
                     <Row>
-                        <Column sm={12} align="center">
+                        <Column sm={12} textalign="center">
                             <Button 
                                 type="button"
                                 btype={BTYPES.TEXTED} 
@@ -284,20 +284,20 @@ function Profile(props) {
                         </Column>
                     </Row>               
                     <Row>
-                        <Column md={12} align="center">
+                        <Column md={12} textalign="center">
                             {updateUserForm.formState.isDirty && (
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.updateUser}
                                 >
-                                    Submit
+                                    Save changes
                                 </Button>
                             )}
                         </Column>
                     </Row>
                     <Hr/>
                     <Row align="center" justify="center">
-                        <Column sm={12} md={4} align="center">
+                        <Column sm={12} md={4} textalign="center">
                             <Button 
                                 type="button"
                                 color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
@@ -312,11 +312,11 @@ function Profile(props) {
                                 }
                             </Button>
                         </Column>
-                        <Column sm={12} md={4} align="center">
+                        <Column sm={12} md={4} textalign="center">
                             <Label>Account created:&nbsp;</Label> 
                             <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
                         </Column>
-                        <Column sm={12} md={4} align="center">
+                        <Column sm={12} md={4} textalign="center">
                             {!props.fireUser.emailVerified && !emailVerifySent && (
                                 <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
                                     Verify Email
@@ -347,11 +347,11 @@ function Profile(props) {
                     <ModalCard onClick={(e) => e.stopPropagation()}>
                         <Label>Update profile avatar</Label>
                         <FileUpload
-                            theme={theme}
                             name="avatar"
+                            path={`users/${props.user.id}/images/avatar/`}
                             accepts="image/png, image/jpg, image/jpeg" 
+                            imageRatio={1}
                             onUploadSuccess={updateAvatar}
-                            user={props.user}
                             setSubmitting={setSubmitting}
                             submitting={submitting}
                             setError={updateUserForm.setError}

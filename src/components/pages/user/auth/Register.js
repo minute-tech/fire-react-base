@@ -254,9 +254,8 @@ function Register(props) {
                         </Column>
                     </Row>                        
                     <Row>
-                        <Column sm={12} align="center">
+                        <Column sm={12} textalign="center">
                             <CheckboxInput
-                                type="checkbox"
                                 error={registerForm.formState.errors.policyAccept}
                                 {
                                     ...registerForm.register("policyAccept", {
@@ -273,7 +272,7 @@ function Register(props) {
                         </Column>
                     </Row>
                     <Row>
-                        <Column md={12} align="center">
+                        <Column md={12} textalign="center">
                             <Button 
                                 type="submit" 
                                 disabled={submitting.register}
@@ -283,14 +282,14 @@ function Register(props) {
                         </Column>
                     </Row>
                     <Row>
-                        <Column md={12} align="center">
+                        <Column md={12} textalign="center">
                             <LLink to="/login">
                                 Already have an account?
                             </LLink>
                         </Column>
                     </Row>
                     <Row>
-                        <Column md={12} align="center">
+                        <Column md={12} textalign="center">
                             <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                             <Recaptcha id="recaptcha" />
                         </Column>

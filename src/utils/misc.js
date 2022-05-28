@@ -19,16 +19,6 @@ export function checkURL(url) {
     }
 };
 
-// Ensure size is no more than 1GB (i think! lol, double check this)
-export function validateSize(file) {
-    var FileSize = file.files[0].size / 1024 / 1024; // in MB
-    if (FileSize > 1000) {
-        return false
-    } else {
-        return true
-    }
-};
-
 // Generate random ID
 export function genId(length) {
     var result           = "";

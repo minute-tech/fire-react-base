@@ -160,7 +160,7 @@ function UserLogin(props) {
                             
                         </Row>
                         <Row>
-                            <Column md={12} align="center">
+                            <Column md={12} textalign="center">
                                 <Button 
                                     type="submit" 
                                     disabled={submitting.login}
@@ -170,19 +170,19 @@ function UserLogin(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column md={12} align="center">
+                            <Column md={12} textalign="center">
                                 <LLink to="/register">
                                     Don't have an account?
                                 </LLink>
                             </Column>
                         </Row>
                         <Row>
-                            <Column md={12} align="center">
+                            <Column md={12} textalign="center">
                                 <SLink onClick={() => toggleModal()}>Forgot password?</SLink>
                             </Column>
                         </Row>
                         <Row>
-                            <Column md={12} align="center">
+                            <Column md={12} textalign="center">
                                 <Body size={SIZES.SM}>This site is protected by reCAPTCHA and the <ALink target="_blank" rel="noopener" href="https://policies.google.com">Google Privacy Policy and Terms of Service</ALink> apply.</Body>
                                 <Recaptcha id="recaptcha" />
                             </Column>

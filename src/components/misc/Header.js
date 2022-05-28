@@ -33,14 +33,15 @@ function Header(props) {
             type: "user"
         },
     ];
-
+console.log(props.site.logo.height)
     return (
         <>
         <HeaderContainer>
             <BrandContainer>
-                <BrandLink to="/">
+                <BrandLink to="/" height={props.site.logo.height}>
                     <NavLogo 
                         width={props.site.logo.width}
+                        height={props.site.logo.height}
                         margin="0" 
                         src={props.site.logo.url} 
                         // TODO: if logo is loading slow, just load from local folder instead of URL
