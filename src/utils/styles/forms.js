@@ -191,6 +191,18 @@ export const Button = styled.button`
         font-weight: 700;
     `}
 
+    ${(props) => (props.size === SIZES.XXL) && `
+        font-size: 28px;
+        padding: 30px 80px;
+        font-weight: 900;
+    `}
+
+    ${(props) => (props.size === SIZES.XXXL) && `
+        font-size: 36px;
+        padding: 45px 100px;
+        font-weight: 900;
+    `}
+
     // Psuedo-classes
     &:hover {
         text-decoration: none;

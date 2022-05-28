@@ -8,7 +8,7 @@ import { BTYPES, SIZES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/forms';
 import { HillSeparators, Iframe, IframeContainer, Path, Squiggle, Svg } from '../../../utils/styles/images.js';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Column, Grid, Hr, Wrapper, Row, Centered, FullWidthLine, Container } from '../../../utils/styles/misc';
-import { Body, H1, H3, LLink } from '../../../utils/styles/text';
+import { ALink, Body, H1, H3, LLink } from '../../../utils/styles/text';
 import { Tooltip } from '../../misc/Misc.js';
 
 function Home(props){
@@ -44,16 +44,29 @@ function Home(props){
                     <BgMediaBody>
                         {props.site.hero.body}
                     </BgMediaBody>
-                    
-                    <LLink to={props.site.hero.cta.link}>
-                        <Button 
-                            type="button"
-                            size={props.site.hero.cta.size} 
-                            color={props.site.hero.cta.color}
-                        >
-                            {props.site.hero.cta.text}
-                        </Button>
-                    </LLink>
+                    {props.site.hero.cta.link.includes("https://") && (
+                        <ALink href={props.site.hero.cta.link} target={"_blank"} rel="noopener noreferrer">
+                            <Button 
+                                type="button"
+                                size={props.site.hero.cta.size} 
+                                color={props.site.hero.cta.color}
+                            >
+                                {props.site.hero.cta.text}
+                            </Button>
+                        </ALink>
+                    )}
+                    {!props.site.hero.cta.link.includes("https://") && (
+                         <LLink to={props.site.hero.cta.link}>
+                            <Button 
+                                type="button"
+                                size={props.site.hero.cta.size} 
+                                color={props.site.hero.cta.color}
+                            >
+                                {props.site.hero.cta.text}
+                            </Button>
+                        </LLink>
+                    )}
+                   
                 </BgMediaModal>
             </BgMediaContainer>
             <Wrapper>

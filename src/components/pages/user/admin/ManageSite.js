@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { CgCheck, CgClose } from 'react-icons/cg'
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai'
 
-import { Button, RadioInput, TextInput } from '../../../../utils/styles/forms'
+import { Button, RadioInput, SelectInput, TextAreaInput, TextInput } from '../../../../utils/styles/forms'
 import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 import { Body, H1, H2, H3, Label, LLink } from '../../../../utils/styles/text'
@@ -83,8 +83,8 @@ export default function ManageSite(props) {
                 cta: {
                     text: props.site.hero.cta.text,
                     link: props.site.hero.cta.link,
-                    size: props.site.hero.cta.size,
                     color: props.site.hero.cta.color,
+                    size: props.site.hero.cta.size,
                 },
             }
         }
@@ -453,7 +453,7 @@ export default function ManageSite(props) {
                                 <Label htmlFor={"name"} br>Site Name:</Label>
                                 <TextInput
                                     type="text" 
-                                    error={siteForm.formState.errors.name}
+                                    error={siteForm.formState.errors?.name ?? ""}
                                     placeholder={`My Awesome Site`} 
                                     { 
                                         ...siteForm.register("name", {
@@ -469,7 +469,7 @@ export default function ManageSite(props) {
                                         })
                                     } 
                                 />
-                                <FormError error={siteForm.formState.errors.name} /> 
+                                <FormError error={siteForm.formState.errors?.name ?? ""} /> 
                             </Column>
                             <Column sm={12} md={6}>
                                 <Label htmlFor={"logo.showTitle"} br>Show name as title?</Label>
@@ -494,6 +494,30 @@ export default function ManageSite(props) {
                                 />
                                 <Body display="inline" margin="0">No</Body>
                                 <FormError error={siteForm.formState.errors?.logo?.showTitle ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor={"emails.support"} br>Support Email:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.emails?.support ?? ""}
+                                    placeholder={`help@minute.tech`} 
+                                    { 
+                                        ...siteForm.register("emails.support", {
+                                            required: "A support email is required!",
+                                            maxLength: {
+                                                value: 50,
+                                                message: "The support email must be at most 50 characters long."
+                                            },
+                                            minLength: {
+                                                value: 3,
+                                                message: "The support email must be at least 3 characters long."
+                                            },
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.emails?.support ?? ""} /> 
                             </Column>
                         </Row>
                         <H2>Logo</H2>
@@ -891,22 +915,6 @@ export default function ManageSite(props) {
                             </Column>
                         </Row>
                         <H2>Hero</H2>
-                        <Row>
-                            <Column sm={6} md={6}>
-                                <Label htmlFor={"hero.heading"} br>Heading:</Label>
-                                <TextInput
-                                    type="text" 
-                                    error={siteForm.formState.errors?.hero?.heading ?? ""}
-                                    placeholder={"Best Site Ever"}
-                                    { 
-                                        ...siteForm.register("hero.heading", {
-                                            required: "A hero heading is required!",
-                                        })
-                                    } 
-                                />
-                                <FormError error={siteForm.formState.errors?.hero?.heading ?? ""} /> 
-                            </Column>
-                        </Row>
                         <Row align="center">
                             <Column sm={12} md={4} textalign="center">
                                 <Label br>Current Banner</Label>
@@ -968,6 +976,94 @@ export default function ManageSite(props) {
                                     onClick={() => toggleModal(true, "logo.url")}>
                                         Update selection
                                 </Button>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor={"hero.heading"} br>Heading:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.hero?.heading ?? ""}
+                                    placeholder={"Best Site Ever"}
+                                    { 
+                                        ...siteForm.register("hero.heading")
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.heading ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Label htmlFor={"hero.body"} br>Body:</Label>
+                                <TextAreaInput
+                                    error={siteForm.formState.errors?.hero?.body ?? ""}
+                                    placeholder={"Explain the reason visitors are at the site here!"}
+                                    { 
+                                        ...siteForm.register("hero.body")
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.body ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <H3>Call To Action (CTA)</H3>
+                        <Row>
+                            <Column sm={12} md={6} lg={3}>
+                                <Label htmlFor={"hero.cta.text"} br>Button text:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.hero?.cta?.text ?? ""}
+                                    placeholder={"Explain the reason visitors are at the site here!"}
+                                    {
+                                        ...siteForm.register("hero.cta.text", {
+                                            maxLength: {
+                                                value: 50,
+                                                message: "The site name must be at most 50 characters long."
+                                            },
+                                            minLength: {
+                                                value: 2,
+                                                message: "The site name must be at least 2 characters long."
+                                            },
+                                        })
+                                    }
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.cta?.text ?? ""} /> 
+                            </Column>
+                            <Column sm={12} md={6} lg={3}>
+                                <Label htmlFor={"hero.cta.link"} br>Button link:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.hero?.cta?.link ?? ""}
+                                    placeholder={"/about"}
+                                    {
+                                        ...siteForm.register("hero.cta.link")
+                                    }
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.cta?.link ?? ""} /> 
+                            </Column>
+                            <Column sm={12} md={6} lg={3}>
+                                <Label htmlFor={"hero.cta.color"} br>Button color: <MiniColor color={props.site.hero.cta.color} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.hero?.cta?.color ?? ""}
+                                    placeholder={"Explain the reason visitors are at the site here!"}
+                                    {
+                                        ...siteForm.register("hero.cta.color")
+                                    }
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.cta?.color ?? ""} /> 
+                            </Column>
+                            <Column sm={12} md={6} lg={3}>
+                                <Label htmlFor={"hero.cta.size"} br>Button size:</Label>
+                                <SelectInput defaultValue={props.site.hero.cta.size} {...siteForm.register("hero.cta.size")}>
+                                    {
+                                        Object.entries(SIZES).map(([key, size]) => {
+                                            return (
+                                                <option key={key} value={size}>{size.toUpperCase()}</option>
+                                            )
+                                        })
+                                    }
+                                </SelectInput>
+                                <FormError error={siteForm.formState.errors?.hero?.cta?.size ?? ""} /> 
                             </Column>
                         </Row>
                         <Row>
@@ -1075,21 +1171,20 @@ export default function ManageSite(props) {
                         <ModalCard onClick={(e) => e.stopPropagation()}>
                             <Label>Update body font:</Label>
                             <FileUpload
-                                    name="hero.banner"
-                                    path={`public/site/fonts/`}
-                                    accepts="*"
-                                    aspectRatio={{
-                                        numer: 16,
-                                        denom: 9,
-                                    }}
-                                    onUploadSuccess={setUrl}
-                                    setSubmitting={setSubmitting}
-                                    submitting={submitting}
-                                    setError={siteForm.setError}
-                                    clearError={siteForm.clearErrors}
-                                    error={siteForm.formState?.errors?.hero?.banner ?? ""}
-                                />
-                            
+                                name="hero.banner"
+                                path={`public/site/fonts/`}
+                                accepts="*"
+                                aspectRatio={{
+                                    numer: 16,
+                                    denom: 9,
+                                }}
+                                onUploadSuccess={setUrl}
+                                setSubmitting={setSubmitting}
+                                submitting={submitting}
+                                setError={siteForm.setError}
+                                clearError={siteForm.clearErrors}
+                                error={siteForm.formState?.errors?.hero?.banner ?? ""}
+                            />
                             <Hr />
                             <Button 
                                 type="button"
