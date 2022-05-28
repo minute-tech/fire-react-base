@@ -33,7 +33,7 @@ function Header(props) {
             type: "user"
         },
     ];
-console.log(props.site.logo.height)
+    
     return (
         <>
         <HeaderContainer>

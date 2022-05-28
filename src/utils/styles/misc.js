@@ -362,16 +362,23 @@ export const Progress = styled.div`
 export const TooltipContainer = styled.div`
     position: relative;
     display: inline-block;
+    z-index: 5;
     // TODO: would be nice if this tooltip could extend past it's child... might pose an issue in the future.
     div:first-child  {
+        font-size: 14px !important;
         ${BodyFont};
         position: absolute;
-        background: rgba(0, 0, 0, 0.7);
+        background: rgba(0, 0, 0, 0.8);
+        width: 12vw;
         color: white !important;
         padding: 10px;
         border-radius: 5px;
         top: calc(100% + 5px);
         display: none;
+        
+        @media (max-width: 768px) {
+            width: 20vw;
+        }
     }
 
     &:hover div:first-child {
@@ -465,3 +472,11 @@ export const DevAlert = styled.div`
         opacity: 0;
     }
 `
+
+export const MiniColor = styled.div`
+    vertical-align: middle;
+    display: inline-block;
+    height: 1em;
+    width: 1em;
+    background-color: ${props => props.color ? props.color : "grey"};
+`;

@@ -22,10 +22,6 @@ export const TextInput = styled.input`
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
-
-    @media (max-width: 768px) {
-        width: 90%;
-    }
 `;
 
 export const TextAreaInput = styled.textarea`
@@ -50,9 +46,6 @@ export const TextAreaInput = styled.textarea`
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
 
-    @media (max-width: 768px) {
-        width: 90%;
-    }
 `;
 
 export const RadioInput = styled.input.attrs({ 

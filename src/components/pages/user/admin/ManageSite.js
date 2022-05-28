@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components'
 import { doc, getDoc, setDoc, deleteDoc, updateDoc } from 'firebase/firestore'
 import { toast } from 'react-toastify'
-import { FaChevronLeft, FaPlus, FaTrash } from 'react-icons/fa'
+import { FaChevronLeft, FaInfoCircle, FaPlus, FaTrash } from 'react-icons/fa'
 import { Helmet } from 'react-helmet-async'
 import { useNavigate } from 'react-router-dom';
 import { confirmAlert } from 'react-confirm-alert'
 import { useForm } from "react-hook-form";
-import { CgClose } from 'react-icons/cg'
+import { CgCheck, CgClose } from 'react-icons/cg'
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai'
 
 import { Button, RadioInput, TextInput } from '../../../../utils/styles/forms'
@@ -15,11 +15,12 @@ import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 import { Body, H1, H2, H3, Label, LLink } from '../../../../utils/styles/text'
 import ConfirmAlert from '../../../misc/ConfirmAlert'
-import { Column, Grid, Hr, ModalCard, ModalContainer, Row } from '../../../../utils/styles/misc'
-import { FormError } from '../../../misc/Misc'
+import { Column, Grid, Hr, MiniColor, ModalCard, ModalContainer, Row } from '../../../../utils/styles/misc'
+import { FormError, Tooltip } from '../../../misc/Misc'
 import FileUpload from '../../../misc/FileUpload'
 import { Img } from '../../../../utils/styles/images'
 import { Hidden, Visible } from 'react-grid-system'
+import { readTimestamp } from '../../../../utils/misc'
 
 export default function ManageSite(props) {
     const theme = useTheme();
@@ -33,7 +34,58 @@ export default function ManageSite(props) {
                 width: props.site.logo.width,
                 height: props.site.logo.height,
                 url: props.site.logo.url,
-                showTitle: props.site.logo.showTitle
+                showTitle: props.site.logo.showTitle,
+            },
+            emails: {
+                support: props.site.emails.support,
+            },
+            theme: {
+                colors: {
+                    primary: props.site.theme.colors.primary,
+                    secondary: props.site.theme.colors.secondary,
+                    tertiary: props.site.theme.colors.tertiary,
+                    green: props.site.theme.colors.green,
+                    red: props.site.theme.colors.red,
+                    yellow: props.site.theme.colors.yellow,
+                    blue: props.site.theme.colors.blue,
+                    grey: props.site.theme.colors.grey,
+                    lightGrey: props.site.theme.colors.lightGrey,
+                    background: {
+                        dark: props.site.theme.colors.background.dark,
+                        light: props.site.theme.colors.background.light,
+                    },
+                },
+                fonts: {
+                    heading: {
+                        name: props.site.theme.fonts.heading.name,
+                        url: props.site.theme.fonts.heading.url,
+                        dark: props.site.theme.fonts.heading.dark,
+                        light: props.site.theme.fonts.heading.light,
+                    },
+                    body: {
+                        name: props.site.theme.fonts.body.name,
+                        url: props.site.theme.fonts.body.url,
+                        dark: props.site.theme.fonts.body.dark,
+                        light: props.site.theme.fonts.body.light,
+                    },
+                    link: {
+                        name: props.site.theme.fonts.link.name,
+                        url: props.site.theme.fonts.link.url,
+                        dark: props.site.theme.fonts.link.dark,
+                        light: props.site.theme.fonts.link.light,
+                    },
+                }
+            },
+            hero: {
+                heading: props.site.hero.heading,
+                body: props.site.hero.body,
+                banner: props.site.hero.banner,
+                cta: {
+                    text: props.site.hero.cta.text,
+                    link: props.site.hero.cta.link,
+                    size: props.site.hero.cta.size,
+                    color: props.site.hero.cta.color,
+                },
             }
         }
     });
@@ -43,11 +95,28 @@ export default function ManageSite(props) {
         logoUrl: false,
     });
     
-    const [shownModals, setShownModals] = useState([false, false]); 
+    const [shownModals, setShownModals] = useState([]); 
+
+    useEffect(() => {
+        function onUnload(e) {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+
+        if (siteForm.formState.isDirty) {
+            window.addEventListener("beforeunload", onUnload);
+        } else {
+            window.removeEventListener('beforeunload', onUnload); 
+        }
+    
+        return () => {
+          window.removeEventListener('beforeunload', onUnload);
+        };
+    }, [siteForm.formState.isDirty]);
 
     const toggleModal = (newStatus, index) => {
-        let tempShownModals = [...shownModals]
-        tempShownModals[index] = newStatus
+        let tempShownModals = [...shownModals];
+        tempShownModals[index] = newStatus;
         setShownModals(tempShownModals);
     };
 
@@ -56,7 +125,6 @@ export default function ManageSite(props) {
             ...prevState,
             site: true
         }));
-        console.log("data.logo.showTitle: " + data.logo.showTitle)
         updateDoc(doc(firestore, "site", "public"), {
             name: data.name,
             logo: {
@@ -64,6 +132,57 @@ export default function ManageSite(props) {
                 height: data.logo.height,
                 url: data.logo.url,
                 showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
+            },
+            emails: {
+                support: data.emails.support,
+            },
+            theme: {
+                colors: {
+                    primary: data.theme.colors.primary,
+                    secondary: data.theme.colors.secondary,
+                    tertiary: data.theme.colors.tertiary,
+                    green: data.theme.colors.green,
+                    red: data.theme.colors.red,
+                    yellow: data.theme.colors.yellow,
+                    blue: data.theme.colors.blue,
+                    grey: data.theme.colors.grey,
+                    lightGrey: data.theme.colors.lightGrey,
+                    background: {
+                        dark: data.theme.colors.background.dark,
+                        light: data.theme.colors.background.light,
+                    },
+                },
+                fonts: {
+                    heading: {
+                        name: data.theme.fonts.heading.name,
+                        url: data.theme.fonts.heading.url,
+                        dark: data.theme.fonts.heading.dark,
+                        light: data.theme.fonts.heading.light,
+                    },
+                    body: {
+                        name: data.theme.fonts.body.name,
+                        url: data.theme.fonts.body.url,
+                        dark: data.theme.fonts.body.dark,
+                        light: data.theme.fonts.body.light,
+                    },
+                    link: {
+                        name: data.theme.fonts.link.name,
+                        url: data.theme.fonts.link.url,
+                        dark: data.theme.fonts.link.dark,
+                        light: data.theme.fonts.link.light,
+                    },
+                }
+            },
+            hero: {
+                heading: data.hero.heading,
+                body: data.hero.body,
+                banner: data.hero.banner,
+                cta: {
+                    text: data.hero.cta.text,
+                    link: data.hero.cta.link,
+                    size: data.hero.cta.size,
+                    color: data.hero.cta.color,
+                },
             },
             updated: {
                 timestamp: Date.now(),
@@ -77,6 +196,7 @@ export default function ManageSite(props) {
                 site: false
             }));
             toast.success(`Site updated!`);
+            siteForm.reset(data);
         }).catch(error => {
             toast.error(`Error updating site: ${error}`);
             setSubmitting(prevState => ({
@@ -324,7 +444,8 @@ export default function ManageSite(props) {
                         &nbsp; Back to Admin Dashboard
                     </Button>
                 </LLink>
-                <H1>Manage Site</H1>
+                <H1 margin="0">Manage Site</H1>
+                <Body size={SIZES.SM} display="inline-block" margin="0 0 25px 0">Last edited by {props.site.updated.name} ({readTimestamp(props.site.updated.timestamp).date} @ {readTimestamp(props.site.updated.timestamp).time})</Body>
                 <form onSubmit={ siteForm.handleSubmit(updateSite) }>
                     <Grid fluid>
                         <Row>
@@ -388,11 +509,12 @@ export default function ManageSite(props) {
                                 <br/>
                                 <Button 
                                     type="button"
-                                    btype={BTYPES.TEXTED} 
+                                    btype={BTYPES.INVERTED} 
                                     color={theme.colors.yellow}
                                     hidden={siteForm.getValues("logo.url") !== props.site.logo.url ? true : false}
-                                    onClick={() => toggleModal(true, 0)}>
-                                        update logo
+                                    onClick={() => toggleModal(true, "logo.url")}
+                                >
+                                        Update logo
                                 </Button>
                             </Column>
                             <Hidden xs sm>
@@ -402,6 +524,7 @@ export default function ManageSite(props) {
                                     hidden={siteForm.getValues("logo.url") === props.site.logo.url ? true : false}
                                 >
                                     <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
+                                    <Body margin="0">Ready to save changes!</Body>
                                 </Column>
                             </Hidden>
                             <Visible xs sm>
@@ -411,6 +534,7 @@ export default function ManageSite(props) {
                                     hidden={siteForm.getValues("logo.url") === props.site.logo.url ? true : false}
                                 >
                                     <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
+                                    <Body margin="0">Ready to save changes!</Body>
                                 </Column>
                             </Visible>
                             <Column 
@@ -429,10 +553,10 @@ export default function ManageSite(props) {
                                 <br/>
                                 <Button 
                                     type="button"
-                                    btype={BTYPES.INVERTED} 
+                                    btype={BTYPES.TEXTED} 
                                     color={theme.colors.yellow}
-                                    onClick={() => toggleModal(true, 0)}>
-                                        update selection
+                                    onClick={() => toggleModal(true, "logo.url")}>
+                                        Update selection
                                 </Button>
                             </Column>
                         </Row>
@@ -484,10 +608,250 @@ export default function ManageSite(props) {
                                 <FormError error={siteForm.formState.errors?.logo?.height ?? ""} /> 
                             </Column>
                         </Row>
+                        <H2>Theme Colors <Tooltip text="All HTML colors allowed, including hex values (#FFFFF)."><FaInfoCircle size={20}/></Tooltip></H2>
+                        <Row>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.primary"} br>Primary: <MiniColor color={props.site.theme.colors.primary} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.primary ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.primary", {
+                                            required: "A primary color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.primary ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.secondary"} br>Secondary: <MiniColor color={props.site.theme.colors.secondary} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.secondary ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.secondary", {
+                                            required: "A secondary color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.secondary ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.tertiary"} br>Tertiary: <MiniColor color={props.site.theme.colors.tertiary} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.tertiary ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.tertiary", {
+                                            required: "A tertiary color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.tertiary ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.background.light"} br>Background - Light: <MiniColor color={props.site.theme.colors.background.light} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.background?.light ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.background.light", {
+                                            required: "A background light color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.background?.light ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.background.dark"} br>Background - Dark: <MiniColor color={props.site.theme.colors.background.dark} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.background?.dark ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.background.dark", {
+                                            required: "A background dark color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.background?.dark ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.green"} br>Green: <MiniColor color={props.site.theme.colors.green} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.green ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.green", {
+                                            required: "A green color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.green ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.red"} br>Red: <MiniColor color={props.site.theme.colors.red} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.red ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.red", {
+                                            required: "A red color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.red ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.yellow"} br>Yellow: <MiniColor color={props.site.theme.colors.yellow} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.yellow ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.yellow", {
+                                            required: "A yellow color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.yellow ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.blue"} br>Blue: <MiniColor color={props.site.theme.colors.blue} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.blue ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.blue", {
+                                            required: "A blue color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.blue ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.grey"} br>Grey: <MiniColor color={props.site.theme.colors.grey} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.grey ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.grey", {
+                                            required: "A grey color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.grey ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={3} lg={2}>
+                                <Label htmlFor={"theme.colors.lightGrey"} br>Light Grey: <MiniColor color={props.site.theme.colors.lightGrey} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.colors?.lightGrey ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.colors.lightGrey", {
+                                            required: "A lightGrey color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.colors?.lightGrey ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <H3>Fonts</H3>
+                        <Row>
+                            <Column md={12} lg={4}>
+                                <Label htmlFor={"theme.fonts.heading.name"} br>Heading Font Name:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.heading?.name ?? ""}
+                                    placeholder={"Times New Roman"}
+                                    { 
+                                        ...siteForm.register("theme.fonts.heading.name", {
+                                            required: "A hero heading is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.heading?.name ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={6} lg={4}>
+                                <Label htmlFor={"theme.fonts.heading.dark"} br>Heading Font Color - Dark: <MiniColor color={props.site.theme.fonts.heading.dark} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.heading?.dark ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.fonts.heading.dark", {
+                                            required: "A heading font dark color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.heading?.dark ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={6} lg={4}>
+                                <Label htmlFor={"theme.fonts.heading.light"} br>Heading Font Color - Light: <MiniColor color={props.site.theme.fonts.heading.light} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.heading?.light ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.fonts.heading.light", {
+                                            required: "A heading font light color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.heading?.light ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12} md={6}>
+                                <Button 
+                                    type="button"
+                                    btype={BTYPES.INVERTED} 
+                                    color={theme.colors.yellow}
+                                    onClick={() => toggleModal(true, "theme.fonts.heading.url")}
+                                    hidden={siteForm.getValues("theme.fonts.heading.url")}
+                                >
+                                        Update heading font file
+                                </Button>
+                                {siteForm.getValues("theme.fonts.heading.url") && (
+                                    <Body color={theme.colors.green}><CgCheck size={40}/>Heading font file uploaded successfully. Ready to save.</Body>
+                                )}
+                            </Column>
+                        </Row>
+                        <H2>Hero</H2>
+                        <Row>
+                            <Column sm={6} md={6}>
+                                <Label htmlFor={"hero.heading"} br>Heading:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.hero?.heading ?? ""}
+                                    placeholder={"Best Site Ever"}
+                                    { 
+                                        ...siteForm.register("hero.heading", {
+                                            required: "A hero heading is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.hero?.heading ?? ""} /> 
+                            </Column>
+                        </Row>
                         <Row>
                             <Column sm={12} textalign="center">
                                 {siteForm.formState.isDirty && (
                                     <Button 
+                                        size={SIZES.LG}
                                         type="submit"
                                         disabled={submitting.site}
                                     >
@@ -499,10 +863,10 @@ export default function ManageSite(props) {
                     </Grid>
                 </form>
     
-                {shownModals[0] && (
-                    <ModalContainer onClick={() => toggleModal(false, 0)}>
+                {shownModals["logo.url"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "logo.url")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <Label>Update logo url</Label>
+                            <Label>Update logo url:</Label>
                             <FileUpload
                                     name="logo.url"
                                     path={`public/site/logos/`}
@@ -519,13 +883,42 @@ export default function ManageSite(props) {
                             <Button 
                                 type="button"
                                 size={SIZES.SM} 
-                                onClick={() => toggleModal(false, 0)}
+                                onClick={() => toggleModal(false, "logo.url")}
                             >
                                 <CgClose /> Close 
                             </Button>
                         </ModalCard>
                     </ModalContainer>
                 )}
+
+                {shownModals["theme.fonts.heading.url"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "theme.fonts.heading.url")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <Label>Update heading font:</Label>
+                            <FileUpload
+                                    name="theme.fonts.heading.url"
+                                    path={`public/site/fonts/`}
+                                    accepts="*"
+                                    onUploadSuccess={setUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.fonts?.heading?.url ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "theme.fonts.heading.url")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
                 <Hr/>
                 <Button 
                     type="button" 
