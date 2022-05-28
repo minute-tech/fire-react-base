@@ -103,22 +103,24 @@ function FileUpload(props) {
 
         // Check each file preview to ensure ratio is what we want, if all pass, continue with upload
         const filePreviewElements = document.getElementsByClassName(`${props.name}`);
-        let passed = true;
-        if(props.imageRatio){
+        let failedAspect = "";
+        if(props.aspectRatio){
             Array.from(filePreviewElements).forEach((element) => {
                 let naturalHeight = element.naturalHeight;
                 let naturalWidth = element.naturalWidth;
-                if (naturalWidth / naturalHeight !== props.imageRatio) {
-                    passed = false;
+                if ((naturalWidth / naturalHeight).toFixed(2) !== (props.aspectRatio.numer / props.aspectRatio.denom).toFixed(2)) {
+                    failedAspect = (naturalWidth / naturalHeight);
                 }
             });
         }
 
         // Loop through each file, and process it!
-        if(!passed){
+        if(failedAspect){
             props.setError(props.name, {
                 type: "invalid-aspect-ratio", 
-                message: "A picture selected is not a square aspect ratio. Please only select pictures that are a square. (i.e. 300px tall by 300px wide is a square)"
+                message: `A picture selected is not the wrong ratio of  ${(failedAspect).toFixed(2)}.
+                    Please resize the photo or pick a photo with the correct aspect ratio 
+                    of ${props.aspectRatio.numer}/${props.aspectRatio.denom} (${(props.aspectRatio.numer/props.aspectRatio.denom).toFixed(2)}).`
             });
             props.setSubmitting(prevState => ({
                 ...prevState,

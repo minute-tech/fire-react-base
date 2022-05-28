@@ -610,7 +610,7 @@ export default function ManageSite(props) {
                         </Row>
                         <H2>Theme Colors <Tooltip text="All HTML colors allowed, including hex values (#FFFFF)."><FaInfoCircle size={20}/></Tooltip></H2>
                         <Row>
-                            <Column sm={6} md={3} lg={2}>
+                            <Column sm={6} md={4} lg={3}>
                                 <Label htmlFor={"theme.colors.primary"} br>Primary: <MiniColor color={props.site.theme.colors.primary} /></Label>
                                 <TextInput
                                     type="text" 
@@ -624,7 +624,7 @@ export default function ManageSite(props) {
                                 />
                                 <FormError error={siteForm.formState.errors?.theme?.colors?.primary ?? ""} /> 
                             </Column>
-                            <Column sm={6} md={3} lg={2}>
+                            <Column sm={6} md={4} lg={3}>
                                 <Label htmlFor={"theme.colors.secondary"} br>Secondary: <MiniColor color={props.site.theme.colors.secondary} /></Label>
                                 <TextInput
                                     type="text" 
@@ -638,7 +638,7 @@ export default function ManageSite(props) {
                                 />
                                 <FormError error={siteForm.formState.errors?.theme?.colors?.secondary ?? ""} /> 
                             </Column>
-                            <Column sm={6} md={3} lg={2}>
+                            <Column sm={6} md={4} lg={3}>
                                 <Label htmlFor={"theme.colors.tertiary"} br>Tertiary: <MiniColor color={props.site.theme.colors.tertiary} /></Label>
                                 <TextInput
                                     type="text" 
@@ -654,7 +654,7 @@ export default function ManageSite(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column sm={6} md={3} lg={2}>
+                            <Column md={6} lg={3}>
                                 <Label htmlFor={"theme.colors.background.light"} br>Background - Light: <MiniColor color={props.site.theme.colors.background.light} /></Label>
                                 <TextInput
                                     type="text" 
@@ -668,7 +668,7 @@ export default function ManageSite(props) {
                                 />
                                 <FormError error={siteForm.formState.errors?.theme?.colors?.background?.light ?? ""} /> 
                             </Column>
-                            <Column sm={6} md={3} lg={2}>
+                            <Column md={6} lg={3}>
                                 <Label htmlFor={"theme.colors.background.dark"} br>Background - Dark: <MiniColor color={props.site.theme.colors.background.dark} /></Label>
                                 <TextInput
                                     type="text" 
@@ -815,18 +815,78 @@ export default function ManageSite(props) {
                             </Column>
                         </Row>
                         <Row>
-                            <Column sm={12} md={6}>
+                            <Column sm={12}>
                                 <Button 
                                     type="button"
                                     btype={BTYPES.INVERTED} 
                                     color={theme.colors.yellow}
                                     onClick={() => toggleModal(true, "theme.fonts.heading.url")}
-                                    hidden={siteForm.getValues("theme.fonts.heading.url")}
+                                    hidden={(siteForm.getValues("theme.fonts.heading.url") && (siteForm.getValues("theme.fonts.heading.url") !== props.site.theme.fonts.heading.url))}
                                 >
                                         Update heading font file
                                 </Button>
-                                {siteForm.getValues("theme.fonts.heading.url") && (
-                                    <Body color={theme.colors.green}><CgCheck size={40}/>Heading font file uploaded successfully. Ready to save.</Body>
+                                {(siteForm.getValues("theme.fonts.heading.url") && (siteForm.getValues("theme.fonts.heading.url") !== props.site.theme.fonts.heading.url)) && (
+                                    <Body color={theme.colors.green}><CgCheck size={40}/>Heading font file uploaded successfully. Don't forget to change the font name above to match, then save this form below!</Body>
+                                )}
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column md={12} lg={4}>
+                                <Label htmlFor={"theme.fonts.body.name"} br>Body Font Name:</Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.body?.name ?? ""}
+                                    placeholder={"Times New Roman"}
+                                    { 
+                                        ...siteForm.register("theme.fonts.body.name", {
+                                            required: "A hero body is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.body?.name ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={6} lg={4}>
+                                <Label htmlFor={"theme.fonts.body.dark"} br>Body Font Color - Dark: <MiniColor color={props.site.theme.fonts.body.dark} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.body?.dark ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.fonts.body.dark", {
+                                            required: "A body font dark color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.body?.dark ?? ""} /> 
+                            </Column>
+                            <Column sm={6} md={6} lg={4}>
+                                <Label htmlFor={"theme.fonts.body.light"} br>Body Font Color - Light: <MiniColor color={props.site.theme.fonts.body.light} /></Label>
+                                <TextInput
+                                    type="text" 
+                                    error={siteForm.formState.errors?.theme?.fonts?.body?.light ?? ""}
+                                    placeholder={"#FFFFFF"} 
+                                    { 
+                                        ...siteForm.register("theme.fonts.body.light", {
+                                            required: "A body font light color is required!",
+                                        })
+                                    } 
+                                />
+                                <FormError error={siteForm.formState.errors?.theme?.fonts?.body?.light ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column sm={12}>
+                                <Button 
+                                    type="button"
+                                    btype={BTYPES.INVERTED} 
+                                    color={theme.colors.yellow}
+                                    onClick={() => toggleModal(true, "theme.fonts.body.url")}
+                                    hidden={(siteForm.getValues("theme.fonts.body.url") && (siteForm.getValues("theme.fonts.body.url") !== props.site.theme.fonts.body.url))}
+                                >
+                                        Update body font file
+                                </Button>
+                                {(siteForm.getValues("theme.fonts.body.url") && (siteForm.getValues("theme.fonts.body.url") !== props.site.theme.fonts.body.url)) && (
+                                    <Body color={theme.colors.green}><CgCheck size={40}/>Body font file uploaded successfully. Don't forget to change the font name above to match, then save this form below!</Body>
                                 )}
                             </Column>
                         </Row>
@@ -845,6 +905,69 @@ export default function ManageSite(props) {
                                     } 
                                 />
                                 <FormError error={siteForm.formState.errors?.hero?.heading ?? ""} /> 
+                            </Column>
+                        </Row>
+                        <Row align="center">
+                            <Column sm={12} md={4} textalign="center">
+                                <Label br>Current Banner</Label>
+                                <Img 
+                                    src={props.site.hero.banner}
+                                    border={`2px solid ${theme.colors.primary}`}
+                                    alt={`site banner`}
+                                    width={`300px`}
+                                />
+                                <br/>
+                                <Button 
+                                    type="button"
+                                    btype={BTYPES.INVERTED} 
+                                    color={theme.colors.yellow}
+                                    hidden={siteForm.getValues("hero.banner") !== props.site.hero.banner ? true : false}
+                                    onClick={() => toggleModal(true, "hero.banner")}
+                                >
+                                        Update banner
+                                </Button>
+                            </Column>
+                            <Hidden xs sm>
+                                <Column 
+                                    sm={12} md={4} 
+                                    textalign="center" 
+                                    hidden={siteForm.getValues("hero.banner") === props.site.hero.banner ? true : false}
+                                >
+                                    <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
+                                    <Body margin="0">Ready to save changes!</Body>
+                                </Column>
+                            </Hidden>
+                            <Visible xs sm>
+                                <Column 
+                                    sm={12} md={4} 
+                                    textalign="center" 
+                                    hidden={siteForm.getValues("hero.banner") === props.site.hero.banner ? true : false}
+                                >
+                                    <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
+                                    <Body margin="0">Ready to save changes!</Body>
+                                </Column>
+                            </Visible>
+                            <Column 
+                                sm={12} 
+                                md={4} 
+                                textalign="center" 
+                                hidden={siteForm.getValues("hero.banner") === props.site.hero.banner ? true : false}
+                            >
+                                <Label br>Incoming Banner</Label>
+                                <Img 
+                                    src={siteForm.getValues("hero.banner")}
+                                    border={`2px solid ${theme.colors.primary}`}
+                                    alt={`incoming site banner`}
+                                    width={`300px`}
+                                />
+                                <br/>
+                                <Button 
+                                    type="button"
+                                    btype={BTYPES.TEXTED} 
+                                    color={theme.colors.yellow}
+                                    onClick={() => toggleModal(true, "logo.url")}>
+                                        Update selection
+                                </Button>
                             </Column>
                         </Row>
                         <Row>
@@ -912,6 +1035,66 @@ export default function ManageSite(props) {
                                 type="button"
                                 size={SIZES.SM} 
                                 onClick={() => toggleModal(false, "theme.fonts.heading.url")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
+                {shownModals["theme.fonts.body.url"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "theme.fonts.body.url")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <Label>Update body font:</Label>
+                            <FileUpload
+                                    name="theme.fonts.body.url"
+                                    path={`public/site/fonts/`}
+                                    accepts="*"
+                                    onUploadSuccess={setUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.fonts?.body?.url ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "theme.fonts.body.url")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
+                {shownModals["hero.banner"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "hero.banner")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <Label>Update body font:</Label>
+                            <FileUpload
+                                    name="hero.banner"
+                                    path={`public/site/fonts/`}
+                                    accepts="*"
+                                    aspectRatio={{
+                                        numer: 16,
+                                        denom: 9,
+                                    }}
+                                    onUploadSuccess={setUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.hero?.banner ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "hero.banner")}
                             >
                                 <CgClose /> Close 
                             </Button>

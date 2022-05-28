@@ -350,7 +350,10 @@ function Profile(props) {
                             name="avatar"
                             path={`users/${props.user.id}/images/avatar/`}
                             accepts="image/png, image/jpg, image/jpeg" 
-                            imageRatio={1}
+                            aspectRatio={{
+                                numer: 1,
+                                denom: 1,
+                            }}
                             onUploadSuccess={updateAvatar}
                             setSubmitting={setSubmitting}
                             submitting={submitting}
