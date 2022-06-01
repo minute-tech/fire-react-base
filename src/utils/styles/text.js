@@ -16,6 +16,11 @@ export const BodyFont = css`
 export const H1 = styled.h1`
     font-size: 50px;
     ${HeadingFont}
+    
+    ${(props) => (props.color) && `
+        color: ${props.color} !important;
+    `};
+    
     font-weight: 900;
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
@@ -27,6 +32,11 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
     font-size: 40px;
     ${HeadingFont}
+    
+    ${(props) => (props.color) && `
+        color: ${props.color} !important;
+    `};
+
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {
@@ -38,6 +48,11 @@ export const H2 = styled.h2`
 export const H3 = styled.h3`
     font-size: 30px;
     ${HeadingFont}
+    
+    ${(props) => (props.color) && `
+        color: ${props.color} !important;
+    `};
+
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {
@@ -48,6 +63,11 @@ export const H3 = styled.h3`
 export const H4 = styled.h4`
     font-size: 24px;
     ${HeadingFont}
+    
+    ${(props) => (props.color) && `
+        color: ${props.color} !important;
+    `};
+
     margin: ${props => props.margin ? props.margin : "10px 0"};
     display: ${props => props.inline ? "inline" : "block"};
     @media (max-width: 992px) {

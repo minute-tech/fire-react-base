@@ -38,6 +38,7 @@ export default function ManageSite(props) {
             },
             emails: {
                 support: props.site.emails.support,
+                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
             },
             theme: {
                 colors: {
@@ -135,6 +136,7 @@ export default function ManageSite(props) {
             },
             emails: {
                 support: data.emails.support,
+                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
             },
             theme: {
                 colors: {
@@ -445,7 +447,10 @@ export default function ManageSite(props) {
                     </Button>
                 </LLink>
                 <H1 margin="0">Manage Site</H1>
-                <Body size={SIZES.SM} display="inline-block" margin="0 0 25px 0">Last edited by {props.site.updated.name} ({readTimestamp(props.site.updated.timestamp).date} @ {readTimestamp(props.site.updated.timestamp).time})</Body>
+                {props.site.updated && (
+                    <Body size={SIZES.SM} display="inline-block" margin="0 0 25px 0">Last edited by {props.site.updated.name} ({readTimestamp(props.site.updated.timestamp).date} @ {readTimestamp(props.site.updated.timestamp).time})</Body>
+                )}
+                
                 <form onSubmit={ siteForm.handleSubmit(updateSite) }>
                     <Grid fluid>
                         <Row>

@@ -113,10 +113,21 @@ export const onMessageCreated = functions.firestore
                 console.log("Error getting site sensitive document:", error);
             });
 
-            const heading = "New Website Contact Message!";
-            const body =
+            const htmlEmail =
             `
-                <div>
+            <div style="width: 100%; font-family: Arial, Helvetica, sans-serif" color: black !important;>
+                <div style="text-align: center;">
+                        <img
+                            alt="${publicSiteData.name} logo"
+                            src="${publicSiteData.logo.url}"
+                            width="${publicSiteData.logo.width}px"
+                            height="auto"
+                        />
+                </div>
+                <h1 style="margin: 20px 0 0 0; text-align: center; color: ${publicSiteData?.theme?.colors?.primary ?? "black"} !important;">${publicSiteData.name}</h1>
+                <div style="margin: auto; width: 70%; padding: 1%;">
+                    <h2>New Website Contact Message!</h2>
+                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData?.theme?.colors?.primary ?? "black"};" role="separator">&#8202;</div>
                     <h3>Message Details:</h3>
                     <p><b>Name</b>: ${newValues.name}</p>
                     <p><b>Email</b>: ${newValues.email}</p>
@@ -125,35 +136,28 @@ export const onMessageCreated = functions.firestore
                         <br/>
                         ${newValues.body}
                     </p>
-                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData?.theme?.schemes?.light?.colors?.primary ?? "black"};" role="separator">&#8202;</div>
+                    <div style="font-size:2px; line-height:2px; height:2px; margin-top: 2px; background:${publicSiteData?.theme?.colors?.primary ?? "black"};" role="separator">&#8202;</div>
                     <p>
                         You can reply directly to this email to continue the email thread with the user who sent the message.
                     </p>
+                    <p>
+                        Feel free to reach out to <a href="mailto:${publicSiteData.emails.support}">${publicSiteData.emails.support}</a> if you have any questions!
+                    </p>
+                    <p style="text-align: center; margin: 50px 0;"><a href="https://minute.tech">Powered by Minute.tech</a></p>
                 </div>
+            </div>
             `;
 
             // Pack It
             const msg = {
                 to: sensitiveSiteData.messengers,
                 from: `${publicSiteData.name} <${publicSiteData.emails.noreply}>`,
-                replyTo: `${newValues.email}`,
+                replyTo: newValues.email,
                 cc: "",
                 bcc: [],
-                // Create this template on SendGrid: https://mc.sendgrid.com/dynamic-templates
-                templateId: "d-3ce711fad081476c91fdad7cf33deb49",
-                dynamicTemplateData: {
-                    subject: `New "${publicSiteData.name}" Contact Message`,
-                    siteName: publicSiteData.name,
-                    logoUrl: publicSiteData.logo.url,
-                    logoWidth: publicSiteData.logo.width,
-                    heading: heading,
-                    body: body,
-                    colors: publicSiteData?.theme?.schemes?.light?.colors ?? "black",
-                    emails: publicSiteData.emails,
-                    ppUrl: `${publicSiteData.projectId}.web.app/privacy-policy`,
-                    termsUrl: `${publicSiteData.projectId}.web.app/terms`,
-                },
+                subject: `New "${publicSiteData.name}" Contact Message`,
                 text: `${newValues.name} <${newValues.email}>: ${newValues.body}`,
+                html: htmlEmail,
             };
 
             // Send it
@@ -161,6 +165,7 @@ export const onMessageCreated = functions.firestore
                 sgMail.send(msg).then(() => {
                         console.log("Email sent");
                     }).catch((error: any) => {
+                        console.error("Error with sgMail: ");
                         console.error(error);
                     })
             );
