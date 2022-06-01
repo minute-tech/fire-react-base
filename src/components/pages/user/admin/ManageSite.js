@@ -222,7 +222,7 @@ export default function ManageSite(props) {
                 logo: {
                     width: 100,
                     height: 100,
-                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
+                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media",
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 emails: {
@@ -238,19 +238,19 @@ export default function ManageSite(props) {
                         size: DEFAULT_SITE.HERO.CTA.SIZE,
                         color: DEFAULT_SITE.HERO.CTA.COLOR,
                     },                    
-                    banner: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Fdesk-clutter.jpg?alt=media&token=ce6d3f14-744b-4a24-8a98-55a2fdb7803f",
+                    banner: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Fdesk-clutter.jpg?alt=media",
                 },
                 theme: { 
                     fonts: {
                         heading: {
                             name: "Lato Black",
-                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Black.ttf?alt=media&token=cd887b00-055e-4a9d-a55b-3dda0ecd9e7b",
+                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Black.ttf?alt=media",
                             light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
                             dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
                         },
                         body: {
                             name: "Lato Regular",
-                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Regular.ttf?alt=media&token=f2f37502-4d69-4224-ba6b-c9426ea22c20",
+                            url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Ffonts%2FLato-Regular.ttf?alt=media",
                             light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
                             dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
                         },
