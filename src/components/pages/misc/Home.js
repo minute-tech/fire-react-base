@@ -8,8 +8,9 @@ import { BTYPES, SIZES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/forms';
 import { HillSeparators, Iframe, IframeContainer, Path, Squiggle, Svg } from '../../../utils/styles/images.js';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Column, Grid, Hr, Wrapper, Row, Centered, FullWidthLine, Container } from '../../../utils/styles/misc';
-import { ALink, Body, H1, H3, LLink } from '../../../utils/styles/text';
+import { ALink, Body, H1, H2, H3, LLink } from '../../../utils/styles/text';
 import { Tooltip } from '../../misc/Misc.js';
+import { Tabs } from '../../misc/Tabs.js';
 
 function Home(props){
     const theme = useTheme();
@@ -70,7 +71,7 @@ function Home(props){
                 </BgMediaModal>
             </BgMediaContainer>
             <Wrapper>
-                <H1>Buttons</H1>
+                <H2>Buttons</H2>
                 <Button>Default button</Button>
                 <Button size={SIZES.LG} onClick={() => sendAlert("info")} type="button">Primary Large Normal Button</Button>
                 <Button color={theme.colors.secondary} size={SIZES.MD} btype={BTYPES.INVERTED} onClick={() => sendAlert("warn")} type="button">Secondary Medium Inverted Button</Button>
@@ -94,8 +95,44 @@ function Home(props){
                     <Path fill={theme.colors.primary} d={Squiggle}/>
                 </Svg>
             </Centered>
+        
             <Wrapper>
-                <H1>Grid System</H1>
+                <H2>Tabs</H2>
+                <Tabs>
+                    <div label="Tab 1">
+                        <H3>Content 1 here</H3>
+                        <Body>
+                            The tab content will be contained below each tab header. Excepteur nisi nulla sint amet incididunt exercitation commodo laboris id pariatur tempor labore minim. 
+                            Proident sunt proident quis dolore ex voluptate reprehenderit aute. Veniam duis occaecat veniam incididunt ea mollit nisi sint et Lorem qui veniam. 
+                        </Body>
+                    </div>
+                    <div label="Tab 2">
+                        <H3>Content 2 here</H3>
+                        <Body>
+                            The tab content will be contained below each tab header. Excepteur nisi nulla sint amet incididunt exercitation commodo laboris id pariatur tempor labore minim. 
+                            Proident sunt proident quis dolore ex voluptate reprehenderit aute. Veniam duis occaecat veniam incididunt ea mollit nisi sint et Lorem qui veniam. Dolor irure esse excepteur voluptate eiusmod labore.
+                        </Body>
+                    </div>
+                    <div label="Tab 3">
+                        <H3>Content 3 here</H3>
+                        <Body>
+                            The tab content will be contained below each tab header. Excepteur nisi nulla sint amet incididunt exercitation commodo laboris id pariatur tempor labore minim. 
+                            Proident sunt proident quis dolore ex voluptate reprehenderit aute. Veniam duis occaecat veniam incididunt ea mollit nisi sint et Lorem qui veniam. 
+                            Id cupidatat aute adipisicing aliqua consectetur deserunt et ipsum. Et nisi eiusmod magna anim ad nostrud sunt.
+                        </Body>
+                    </div>
+                    <div label="Tab 4">
+                        <H3>Content 4 here</H3>
+                        <Body>
+                            The tab content will be contained below each tab header. Excepteur nisi nulla sint amet incididunt exercitation commodo laboris id pariatur tempor labore minim. 
+                            Proident sunt proident quis dolore ex voluptate reprehenderit aute. Veniam duis occaecat veniam incididunt ea mollit nisi sint et Lorem qui veniam.
+                            Dolor officia nulla et aliquip. Sint dolore sint eiusmod veniam aliquip incididunt minim duis sint non cupidatat cillum aliquip. Consectetur deserunt sunt voluptate consequat.
+                            Sint commodo nisi Lorem sunt amet sit mollit.
+                        </Body>
+                    </div>
+                </Tabs>
+            <Hr/>
+                <H2>Grid System</H2>
                 <Grid fluid>
                     <Row>
                         <Column sm={12} textalign="center" background={theme.colors.primary}>
@@ -258,7 +295,7 @@ function Home(props){
             </Svg>
             <FullWidthLine height="auto">
                 <Wrapper>
-                        <H1 id="anchored">Anchored Section!</H1>
+                        <H2 id="anchored">Anchored Section!</H2>
                         <Body>
                             When you click the anchor link button above, it should jump down here! Long body of text to follow Sunt aliqua veniam nisi non quis cupidatat Lorem dolor. 
                             Sit in ad ex deserunt non laboris. Exercitation eu amet nulla laborum ea magna aliquip tempor nulla ipsum duis culpa dolore eu. Nostrud qui enim officia consequat dolore reprehenderit est laboris esse. 

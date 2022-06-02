@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle }  from 'styled-components';
-import { rgb, rgba } from 'polished'
+import { rgb, rgba, transparentize } from 'polished'
 import { Col as GCol } from 'react-grid-system';
 import { Row as GRow } from 'react-grid-system';
 import { Container as GContainer } from 'react-grid-system';
@@ -256,7 +256,7 @@ export const BgMediaModal = styled.div`
 `;
 
 export const BgMediaHeading = styled.h1`
-    font-size: 35px;
+    font-size: 55px;
     ${HeadingFont}
     color: ${props => props.color ? props.color : "black"};
     margin-bottom: 1%;
@@ -397,29 +397,36 @@ export const TooltipContainer = styled.div`
 `;
 
 // Tabs
-export const TabsContainer = styled.div`
-    .tab-list {
-        border-bottom: 1px solid ${props => props.theme.colors.primary};
-        padding-left: 0;
-        ${BodyFont};
-        font-size: 20px;
-        font-weight: 900;
-    }
-
-    .tab-list-item {
-        display: inline-block;
-        list-style: none;
-        margin-bottom: -1px;
-        padding: 0.8rem 3rem;
-        cursor: pointer;
-    }
-
-    .tab-list-active {
-        background-color: ${props => props.theme.colors.primary};
-        border: solid ${props => props.theme.colors.primary};
-        border-width: 1px 1px 0 1px;
-    }
+export const TabList = styled.ol`
+    border-bottom: 2px solid ${props => props.theme.colors.primary};
+    padding-left: 0;
+    ${BodyFont};
+    font-size: 20px;
+    font-weight: 900;
 `;
+
+export const TabItem = styled.li`
+    transition: all 0.2s linear;
+    display: inline-block;
+    list-style: none;
+    margin-bottom: -1px;
+    padding: 0.8rem 3rem;
+    cursor: pointer;
+
+    background-color: ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
+    border: 2px solid ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
+    border-width: 1px 1px 0 1px; // Will go transparent when isActive
+
+    &:hover {
+        background-color: ${props => props.isActiveTab ? "" : transparentize(0.6, props.theme.colors.primary)};
+    }
+
+`;
+
+export const TabContent = styled.div`
+    /* No styles for this section yet */
+`;
+
 
 // Misc Misc //
 export const Centered = styled.div`
