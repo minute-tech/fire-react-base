@@ -396,6 +396,31 @@ export const TooltipContainer = styled.div`
     }
 `;
 
+// Tabs
+export const TabsContainer = styled.div`
+    .tab-list {
+        border-bottom: 1px solid ${props => props.theme.colors.primary};
+        padding-left: 0;
+        ${BodyFont};
+        font-size: 20px;
+        font-weight: 900;
+    }
+
+    .tab-list-item {
+        display: inline-block;
+        list-style: none;
+        margin-bottom: -1px;
+        padding: 0.8rem 3rem;
+        cursor: pointer;
+    }
+
+    .tab-list-active {
+        background-color: ${props => props.theme.colors.primary};
+        border: solid ${props => props.theme.colors.primary};
+        border-width: 1px 1px 0 1px;
+    }
+`;
+
 // Misc Misc //
 export const Centered = styled.div`
     width: 100%;
