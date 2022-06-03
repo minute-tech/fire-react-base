@@ -5,7 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
-import { sendEmailVerification, updateProfile } from "firebase/auth";
+import { sendEmailVerification, updateEmail, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
 import { AiOutlineReload } from "react-icons/ai";
 import { BiCheck } from "react-icons/bi";
@@ -57,16 +57,24 @@ function Profile(props) {
             phone: data.phone
         }).then(() => {
             console.log("Successful update of user doc to Firestore.");
+            if(data.email !== props.fireUser.email){
+                updateEmail(auth.currentUser, data.email).then(() => {
+                    console.log("Successfully updated the user email on firebase");
+                  }).catch((error) => {
+                    console.error("Error updating user's email: ");
+                    console.error(error);
+                  });
+            }
             updateProfile(auth.currentUser, {
                 displayName: `${data.firstName} ${data.lastName}`,
-                // phoneNumber: data.phone,
-                email: data.email,
             }).then(() => {
-                toast.success(`Successfully updated the user profile.`);
-                console.log("Successfully updated the user profile on firebase");
+                console.log("Successfully updated the user's displayName on firebase");
             }).catch((error) => {
+                console.error("Error updating user's displayName: ");
                 console.error(error);
             });
+            
+            toast.success(`Successfully updated the user profile.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 updateUser: false
@@ -263,7 +271,9 @@ function Profile(props) {
                         <Column sm={12} md={6}>
                             <Label htmlFor={INPUT.PHONE.VALUE} br>Phone:</Label>
                             <TextInput
-                                type="text" 
+                                type="text"
+                                // disabled={props.fireUser?.multiFactor?.enrolledFactors && props.fireUser.multiFactor.enrolledFactors.length === 0}
+                                // disabled
                                 error={updateUserForm.formState.errors[INPUT.PHONE.VALUE]}
                                 placeholder={INPUT.PHONE.PLACEHOLDER} 
                                 {
@@ -335,6 +345,11 @@ function Profile(props) {
                                     <BiCheck /> Email verified!
                                     <br/>
                                     <Button size={SIZES.SM} btype={BTYPES.TEXTED} color={theme.colors.green}>Now secure account with a phone number <FaUserShield /></Button>
+                                </Body>
+                            )}
+                            {(props.fireUser?.multiFactor?.enrolledFactors && props.fireUser.multiFactor.enrolledFactors.length !== 0) && (
+                                <Body display="inline" color={theme.colors.green}>
+                                    Account Secured with 2FA <FaUserShield />
                                 </Body>
                             )}
                         </Column>

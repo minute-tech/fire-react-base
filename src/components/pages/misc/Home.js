@@ -8,7 +8,7 @@ import { BTYPES, SIZES } from '../../../utils/constants.js';
 import { Button } from '../../../utils/styles/forms';
 import { HillSeparators, Iframe, IframeContainer, Path, Squiggle, Svg } from '../../../utils/styles/images.js';
 import { BgColor, BgMedia, BgMediaBody, BgMediaContainer, BgMediaHeading, BgMediaModal, Column, Grid, Hr, Wrapper, Row, Centered, FullWidthLine, Container } from '../../../utils/styles/misc';
-import { ALink, Body, H1, H2, H3, LLink } from '../../../utils/styles/text';
+import { ALink, Body, H2, H3, LLink } from '../../../utils/styles/text';
 import { Tooltip } from '../../misc/Misc.js';
 import { Tabs } from '../../misc/Tabs.js';
 

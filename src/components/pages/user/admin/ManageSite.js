@@ -123,15 +123,11 @@ export default function ManageSite(props) {
     };
 
     const updateSite = (data) => {   
-        setSubmitting(prevState => ({
-            ...prevState,
-            site: true
-        }));
         updateDoc(doc(firestore, "site", "public"), {
             name: data.name,
             logo: {
-                width: data.logo.width,
-                height: data.logo.height,
+                width: parseInt(data.logo.width),
+                height: parseInt(data.logo.height),
                 url: data.logo.url,
                 showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
             },
@@ -198,7 +194,7 @@ export default function ManageSite(props) {
                 ...prevState,
                 site: false
             }));
-            toast.success(`Site updated!`);
+            toast.success("Site updated!");
             siteForm.reset(data);
         }).catch(error => {
             toast.error(`Error updating site: ${error}`);
@@ -649,7 +645,7 @@ export default function ManageSite(props) {
                                                         value: 50,
                                                         message: "50px wide is too small!"
                                                     },
-                                                    valueAsNumber: true,
+                                                    // valueAsNumber: true, //** this was not working, triggering field on another tab when dirtied, so just going to convert before we submit */
                                                 })
                                             } 
                                         />
@@ -672,7 +668,6 @@ export default function ManageSite(props) {
                                                         value: 50,
                                                         message: "50px high is too small!"
                                                     },
-                                                    valueAsNumber: true,
                                                 })
                                             } 
                                         />
@@ -901,7 +896,7 @@ export default function ManageSite(props) {
                                                 Update heading font file
                                         </Button>
                                         {(siteForm.getValues("theme.fonts.heading.url") && (siteForm.getValues("theme.fonts.heading.url") !== props.site.theme.fonts.heading.url)) && (
-                                            <Body color={theme.colors.green}><CgCheck size={40}/>Heading font file uploaded successfully. Don't forget to change the font name above to match, then save this form below!</Body>
+                                            <Body color={theme.colors.green}><CgCheck size={40}/>Heading font file uploaded successfully. Don't forget to change the font name above to match, then save this form above!</Body>
                                         )}
                                     </Column>
                                 </Row>
@@ -961,7 +956,7 @@ export default function ManageSite(props) {
                                                 Update body font file
                                         </Button>
                                         {(siteForm.getValues("theme.fonts.body.url") && (siteForm.getValues("theme.fonts.body.url") !== props.site.theme.fonts.body.url)) && (
-                                            <Body color={theme.colors.green}><CgCheck size={40}/>Body font file uploaded successfully. Don't forget to change the font name above to match, then save this form below!</Body>
+                                            <Body color={theme.colors.green}><CgCheck size={40}/>Body font file uploaded successfully. Don't forget to change the font name above to match, then save this form above!</Body>
                                         )}
                                     </Column>
                                 </Row>
@@ -1217,10 +1212,10 @@ export default function ManageSite(props) {
                                 name="hero.banner"
                                 path={`public/site/fonts/`}
                                 accepts="*"
-                                aspectRatio={{
-                                    numer: 16,
-                                    denom: 9,
-                                }}
+                                // aspectRatio={{
+                                //     numer: 16,
+                                //     denom: 9,
+                                // }}
                                 onUploadSuccess={setUrl}
                                 setSubmitting={setSubmitting}
                                 submitting={submitting}
