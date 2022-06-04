@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 
 import { auth } from "../../../../Fire.js";
 import { Column, Grid, Container, ModalCard, ModalContainer, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
-import { ALink, Body, H1, H2, Label, LLink, SLink } from '../../../../utils/styles/text.js';
+import { ALink, Body, H1, H3, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 import { FormError } from '../../../misc/Misc';
 import { INPUT, SIZES } from '../../../../utils/constants.js';
 import { TextInput, Button } from '../../../../utils/styles/forms.js';
@@ -33,9 +33,9 @@ function UserLogin(props) {
 
     const loginUser = (data) => {
         const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
-        window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
-            'size': 'normal',
-            'callback': (response) => {
+        window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
+            "size": "normal",
+            "callback": (response) => {
                  // reCAPTCHA solved, allow signIn.
                  props.setIsLoggingIn(true);
                  signInWithEmailAndPassword(auth, data.email, data.password)
@@ -70,7 +70,7 @@ function UserLogin(props) {
                         toast.dismiss(recaptchaToastId);
                     });
             },
-            'expired-callback': () => {
+            "expired-callback": () => {
                 toast.warn('Please solve the reCAPTCHA again!');
                 window.recaptchaVerifier.clear();
             }
@@ -193,7 +193,7 @@ function UserLogin(props) {
             {forgotExpanded && (
                 <ModalContainer onClick={() => toggleModal()}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
-                        <H2>Forgot Password</H2>
+                        <H3>Forgot Password</H3>
                         <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
                         <TextInput 
                             type="text"

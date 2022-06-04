@@ -398,9 +398,9 @@ export default function ManageSite(props) {
         });
     }
 
-    const setUrl = (urls, valueName) => {
+    const setFileUrl = (urls, valueName) => {
         siteForm.setValue(valueName, urls[0], { shouldValidate: true, shouldDirty: true })
-        toggleModal(false, 0)
+        toggleModal(false, valueName)
         setSubmitting(prevState => ({
             ...prevState,
             files: false
@@ -1123,12 +1123,12 @@ export default function ManageSite(props) {
                 {shownModals["logo.url"] && (
                     <ModalContainer onClick={() => toggleModal(false, "logo.url")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <Label>Update logo url:</Label>
+                            <H3>Update logo url:</H3>
                             <FileUpload
                                     name="logo.url"
                                     path={`public/site/logos/`}
                                     accepts="image/png, image/jpg, image/jpeg" 
-                                    onUploadSuccess={setUrl}
+                                    onUploadSuccess={setFileUrl}
                                     setSubmitting={setSubmitting}
                                     submitting={submitting}
                                     setError={siteForm.setError}
@@ -1151,12 +1151,12 @@ export default function ManageSite(props) {
                 {shownModals["theme.fonts.heading.url"] && (
                     <ModalContainer onClick={() => toggleModal(false, "theme.fonts.heading.url")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <Label>Update heading font:</Label>
+                            <H3>Update heading font:</H3>
                             <FileUpload
                                     name="theme.fonts.heading.url"
                                     path={`public/site/fonts/`}
                                     accepts="*"
-                                    onUploadSuccess={setUrl}
+                                    onUploadSuccess={setFileUrl}
                                     setSubmitting={setSubmitting}
                                     submitting={submitting}
                                     setError={siteForm.setError}
@@ -1179,12 +1179,12 @@ export default function ManageSite(props) {
                 {shownModals["theme.fonts.body.url"] && (
                     <ModalContainer onClick={() => toggleModal(false, "theme.fonts.body.url")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <Label>Update body font:</Label>
+                            <H3>Update body font:</H3>
                             <FileUpload
                                     name="theme.fonts.body.url"
                                     path={`public/site/fonts/`}
                                     accepts="*"
-                                    onUploadSuccess={setUrl}
+                                    onUploadSuccess={setFileUrl}
                                     setSubmitting={setSubmitting}
                                     submitting={submitting}
                                     setError={siteForm.setError}
@@ -1207,7 +1207,7 @@ export default function ManageSite(props) {
                 {shownModals["hero.banner"] && (
                     <ModalContainer onClick={() => toggleModal(false, "hero.banner")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <Label>Update body font:</Label>
+                            <H3>Update body font:</H3>
                             <FileUpload
                                 name="hero.banner"
                                 path={`public/site/fonts/`}
@@ -1216,7 +1216,7 @@ export default function ManageSite(props) {
                                 //     numer: 16,
                                 //     denom: 9,
                                 // }}
-                                onUploadSuccess={setUrl}
+                                onUploadSuccess={setFileUrl}
                                 setSubmitting={setSubmitting}
                                 submitting={submitting}
                                 setError={siteForm.setError}

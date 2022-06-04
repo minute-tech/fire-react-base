@@ -1,30 +1,29 @@
-import React, { useEffect, useRef, useState } from "react"
-import { FaChevronLeft, FaUserShield } from "react-icons/fa";
+import React, { useState } from "react"
+import { FaChevronLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { doc, updateDoc } from "firebase/firestore";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
-import { sendEmailVerification, updateEmail, updateProfile } from "firebase/auth";
+import {  updateEmail, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
-import { AiOutlineReload } from "react-icons/ai";
-import { BiCheck } from "react-icons/bi";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 import { Column, Grid, Hr, ModalCard, ModalContainer, Row } from "../../../../utils/styles/misc.js";
 import { Img } from "../../../../utils/styles/images.js";
 import { TextInput, Button } from "../../../../utils/styles/forms.js";
-import { Body, H1, Label, LLink } from "../../../../utils/styles/text.js";
+import { Body, H1, H3, Label, LLink } from "../../../../utils/styles/text.js";
 import { FormError } from "../../../misc/Misc.js";
 import { BTYPES, INPUT, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore } from "../../../../Fire";
 import FileUpload from "../../../misc/FileUpload";
 import { readTimestamp } from "../../../../utils/misc";
+import Reauth from "../auth/Reauth.js";
+import AccountSecurityStatus from "../auth/AccountSecurityStatus.js";
+import MfaSetup from "../auth/MfaSetup.js";
 
 function Profile(props) {
     const theme = useTheme();
-    const navigate = useNavigate()
     const [submitting, setSubmitting] = useState({ 
         updateUser: false,
         files: false
@@ -40,31 +39,35 @@ function Profile(props) {
         }
     });
 
-    const [shownModals, setShownModals] = useState([false]); 
-    const [emailVerifySent, setEmailVerifySent] = useState(false); 
-    const [refreshButtonShown, setRefreshButtonShown] = useState(false); 
-    const verifyEmailTimer = useRef();
+    const [shownModals, setShownModals] = useState([]); 
 
-    useEffect(() => {
-        return clearTimeout(verifyEmailTimer.current);
-    }, [])
+    const updateUser = async (data) => {
+        setSubmitting(prevState => ({
+            ...prevState,
+            updateUser: true
+        }));
 
-    const updateUser = (data) => {
-        updateDoc(doc(firestore, "users", props.fireUser.uid), {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            phone: data.phone
-        }).then(() => {
-            console.log("Successful update of user doc to Firestore.");
-            if(data.email !== props.fireUser.email){
-                updateEmail(auth.currentUser, data.email).then(() => {
-                    console.log("Successfully updated the user email on firebase");
-                  }).catch((error) => {
+        let passed = false;
+
+        if(data.email !== props.fireUser.email){
+            await updateEmail(auth.currentUser, data.email).then(() => {
+                console.log("Successfully updated the user email on firebase");
+                passed = true;
+              }).catch((error) => {
+                passed = false;
+                if(error.code === "auth/requires-recent-login"){
+                    toast.warn("Please re-authenticate your account before making this change.");
+                    toggleModal(true, "reauth");
+                } else {
                     console.error("Error updating user's email: ");
                     console.error(error);
-                  });
-            }
+                }
+              });
+        } else {
+            passed = true
+        }
+
+        if(passed){
             updateProfile(auth.currentUser, {
                 displayName: `${data.firstName} ${data.lastName}`,
             }).then(() => {
@@ -73,20 +76,34 @@ function Profile(props) {
                 console.error("Error updating user's displayName: ");
                 console.error(error);
             });
-            
-            toast.success(`Successfully updated the user profile.`);
+    
+            updateDoc(doc(firestore, "users", props.fireUser.uid), {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                // phone: data.phone
+            }).then(() => {
+                console.log("Successful update of user doc to Firestore.");
+                toast.success(`Successfully updated the user profile.`);
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    updateUser: false
+                }));
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+                toast.error(`Error setting users doc: ${error}`);
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    updateUser: false
+                }));
+            });
+        } else {
             setSubmitting(prevState => ({
                 ...prevState,
                 updateUser: false
             }));
-        }).catch((error) => {
-            console.error("Error adding document: ", error);
-            toast.error(`Error setting users doc: ${error}`);
-            setSubmitting(prevState => ({
-                ...prevState,
-                updateUser: false
-            }));
-        });
+        }
+        
     }
 
     const setThemeScheme = (currentScheme, userId) => {
@@ -129,7 +146,7 @@ function Profile(props) {
             }).then(() => {
                 toast.success(`Successfully updated the user profile.`);
                 console.log("Successfully updated the user profile pic on firebase");
-                toggleModal(false, 0)
+                toggleModal(false, "avatar")
                 setSubmitting(prevState => ({
                     ...prevState,
                     files: false
@@ -144,18 +161,6 @@ function Profile(props) {
                 ...prevState,
                 files: false
             }));
-        });
-    }
-
-    const sendEmailVerifyLink = () => {
-        sendEmailVerification(auth.currentUser).then(() => {
-            console.log(`Successfully sent a verification email to ${props.fireUser.email}.`);
-            setEmailVerifySent(true)
-            verifyEmailTimer.current = setTimeout(() => {
-                setRefreshButtonShown(true)
-            }, 8000);
-        }).catch((error) => {
-            console.error(error);
         });
     }
     
@@ -194,7 +199,7 @@ function Profile(props) {
                                 type="button"
                                 btype={BTYPES.TEXTED} 
                                 color={theme.colors.yellow}
-                                onClick={() => toggleModal(true, 0)}>
+                                onClick={() => toggleModal(true, "avatar")}>
                                     update picture
                             </Button>
                         </Column>
@@ -327,40 +332,20 @@ function Profile(props) {
                             <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
                         </Column>
                         <Column sm={12} md={4} textalign="center">
-                            {!props.fireUser.emailVerified && !emailVerifySent && (
-                                <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
-                                    Verify Email
-                                </Button>
-                            )}
-                            {emailVerifySent && !refreshButtonShown && (
-                                <Body color={theme.colors.yellow} display="inline">Email sent, check your email inbox!</Body>
-                            )}
-                            {emailVerifySent && refreshButtonShown && (
-                                <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
-                                    <AiOutlineReload /> Reload page
-                                </Button>
-                            )}
-                            {props.fireUser.emailVerified && (
-                                <Body display="inline" color={theme.colors.green}>
-                                    <BiCheck /> Email verified!
-                                    <br/>
-                                    <Button size={SIZES.SM} btype={BTYPES.TEXTED} color={theme.colors.green}>Now secure account with a phone number <FaUserShield /></Button>
-                                </Body>
-                            )}
-                            {(props.fireUser?.multiFactor?.enrolledFactors && props.fireUser.multiFactor.enrolledFactors.length !== 0) && (
-                                <Body display="inline" color={theme.colors.green}>
-                                    Account Secured with 2FA <FaUserShield />
-                                </Body>
-                            )}
+                            <AccountSecurityStatus
+                                site={props.site}
+                                fireUser={props.fireUser}
+                                toggleModal={toggleModal}
+                            />
                         </Column>
                     </Row>
                 </Grid>
             </form>
                        
-            {shownModals[0] && (
-                <ModalContainer onClick={() => toggleModal(false, 0)}>
+            {shownModals["avatar"] && (
+                <ModalContainer onClick={() => toggleModal(false, "avatar")}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
-                        <Label>Update profile avatar</Label>
+                        <H3>Update profile avatar</H3>
                         <FileUpload
                             name="avatar"
                             path={`users/${props.user.id}/images/avatar/`}
@@ -381,7 +366,44 @@ function Profile(props) {
                         <Button 
                             type="button"
                             size={SIZES.SM} 
-                            onClick={() => toggleModal(false, 0)}
+                            onClick={() => toggleModal(false, "avatar")}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
+
+            {shownModals["reauth"] && (
+                <ModalContainer onClick={() => toggleModal(false, "reauth")}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H3>Reauthenticate</H3>
+                        <Reauth />
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "reauth")}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
+
+            {shownModals["mfa"] && (
+                <ModalContainer onClick={() => toggleModal(false, "mfa")}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H3>Enter your phone number</H3>
+                        <MfaSetup 
+                            fireUser={props.fireUser} 
+                            user={props.user} 
+                        />
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "mfa")}
                         >
                             <CgClose /> Close 
                         </Button>

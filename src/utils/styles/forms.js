@@ -159,7 +159,7 @@ export const Button = styled.button`
     border: ${props => (props.btype !== BTYPES.INVERTED && props.btype === BTYPES.TEXTED) ? "transparent" : (props.color ?? props.theme.colors.primary)} solid 2px; 
     border-radius: ${props => !props.rounded ? "0px" : "20px"};
     background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? (props.color ?? props.theme.colors.primary) : "transparent"};
-    display: ${props => props.hidden ? "none" : "inline"};
+    display: ${props => props.display ? props.display : "inline"};
     cursor: pointer;
     a {
         text-decoration: none; 

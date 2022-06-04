@@ -46,9 +46,9 @@ function Register(props) {
             }));
         } else {
             const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
-            window.recaptchaVerifier = new RecaptchaVerifier('recaptcha', {
-                'size': 'normal',
-                'callback': async (response) => { 
+            window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
+                "size": "normal",
+                "callback": async (response) => { 
                     props.setIsLoggingIn(true);
                     await createUserWithEmailAndPassword(auth, data.email, data.password)
                         .then(async (userCredential) => {
@@ -115,7 +115,7 @@ function Register(props) {
                             props.setIsLoggingIn(false);
                         });
                 },
-                'expired-callback': () => {
+                "expired-callback": () => {
                     toast.warn('Please solve the reCAPTCHA again!');
                     window.recaptchaVerifier.clear()
                 }

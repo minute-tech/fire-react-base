@@ -10,7 +10,7 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div, Grid, Column, Row } from '../../utils/styles/misc';
 import { Spinner } from '../../utils/styles/images';
-import { ALink, Body, H1, H2, Label, LLink } from '../../utils/styles/text';
+import { ALink, Body, H1, H2, H3, Label, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
@@ -709,7 +709,7 @@ export default function DataManager(props) {
                                                             {/* ** for now just manually add this conditional for your pages here, not sure right now how to pass these item variables at a higher level for the differing modal views */}
                                                             {props.dataName === "users" && (
                                                                 <>
-                                                                <Label>{item.firstName} {item.lastName}</Label> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
+                                                                <H3>{item.firstName} {item.lastName}</H3> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
                                                                 <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
                                                                 <Div margin="10px 30px 0 0">
                                                                     { renderAdminBadge(item) }

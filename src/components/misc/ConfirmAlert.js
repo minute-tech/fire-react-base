@@ -3,7 +3,7 @@ import React from 'react';
 import { BTYPES, SIZES } from '../../utils/constants.js';
 import { Button } from '../../utils/styles/forms'
 import { ModalCard } from '../../utils/styles/misc';
-import { Body, H2 } from '../../utils/styles/text';
+import { Body, H3 } from '../../utils/styles/text';
 
 function ConfirmAlert(props) {
     const yesClicked = () => {
@@ -21,7 +21,7 @@ function ConfirmAlert(props) {
     return (
         // ** I need to pass the theme to each of these components separately because it is undefined in the ConfirmAlert library.
         <ModalCard theme={props.theme}>
-            <H2 theme={props.theme}>{props.headingText}</H2>
+            <H3 theme={props.theme}>{props.headingText}</H3>
             <Body theme={props.theme}>{props.body}</Body>
             <Button 
                 type="button"
