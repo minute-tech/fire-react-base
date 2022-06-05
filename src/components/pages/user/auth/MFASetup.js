@@ -1,4 +1,4 @@
-import { PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier } from 'firebase/auth';
+import { multiFactor, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -14,9 +14,7 @@ export default function MfaSetup(props) {
     const [vCodeSent, setVCodeSent] = useState(false);
     const [verificationId, setVerificationId] = useState(null);
     const [enteredPhone, setEnteredPhone] = useState(null);
-
-    const [submitting, setSubmitting] = useState({ 
-        phone: false,
+    const [submitting, setSubmitting] = useState({
         vCode: false,
     }); 
     
@@ -34,42 +32,46 @@ export default function MfaSetup(props) {
 
     const sendVCodeToNewPhone = (data) => {
         if(data.phone.substring(0, 2) !== "+1"){
+            // This validation only is valid for US numbers!
             toast.warn("Please reformat your phone number to international format such as: +1 234 567 8901");
         } else {
             const recaptchaToastId = toast.info("Please complete the reCAPTCHA below to continue.");
+            // TODO: should this be added to every form to cover the case of the user re-submits with changed data, but unfinished recaptcha?
+            // if(window.recaptchaVerifier){
+            //     window.recaptchaVerifier.clear();
+            // }
             
             window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
                 "size": "normal",
                 "callback": (response) => {
-                    // TODO: getting stuck right here
-                    props.fireUser.multiFactor.getSession().then((multiFactorSession) => {
-                        console.log("here")
+                    const user = auth.currentUser;
+                    const mfaUser = multiFactor(user);
+                    mfaUser.getSession().then((multiFactorSession) => {
                         // Specify the phone number and pass the MFA session.
                         let phoneInfoOptions = {
                             phoneNumber: data.phone,
                             session: multiFactorSession
                         };
-                        let phoneAuthProvider = PhoneAuthProvider();
+                        let phoneAuthProvider = new PhoneAuthProvider(auth);
                         // Send SMS verification code.
                         phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, window.recaptchaVerifier).then((tempVerificationId) => {
-                            console.log("here")
                             setVCodeSent(true);
                             setVerificationId(tempVerificationId);
                             setEnteredPhone(data.phone);
                             toast.dismiss(recaptchaToastId);
                             toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
-                            window.recaptchaVerifier.clear()
+                            window.recaptchaVerifier.clear();
                         }).catch((error) => {
                             console.error("Error adding phone: ", error);
-                            toast.dismiss(recaptchaToastId);
                             toast.error(`Error adding phone: ${error.message}`);
-                            window.recaptchaVerifier.clear()
+                            toast.dismiss(recaptchaToastId);
+                            window.recaptchaVerifier.clear();
                         });
                     }).catch((error) => {
                         console.error("Error adding multi-factor authentication: ", error);
                         toast.error(`Error adding multi-factor authentication: ${error}`);
                         toast.dismiss(recaptchaToastId);
-                        window.recaptchaVerifier.clear()
+                        window.recaptchaVerifier.clear();
                     });
                 },
                 "expired-callback": () => {
@@ -89,13 +91,15 @@ export default function MfaSetup(props) {
             ...prevState,
             vCode: true
         }));
+        
         let cred = PhoneAuthProvider.credential(verificationId, data.vCode);
         let multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
-        props.user.multiFactor.enroll(multiFactorAssertion, props.fireUser.userName).then(response => {
-
+        const user = auth.currentUser;
+        const mfaUser = multiFactor(user);
+        mfaUser.enroll(multiFactorAssertion, props.fireUser.userName).then(response => {
             if(props.user.phone){
                 // Unenroll old phone number if user has one
-                props.fireUser.multiFactor.unenroll(props.fireUser.multiFactor.enrolledFactors[0]).then(() => {
+                mfaUser.unenroll(mfaUser.enrolledFactors[0]).then(() => {
                     console.log("Successful removed old phone.");
                 }).catch((error) => {
                     console.error("Error removing old phone", error);
@@ -112,6 +116,8 @@ export default function MfaSetup(props) {
             });
             
             toast.success("Successfully updated phone number!");
+            props.setPhoneField("phone", enteredPhone);
+            props.toggleModal(false, "mfa-setup");
             setSubmitting(prevState => ({
                 ...prevState,
                 vCode: false,
@@ -126,6 +132,7 @@ export default function MfaSetup(props) {
 
     return (
         <>
+        {!vCodeSent && (
             <form onSubmit={ phoneForm.handleSubmit(sendVCodeToNewPhone) }>
                 <Grid fluid>
                     <Row justify="center">
@@ -138,10 +145,6 @@ export default function MfaSetup(props) {
                                 {
                                     ...phoneForm.register(INPUT.PHONE.VALUE, { 
                                             required: INPUT.PHONE.ERRORS.REQUIRED,
-                                            // pattern: {
-                                            //     value: INPUT.PHONE.ERRORS.PATTERN.VALUE,
-                                            //     message: INPUT.PHONE.ERRORS.PATTERN.MESSAGE
-                                            // },
                                         }
                                     )
                                 } 
@@ -167,40 +170,41 @@ export default function MfaSetup(props) {
                     </Row>
                 </Grid>
             </form>
+        )}
 
-            {vCodeSent && (
-                <form onSubmit={ vCodeForm.handleSubmit(submitNewPhoneVCode) }>
-                    <Grid fluid>
-                        <Row justify="center">
-                            <Column md={12} lg={8}>
-                                <Label htmlFor={"vCode"} br>Enter the verification code sent to your phone number:</Label>
-                                <TextInput
-                                    type="text" 
-                                    error={vCodeForm.formState.errors.vCode}
-                                    placeholder={"12345"} 
-                                    {
-                                        ...vCodeForm.register("vCode", { 
-                                                required: "You must enter the verification code sent to your phone number to continue.",
-                                            }
-                                        )
-                                    } 
-                                />
-                                <FormError error={vCodeForm.formState.errors.vCode} /> 
-                            </Column>
-                        </Row>
-                        <Row>
-                            <Column md={12} textalign="center">
-                                <Button 
-                                    type="submit" 
-                                    disabled={submitting.vCode}
-                                >
-                                    Submit
-                                </Button>
-                            </Column>
-                        </Row>
-                    </Grid>
-                </form>
-            )}
+        {vCodeSent && (
+            <form onSubmit={ vCodeForm.handleSubmit(submitNewPhoneVCode) }>
+                <Grid fluid>
+                    <Row justify="center">
+                        <Column md={12} lg={8}>
+                            <Label htmlFor={"vCode"} br>Enter the verification code sent to your phone number:</Label>
+                            <TextInput
+                                type="text" 
+                                error={vCodeForm.formState.errors.vCode}
+                                placeholder={"12345"} 
+                                {
+                                    ...vCodeForm.register("vCode", { 
+                                            required: "You must enter the verification code sent to your phone number to continue.",
+                                        }
+                                    )
+                                } 
+                            />
+                            <FormError error={vCodeForm.formState.errors.vCode} /> 
+                        </Column>
+                    </Row>
+                    <Row>
+                        <Column md={12} textalign="center">
+                            <Button 
+                                type="submit" 
+                                disabled={submitting.vCode}
+                            >
+                                Submit
+                            </Button>
+                        </Column>
+                    </Row>
+                </Grid>
+            </form>
+        )}
         </>
     )
 }

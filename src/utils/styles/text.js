@@ -124,7 +124,7 @@ export const Body = styled.p`
 
     ${(props) => (props.hoverColor) && `
         &:hover {
-            color: ${props.hoverColor};
+            color: ${props.hoverColor} !important;
             cursor: pointer;
         }
     `};  

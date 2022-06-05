@@ -14,7 +14,6 @@ import { Tabs } from '../../misc/Tabs.js';
 
 function Home(props){
     const theme = useTheme();
-
     const sendAlert = (alertType) => {
         toast[alertType]('🦄 Wow so easy to send an alert!');
     }

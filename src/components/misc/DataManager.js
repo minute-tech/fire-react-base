@@ -40,8 +40,8 @@ export default function DataManager(props) {
     const [beginCursor, setBeginCursor] = useState("");
     const [finalCursor, setFinalCursor] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [shownModals, setShownModals] = useState([false]); 
-    const [search, setSearch] = useState({ 
+    const [shownModals, setShownModals] = useState([]); 
+    const [search, setSearch] = useState({
         column: "",
         term: "",
     }); 

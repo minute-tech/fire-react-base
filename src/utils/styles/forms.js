@@ -18,6 +18,11 @@ export const TextInput = styled.input`
     outline-color: ${props => props.error ? props.theme.colors.red : "none"};
     box-shadow: 0 0 2pt 1pt ${props => props.error ? props.theme.colors.red : "none"};
 
+    &:disabled {
+        color: ${props => props.theme.colors.grey} !important;
+        cursor: not-allowed;
+    }
+
     &:focus {
         outline-color: ${props => props.theme.colors.primary};
         box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
@@ -161,11 +166,12 @@ export const Button = styled.button`
     background-color: ${props => (props.btype !== BTYPES.INVERTED && props.btype !== BTYPES.TEXTED) ? (props.color ?? props.theme.colors.primary) : "transparent"};
     display: ${props => props.display ? props.display : "inline"};
     cursor: pointer;
+
     a {
         text-decoration: none; 
         color: ${props => props.btype !== BTYPES.INVERTED ? (props.btype !== BTYPES.TEXTED ? "white" : "black") : (props.color ?? props.theme.colors.primary)};
     }
-
+    
     // Sizing
     ${(props) => (props.size === SIZES.SM) && `
         font-size: 12px;
@@ -203,7 +209,7 @@ export const Button = styled.button`
         font-weight: 900;
     `}
 
-    // Psuedo-classes
+    // Psuedo
     &:hover {
         text-decoration: none;
         cursor: pointer;
@@ -213,5 +219,10 @@ export const Button = styled.button`
         a {
             color: ${props => props.btype !== BTYPES.INVERTED ? (props.color ?? props.theme.colors.primary) : "white"};
         }
+    }
+
+    &:focus {
+        outline-color: ${props => props.theme.colors.primary};
+        box-shadow: 0 0 2pt 1pt ${props => props.theme.colors.primary};
     }
 `;

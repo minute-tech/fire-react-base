@@ -5,7 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { CgClose } from "react-icons/cg";
 import { Helmet } from "react-helmet-async";
-import {  updateEmail, updateProfile } from "firebase/auth";
+import { updateEmail, updateProfile } from "firebase/auth";
 import { useTheme } from "styled-components";
 import { useForm } from "react-hook-form";
 
@@ -25,11 +25,12 @@ import MfaSetup from "../auth/MfaSetup.js";
 function Profile(props) {
     const theme = useTheme();
     const [submitting, setSubmitting] = useState({ 
-        updateUser: false,
+        updateUserProfile: false,
+        email: false,
         files: false
     });
 
-    const updateUserForm = useForm({
+    const profileForm = useForm({
         defaultValues: {
             firstName: props.user.firstName,
             lastName: props.user.lastName,
@@ -39,71 +40,96 @@ function Profile(props) {
         }
     });
 
-    const [shownModals, setShownModals] = useState([]); 
+    const emailForm = useForm({
+        defaultValues: {
+            email: "",
+        }
+    });
 
-    const updateUser = async (data) => {
+
+    const [shownModals, setShownModals] = useState([]); 
+    
+    const toggleModal = (newStatus, index) => {
+        let tempShownModals = [...shownModals]
+        tempShownModals[index] = newStatus
+        setShownModals(tempShownModals);
+    }
+
+    const updateUserProfile = async (data) => {
         setSubmitting(prevState => ({
             ...prevState,
-            updateUser: true
+            updateUserProfile: true
         }));
 
-        let passed = false;
+        updateProfile(auth.currentUser, {
+            displayName: `${data.firstName} ${data.lastName}`,
+        }).then(() => {
+            console.log("Successfully updated the user's displayName on firebase");
+        }).catch((error) => {
+            console.error("Error updating user's displayName: ");
+            console.error(error);
+        });
 
-        if(data.email !== props.fireUser.email){
-            await updateEmail(auth.currentUser, data.email).then(() => {
-                console.log("Successfully updated the user email on firebase");
-                passed = true;
-              }).catch((error) => {
-                passed = false;
-                if(error.code === "auth/requires-recent-login"){
-                    toast.warn("Please re-authenticate your account before making this change.");
-                    toggleModal(true, "reauth");
-                } else {
-                    console.error("Error updating user's email: ");
-                    console.error(error);
-                }
-              });
-        } else {
-            passed = true
-        }
+        updateDoc(doc(firestore, "users", props.fireUser.uid), {
+            firstName: data.firstName,
+            lastName: data.lastName,
+        }).then(() => {
+            console.log("Successful update of user doc to Firestore.");
+            toast.success(`Successfully updated the user profile.`);
+            setSubmitting(prevState => ({
+                ...prevState,
+                updateUserProfile: false
+            }));
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            toast.error(`Error setting users doc: ${error}`);
+            setSubmitting(prevState => ({
+                ...prevState,
+                updateUserProfile: false
+            }));
+        });
+    }
 
-        if(passed){
-            updateProfile(auth.currentUser, {
-                displayName: `${data.firstName} ${data.lastName}`,
-            }).then(() => {
-                console.log("Successfully updated the user's displayName on firebase");
-            }).catch((error) => {
-                console.error("Error updating user's displayName: ");
-                console.error(error);
-            });
-    
+    const updateUserEmail = (data) =>{
+        setSubmitting(prevState => ({
+            ...prevState,
+            email: true
+        }));
+        updateEmail(auth.currentUser, data.email).then(() => {
+            console.log("Successfully updated the user email on firebase");
+
             updateDoc(doc(firestore, "users", props.fireUser.uid), {
-                firstName: data.firstName,
-                lastName: data.lastName,
                 email: data.email,
-                // phone: data.phone
             }).then(() => {
                 console.log("Successful update of user doc to Firestore.");
-                toast.success(`Successfully updated the user profile.`);
+                toast.success("Successfully updated your email!");
+                toggleModal(false, "update-email");
+                profileForm.setValue("email", data.email);
                 setSubmitting(prevState => ({
                     ...prevState,
-                    updateUser: false
+                    email: false
                 }));
             }).catch((error) => {
                 console.error("Error adding document: ", error);
-                toast.error(`Error setting users doc: ${error}`);
+                toast.error(`Error setting your email doc: ${error}`);
                 setSubmitting(prevState => ({
                     ...prevState,
-                    updateUser: false
+                    email: false
                 }));
             });
-        } else {
+        }).catch((error) => {
+            if(error.code === "auth/email-already-in-use"){
+                toast.error("This email is already taken, please try another email address.");
+            } else {
+                console.error("Error updating user's email: ");
+                console.error(error);
+            }
+                
             setSubmitting(prevState => ({
                 ...prevState,
-                updateUser: false
+                email: false
             }));
-        }
-        
+        });
     }
 
     const setThemeScheme = (currentScheme, userId) => {
@@ -163,12 +189,6 @@ function Profile(props) {
             }));
         });
     }
-    
-    const toggleModal = (newStatus, index) => {
-        let tempShownModals = [...shownModals]
-        tempShownModals[index] = newStatus
-        setShownModals(tempShownModals);
-    }
 
     return (
         <>
@@ -181,7 +201,7 @@ function Profile(props) {
                 </Button>
             </LLink>
             <H1>Profile</H1>
-            <form onSubmit={ updateUserForm.handleSubmit(updateUser) }>
+            <form onSubmit={ profileForm.handleSubmit(updateUserProfile) }>
                 <Grid fluid>
                     <Row style={{ height: "200px" }}>
                         <Column sm={12} textalign="center">
@@ -211,9 +231,9 @@ function Profile(props) {
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
-                                error={updateUserForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
+                                error={profileForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
                                 {
-                                    ...updateUserForm.register(INPUT.FIRST_NAME.VALUE, { 
+                                    ...profileForm.register(INPUT.FIRST_NAME.VALUE, { 
                                             required: INPUT.FIRST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
                                                 value: INPUT.FIRST_NAME.ERRORS.MAX.VALUE,
@@ -227,16 +247,16 @@ function Profile(props) {
                                     )
                                 } 
                             />
-                            <FormError error={updateUserForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
                         </Column>
                         <Column sm={12} md={6}>
                             <Label htmlFor={INPUT.LAST_NAME.VALUE} br>Last Name:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
-                                error={updateUserForm.formState.errors[INPUT.LAST_NAME.VALUE]}
+                                error={profileForm.formState.errors[INPUT.LAST_NAME.VALUE]}
                                 {
-                                    ...updateUserForm.register(INPUT.LAST_NAME.VALUE, { 
+                                    ...profileForm.register(INPUT.LAST_NAME.VALUE, { 
                                             required: INPUT.LAST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
                                                 value: INPUT.LAST_NAME.ERRORS.MAX.VALUE,
@@ -250,18 +270,31 @@ function Profile(props) {
                                     )
                                 } 
                             />
-                            <FormError error={updateUserForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
                         </Column>
                     </Row>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                            <Label htmlFor={INPUT.EMAIL.VALUE}>Email:</Label>
+                            &nbsp;
+                            <Body 
+                                margin="0" 
+                                display="inline" 
+                                size={SIZES.SM} 
+                                color={theme.colors.green}
+                                hoverColor={theme.colors.yellow}
+                                onClick={() => toggleModal(true, "reauth-email")}
+                            >
+                                edit
+                            </Body>
+                            <br />
                             <TextInput
                                 type="text" 
-                                error={updateUserForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                disabled
+                                error={profileForm.formState.errors[INPUT.EMAIL.VALUE]}
                                 placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                 {
-                                    ...updateUserForm.register(INPUT.EMAIL.VALUE, { 
+                                    ...profileForm.register(INPUT.EMAIL.VALUE, { 
                                             required: INPUT.EMAIL.ERRORS.REQUIRED,
                                             pattern: {
                                                 value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
@@ -271,18 +304,29 @@ function Profile(props) {
                                     )
                                 } 
                             />
-                            <FormError error={updateUserForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.PHONE.VALUE} br>Phone:</Label>
+                            <Label htmlFor={INPUT.PHONE.VALUE}>Phone:</Label>
+                            &nbsp;
+                            <Body 
+                                margin="0"
+                                display="inline"
+                                size={SIZES.SM}
+                                color={theme.colors.green}
+                                hoverColor={theme.colors.yellow}
+                                onClick={() => toggleModal(true, "reauth-mfa")}
+                            >
+                                edit
+                            </Body>
+                            <br />
                             <TextInput
                                 type="text"
-                                // disabled={props.fireUser?.multiFactor?.enrolledFactors && props.fireUser.multiFactor.enrolledFactors.length === 0}
-                                // disabled
-                                error={updateUserForm.formState.errors[INPUT.PHONE.VALUE]}
+                                disabled
+                                error={profileForm.formState.errors[INPUT.PHONE.VALUE]}
                                 placeholder={INPUT.PHONE.PLACEHOLDER} 
                                 {
-                                    ...updateUserForm.register(INPUT.PHONE.VALUE, { 
+                                    ...profileForm.register(INPUT.PHONE.VALUE, { 
                                             maxLength: {
                                                 value: INPUT.PHONE.ERRORS.MAX.VALUE,
                                                 message: INPUT.PHONE.ERRORS.MAX.MESSAGE
@@ -295,15 +339,15 @@ function Profile(props) {
                                     )
                                 } 
                             />
-                            <FormError error={updateUserForm.formState.errors[INPUT.PHONE.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.PHONE.VALUE]} /> 
                         </Column>
                     </Row>               
                     <Row>
                         <Column md={12} textalign="center">
-                            {updateUserForm.formState.isDirty && (
+                            {profileForm.formState.isDirty && (
                                 <Button 
                                     type="submit" 
-                                    disabled={submitting.updateUser}
+                                    disabled={submitting.updateUserProfile}
                                 >
                                     Save changes
                                 </Button>
@@ -357,9 +401,9 @@ function Profile(props) {
                             onUploadSuccess={updateAvatar}
                             setSubmitting={setSubmitting}
                             submitting={submitting}
-                            setError={updateUserForm.setError}
-                            clearError={updateUserForm.clearErrors}
-                            error={updateUserForm.formState.errors.avatar}
+                            setError={profileForm.setError}
+                            clearError={profileForm.clearErrors}
+                            error={profileForm.formState.errors.avatar}
                         />
                         
                         <Hr />
@@ -374,16 +418,16 @@ function Profile(props) {
                 </ModalContainer>
             )}
 
-            {shownModals["reauth"] && (
-                <ModalContainer onClick={() => toggleModal(false, "reauth")}>
+            {shownModals["reauth-email"] && (
+                <ModalContainer onClick={() => toggleModal(false, "reauth-email")}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
                         <H3>Reauthenticate</H3>
-                        <Reauth />
+                        <Reauth onSuccess={toggleModal} destination="update-email" />
                         <Hr />
                         <Button 
                             type="button"
                             size={SIZES.SM} 
-                            onClick={() => toggleModal(false, "reauth")}
+                            onClick={() => toggleModal(false, "reauth-email")}
                         >
                             <CgClose /> Close 
                         </Button>
@@ -391,19 +435,90 @@ function Profile(props) {
                 </ModalContainer>
             )}
 
-            {shownModals["mfa"] && (
-                <ModalContainer onClick={() => toggleModal(false, "mfa")}>
+            {shownModals["update-email"] && (
+                <ModalContainer onClick={() => toggleModal(false, "update-email")}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
-                        <H3>Enter your phone number</H3>
+                        <H3>Update Email</H3>
+                        <form onSubmit={ emailForm.handleSubmit(updateUserEmail) }>
+                            <Grid fluid>
+                                <Row justify="center">
+                                    <Column md={12} lg={8}>
+                                        <Label htmlFor={INPUT.EMAIL.VALUE} br>New Email Address:</Label>
+                                        <TextInput
+                                            type="text"
+                                            error={emailForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                            placeholder={INPUT.EMAIL.PLACEHOLDER}
+                                            {
+                                                ...emailForm.register(INPUT.EMAIL.VALUE, { 
+                                                        required: INPUT.EMAIL.ERRORS.REQUIRED,
+                                                        pattern: {
+                                                            value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                            message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
+                                                        },
+                                                    }
+                                                )
+                                            } 
+                                        />
+                                        <FormError error={emailForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column md={12} textalign="center">
+                                        <Button 
+                                            type="submit" 
+                                            disabled={submitting.email}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Column>
+                                </Row>
+                            </Grid>
+                        </form>
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "update-email")}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
+
+            
+            {shownModals["reauth-mfa"] && (
+                <ModalContainer onClick={() => toggleModal(false, "reauth-mfa")}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H3>Reauthenticate</H3>
+                        <Reauth onSuccess={toggleModal} destination="update-mfa" />
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "reauth-mfa")}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
+
+            {shownModals["update-mfa"] && (
+                <ModalContainer onClick={() => toggleModal(false, "update-mfa")}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H3>Setup 2FA with phone number</H3>
                         <MfaSetup 
-                            fireUser={props.fireUser} 
-                            user={props.user} 
+                            fireUser={props.fireUser}
+                            user={props.user}
+                            toggleModal={toggleModal}
+                            setPhoneField={profileForm.setValue}
                         />
                         <Hr />
                         <Button 
                             type="button"
                             size={SIZES.SM} 
-                            onClick={() => toggleModal(false, "mfa")}
+                            onClick={() => toggleModal(false, "update-mfa")}
                         >
                             <CgClose /> Close 
                         </Button>

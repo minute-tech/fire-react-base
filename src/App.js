@@ -274,7 +274,7 @@ function App() {
                 unsubReadOnlyFlags?.current();
             }
         };
-    }, [site]);
+    }, [site]); // if site is not added here, the pages will continue to render endlessly for some reason
 
     const cleanUpLogout = () => {
         if(unsubUser.current){
