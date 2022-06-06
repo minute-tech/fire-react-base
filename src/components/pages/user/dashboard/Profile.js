@@ -315,7 +315,7 @@ function Profile(props) {
                                 size={SIZES.SM}
                                 color={theme.colors.green}
                                 hoverColor={theme.colors.yellow}
-                                onClick={() => toggleModal(true, "reauth-mfa")}
+                                onClick={() => !props.fireUser.emailVerified ? toast.warn("You need to verify your email before adding a phone number to your account. Send a verification link to your email below first!") : toggleModal(true, "reauth-mfa")}
                             >
                                 edit
                             </Body>

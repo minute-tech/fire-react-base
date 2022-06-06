@@ -23,12 +23,16 @@ service cloud.firestore {
                 )
             }
 
+            function isMfaEnabled() {
+                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            }
+
             // Anyone can read or list site docs as long as it isn't id of 'sensitive'
-            allow read, list: if isPublic() || isAdmin();
+            allow read, list: if isPublic() || (isAdmin() && isMfaEnabled());
             // Only admins or super admins can create and update
-            allow create, update: if isAdmin();
+            allow create, update: if (isAdmin() && isMfaEnabled());
             // Only super admins can delete it
-            allow delete: if isSuperAdmin();
+            allow delete: if (isSuperAdmin() && isMfaEnabled());
         }
 
         // Users collection // 
@@ -49,27 +53,31 @@ service cloud.firestore {
                 )
             }
 
+            function isMfaEnabled() {
+                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            }
+
             // Anyone can create a user
             allow create: if true;
             // Only that user or an admin can update, list, or read their profile data
-            allow read, list, update: if isTrueUser() || isAdmin();
+            allow read, list, update: if isTrueUser() || (isAdmin() && isMfaEnabled());
             // Super admins can delete a user
             allow delete: if isSuperAdmin();
 
             match /uploads/{document=**} {
                 // Only that signed in admin user can create, update, read, delete, or list upload documents
-                allow create, update, read, list, delete: if isAdmin();
+                allow create, update, read, list, delete: if (isAdmin() && isMfaEnabled());
             }
 
             match /readOnly/{document=**} {
                 // Only Super Admins can edit these documents, anyone can read
-                allow create, update, list, delete: if isSuperAdmin();
+                allow create, update, list, delete: if (isSuperAdmin() && isMfaEnabled());
                 allow read: if true;
             }
 
             match /newAdmins/{document=**} {
                 // Only Super Admins can write and read these documents
-                allow read, create, update, list, delete: if isSuperAdmin();
+                allow read, create, update, list, delete: if (isSuperAdmin() && isMfaEnabled());
             }
         }
 
@@ -81,8 +89,13 @@ service cloud.firestore {
                     get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
                 )
             }
+
+            function isMfaEnabled() {
+                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            }
+            
             // No one can update, delete, read, or list but everyone can create
-            allow update, delete, read, list: if isAdmin();
+            allow update, delete, read, list: if (isAdmin() && isMfaEnabled());
             allow create: if true;
         }
     }

@@ -47,16 +47,16 @@ export default function Reauth(props) {
                     data.password,
                 );
                 
+                toast.dismiss(recaptchaToastId);
                 reauthenticateWithCredential(user, credentials).then(() => {
                     // First time users will go this path
                     toast.success("Your account has been reauthenticated!");
-                    toast.dismiss(recaptchaToastId);
                     props.onSuccess(true, props.destination);
                     window.recaptchaVerifier.clear();
                 }).catch((error) => {
                     console.error("Error logging you in: " + error);
                     if(error.code === "auth/multi-factor-auth-required"){
-                        console.log("MFA needed!")
+                        console.log("MFA needed!");
                         let resolver = getMultiFactorResolver(auth, error);
                         let phoneInfoOptions = {
                             multiFactorHint: resolver.hints[0], // Just grabbing first factor source (phone)
@@ -69,11 +69,9 @@ export default function Reauth(props) {
                             setVerificationId(tempVerificationId);
                             setMfaResolver(resolver);
                             toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
-                            toast.dismiss(recaptchaToastId);
                         }).catch((error) => {
                             console.error("Error adding phone: ", error);
                             toast.error(`Error adding phone: ${error.message}`);
-                            toast.dismiss(recaptchaToastId);
                             window.recaptchaVerifier.clear();
                         });
                     } else if(error.code === "auth/wrong-password"){
@@ -83,7 +81,6 @@ export default function Reauth(props) {
                     } else {
                         toast.error(`Error logging you in, please try again: ${error}`);
                     }
-                    toast.dismiss(recaptchaToastId);
                 });
             },
             "expired-callback": () => {

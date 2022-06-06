@@ -24,6 +24,7 @@ import ManageMessages from './components/pages/user/admin/ManageMessages';
 import ManageUsers from './components/pages/user/admin/ManageUsers';
 import { Wrapper } from './utils/styles/misc';
 import ManageSite from './components/pages/user/admin/ManageSite';
+import { multiFactor } from 'firebase/auth';
 
 function Views(props) {
     const theme = useTheme();
@@ -176,6 +177,7 @@ function Views(props) {
                         element={
                             <ErrorBoundary>
                                 <AdminRoutes 
+                                    fireUser={props.fireUser}
                                     site={props.site} 
                                     isAdmin={props?.readOnlyFlags?.isAdmin} 
                                     isLoggingIn={props.isLoggingIn} 
@@ -275,18 +277,23 @@ function UserRoutes({ isUser, isLoggingIn }) {
     }
 }
 
-function AdminRoutes({ isAdmin, isLoggingIn }) {
-    let location = useLocation();
+function AdminRoutes({ isAdmin, isLoggingIn, fireUser }) {
+    const location = useLocation();
+    const mfaUser = multiFactor(fireUser);
+
     if (!isAdmin && !isLoggingIn) {
         toast.warn("Sorry, but you need to be an administrator to access this page.", {
             toastId: 'admin',
         });
         return <Navigate to="/dashboard" state={{ from: location }} />;
+    } else if ((mfaUser?.enrolledFactors.length ?? 0) === 0) {
+        toast.warn(`Sorry, but you need to enable 2FA to view admin pages. ${!fireUser.emailVerified ? "Start by verifying your email below." : "Secure your account on this page!"}`, {
+            toastId: 'admin-2fa',
+        });
+        return <Navigate to="/dashboard/profile" state={{ from: location }} />;
     } else {
         return <Outlet />;
     }
 }
-
-
 
 export default Views;

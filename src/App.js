@@ -75,6 +75,7 @@ function App() {
         name: DEFAULT_SITE.NAME,
         logo: {
             width: DEFAULT_SITE.LOGO.WIDTH,
+            height: DEFAULT_SITE.LOGO.HEIGHT,
             url: DEFAULT_SITE.LOGO.URL,
             showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
         },

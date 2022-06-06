@@ -56,7 +56,7 @@ export default function AccountSecurityStatus(props) {
                 <AiOutlineReload /> Reload page
             </Button>
         )
-    } else if (props.fireUser.emailVerified && (!mfaUser || ((mfaUser?.enrolledFactors.length ?? 1) === 0))) {
+    } else if (props.fireUser.emailVerified && (!mfaUser || ((mfaUser?.enrolledFactors.length ?? 0) === 0))) {
         return (
             <>
                 <Body margin="5px 0" color={theme.colors.green}>

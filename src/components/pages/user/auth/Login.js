@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
-import { RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
+import { getMultiFactorResolver, PhoneAuthProvider, PhoneMultiFactorGenerator, RecaptchaVerifier, sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { FaChevronLeft } from 'react-icons/fa';
 import { Helmet } from 'react-helmet-async';
 import { CgClose } from 'react-icons/cg';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 
 import { auth } from "../../../../Fire.js";
-import { Column, Grid, Container, ModalCard, ModalContainer, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
+import { Column, Grid, Container, ModalCard, ModalContainer, Recaptcha, Row, Wrapper, Hr } from '../../../../utils/styles/misc.js';
 import { ALink, Body, H1, H3, Label, LLink, SLink } from '../../../../utils/styles/text.js';
 import { FormError } from '../../../misc/Misc';
 import { INPUT, SIZES } from '../../../../utils/constants.js';
@@ -17,11 +16,14 @@ import { TextInput, Button } from '../../../../utils/styles/forms.js';
 
 function UserLogin(props) {
     const navigate = useNavigate();
-    const theme = useTheme();
-    const [forgotExpanded, setForgotExpanded] = useState(false);
-    const [forgotEmail, setForgotEmail] = useState("");
+
+    const [verificationId, setVerificationId] = useState(null);
+    const [mfaResolver, setMfaResolver] = useState(null);
+    const [shownModals, setShownModals] = useState([]); 
     const [submitting, setSubmitting] = useState({ 
         login: false,
+        vCode: false,
+        forgotPassword: false,
     }); 
     
     const loginForm = useForm({
@@ -30,6 +32,24 @@ function UserLogin(props) {
             password: "",
         }
     });
+
+    const vCodeForm = useForm({
+        defaultValues: {
+            vCode: "",
+        }
+    });
+
+    const forgotPasswordForm = useForm({
+        defaultValues: {
+            email: "",
+        }
+    });
+    
+    const toggleModal = (newStatus, index) => {
+        let tempShownModals = [...shownModals]
+        tempShownModals[index] = newStatus
+        setShownModals(tempShownModals);
+    };
 
     const loginUser = (data) => {
         const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
@@ -54,20 +74,40 @@ function UserLogin(props) {
                         const errorMessage = error.message;
                         
                         console.log("Error signing in: " + errorCode + " - " + errorMessage);
+
                         if(errorCode === "auth/user-not-found" || errorCode === "auth/wrong-password"){
                             toast.error(`Email or password was not accepted, please try another combination.`);
+                        } else if(error.code === "auth/multi-factor-auth-required"){
+                            console.log("MFA needed!");
+                            let resolver = getMultiFactorResolver(auth, error);
+                            let phoneInfoOptions = {
+                                multiFactorHint: resolver.hints[0], // Just grabbing first factor source (phone)
+                                session: resolver.session,
+                            };
+                            let phoneAuthProvider = new PhoneAuthProvider(auth);
+                            // Send SMS verification code.
+                            phoneAuthProvider.verifyPhoneNumber(phoneInfoOptions, window.recaptchaVerifier).then((tempVerificationId) => {
+                                toggleModal(true, "v-code");
+                                setVerificationId(tempVerificationId);
+                                setMfaResolver(resolver);
+                                toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
+                            }).catch((error) => {
+                                console.error("Error adding phone: ", error);
+                                toast.error(`Error adding phone: ${error.message}`);
+                                window.recaptchaVerifier.clear();
+                            });
                         } else {
                             toast.error(`Error: ${errorMessage}`);
                         }
                         
-                        // Clean up
-                        setSubmitting(prevState => ({
-                            ...prevState,
-                            login: false
-                        }));
-                        window.recaptchaVerifier.clear();
-                        props.setIsLoggingIn(false);
-                        toast.dismiss(recaptchaToastId);
+                        // // Clean up
+                        // setSubmitting(prevState => ({
+                        //     ...prevState,
+                        //     login: false
+                        // }));
+                        // window.recaptchaVerifier.clear();
+                        // props.setIsLoggingIn(false);
+                        // toast.dismiss(recaptchaToastId);
                     });
             },
             "expired-callback": () => {
@@ -77,21 +117,64 @@ function UserLogin(props) {
         }, auth);
         window.recaptchaVerifier.render(); 
     }
-    
-    const toggleModal = () => {
-        setForgotEmail("");
-        setForgotExpanded(!forgotExpanded);
+
+    const submitVCode = (data) => {
+        setSubmitting(prevState => ({
+            ...prevState,
+            vCode: true
+        }));
+
+        let cred = PhoneAuthProvider.credential(verificationId, data.vCode);
+        let multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
+
+        // Complete sign-in.
+        mfaResolver.resolveSignIn(multiFactorAssertion).then((userCredential) => {
+            // User successfully signed in with the second factor phone number.
+            toast.success("Successfully logged in with two factor authentication (2FA)!");
+            setSubmitting(prevState => ({
+                ...prevState,
+                vCode: false,
+                login: false,
+            }));
+            toggleModal(false, "v-code");
+            vCodeForm.reset();
+            navigate("/logging-in");
+        }).catch(error => {
+            setSubmitting(prevState => ({
+                ...prevState,
+                vCode: false
+            }));
+
+            if(error.code === "auth/invalid-verification-code"){
+                console.error(`The code you entered was not correct, please try again.`);
+                toast.error("The code you entered was not correct, please try again.");
+            } else { 
+                console.error(`Error with entered code: ${error}`);
+                toast.error(`Error with entered code: ${error.message}`);
+            }
+            
+        });
     }
 
-    const sendPasswordReset = () => {
-        if(forgotEmail){
-            sendPasswordResetEmail(auth, forgotEmail).then(() => {
-                toast.success('Check your email for a password reset link!');
-                setForgotExpanded(false);
-            }).catch((error) => {
-                toast.error(`Error sending password reset: ${error}`);
-            });
-        }
+    const sendPasswordReset = (data) => {
+        setSubmitting(prevState => ({
+            ...prevState,
+            forgotPassword: true
+        }));
+        sendPasswordResetEmail(auth, data.email).then(() => {
+            toast.success('Check your email for a password reset link!');
+            toggleModal(false, "forgot-password");
+            setSubmitting(prevState => ({
+                ...prevState,
+                forgotPassword: false
+            }));
+        }).catch((error) => {
+            toast.error(`Error sending password reset: ${error}`);
+            setSubmitting(prevState => ({
+                ...prevState,
+                forgotPassword: false
+            }));
+        });
     }
   
     return (
@@ -178,7 +261,7 @@ function UserLogin(props) {
                         </Row>
                         <Row>
                             <Column md={12} textalign="center">
-                                <SLink onClick={() => toggleModal()}>Forgot password?</SLink>
+                                <SLink onClick={() => toggleModal(true, "forgot-password")}>Forgot password?</SLink>
                             </Column>
                         </Row>
                         <Row>
@@ -190,27 +273,102 @@ function UserLogin(props) {
                     </Grid>
                 </form>
             </Container>
-            {forgotExpanded && (
-                <ModalContainer onClick={() => toggleModal()}>
+
+            {shownModals["v-code"] && (
+                <ModalContainer onClick={() => toggleModal(false, "v-code")}>
+                    <ModalCard onClick={(e) => e.stopPropagation()}>
+                        <H3>Verify with 2FA</H3>
+                        <Body>Enter the verification code we just sent to your phone number below to verify account ownership.</Body>
+                        <form onSubmit={ vCodeForm.handleSubmit(submitVCode) }>
+                            <Grid fluid>
+                                <Row justify="center">
+                                    <Column md={12} lg={8}>
+                                        <Label htmlFor={"vCode"} br>Verification Code</Label>
+                                        <TextInput
+                                            type="text" 
+                                            error={vCodeForm.formState.errors.vCode}
+                                            placeholder={"12345"} 
+                                            {
+                                                ...vCodeForm.register("vCode", { 
+                                                        required: "You must enter the verification code sent to your phone number to continue.",
+                                                    }
+                                                )
+                                            } 
+                                        />
+                                        <FormError error={vCodeForm.formState.errors.vCode} /> 
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column md={12} textalign="center">
+                                        <Button 
+                                            type="submit" 
+                                            disabled={submitting.vCode}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </Column>
+                                </Row>
+                            </Grid>
+                        </form>
+                        <Hr />
+                        <Button 
+                            type="button"
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "v-code")}
+                        >
+                            <CgClose /> Close 
+                        </Button>
+                    </ModalCard>
+                </ModalContainer>
+            )}
+
+            {shownModals["forgot-password"] && (
+                <ModalContainer onClick={() => toggleModal(false, "forgot-password")}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
                         <H3>Forgot Password</H3>
                         <Body>Enter your email below and we will send you an email for you to reset your password.</Body>
-                        <TextInput 
-                            type="text"
-                            placeholder={INPUT.EMAIL.PLACEHOLDER}
-                            onChange={(e) => setForgotEmail(e.target.value)} 
-                            value={forgotEmail}
-                        />
-                        <Button color={theme.colors.green} type="button" onClick={() => sendPasswordReset()}>
-                            Send password reset link
-                        </Button>
+                        <form onSubmit={ forgotPasswordForm.handleSubmit(sendPasswordReset) }>
+                            <Grid fluid>
+                                <Row justify="center">
+                                    <Column md={12} lg={8}>
+                                        <Label htmlFor={INPUT.EMAIL.VALUE} br>Your Email:</Label>
+                                        <TextInput
+                                            type="text"
+                                            error={forgotPasswordForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                            placeholder={INPUT.EMAIL.PLACEHOLDER}
+                                            {
+                                                ...forgotPasswordForm.register(INPUT.EMAIL.VALUE, { 
+                                                        required: INPUT.EMAIL.ERRORS.REQUIRED,
+                                                        pattern: {
+                                                            value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                            message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
+                                                        },
+                                                    }
+                                                )
+                                            } 
+                                        />
+                                        <FormError error={forgotPasswordForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column md={12} textalign="center">
+                                        <Button 
+                                            type="submit" 
+                                            disabled={submitting.forgotPassword}
+                                        >
+                                            Send link
+                                        </Button>
+                                    </Column>
+                                </Row>
+                            </Grid>
+                        </form>
+                        <Hr />
                         <Button 
                             type="button"
-                            color={theme.colors.red}
-                            size={SIZES.SM}
-                            onClick={() => toggleModal()}
+                            size={SIZES.SM} 
+                            onClick={() => toggleModal(false, "forgot-password")}
                         >
-                            <CgClose /> Cancel 
+                            <CgClose /> Close 
                         </Button>
                     </ModalCard>
                 </ModalContainer>
