@@ -54,7 +54,6 @@ export default function Reauth(props) {
                     props.onSuccess(true, props.destination);
                     window.recaptchaVerifier.clear();
                 }).catch((error) => {
-                    console.error("Error logging you in: " + error);
                     if(error.code === "auth/multi-factor-auth-required"){
                         console.log("MFA needed!");
                         let resolver = getMultiFactorResolver(auth, error);
@@ -76,10 +75,13 @@ export default function Reauth(props) {
                         });
                     } else if(error.code === "auth/wrong-password"){
                         toast.error(`Sorry, but that doesn't look like the right password. Please try again.`);
+                        console.error("Error logging you in: " + error);
                     } else if(error.code === "auth/user-mismatch"){
                         toast.error(`Sorry, but that doesn't look the credentials are correct. Are you sure that is the right email? Check and try again.`);
+                        console.error("Error logging you in: " + error);
                     } else {
                         toast.error(`Error logging you in, please try again: ${error}`);
+                        console.error("Error logging you in: " + error);
                     }
                 });
             },

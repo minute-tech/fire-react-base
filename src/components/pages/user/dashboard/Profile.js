@@ -120,6 +120,8 @@ function Profile(props) {
         }).catch((error) => {
             if(error.code === "auth/email-already-in-use"){
                 toast.error("This email is already taken, please try another email address.");
+            } else if(error.code === "auth/email-change-needs-verification") {
+                toast.error("MFA so you need to verify your email.");
             } else {
                 console.error("Error updating user's email: ");
                 console.error(error);
