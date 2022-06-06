@@ -267,6 +267,7 @@ export const BgMediaHeading = styled.h1`
 
 export const BgMediaBody = styled.div`
     font-size: 18px;
+    white-space: pre-wrap;
     color: ${props => props.color ? props.color : "black"};
     line-height: 1.6;
     text-align: ${props => props.textAlign ? props.textAlign : "left"};
