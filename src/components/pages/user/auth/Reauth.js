@@ -76,12 +76,15 @@ export default function Reauth(props) {
                     } else if(error.code === "auth/wrong-password"){
                         toast.error(`Sorry, but that doesn't look like the right password. Please try again.`);
                         console.error("Error logging you in: " + error);
+                        window.recaptchaVerifier.clear();
                     } else if(error.code === "auth/user-mismatch"){
                         toast.error(`Sorry, but that doesn't look the credentials are correct. Are you sure that is the right email? Check and try again.`);
                         console.error("Error logging you in: " + error);
+                        window.recaptchaVerifier.clear();
                     } else {
                         toast.error(`Error logging you in, please try again: ${error}`);
                         console.error("Error logging you in: " + error);
+                        window.recaptchaVerifier.clear();
                     }
                 });
             },

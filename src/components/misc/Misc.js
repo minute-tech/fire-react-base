@@ -38,19 +38,19 @@ export function StartAtTop() {
         // if not a hash link, scroll to top
         if (hash === "") {
             // ** this smooth too? 
-        window.scrollTo(0, 0);
-      } else {
-        // else scroll to id
-        hashTimer.current = setTimeout(() => {
-          const id = hash.replace("#", "");
-          const element = document.getElementById(id);
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth"});
-          }
-        }, 100);
-      }
+            window.scrollTo(0, 0);
+        } else {
+            // else scroll to id
+            hashTimer.current = setTimeout(() => {
+                const id = hash.replace("#", "");
+                const element = document.getElementById(id);
+                if (element) {
+                    element.scrollIntoView({ behavior: "smooth"});
+                }
+            }, 100);
+        }
 
-      return () => {clearTimeout(hashTimer.current)};
+        return () => {clearTimeout(hashTimer.current)};
     }, [pathname, hash])
 
     return null;

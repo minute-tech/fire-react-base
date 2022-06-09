@@ -118,7 +118,7 @@ function FileUpload(props) {
         if(failedAspect){
             props.setError(props.name, {
                 type: "invalid-aspect-ratio", 
-                message: `A picture selected is not the wrong ratio of  ${(failedAspect).toFixed(2)}.
+                message: `A picture selected is the wrong ratio of  ${(failedAspect).toFixed(2)}.
                     Please resize the photo or pick a photo with the correct aspect ratio 
                     of ${props.aspectRatio.numer}/${props.aspectRatio.denom} (${(props.aspectRatio.numer/props.aspectRatio.denom).toFixed(2)}).`
             });

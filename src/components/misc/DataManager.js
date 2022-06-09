@@ -181,7 +181,7 @@ export default function DataManager(props) {
                 const docWithMore = Object.assign({}, doc.data());
                 docWithMore.id = doc.id;
                 tempItems.push(docWithMore);
-                tempShownModals.push(false)
+                tempShownModals.push(false);
             });
 
             setItems(tempItems);

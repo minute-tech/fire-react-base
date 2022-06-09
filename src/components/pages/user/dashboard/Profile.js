@@ -279,16 +279,30 @@ function Profile(props) {
                         <Column sm={12} md={6}>
                             <Label htmlFor={INPUT.EMAIL.VALUE}>Email:</Label>
                             &nbsp;
-                            <Body 
-                                margin="0" 
-                                display="inline" 
-                                size={SIZES.SM} 
-                                color={theme.colors.green}
-                                hoverColor={theme.colors.yellow}
-                                onClick={() => toggleModal(true, "reauth-email")}
-                            >
-                                edit
-                            </Body>
+                            {(props.readOnlyFlags.isAdmin) && (
+                                <Body 
+                                    margin="0" 
+                                    display="inline" 
+                                    size={SIZES.SM} 
+                                    color={theme.colors.red}
+                                >
+                                    cannot change email as admin
+                                </Body>
+                            )}
+                            {(!props.readOnlyFlags.isAdmin) && (
+                                <Body 
+                                    margin="0" 
+                                    display="inline" 
+                                    size={SIZES.SM} 
+                                    color={theme.colors.green}
+                                    hoverColor={theme.colors.yellow}
+                                    onClick={() => toggleModal(true, "reauth-email")}
+                                >
+                                    edit
+                                </Body>
+                            )}
+                            
+                            
                             <br />
                             <TextInput
                                 type="text" 
