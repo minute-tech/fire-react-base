@@ -123,86 +123,109 @@ export default function ManageSite(props) {
     };
 
     const updateSite = (data) => {   
-        updateDoc(doc(firestore, "site", "public"), {
-            name: data.name,
-            logo: {
-                width: parseInt(data.logo.width),
-                height: parseInt(data.logo.height),
-                url: data.logo.url,
-                showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
-            },
-            emails: {
-                support: data.emails.support,
-                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
-            },
-            theme: {
-                colors: {
-                    primary: data.theme.colors.primary,
-                    secondary: data.theme.colors.secondary,
-                    tertiary: data.theme.colors.tertiary,
-                    green: data.theme.colors.green,
-                    red: data.theme.colors.red,
-                    yellow: data.theme.colors.yellow,
-                    blue: data.theme.colors.blue,
-                    grey: data.theme.colors.grey,
-                    lightGrey: data.theme.colors.lightGrey,
-                    background: {
-                        dark: data.theme.colors.background.dark,
-                        light: data.theme.colors.background.light,
+        if (
+            !isColor(data.theme.colors.primary) ||
+            !isColor(data.theme.colors.secondary) ||
+            !isColor(data.theme.colors.tertiary) ||
+            !isColor(data.theme.colors.green) ||
+            !isColor(data.theme.colors.red) ||
+            !isColor(data.theme.colors.yellow) ||
+            !isColor(data.theme.colors.blue) ||
+            !isColor(data.theme.colors.grey) ||
+            !isColor(data.theme.colors.lightGrey) ||
+            !isColor(data.theme.colors.background.dark) ||
+            !isColor(data.theme.colors.background.light) ||
+            !isColor(data.theme.fonts.heading.light) ||
+            !isColor(data.theme.fonts.heading.dark) ||
+            !isColor(data.theme.fonts.body.light) ||
+            !isColor(data.theme.fonts.body.dark) ||
+            !isColor(data.theme.fonts.link.light) ||
+            !isColor(data.theme.fonts.link.dark)
+        ) {
+            toast.error("Looks like one of the colors you inputted is not a proper HTML color. Try using a hex color like '#FFFFFF'!")
+        } else {
+            updateDoc(doc(firestore, "site", "public"), {
+                name: data.name,
+                logo: {
+                    width: parseInt(data.logo.width),
+                    height: parseInt(data.logo.height),
+                    url: data.logo.url,
+                    showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
+                },
+                emails: {
+                    support: data.emails.support,
+                    noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+                },
+                theme: {
+                    colors: {
+                        primary: data.theme.colors.primary,
+                        secondary: data.theme.colors.secondary,
+                        tertiary: data.theme.colors.tertiary,
+                        green: data.theme.colors.green,
+                        red: data.theme.colors.red,
+                        yellow: data.theme.colors.yellow,
+                        blue: data.theme.colors.blue,
+                        grey: data.theme.colors.grey,
+                        lightGrey: data.theme.colors.lightGrey,
+                        background: {
+                            dark: data.theme.colors.background.dark,
+                            light: data.theme.colors.background.light,
+                        },
+                    },
+                    fonts: {
+                        heading: {
+                            name: data.theme.fonts.heading.name,
+                            url: data.theme.fonts.heading.url,
+                            dark: data.theme.fonts.heading.dark,
+                            light: data.theme.fonts.heading.light,
+                        },
+                        body: {
+                            name: data.theme.fonts.body.name,
+                            url: data.theme.fonts.body.url,
+                            dark: data.theme.fonts.body.dark,
+                            light: data.theme.fonts.body.light,
+                        },
+                        link: {
+                            name: data.theme.fonts.link.name,
+                            url: data.theme.fonts.link.url,
+                            dark: data.theme.fonts.link.dark,
+                            light: data.theme.fonts.link.light,
+                        },
+                    }
+                },
+                hero: {
+                    heading: data.hero.heading,
+                    body: data.hero.body,
+                    banner: data.hero.banner,
+                    cta: {
+                        text: data.hero.cta.text,
+                        link: data.hero.cta.link,
+                        size: data.hero.cta.size,
+                        color: data.hero.cta.color,
                     },
                 },
-                fonts: {
-                    heading: {
-                        name: data.theme.fonts.heading.name,
-                        url: data.theme.fonts.heading.url,
-                        dark: data.theme.fonts.heading.dark,
-                        light: data.theme.fonts.heading.light,
-                    },
-                    body: {
-                        name: data.theme.fonts.body.name,
-                        url: data.theme.fonts.body.url,
-                        dark: data.theme.fonts.body.dark,
-                        light: data.theme.fonts.body.light,
-                    },
-                    link: {
-                        name: data.theme.fonts.link.name,
-                        url: data.theme.fonts.link.url,
-                        dark: data.theme.fonts.link.dark,
-                        light: data.theme.fonts.link.light,
-                    },
-                }
-            },
-            hero: {
-                heading: data.hero.heading,
-                body: data.hero.body,
-                banner: data.hero.banner,
-                cta: {
-                    text: data.hero.cta.text,
-                    link: data.hero.cta.link,
-                    size: data.hero.cta.size,
-                    color: data.hero.cta.color,
+                updated: {
+                    timestamp: Date.now(),
+                    userId: props.user.id,
+                    name: `${props.user.firstName} ${props.user.lastName}`,
+                    email: props.user.email,
                 },
-            },
-            updated: {
-                timestamp: Date.now(),
-                userId: props.user.id,
-                name: `${props.user.firstName} ${props.user.lastName}`,
-                email: props.user.email,
-            },
-        }).then(() => {
-            setSubmitting(prevState => ({
-                ...prevState,
-                site: false
-            }));
-            toast.success("Site updated!");
-            siteForm.reset(data);
-        }).catch(error => {
-            toast.error(`Error updating site: ${error}`);
-            setSubmitting(prevState => ({
-                ...prevState,
-                site: false
-            }));
-        });
+            }).then(() => {
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    site: false
+                }));
+                toast.success("Site updated!");
+                siteForm.reset(data);
+            }).catch(error => {
+                toast.error(`Error updating site: ${error}`);
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    site: false
+                }));
+            });
+        }
+        
     }
 
     const createCustomSite = async () => {
@@ -406,6 +429,12 @@ export default function ManageSite(props) {
             files: false
         }));
     };
+
+    const isColor = (strColor) => {
+        const s = new Option().style;
+        s.color = strColor;
+        return s.color !== "";
+    }
 
     if (props.site.unset) {
         return (

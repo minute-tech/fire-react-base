@@ -359,7 +359,7 @@ function Home(props){
             </FullWidthLine>
             <Svg 
                 viewBox="0 0 1000 149" 
-                margin="0 0 -20px 0"
+                margin="-20px 0 0 0"
                 flipHoriz
             >
                 <Path 
