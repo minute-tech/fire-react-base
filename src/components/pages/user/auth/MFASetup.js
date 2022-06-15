@@ -62,14 +62,14 @@ export default function MfaSetup(props) {
                             toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
                             window.recaptchaVerifier.clear();
                         }).catch((error) => {
-                            console.error("Error adding phone: ", error);
-                            toast.error(`Error adding phone: ${error.message}`);
+                            console.error("Error adding phone: " + error);
+                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                             toast.dismiss(recaptchaToastId);
                             window.recaptchaVerifier.clear();
                         });
                     }).catch((error) => {
-                        console.error("Error adding multi-factor authentication: ", error);
-                        toast.error(`Error adding multi-factor authentication: ${error}`);
+                        console.error("Error adding multi-factor authentication: " + error);
+                        toast.error(`Error adding multi-factor authentication. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                         toast.dismiss(recaptchaToastId);
                         window.recaptchaVerifier.clear();
                     });
@@ -111,8 +111,8 @@ export default function MfaSetup(props) {
             }).then(() => {
                 console.log("Successful updated user on Firestore.");
             }).catch((error) => {
-                console.error("Error updating user document: ", error);
-                toast.error(`Error updating user details: ${error}`);
+                console.error("Error updating user document: " + error);
+                toast.error(`Error updating user details. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
             
             toast.success("Successfully updated phone number!");
@@ -126,7 +126,11 @@ export default function MfaSetup(props) {
 
         }).catch(error => {
             console.error(`Error with entered code: ${error.message}`);
-            toast.error(`Error with entered code: ${error.message}`);
+            toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            setSubmitting(prevState => ({
+                ...prevState,
+                vCode: false,
+            }));
         });
     }
 

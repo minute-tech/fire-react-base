@@ -48,7 +48,8 @@ function ContactForm(props) {
             toast.success(`Message submitted successfully, thanks!`);
             contactForm.reset();
         }).catch(error => {
-            toast.error(`Error submitting message: ${error}`);
+            toast.error(`Error submitting message. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            console.error("Error submitting message: " + error);
             setSubmitting(prevState => ({
                 ...prevState,
                 message: false

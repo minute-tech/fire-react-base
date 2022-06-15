@@ -326,11 +326,11 @@ export default function DataManager(props) {
                 setItems(tempItems);
             }).catch((error) => {
                 console.error("Error decrementing count: ", error);
-                toast.error(`Error decrementing count: ${error}`);
+                toast.error(`Error decrementing count. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
         }).catch((error) => {
             console.error("Error deleting item: ", error);
-            toast.error(`Error deleting item: ${error}`);
+            toast.error(`Error deleting item. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     }
 
@@ -347,7 +347,7 @@ export default function DataManager(props) {
             toast.success("Successful add of new admin!");
         }).catch((error) => {
             console.error("Error adding newAdmins doc: ", error);
-            toast.error(`Error setting newAdmins doc: ${error}`);
+            toast.error(`Error setting new admin. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     };
 
@@ -364,7 +364,7 @@ export default function DataManager(props) {
             toast.success("Successful add of new super admin!");
         }).catch((error) => {
             console.error("Error adding newAdmins doc: ", error);
-            toast.error(`Error setting newAdmins doc: ${error}`);
+            toast.error(`Error setting new super admin. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     };
 
@@ -377,7 +377,7 @@ export default function DataManager(props) {
             toast.success("Successful add of a new email to get contact users.");
         }).catch((error) => {
             console.error("Error updating sensitive doc: ", error);
-            toast.error(`Error updating sensitive doc: ${error}`);
+            toast.error(`Error updating sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     };
 
@@ -390,7 +390,7 @@ export default function DataManager(props) {
             toast.success("Successfully removed email from contact users.");
         }).catch((error) => {
             console.error("Error updating sensitive doc: ", error);
-            toast.error(`Error updating sensitive doc: ${error}`);
+            toast.error(`Error updating sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     };
 

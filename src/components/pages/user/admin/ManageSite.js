@@ -220,7 +220,8 @@ export default function ManageSite(props) {
                 toast.success("Site updated!");
                 siteForm.reset(data);
             }).catch(error => {
-                toast.error(`Error updating site: ${error}`);
+                toast.error(`Error updating site. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                console.error("Error updating site: " + error);
                 setSubmitting(prevState => ({
                     ...prevState,
                     site: false
@@ -303,21 +304,21 @@ export default function ManageSite(props) {
                     },
                 },
             }).then(() => {
-                toast.success(`Created public doc.`);
+                toast.success("Created public document.");
                 console.log("Successful write of site public doc to Firestore.");
             }).catch((error) => {
-                console.error("Error adding public document: ", error);
-                toast.error(`Error setting public doc: ${error}`);
+                console.error("Error adding public document: " + error);
+                toast.error(`Error adding public document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
 
             await setDoc(doc(firestore, "site", "sensitive"), {
                 messengers: ["douglasrcjames@gmail.com"]
             }, {merge: true}).then(() => {
                 console.log("Successful write of sensitive doc to Firestore.");
-                toast.success(`Created sensitive doc.`);
+                toast.success("Created sensitive document.");
             }).catch((error) => {
-                console.error("Error adding sensitive document: ", error);
-                toast.error(`Error setting sensitive doc: ${error}`);
+                console.error("Error adding sensitive document: " + error);
+                toast.error(`Error setting sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
         }
     };
@@ -395,21 +396,21 @@ export default function ManageSite(props) {
                     },
                 },
             }).then(() => {
-                toast.success(`Created public doc.`);
+                toast.success("Created public document.");
                 console.log("Successful write of site public doc to Firestore.");
             }).catch((error) => {
                 console.error("Error adding public document: ", error);
-                toast.error(`Error setting public doc: ${error}`);
+                toast.error(`Error setting public document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
 
             await setDoc(doc(firestore, "site", "sensitive"), {
                 messengers: DEFAULT_SITE.EMAILS.MESSENGERS
             }, {merge: true}).then(() => {
                 console.log("Successful write of sensitive doc to Firestore.");
-                toast.success(`Created sensitive doc.`);
+                toast.success("Created sensitive document.");
             }).catch((error) => {
-                console.error("Error adding sensitive document: ", error);
-                toast.error(`Error setting sensitive doc: ${error}`);
+                console.error("Error adding sensitive document: " + error);
+                toast.error(`Error setting sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
         }
     };
@@ -420,8 +421,8 @@ export default function ManageSite(props) {
             toast.success("Deleting site");
             navigate(0);
         }).catch((error) => {
-            console.error("Error deleting site: ", error);
-            toast.error(`Error deleting site: ${error}`);
+            console.error("Error deleting site: " + error);
+            toast.error(`Error deleting site. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     }
 

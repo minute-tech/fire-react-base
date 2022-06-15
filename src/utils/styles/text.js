@@ -77,8 +77,9 @@ export const H4 = styled.h4`
 
 // Paragraph Body
 export const Body = styled.p`
-    margin: ${props => props.margin ? props.margin : "1em 0"};
-    display: ${props => props.display ? props.display : "block"};
+    /* "spanned" is used for an inline, no margin text with all the body attributes like size! */
+    margin: ${props => (props.spanned ? "0" : (props.margin ? props.margin : "1em 0"))};
+    display: ${props => (props.spanned ? "0" : (props.display ? props.display : "block"))};
     text-align: ${props => props.textAlign ? props.textAlign : ""};
     font-weight: ${props => props.bold ? 900 : 0};
     ${BodyFont};

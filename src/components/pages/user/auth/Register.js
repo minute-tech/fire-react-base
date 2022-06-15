@@ -63,8 +63,8 @@ function Register(props) {
                             }).then(() => {
                                 console.log("Successfully added display name to Firebase.");
                             }).catch((error) => {
-                                console.error("Error adding your display name to database: ", error);
-                                toast.error(`Error adding your display name to database: ${error}`);
+                                console.error("Error adding your display name to database: " + error);
+                                toast.error(`Error adding your display name to database. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                             });
 
                             // Create Firestore doc
@@ -80,8 +80,8 @@ function Register(props) {
                             }).then(() => {
                                 console.log("Successful write of user doc to Firestore.");
                             }).catch((error) => {
-                                console.error("Error adding document: ", error);
-                                toast.error(`Error setting users doc: ${error}`);
+                                console.error("Error adding document: " + error);
+                                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                             });
 
                             // Clean up
@@ -97,7 +97,8 @@ function Register(props) {
                                     message: INPUT.EMAIL.ERRORS.TAKEN.MESSAGE
                                 });
                             } else {
-                                toast.error(`Error adding creating account: ${error.message}`);
+                                console.error("Error creating account: " + error.message)
+                                toast.error(`Error creating account. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                             }
 
                             setSubmitting(prevState => ({

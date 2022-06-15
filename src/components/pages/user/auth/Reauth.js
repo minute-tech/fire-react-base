@@ -69,20 +69,20 @@ export default function Reauth(props) {
                             setMfaResolver(resolver);
                             toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
                         }).catch((error) => {
-                            console.error("Error adding phone: ", error);
-                            toast.error(`Error adding phone: ${error.message}`);
+                            console.error("Error adding phone: " + error);
+                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                             window.recaptchaVerifier.clear();
                         });
                     } else if(error.code === "auth/wrong-password"){
-                        toast.error(`Sorry, but that doesn't look like the right password. Please try again.`);
+                        toast.error("Sorry, but that doesn't look like the right password. Please try again.");
                         console.error("Error logging you in: " + error);
                         window.recaptchaVerifier.clear();
                     } else if(error.code === "auth/user-mismatch"){
-                        toast.error(`Sorry, but that doesn't look the credentials are correct. Are you sure that is the right email? Check and try again.`);
+                        toast.error("Sorry, but that doesn't look the credentials are correct. Are you sure that is the right email? Check and try again.");
                         console.error("Error logging you in: " + error);
                         window.recaptchaVerifier.clear();
                     } else {
-                        toast.error(`Error logging you in, please try again: ${error}`);
+                        toast.error(`Error logging you in. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                         console.error("Error logging you in: " + error);
                         window.recaptchaVerifier.clear();
                     }
@@ -125,11 +125,11 @@ export default function Reauth(props) {
             }));
 
             if(error.code === "auth/invalid-verification-code"){
-                console.error(`The code you entered was not correct, please try again.`);
+                console.error("The code you entered was not correct, please try again.");
                 toast.error("The code you entered was not correct, please try again.");
             } else { 
                 console.error(`Error with entered code: ${error}`);
-                toast.error(`Error with entered code: ${error.message}`);
+                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             }
             
         });

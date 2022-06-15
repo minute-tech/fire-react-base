@@ -100,6 +100,43 @@ export const PageSelectInput = styled.select`
     }
 `;
 
+const sliderThumb = (props) => (`
+  width: 25px;
+  height: 25px;
+  background: ${props.color};
+  cursor: pointer;
+  outline: 5px solid ${props.color};
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+`);
+
+export const Slider = styled.div`
+  align-items: center;
+  color: black;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  .range-value {
+    font-size: 2rem;
+    margin-top: 25px;
+  }
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: lightgrey;
+    outline: none;
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      ${props => sliderThumb(props)}
+    }
+    &::-moz-range-thumb {
+      ${props => sliderThumb(props)}
+    }
+  }
+`;
+
 // File input
 export const FileDragForm = styled.form`
     transition: all 0.3s linear;

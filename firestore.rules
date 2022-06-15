@@ -98,5 +98,21 @@ service cloud.firestore {
             allow update, delete, read, list: if (isAdmin() && isMfaEnabled());
             allow create: if true;
         }
+
+        match /feedback/{feedbackId} {
+            function isAdmin() {
+                return (
+                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
+                )
+            }
+
+            function isMfaEnabled() {
+                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            }
+            
+            // No one can update, delete, read, or list but everyone can create
+            allow update, delete, read, list: if (isAdmin() && isMfaEnabled());
+            allow create: if true;
+        }
     }
 }

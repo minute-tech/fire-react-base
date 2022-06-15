@@ -75,14 +75,14 @@ function Profile(props) {
             lastName: data.lastName,
         }).then(() => {
             console.log("Successful update of user doc to Firestore.");
-            toast.success(`Successfully updated the user profile.`);
+            toast.success("Successfully updated the user profile.");
             setSubmitting(prevState => ({
                 ...prevState,
                 updateUserProfile: false
             }));
         }).catch((error) => {
-            console.error("Error adding document: ", error);
-            toast.error(`Error setting users doc: ${error}`);
+            console.error("Error adding document: " + error);
+            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 updateUserProfile: false
@@ -111,7 +111,7 @@ function Profile(props) {
                 }));
             }).catch((error) => {
                 console.error("Error adding document: ", error);
-                toast.error(`Error setting your email doc: ${error}`);
+                toast.error(`Error setting your email document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                 setSubmitting(prevState => ({
                     ...prevState,
                     email: false
@@ -123,8 +123,7 @@ function Profile(props) {
             } else if(error.code === "auth/email-change-needs-verification") {
                 toast.error("MFA so you need to verify your email.");
             } else {
-                console.error("Error updating user's email: ");
-                console.error(error);
+                toast.error(`Error updating account. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             }
                 
             setSubmitting(prevState => ({
@@ -146,7 +145,7 @@ function Profile(props) {
                 console.log("Successful update of user doc to Firestore.");
             }).catch((error) => {
                 console.error("Error adding document: ", error);
-                toast.error(`Error setting users doc: ${error}`);
+                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
         } else {
             // Currently Light Theme, change to Dark
@@ -159,7 +158,7 @@ function Profile(props) {
                 console.log("Successful update of user doc to Firestore.");
             }).catch((error) => {
                 console.error("Error adding document: ", error);
-                toast.error(`Error setting users doc: ${error}`);
+                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             });
         }
     }
@@ -184,7 +183,7 @@ function Profile(props) {
             });
         }).catch((error) => {
             console.error("Error adding document: ", error);
-            toast.error(`Error setting users doc: ${error}`);
+            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 files: false

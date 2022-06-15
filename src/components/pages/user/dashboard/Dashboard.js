@@ -27,7 +27,7 @@ function Dashboard(props) {
             props.cleanUpLogout();
         }).catch((error) => {
             console.error("Error signing out: " + error);
-            toast.error(`Error signing out: ${error}`);
+            toast.error(`Error signing out. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
         });
     }
     

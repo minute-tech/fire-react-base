@@ -96,6 +96,11 @@ export const HillSeparators = {
     c0,0,0,0,0-7c0-12.66,0-18.99,0-19c-0.03-10.72-0.46-13.95-1-27C-1.28,58.74-1.67,49.37-0.5,47.5z`
 }
 
+export const Emoji = styled.span`
+    font-size: ${props => props.size || '1 em'};
+    display: ${props => props.display || 'inline'};
+    margin: ${props => props.margin || '0'};
+`;
 
 // Responsive iframe
 export const IframeContainer = styled.div`

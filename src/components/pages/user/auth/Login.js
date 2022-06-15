@@ -68,7 +68,7 @@ function UserLogin(props) {
                         toast.dismiss(recaptchaToastId);
                         window.recaptchaVerifier.clear();
                         navigate("/logging-in");
-                        toast.success(`Logged in successfully!`);
+                        toast.success("Logged in successfully!");
                     }).catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
@@ -76,7 +76,7 @@ function UserLogin(props) {
                         console.log("Error signing in: " + errorCode + " - " + errorMessage);
 
                         if(errorCode === "auth/user-not-found" || errorCode === "auth/wrong-password"){
-                            toast.error(`Email or password was not accepted, please try another combination.`);
+                            toast.error("Email or password was not accepted, please try another combination.");
                         } else if(error.code === "auth/multi-factor-auth-required"){
                             console.log("MFA needed!");
                             let resolver = getMultiFactorResolver(auth, error);
@@ -92,12 +92,12 @@ function UserLogin(props) {
                                 setMfaResolver(resolver);
                                 toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
                             }).catch((error) => {
-                                console.error("Error adding phone: ", error);
-                                toast.error(`Error adding phone: ${error.message}`);
+                                console.error("Error adding phone: " + error);
+                                toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                                 window.recaptchaVerifier.clear();
                             });
                         } else {
-                            toast.error(`Error: ${errorMessage}`);
+                            toast.error(`Error adding phone. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                         }
                         
                         // // Clean up
@@ -150,7 +150,7 @@ function UserLogin(props) {
                 toast.error("The code you entered was not correct, please try again.");
             } else { 
                 console.error(`Error with entered code: ${error}`);
-                toast.error(`Error with entered code: ${error.message}`);
+                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             }
             
         });
@@ -162,14 +162,15 @@ function UserLogin(props) {
             forgotPassword: true
         }));
         sendPasswordResetEmail(auth, data.email).then(() => {
-            toast.success('Check your email for a password reset link!');
+            toast.success("Check your email for a password reset link!");
             toggleModal(false, "forgot-password");
             setSubmitting(prevState => ({
                 ...prevState,
                 forgotPassword: false
             }));
         }).catch((error) => {
-            toast.error(`Error sending password reset: ${error}`);
+            console.error(`Error sending password reset: ${error}`);
+            toast.error(`Error sending password reset. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 forgotPassword: false
