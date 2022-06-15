@@ -76,7 +76,8 @@ function App() {
         logo: {
             width: DEFAULT_SITE.LOGO.WIDTH,
             height: DEFAULT_SITE.LOGO.HEIGHT,
-            url: DEFAULT_SITE.LOGO.URL,
+            lightUrl: DEFAULT_SITE.LOGO.LIGHT_URL,
+            darkUrl: DEFAULT_SITE.LOGO.DARK_URL,
             showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
         },
         hero: {

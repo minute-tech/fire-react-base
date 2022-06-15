@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { useTheme } from 'styled-components';
+import { SCHEMES } from '../../utils/constants';
 import { BurgerNavLink, NavLLink, NavLogo, NavTitle, HeaderContainer, NavLinks, BurgerNavContainer, NavMenuContainer, BrandContainer, BgOverlay, BrandLink } from '../../utils/styles/header';
 import { Burger, BurgerNav } from '../../utils/styles/header';
 import { FullWidthLine } from '../../utils/styles/misc';
 
 function Header(props) {
     const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
-
+    const theme = useTheme();
     const navLinks = [
         {
             label: "Home",
@@ -43,7 +45,7 @@ function Header(props) {
                         width={props.site.logo.width}
                         height={props.site.logo.height}
                         margin="0" 
-                        src={props.site.logo.url} 
+                        src={theme.value === SCHEMES.DARK ? props.site.logo.darkUrl : props.site.logo.lightUrl} 
                         // TODO: if logo is loading slow, just load from local folder instead of URL
                         // src={require("../../assets/images/logos/logo.png")} 
                     />

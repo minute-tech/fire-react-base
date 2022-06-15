@@ -3,5 +3,5 @@
         "nogutter",
         "numer"
     ],
-    "discord.enabled": false
+    "discord.enabled": true
 }

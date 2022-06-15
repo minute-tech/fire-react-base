@@ -34,7 +34,8 @@ export default function ManageSite(props) {
             logo: {
                 width: props.site.logo.width,
                 height: props.site.logo.height,
-                url: props.site.logo.url,
+                lightUrl: props.site.logo.lightUrl,
+                darkUrl: props.site.logo.darkUrl,
                 showTitle: props.site.logo.showTitle,
             },
             emails: {
@@ -149,7 +150,8 @@ export default function ManageSite(props) {
                 logo: {
                     width: parseInt(data.logo.width),
                     height: parseInt(data.logo.height),
-                    url: data.logo.url,
+                    lightUrl: data.logo.lightUrl,
+                    darkUrl: data.logo.darkUrl,
                     showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
                 },
                 emails: {
@@ -244,7 +246,8 @@ export default function ManageSite(props) {
                 logo: {
                     width: 100,
                     height: 100,
-                    url: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
+                    darkUrl: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
+                    lightUrl: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 emails: {
@@ -335,7 +338,8 @@ export default function ManageSite(props) {
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     height: DEFAULT_SITE.LOGO.HEIGHT,
-                    url: DEFAULT_SITE.LOGO.URL,
+                    lightUrl: DEFAULT_SITE.LOGO.LIGHT_URL,
+                    darkUrl: DEFAULT_SITE.LOGO.DARK_URL,
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 emails: {
@@ -595,9 +599,9 @@ export default function ManageSite(props) {
                             <Grid fluid>
                                 <Row align="center">
                                     <Column sm={12} md={4} textalign="center">
-                                        <Label br>Current Logo</Label>
+                                        <Label br>Current Light Logo</Label>
                                         <Img 
-                                            src={props.site.logo.url}
+                                            src={props.site.logo.lightUrl}
                                             border={`2px solid ${theme.colors.primary}`}
                                             alt={`site logo`}
                                             width={`${props.site.logo.width}px`}
@@ -607,8 +611,8 @@ export default function ManageSite(props) {
                                             type="button"
                                             btype={BTYPES.INVERTED} 
                                             color={theme.colors.yellow}
-                                            hidden={siteForm.getValues("logo.url") !== props.site.logo.url ? true : false}
-                                            onClick={() => toggleModal(true, "logo.url")}
+                                            hidden={siteForm.getValues("logo.lightUrl") !== props.site.logo.lightUrl ? true : false}
+                                            onClick={() => toggleModal(true, "logo.lightUrl")}
                                         >
                                                 Update logo
                                         </Button>
@@ -617,7 +621,7 @@ export default function ManageSite(props) {
                                         <Column 
                                             sm={12} md={4} 
                                             textalign="center" 
-                                            hidden={siteForm.getValues("logo.url") === props.site.logo.url ? true : false}
+                                            hidden={siteForm.getValues("logo.lightUrl") === props.site.logo.lightUrl ? true : false}
                                         >
                                             <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
                                             <Body margin="0">Ready to save changes!</Body>
@@ -627,7 +631,7 @@ export default function ManageSite(props) {
                                         <Column 
                                             sm={12} md={4} 
                                             textalign="center" 
-                                            hidden={siteForm.getValues("logo.url") === props.site.logo.url ? true : false}
+                                            hidden={siteForm.getValues("logo.lightUrl") === props.site.logo.lightUrl ? true : false}
                                         >
                                             <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
                                             <Body margin="0">Ready to save changes!</Body>
@@ -637,11 +641,11 @@ export default function ManageSite(props) {
                                         sm={12} 
                                         md={4} 
                                         textalign="center" 
-                                        hidden={siteForm.getValues("logo.url") === props.site.logo.url ? true : false}
+                                        hidden={siteForm.getValues("logo.lightUrl") === props.site.logo.lightUrl ? true : false}
                                     >
                                         <Label br>Incoming Logo</Label>
                                         <Img 
-                                            src={siteForm.getValues("logo.url")}
+                                            src={siteForm.getValues("logo.lightUrl")}
                                             border={`2px solid ${theme.colors.primary}`}
                                             alt={`incoming site logo`}
                                             width={`${props.site.logo.width}px`}
@@ -651,12 +655,75 @@ export default function ManageSite(props) {
                                             type="button"
                                             btype={BTYPES.TEXTED} 
                                             color={theme.colors.yellow}
-                                            onClick={() => toggleModal(true, "logo.url")}>
+                                            onClick={() => toggleModal(true, "logo.lightUrl")}>
                                                 Update selection
                                         </Button>
                                     </Column>
                                 </Row>
-                                <Row>
+                                <Row align="center">
+                                    <Column sm={12} md={4} textalign="center">
+                                        <Label br>Current Dark Logo</Label>
+                                        <Img 
+                                            src={props.site.logo.darkUrl}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.INVERTED} 
+                                            color={theme.colors.yellow}
+                                            hidden={siteForm.getValues("logo.darkUrl") !== props.site.logo.darkUrl ? true : false}
+                                            onClick={() => toggleModal(true, "logo.darkUrl")}
+                                        >
+                                                Update logo
+                                        </Button>
+                                    </Column>
+                                    <Hidden xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.darkUrl") === props.site.logo.darkUrl ? true : false}
+                                        >
+                                            <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Hidden>
+                                    <Visible xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.darkUrl") === props.site.logo.darkUrl ? true : false}
+                                        >
+                                            <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Visible>
+                                    <Column 
+                                        sm={12} 
+                                        md={4} 
+                                        textalign="center" 
+                                        hidden={siteForm.getValues("logo.darkUrl") === props.site.logo.darkUrl ? true : false}
+                                    >
+                                        <Label br>Incoming Logo</Label>
+                                        <Img 
+                                            src={siteForm.getValues("logo.darkUrl")}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`incoming site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.TEXTED} 
+                                            color={theme.colors.yellow}
+                                            onClick={() => toggleModal(true, "logo.darkUrl")}>
+                                                Update selection
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                <Row center="xs">
                                     <Column sm={6} md={3} lg={2}>
                                         <Label htmlFor={"logo.width"} br>Logo width:</Label>
                                         <TextInput
@@ -1051,7 +1118,7 @@ export default function ManageSite(props) {
                                             type="button"
                                             btype={BTYPES.TEXTED} 
                                             color={theme.colors.yellow}
-                                            onClick={() => toggleModal(true, "logo.url")}>
+                                            onClick={() => toggleModal(true, "hero.banner")}>
                                                 Update selection
                                         </Button>
                                     </Column>
@@ -1149,12 +1216,12 @@ export default function ManageSite(props) {
                     </Tabs>
                 </form>
     
-                {shownModals["logo.url"] && (
-                    <ModalContainer onClick={() => toggleModal(false, "logo.url")}>
+                {shownModals["logo.lightUrl"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "logo.lightUrl")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
                             <H3>Update logo url:</H3>
                             <FileUpload
-                                    name="logo.url"
+                                    name="logo.lightUrl"
                                     path={`public/site/logos/`}
                                     accepts="image/png, image/jpg, image/jpeg" 
                                     onUploadSuccess={setFileUrl}
@@ -1169,7 +1236,35 @@ export default function ManageSite(props) {
                             <Button 
                                 type="button"
                                 size={SIZES.SM} 
-                                onClick={() => toggleModal(false, "logo.url")}
+                                onClick={() => toggleModal(false, "logo.lightUrl")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
+                {shownModals["logo.darkUrl"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "logo.darkUrl")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <H3>Update logo url:</H3>
+                            <FileUpload
+                                    name="logo.darkUrl"
+                                    path={`public/site/logos/`}
+                                    accepts="image/png, image/jpg, image/jpeg" 
+                                    onUploadSuccess={setFileUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.logo?.url ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "logo.darkUrl")}
                             >
                                 <CgClose /> Close 
                             </Button>
