@@ -11,7 +11,7 @@ import { CgCheck, CgClose } from 'react-icons/cg'
 import { AiOutlineArrowDown, AiOutlineArrowRight } from 'react-icons/ai'
 
 import { Button, RadioInput, SelectInput, TextAreaInput, TextInput } from '../../../../utils/styles/forms'
-import { BTYPES, DEFAULT_SITE, SIZES } from '../../../../utils/constants.js'
+import { BTYPES, DEFAULT_SITE, INPUT, SIZES } from '../../../../utils/constants.js'
 import { firestore } from '../../../../Fire'
 import { Body, H1, H3, Label, LLink } from '../../../../utils/styles/text'
 import ConfirmAlert from '../../../misc/ConfirmAlert'
@@ -30,17 +30,20 @@ export default function ManageSite(props) {
     const siteForm = useForm({
         defaultValues: {
             name: props.site.name,
-            // projectId: props.site.projectId,// dont think we need to set this yet...
+            // projectId: props.site.projectId, // not quite setting the projectId manually. Created alongside firebase project from Fire.js > .env
+            description: props.site.description,
             logo: {
                 width: props.site.logo.width,
                 height: props.site.logo.height,
                 lightUrl: props.site.logo.lightUrl,
                 darkUrl: props.site.logo.darkUrl,
                 showTitle: props.site.logo.showTitle,
+                favicon: props.site.logo.favicon,
+                appleTouchIcon: props.site.logo.appleTouchIcon,
             },
             emails: {
                 support: props.site.emails.support,
-                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+                noreply: DEFAULT_SITE.EMAILS.NOREPLY, // Currently this is not change-able, there are logistics to changing this, but eventually we will!
             },
             theme: {
                 colors: {
@@ -124,110 +127,91 @@ export default function ManageSite(props) {
     };
 
     const updateSite = (data) => {   
-        if (
-            !isColor(data.theme.colors.primary) ||
-            !isColor(data.theme.colors.secondary) ||
-            !isColor(data.theme.colors.tertiary) ||
-            !isColor(data.theme.colors.green) ||
-            !isColor(data.theme.colors.red) ||
-            !isColor(data.theme.colors.yellow) ||
-            !isColor(data.theme.colors.blue) ||
-            !isColor(data.theme.colors.grey) ||
-            !isColor(data.theme.colors.lightGrey) ||
-            !isColor(data.theme.colors.background.dark) ||
-            !isColor(data.theme.colors.background.light) ||
-            !isColor(data.theme.fonts.heading.light) ||
-            !isColor(data.theme.fonts.heading.dark) ||
-            !isColor(data.theme.fonts.body.light) ||
-            !isColor(data.theme.fonts.body.dark) ||
-            !isColor(data.theme.fonts.link.light) ||
-            !isColor(data.theme.fonts.link.dark)
-        ) {
-            toast.error("Looks like one of the colors you inputted is not a proper HTML color. Try using a hex color like '#FFFFFF'!")
-        } else {
-            updateDoc(doc(firestore, "site", "public"), {
-                name: data.name,
-                logo: {
-                    width: parseInt(data.logo.width),
-                    height: parseInt(data.logo.height),
-                    lightUrl: data.logo.lightUrl,
-                    darkUrl: data.logo.darkUrl,
-                    showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
-                },
-                emails: {
-                    support: data.emails.support,
-                    noreply: DEFAULT_SITE.EMAILS.NOREPLY,
-                },
-                theme: {
-                    colors: {
-                        primary: data.theme.colors.primary,
-                        secondary: data.theme.colors.secondary,
-                        tertiary: data.theme.colors.tertiary,
-                        green: data.theme.colors.green,
-                        red: data.theme.colors.red,
-                        yellow: data.theme.colors.yellow,
-                        blue: data.theme.colors.blue,
-                        grey: data.theme.colors.grey,
-                        lightGrey: data.theme.colors.lightGrey,
-                        background: {
-                            dark: data.theme.colors.background.dark,
-                            light: data.theme.colors.background.light,
-                        },
-                    },
-                    fonts: {
-                        heading: {
-                            name: data.theme.fonts.heading.name,
-                            url: data.theme.fonts.heading.url,
-                            dark: data.theme.fonts.heading.dark,
-                            light: data.theme.fonts.heading.light,
-                        },
-                        body: {
-                            name: data.theme.fonts.body.name,
-                            url: data.theme.fonts.body.url,
-                            dark: data.theme.fonts.body.dark,
-                            light: data.theme.fonts.body.light,
-                        },
-                        link: {
-                            name: data.theme.fonts.link.name,
-                            url: data.theme.fonts.link.url,
-                            dark: data.theme.fonts.link.dark,
-                            light: data.theme.fonts.link.light,
-                        },
-                    }
-                },
-                hero: {
-                    heading: data.hero.heading,
-                    body: data.hero.body,
-                    banner: data.hero.banner,
-                    cta: {
-                        text: data.hero.cta.text,
-                        link: data.hero.cta.link,
-                        size: data.hero.cta.size,
-                        color: data.hero.cta.color,
+        updateDoc(doc(firestore, "site", "public"), {
+            name: data.name,
+            description: data.description,
+            logo: {
+                width: data.logo.width,
+                height: data.logo.height,
+                lightUrl: data.logo.lightUrl,
+                darkUrl: data.logo.darkUrl,
+                favicon: data.logo.favicon,
+                appleTouchIcon: data.logo.appleTouchIcon,
+                showTitle: (data.logo.showTitle === "true"), //** value from react-hook-form is passed as string "false", so we need to "parseBoolean" */
+            },
+            emails: {
+                support: data.emails.support,
+                noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+            },
+            theme: {
+                colors: {
+                    primary: data.theme.colors.primary,
+                    secondary: data.theme.colors.secondary,
+                    tertiary: data.theme.colors.tertiary,
+                    green: data.theme.colors.green,
+                    red: data.theme.colors.red,
+                    yellow: data.theme.colors.yellow,
+                    blue: data.theme.colors.blue,
+                    grey: data.theme.colors.grey,
+                    lightGrey: data.theme.colors.lightGrey,
+                    background: {
+                        dark: data.theme.colors.background.dark,
+                        light: data.theme.colors.background.light,
                     },
                 },
-                updated: {
-                    timestamp: Date.now(),
-                    userId: props.user.id,
-                    name: `${props.user.firstName} ${props.user.lastName}`,
-                    email: props.user.email,
+                fonts: {
+                    heading: {
+                        name: data.theme.fonts.heading.name,
+                        url: data.theme.fonts.heading.url,
+                        dark: data.theme.fonts.heading.dark,
+                        light: data.theme.fonts.heading.light,
+                    },
+                    body: {
+                        name: data.theme.fonts.body.name,
+                        url: data.theme.fonts.body.url,
+                        dark: data.theme.fonts.body.dark,
+                        light: data.theme.fonts.body.light,
+                    },
+                    link: {
+                        name: data.theme.fonts.link.name,
+                        url: data.theme.fonts.link.url,
+                        dark: data.theme.fonts.link.dark,
+                        light: data.theme.fonts.link.light,
+                    },
+                }
+            },
+            hero: {
+                heading: data.hero.heading,
+                body: data.hero.body,
+                banner: data.hero.banner,
+                cta: {
+                    text: data.hero.cta.text,
+                    link: data.hero.cta.link,
+                    size: data.hero.cta.size,
+                    color: data.hero.cta.color,
                 },
-            }).then(() => {
-                setSubmitting(prevState => ({
-                    ...prevState,
-                    site: false
-                }));
-                toast.success("Site updated!");
-                siteForm.reset(data);
-            }).catch(error => {
-                toast.error(`Error updating site. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-                console.error("Error updating site: " + error);
-                setSubmitting(prevState => ({
-                    ...prevState,
-                    site: false
-                }));
-            });
-        }
+            },
+            updated: {
+                timestamp: Date.now(),
+                userId: props.user.id,
+                name: `${props.user.firstName} ${props.user.lastName}`,
+                email: props.user.email,
+            },
+        }).then(() => {
+            setSubmitting(prevState => ({
+                ...prevState,
+                site: false
+            }));
+            toast.success("Site updated!");
+            siteForm.reset(data);
+        }).catch(error => {
+            toast.error(`Error updating site. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            console.error("Error updating site: " + error);
+            setSubmitting(prevState => ({
+                ...prevState,
+                site: false
+            }));
+        });
         
     }
 
@@ -243,6 +227,7 @@ export default function ManageSite(props) {
             
             await setDoc(publicRef, {
                 name: "Minute.tech",
+                description: "Minute.tech is a tech support platform connecting non-techies to techies to answer everyday tech problems.",
                 projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
                 logo: {
                     width: 100,
@@ -250,6 +235,8 @@ export default function ManageSite(props) {
                     darkUrl: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
                     lightUrl: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ficon-color-lg.png?alt=media&token=a2d63bf2-4787-4bdc-b29f-48502328c00e",
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+                    favicon: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Ffavicon.ico?alt=media&token=88ea43a6-08a7-44d6-b8aa-88ce94c96703",
+                    appleTouchIcon: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Fminute.tech%2Fapple-touch-icon.png?alt=media&token=f2757307-6231-4e3d-b77a-e4cc792789ac",
                 },
                 emails: {
                     support: DEFAULT_SITE.EMAILS.SUPPORT,
@@ -336,11 +323,14 @@ export default function ManageSite(props) {
             await setDoc(publicRef, {
                 name: DEFAULT_SITE.NAME,
                 projectId: process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID,
+                description: DEFAULT_SITE.DESCRIPTION,
                 logo: {
                     width: DEFAULT_SITE.LOGO.WIDTH,
                     height: DEFAULT_SITE.LOGO.HEIGHT,
                     lightUrl: DEFAULT_SITE.LOGO.LIGHT_URL,
                     darkUrl: DEFAULT_SITE.LOGO.DARK_URL,
+                    favicon: DEFAULT_SITE.LOGO.FAVICON,
+                    appleTouchIcon: DEFAULT_SITE.LOGO.APPLE_TOUCH_ICON,
                     showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
                 },
                 emails: {
@@ -506,7 +496,7 @@ export default function ManageSite(props) {
                                                     required: "A site name is required!",
                                                     maxLength: {
                                                         value: 50,
-                                                        message: "The site name must be at most 50 characters long."
+                                                        message: "The site name can be at most 50 characters long."
                                                     },
                                                     minLength: {
                                                         value: 3,
@@ -525,7 +515,7 @@ export default function ManageSite(props) {
                                             value={true}
                                             error={siteForm.formState.errors?.logo?.showTitle ?? ""}
                                             {
-                                            ...siteForm.register("logo.showTitle")
+                                                ...siteForm.register("logo.showTitle")
                                             } 
                                         />
                                         <Body display="inline" margin="0">Yes</Body>
@@ -535,11 +525,34 @@ export default function ManageSite(props) {
                                             value={false}
                                             error={siteForm.formState.errors?.logo?.showTitle ?? ""}
                                             {
-                                            ...siteForm.register("logo.showTitle")
+                                                ...siteForm.register("logo.showTitle")
                                             } 
                                         />
                                         <Body display="inline" margin="0">No</Body>
                                         <FormError error={siteForm.formState.errors?.logo?.showTitle ?? ""} /> 
+                                    </Column>
+                                </Row>
+                                <Row>
+                                    <Column sm={12} md={6}>
+                                        <Label htmlFor={"description"} br>Description:</Label>
+                                        <TextAreaInput
+                                            error={siteForm.formState.errors?.description ?? ""}
+                                            placeholder={"This description will be used for SEO purposes, such as the small body text below the main link in a Google Search results page."}
+                                            { 
+                                                ...siteForm.register("description", {
+                                                    required: "A site description is required!",
+                                                    maxLength: {
+                                                        value: 160,
+                                                        message: "The site description can be at most 160 characters long."
+                                                    },
+                                                    minLength: {
+                                                        value: 20,
+                                                        message: "The site description must be at least 20 characters long."
+                                                    },
+                                                })
+                                            } 
+                                        />
+                                        <FormError error={siteForm.formState.errors?.description ?? ""} /> 
                                     </Column>
                                 </Row>
                                 <Row>
@@ -554,7 +567,7 @@ export default function ManageSite(props) {
                                                     required: "A support email is required!",
                                                     maxLength: {
                                                         value: 50,
-                                                        message: "The support email must be at most 50 characters long."
+                                                        message: "The support email can be at most 50 characters long."
                                                     },
                                                     minLength: {
                                                         value: 3,
@@ -726,7 +739,7 @@ export default function ManageSite(props) {
                                 </Row>
                                 <Row center="xs">
                                     <Column sm={6} md={3} lg={2}>
-                                        <Label htmlFor={"logo.width"} br>Logo width:</Label>
+                                        <Label htmlFor={"logo.width"} br>Main logo width:</Label>
                                         <TextInput
                                             type="number" 
                                             error={siteForm.formState.errors?.logo?.width ?? ""}
@@ -742,6 +755,7 @@ export default function ManageSite(props) {
                                                         value: 50,
                                                         message: "50px wide is too small!"
                                                     },
+                                                    setValueAs: v => parseInt(v),
                                                     // valueAsNumber: true, //** this was not working, triggering field on another tab when dirtied, so just going to convert before we submit */
                                                 })
                                             } 
@@ -749,7 +763,7 @@ export default function ManageSite(props) {
                                         <FormError error={siteForm.formState.errors?.logo?.width ?? ""} /> 
                                     </Column>
                                     <Column sm={6} md={3} lg={2}>
-                                        <Label htmlFor={"logo.height"} br>Logo height:</Label>
+                                        <Label htmlFor={"logo.height"} br>Main logo height:</Label>
                                         <TextInput
                                             type="number" 
                                             error={siteForm.formState.errors?.logo?.height ?? ""}
@@ -765,10 +779,137 @@ export default function ManageSite(props) {
                                                         value: 50,
                                                         message: "50px high is too small!"
                                                     },
+                                                    setValueAs: v => parseInt(v),
                                                 })
                                             } 
                                         />
                                         <FormError error={siteForm.formState.errors?.logo?.height ?? ""} /> 
+                                    </Column>
+                                </Row>
+                                <Row align="center">
+                                    <Column sm={12} md={4} textalign="center">
+                                        <Label br>Current Favicon</Label>
+                                        <Img 
+                                            src={props.site.logo.favicon}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.INVERTED} 
+                                            color={theme.colors.yellow}
+                                            hidden={siteForm.getValues("logo.favicon") !== props.site.logo.favicon ? true : false}
+                                            onClick={() => toggleModal(true, "logo.favicon")}
+                                        >
+                                                Update favicon
+                                        </Button>
+                                    </Column>
+                                    <Hidden xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.favicon") === props.site.logo.favicon ? true : false}
+                                        >
+                                            <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Hidden>
+                                    <Visible xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.favicon") === props.site.logo.favicon ? true : false}
+                                        >
+                                            <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Visible>
+                                    <Column 
+                                        sm={12} 
+                                        md={4} 
+                                        textalign="center" 
+                                        hidden={siteForm.getValues("logo.favicon") === props.site.logo.favicon ? true : false}
+                                    >
+                                        <Label br>Incoming Logo</Label>
+                                        <Img 
+                                            src={siteForm.getValues("logo.favicon")}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`incoming site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.TEXTED} 
+                                            color={theme.colors.yellow}
+                                            onClick={() => toggleModal(true, "logo.favicon")}>
+                                                Update selection
+                                        </Button>
+                                    </Column>
+                                </Row>
+                                <Row align="center">
+                                    <Column sm={12} md={4} textalign="center">
+                                        <Label br>Current Apple Touch Icon</Label>
+                                        <Img 
+                                            src={props.site.logo.appleTouchIcon}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.INVERTED} 
+                                            color={theme.colors.yellow}
+                                            hidden={siteForm.getValues("logo.appleTouchIcon") !== props.site.logo.appleTouchIcon ? true : false}
+                                            onClick={() => toggleModal(true, "logo.appleTouchIcon")}
+                                        >
+                                                Update logo
+                                        </Button>
+                                    </Column>
+                                    <Hidden xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.appleTouchIcon") === props.site.logo.appleTouchIcon ? true : false}
+                                        >
+                                            <AiOutlineArrowRight style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Hidden>
+                                    <Visible xs sm>
+                                        <Column 
+                                            sm={12} md={4} 
+                                            textalign="center" 
+                                            hidden={siteForm.getValues("logo.appleTouchIcon") === props.site.logo.appleTouchIcon ? true : false}
+                                        >
+                                            <AiOutlineArrowDown style={{color: theme.colors.primary}} size={100} />
+                                            <Body margin="0">Ready to save changes!</Body>
+                                        </Column>
+                                    </Visible>
+                                    <Column 
+                                        sm={12} 
+                                        md={4} 
+                                        textalign="center" 
+                                        hidden={siteForm.getValues("logo.appleTouchIcon") === props.site.logo.appleTouchIcon ? true : false}
+                                    >
+                                        <Label br>Incoming Logo</Label>
+                                        <Img 
+                                            src={siteForm.getValues("logo.appleTouchIcon")}
+                                            border={`2px solid ${theme.colors.primary}`}
+                                            alt={`incoming site logo`}
+                                            width={`${props.site.logo.width}px`}
+                                        />
+                                        <br/>
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.TEXTED} 
+                                            color={theme.colors.yellow}
+                                            onClick={() => toggleModal(true, "logo.appleTouchIcon")}>
+                                                Update selection
+                                        </Button>
                                     </Column>
                                 </Row>
                             </Grid>
@@ -782,10 +923,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.primary ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.primary", {
-                                                    required: "A primary color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -796,10 +938,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.secondary ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.secondary", {
-                                                    required: "A secondary color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -810,10 +953,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.tertiary ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.tertiary", {
-                                                    required: "A tertiary color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -826,10 +970,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.background?.light ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.background.light", {
-                                                    required: "A background light color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -840,10 +985,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.background?.dark ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.background.dark", {
-                                                    required: "A background dark color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -856,10 +1002,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.green ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.green", {
-                                                    required: "A green color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -870,10 +1017,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.red ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.red", {
-                                                    required: "A red color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -884,10 +1032,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.yellow ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.yellow", {
-                                                    required: "A yellow color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -898,10 +1047,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.blue ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.blue", {
-                                                    required: "A blue color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -912,10 +1062,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.grey ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.grey", {
-                                                    required: "A grey color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -926,10 +1077,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.colors?.lightGrey ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.colors.lightGrey", {
-                                                    required: "A lightGrey color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -946,7 +1098,7 @@ export default function ManageSite(props) {
                                             placeholder={"Times New Roman"}
                                             { 
                                                 ...siteForm.register("theme.fonts.heading.name", {
-                                                    required: "A hero heading is required!",
+                                                    required: "A hero heading font name is required!",
                                                 })
                                             } 
                                         />
@@ -957,10 +1109,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.fonts?.heading?.dark ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.fonts.heading.dark", {
-                                                    required: "A heading font dark color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -971,10 +1124,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.fonts?.heading?.light ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.fonts.heading.light", {
-                                                    required: "A heading font light color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -1017,10 +1171,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.fonts?.body?.dark ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.fonts.body.dark", {
-                                                    required: "A body font dark color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -1031,10 +1186,11 @@ export default function ManageSite(props) {
                                         <TextInput
                                             type="text" 
                                             error={siteForm.formState.errors?.theme?.fonts?.body?.light ?? ""}
-                                            placeholder={"#FFFFFF"} 
+                                            placeholder={INPUT.COLOR.PLACEHOLDER} 
                                             { 
                                                 ...siteForm.register("theme.fonts.body.light", {
-                                                    required: "A body font light color is required!",
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
                                                 })
                                             } 
                                         />
@@ -1050,7 +1206,7 @@ export default function ManageSite(props) {
                                             onClick={() => toggleModal(true, "theme.fonts.body.url")}
                                             hidden={(siteForm.getValues("theme.fonts.body.url") && (siteForm.getValues("theme.fonts.body.url") !== props.site.theme.fonts.body.url))}
                                         >
-                                                Update body font file
+                                            Update body font file
                                         </Button>
                                         {(siteForm.getValues("theme.fonts.body.url") && (siteForm.getValues("theme.fonts.body.url") !== props.site.theme.fonts.body.url)) && (
                                             <Body color={theme.colors.green}><CgCheck size={40}/>Body font file uploaded successfully. Don't forget to change the font name above to match, then save this form above!</Body>
@@ -1078,7 +1234,7 @@ export default function ManageSite(props) {
                                             hidden={siteForm.getValues("hero.banner") !== props.site.hero.banner ? true : false}
                                             onClick={() => toggleModal(true, "hero.banner")}
                                         >
-                                                Update banner
+                                            Update banner
                                         </Button>
                                     </Column>
                                     <Hidden xs sm>
@@ -1132,7 +1288,12 @@ export default function ManageSite(props) {
                                             error={siteForm.formState.errors?.hero?.heading ?? ""}
                                             placeholder={"Best Site Ever"}
                                             { 
-                                                ...siteForm.register("hero.heading")
+                                                ...siteForm.register("hero.heading", {
+                                                    maxLength: {
+                                                        value: 100,
+                                                        message: "The heading can be at most 30,000 characters long."
+                                                    },
+                                                })
                                             } 
                                         />
                                         <FormError error={siteForm.formState.errors?.hero?.heading ?? ""} /> 
@@ -1145,7 +1306,12 @@ export default function ManageSite(props) {
                                             error={siteForm.formState.errors?.hero?.body ?? ""}
                                             placeholder={"Explain the reason visitors are at the site here!"}
                                             { 
-                                                ...siteForm.register("hero.body")
+                                                ...siteForm.register("hero.body", {
+                                                    maxLength: {
+                                                        value: 30000,
+                                                        message: "The body text can be at most 30,000 characters long."
+                                                    },
+                                                })
                                             } 
                                         />
                                         <FormError error={siteForm.formState.errors?.hero?.body ?? ""} /> 
@@ -1163,11 +1329,7 @@ export default function ManageSite(props) {
                                                 ...siteForm.register("hero.cta.text", {
                                                     maxLength: {
                                                         value: 50,
-                                                        message: "The site name must be at most 50 characters long."
-                                                    },
-                                                    minLength: {
-                                                        value: 2,
-                                                        message: "The site name must be at least 2 characters long."
+                                                        message: "The button text can be at most 50 characters long."
                                                     },
                                                 })
                                             }
@@ -1193,7 +1355,10 @@ export default function ManageSite(props) {
                                             error={siteForm.formState.errors?.hero?.cta?.color ?? ""}
                                             placeholder={"Explain the reason visitors are at the site here!"}
                                             {
-                                                ...siteForm.register("hero.cta.color")
+                                                ...siteForm.register("hero.cta.color", {
+                                                    required: INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                    validate: value => isColor(value) || INPUT.COLOR.ERRORS.VALIDATE.MESSAGE,
+                                                })
                                             }
                                         />
                                         <FormError error={siteForm.formState.errors?.hero?.cta?.color ?? ""} /> 
@@ -1220,17 +1385,17 @@ export default function ManageSite(props) {
                 {shownModals["logo.lightUrl"] && (
                     <ModalContainer onClick={() => toggleModal(false, "logo.lightUrl")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <H3>Update logo url:</H3>
+                            <H3>Update logo:</H3>
                             <FileUpload
                                     name="logo.lightUrl"
                                     path={`public/site/logos/`}
-                                    accepts="image/png, image/jpg, image/jpeg" 
+                                    accepts="image/*" 
                                     onUploadSuccess={setFileUrl}
                                     setSubmitting={setSubmitting}
                                     submitting={submitting}
                                     setError={siteForm.setError}
                                     clearError={siteForm.clearErrors}
-                                    error={siteForm.formState?.errors?.logo?.url ?? ""}
+                                    error={siteForm.formState?.errors?.logo?.lightUrl ?? ""}
                                 />
                             
                             <Hr />
@@ -1248,17 +1413,17 @@ export default function ManageSite(props) {
                 {shownModals["logo.darkUrl"] && (
                     <ModalContainer onClick={() => toggleModal(false, "logo.darkUrl")}>
                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                            <H3>Update logo url:</H3>
+                            <H3>Update logo:</H3>
                             <FileUpload
                                     name="logo.darkUrl"
                                     path={`public/site/logos/`}
-                                    accepts="image/png, image/jpg, image/jpeg" 
+                                    accepts="image/*" 
                                     onUploadSuccess={setFileUrl}
                                     setSubmitting={setSubmitting}
                                     submitting={submitting}
                                     setError={siteForm.setError}
                                     clearError={siteForm.clearErrors}
-                                    error={siteForm.formState?.errors?.logo?.url ?? ""}
+                                    error={siteForm.formState?.errors?.logo?.darkUrl ?? ""}
                                 />
                             
                             <Hr />
@@ -1266,6 +1431,70 @@ export default function ManageSite(props) {
                                 type="button"
                                 size={SIZES.SM} 
                                 onClick={() => toggleModal(false, "logo.darkUrl")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
+                {shownModals["logo.favicon"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "logo.favicon")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <H3>Update Favicon:</H3>
+                            <FileUpload
+                                    name="logo.favicon"
+                                    path={`public/site/logos/`}
+                                    accepts="image/*"
+                                    pixelDims={{
+                                        width: 48,
+                                        height: 48,
+                                    }}
+                                    onUploadSuccess={setFileUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.logo?.favicon ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "logo.favicon")}
+                            >
+                                <CgClose /> Close 
+                            </Button>
+                        </ModalCard>
+                    </ModalContainer>
+                )}
+
+                {shownModals["logo.appleTouchIcon"] && (
+                    <ModalContainer onClick={() => toggleModal(false, "logo.appleTouchIcon")}>
+                        <ModalCard onClick={(e) => e.stopPropagation()}>
+                            <H3>Update Apple Touch Icon:</H3>
+                            <FileUpload
+                                    name="logo.appleTouchIcon"
+                                    path={`public/site/logos/`}
+                                    accepts="image/*"
+                                    pixelDims={{
+                                        width: 180,
+                                        height: 180,
+                                    }}
+                                    onUploadSuccess={setFileUrl}
+                                    setSubmitting={setSubmitting}
+                                    submitting={submitting}
+                                    setError={siteForm.setError}
+                                    clearError={siteForm.clearErrors}
+                                    error={siteForm.formState?.errors?.logo?.appleTouchIcon ?? ""}
+                                />
+                            
+                            <Hr />
+                            <Button 
+                                type="button"
+                                size={SIZES.SM} 
+                                onClick={() => toggleModal(false, "logo.appleTouchIcon")}
                             >
                                 <CgClose /> Close 
                             </Button>

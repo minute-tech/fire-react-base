@@ -26,8 +26,6 @@ function FileUpload(props) {
         props.clearError(props.name);
         let passed = true;
         const mbLimit = props.mbLimit ? props.mbLimit : 5;
-        console.log("files: ")
-        console.log(files)
         Array.from(files).forEach((file, f, filesArr) => {
             const fileSizeMb = (file.size / (1024 ** 2)).toFixed(2);
             if (fileSizeMb > props) {
@@ -104,6 +102,7 @@ function FileUpload(props) {
         // Check each file preview to ensure ratio is what we want, if all pass, continue with upload
         const filePreviewElements = document.getElementsByClassName(`${props.name}`);
         let failedAspect = "";
+        let failedPixelDims = "";
         if(props.aspectRatio){
             Array.from(filePreviewElements).forEach((element) => {
                 let naturalHeight = element.naturalHeight;
@@ -114,13 +113,32 @@ function FileUpload(props) {
             });
         }
 
+        if(props.pixelDims){
+            Array.from(filePreviewElements).forEach((element) => {
+                if (props.pixelDims.height !== element.naturalHeight || props.pixelDims.width !== element.naturalWidth) {
+                    failedPixelDims = `A picture you selected does not match the required pixel dimensions of ${props.pixelDims.width} wide by ${props.pixelDims.height} high. 
+                        Your image was ${element.naturalHeight} wide by ${element.naturalHeight} high. Please try again with a new image.`
+                }
+            });
+        }
+
         // Loop through each file, and process it!
-        if(failedAspect){
+        if (failedAspect) {
             props.setError(props.name, {
                 type: "invalid-aspect-ratio", 
                 message: `A picture selected is the wrong ratio of  ${(failedAspect).toFixed(2)}.
                     Please resize the photo or pick a photo with the correct aspect ratio 
                     of ${props.aspectRatio.numer}/${props.aspectRatio.denom} (${(props.aspectRatio.numer/props.aspectRatio.denom).toFixed(2)}).`
+            });
+            props.setSubmitting(prevState => ({
+                ...prevState,
+                files: false
+            }));
+            setFiles([]);
+        } else if (failedPixelDims){
+            props.setError(props.name, {
+                type: "invalid-pixel-dimensions", 
+                message: failedPixelDims,
             });
             props.setSubmitting(prevState => ({
                 ...prevState,

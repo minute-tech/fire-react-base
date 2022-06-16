@@ -413,7 +413,7 @@ export const TabItem = styled.li`
     margin-bottom: -1px;
     padding: 0.8rem 3rem;
     cursor: pointer;
-
+    color: ${props => props.isActiveTab ? "white" : props.theme.fonts.body.color};
     background-color: ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
     border: 2px solid ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
     border-width: 1px 1px 0 1px; // Will go transparent when isActive

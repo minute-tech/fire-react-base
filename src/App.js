@@ -193,6 +193,7 @@ function App() {
             if(siteDoc.exists()){
                 let siteData = siteDoc.data();
                 setSite(siteData)
+
                 setLoading(prevState => ({
                     ...prevState,
                     site: false
@@ -299,9 +300,33 @@ function App() {
         )
     } else {
         return (
+            <>
             <HelmetProvider>
                 <Helmet>
-                    <title>{site.name ? `${site.name}` : "Fire React Base"}</title>
+                    <meta name="title" content={site.name || DEFAULT_SITE.NAME} />
+                    <meta name="description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
+                    <meta name="theme-color" content={theme.colors.primary || DEFAULT_SITE.THEME.COLORS.PRIMARY }/>
+                    <link rel="shortcut icon" href={site.logo.favicon || DEFAULT_SITE.LOGO.FAVICON} />
+                    <link rel="apple-touch-icon" href={site.logo.appleTouchIcon || DEFAULT_SITE.LOGO.APPLE_TOUCH_ICON} />
+                    
+                    {/* Google / Search Engine Tags */}
+                    <meta itemprop="name" content={site.name || DEFAULT_SITE.NAME} />
+                    <meta itemprop="description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
+                    <meta itemprop="image" content={site.hero.banner || DEFAULT_SITE.HERO.BANNER} />
+
+                    {/* Facebook/OpenGraph Meta Tags */}
+                    <meta property="og:site_name " content={site.name || DEFAULT_SITE.NAME} />
+                    <meta property="og:url" content={site.projectId ? `https://${site.projectId}.web.app` : `https://${DEFAULT_SITE.PROJECT_ID}.web.app`} />
+                    <meta property="og:title" content={site.name || DEFAULT_SITE.NAME} />
+                    <meta property="og:description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
+                    {/* Suggested dimensions for og:image is 1200×630 pixels */}
+                    <meta property="og:image" content={site.hero.banner || DEFAULT_SITE.HERO.BANNER} /> 
+
+                    {/* Twitter Meta Tags */}
+                    <meta name="twitter:title" content={site.name || DEFAULT_SITE.NAME} />
+                    <meta name="twitter:description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
+                    {/* must be less than 5MB in size */}
+                    <meta name="twitter:image" content={site.logo ? (theme.value === SCHEMES.DARK ? site.logo.darkUrl : site.logo.lightUrl) : DEFAULT_SITE.LOGO.LIGHT_URL} />
                 </Helmet>
                 <ScreenClassProvider>
                     {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
@@ -354,6 +379,7 @@ function App() {
                 </ScreenClassProvider>
                 
             </HelmetProvider>
+            </>
         );
     }
 }

@@ -131,6 +131,25 @@ export const INPUT = {
             },
         },
     },
+    COLOR: {
+        VALUE: "color",
+        LABEL: "Color",
+        PLACEHOLDER: "#FFFFFF",
+        ERRORS: {
+            REQUIRED: "A color is required!",
+            MAX: {
+                MESSAGE: "The color can only be 15 characters long.",
+                VALUE: 15,
+            },
+            MIN: {
+                MESSAGE: "The text body must be at least 2 characters long.",
+                VALUE: 2,
+            },
+            VALIDATE: {
+                MESSAGE: "Looks like one of the colors you inputted is not a proper HTML color. Try using a hex color like '#FFFFFF'!",
+            },
+        },
+    },
 };
 
 export const SIZES = {
@@ -145,12 +164,15 @@ export const SIZES = {
 
 export const DEFAULT_SITE = {
     NAME: "Fire React Base",
+    DESCRIPTION: "Fire React Base is a template for creating web apps with Firebase and React.js.",
     PROJECT_ID: "fire-react-base",
     LOGO: {
         WIDTH: 100,
         HEIGHT: 100,
         LIGHT_URL: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Flogo-dark.png?alt=media&token=1483f9fd-0cc4-4e4d-b737-2042cfef05f7",
         DARK_URL: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Flogo192.png?alt=media&token=d327bc99-6ee8-496e-86c7-0206244b837b",
+        FAVICON: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Ffavicon.ico?alt=media&token=3f463d53-9d63-4e47-864f-8ad01df23638",
+        APPLE_TOUCH_ICON: "https://firebasestorage.googleapis.com/v0/b/test-fire-react-base.appspot.com/o/public%2Flogos%2Fapple-touch-icon.png?alt=media&token=fa68e408-7fe8-4c3f-91b4-bdbdabe46e9a",
         SHOW_TITLE: true,
     },
     HERO: {
