@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -23,7 +23,7 @@ import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, DevAlert, GlobalStyle, Wrapper } from './utils/styles/misc';
 import { Spinner } from './utils/styles/images';
 import { H2 } from './utils/styles/text';
-
+import DynamicHeadTags from './components/misc/DynamicHeadTags';
 
 setConfiguration({ 
     // sm, md, lg, xl, xxl, xxxl
@@ -302,32 +302,7 @@ function App() {
         return (
             <>
             <HelmetProvider>
-                <Helmet>
-                    <meta name="title" content={site.name || DEFAULT_SITE.NAME} />
-                    <meta name="description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
-                    <meta name="theme-color" content={theme.colors.primary || DEFAULT_SITE.THEME.COLORS.PRIMARY }/>
-                    <link rel="shortcut icon" href={site.logo.favicon || DEFAULT_SITE.LOGO.FAVICON} />
-                    <link rel="apple-touch-icon" href={site.logo.appleTouchIcon || DEFAULT_SITE.LOGO.APPLE_TOUCH_ICON} />
-                    
-                    {/* Google / Search Engine Tags */}
-                    <meta itemprop="name" content={site.name || DEFAULT_SITE.NAME} />
-                    <meta itemprop="description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
-                    <meta itemprop="image" content={site.hero.banner || DEFAULT_SITE.HERO.BANNER} />
-
-                    {/* Facebook/OpenGraph Meta Tags */}
-                    <meta property="og:site_name " content={site.name || DEFAULT_SITE.NAME} />
-                    <meta property="og:url" content={site.projectId ? `https://${site.projectId}.web.app` : `https://${DEFAULT_SITE.PROJECT_ID}.web.app`} />
-                    <meta property="og:title" content={site.name || DEFAULT_SITE.NAME} />
-                    <meta property="og:description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
-                    {/* Suggested dimensions for og:image is 1200×630 pixels */}
-                    <meta property="og:image" content={site.hero.banner || DEFAULT_SITE.HERO.BANNER} /> 
-
-                    {/* Twitter Meta Tags */}
-                    <meta name="twitter:title" content={site.name || DEFAULT_SITE.NAME} />
-                    <meta name="twitter:description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
-                    {/* must be less than 5MB in size */}
-                    <meta name="twitter:image" content={site.logo.lightUrl || DEFAULT_SITE.LOGO.LIGHT_URL} />
-                </Helmet>
+                <DynamicHeadTags theme={theme} site={site} />
                 <ScreenClassProvider>
                     {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
@@ -338,14 +313,9 @@ function App() {
                                     <FirebaseAnalytics />
                                     <StartAtTop />
                                     {process.env.NODE_ENV === 'development' && (
-                                        <DevAlert>
-                                            LOCAL SERVER
-                                        </DevAlert>
+                                        <DevAlert> LOCAL SERVER </DevAlert>
                                     )}      
-                                    <Header 
-                                        site={site}
-                                        user={user} 
-                                    />
+                                    <Header site={site} user={user} />
                                     <ToastContainer
                                         position="top-center"
                                         autoClose={4000}
@@ -369,9 +339,7 @@ function App() {
                                         cleanUpLogout={cleanUpLogout}
                                         isLoggingIn={isLoggingIn}
                                     />
-                                    <Footer
-                                        site={site} 
-                                    />
+                                    <Footer site={site} />
                                 </BrowserRouter>
                             </BodyWrapper>
                         </ThemeProvider>

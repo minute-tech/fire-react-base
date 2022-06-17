@@ -17,7 +17,7 @@ import { APHORISMS, SCHEMES } from '../../../../utils/constants.js';
 function Dashboard(props) {
     const theme = useTheme();
     const navigate = useNavigate();
-    const quote = APHORISMS[Math.floor(Math.random() * APHORISMS.length)];
+    const quote = APHORISMS[Math.floor(Math.random() * APHORISMS.length)]; // Rendering of these can show React DOM render patterns!
 
     const logOut = () => {
         signOut(auth).then(() => {

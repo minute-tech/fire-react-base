@@ -70,7 +70,7 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - Update `README.md`, at least the title and description to this project. I just copy-paste the same description used in `index.html`.
 
 **10. Add in icons to public**
-   - Use this site to generate icon from PNG file (https://favicon.io/), then add that 32x32, 192, and 512 icon files to the `public` folder in the project
+   - Use this site to generate icon from PNG file (https://favicon.io/), then add that 48x48, 192, apple-touch-icon and 512 icon files to the `public` folder in the project
 
 **11. Update font at `App.css` in src assets**
    - font `.ttf`/`.otf` font file placed in assets > fonts
@@ -80,7 +80,6 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
    - https://www.permissionspolicy.com/
-
 
 **13. Build**
    - $ `npm run-script build`
