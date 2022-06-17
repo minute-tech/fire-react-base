@@ -300,8 +300,6 @@ function Profile(props) {
                                     edit
                                 </Body>
                             )}
-                            
-                            
                             <br />
                             <TextInput
                                 type="text" 

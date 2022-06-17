@@ -326,7 +326,7 @@ function App() {
                     <meta name="twitter:title" content={site.name || DEFAULT_SITE.NAME} />
                     <meta name="twitter:description" content={site.description || DEFAULT_SITE.DESCRIPTION} />
                     {/* must be less than 5MB in size */}
-                    <meta name="twitter:image" content={site.logo ? (theme.value === SCHEMES.DARK ? site.logo.darkUrl : site.logo.lightUrl) : DEFAULT_SITE.LOGO.LIGHT_URL} />
+                    <meta name="twitter:image" content={site.logo.lightUrl || DEFAULT_SITE.LOGO.LIGHT_URL} />
                 </Helmet>
                 <ScreenClassProvider>
                     {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
