@@ -18,14 +18,15 @@ export const BodyWrapper = styled.div`
     position: relative;
     z-index: 1;
     min-height: 100vh;
-    padding-bottom: 5rem;    
     background-color: ${props => props.theme.colors.background};
 
     /* Overflow hidden so side nav can stay hidden, but transition-able */
     overflow-x: hidden;
     
+    // ** might be better to start using pixels here? because it should be adjusted for every charge to the amount of content it has
+    padding-bottom: 8rem;  
     @media (max-width: 992px) {
-        padding-bottom: 10rem; 
+        padding-bottom: 15rem; 
     }
 
     /* Change notification colors */
