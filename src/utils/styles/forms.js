@@ -101,40 +101,39 @@ export const PageSelectInput = styled.select`
 `;
 
 const sliderThumb = (props) => (`
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 50px;
   background: ${props.color};
   cursor: pointer;
-  outline: 5px solid ${props.color};
   -webkit-transition: .2s;
   transition: opacity .2s;
 `);
 
 export const Slider = styled.div`
-  align-items: center;
-  color: black;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  .range-value {
-    font-size: 2rem;
-    margin-top: 25px;
-  }
-  .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 15px;
-    border-radius: 5px;
-    background: lightgrey;
-    outline: none;
-    &::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      ${props => sliderThumb(props)}
+    align-items: center;
+    color: black;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    .range-value {
+        font-size: 2rem;
+        margin-top: 25px;
     }
-    &::-moz-range-thumb {
-      ${props => sliderThumb(props)}
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 18px;
+        border-radius: 5px;
+        background: lightgrey;
+        outline: none;
+        &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            ${props => sliderThumb(props)};
+        }
+        &::-moz-range-thumb {
+            ${props => sliderThumb(props)};
+        }
     }
-  }
 `;
 
 // File input

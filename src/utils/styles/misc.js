@@ -319,7 +319,7 @@ export const ModalCard = styled.div`
 `
 
 export const ModalContainer = styled.div`
-    position: absolute;
+position: fixed;
     z-index: 9;
     top: 0;
     left: 0;
