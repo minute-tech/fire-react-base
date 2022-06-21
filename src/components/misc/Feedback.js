@@ -1,29 +1,26 @@
 import React, { useState } from 'react'
-import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 
 import { firestore } from "../../Fire.js";
 import { Centered, Column, Grid, Row } from '../../utils/styles/misc';
-import { Body, ErrorText, H4, Label } from '../../utils/styles/text';
-import { INPUT } from '../../utils/constants.js';
+import { Body, H4, Label } from '../../utils/styles/text';
+import { INPUT, SIZES } from '../../utils/constants.js';
 import { Emoji } from '../../utils/styles/images.js';
 import { Button, Slider, TextAreaInput } from '../../utils/styles/forms.js';
 import { FormError } from './Misc.js';
 
 export function Feedback(props) {
     const theme = useTheme();
-    const [neutral, setNeutral] = useState(false);
     const [rangeValue, setRangeValue] = useState(50);
     const [feedbackId, setFeedbackId] = useState("");
     const [submitted, setSubmitted] = useState({ 
-        emotion: false,
-        body: false,
+        feedback: false,
     });
     const [submitting, setSubmitting] = useState({
-        emotion: false,
-        body: false,
+        feedback: false,
     }); 
     const feedbackForm = useForm({
         defaultValues: {
@@ -31,84 +28,52 @@ export function Feedback(props) {
         }
     });
 
-    const submitEmotion = () => {
+    const submitFeedback = (data) => {
         setSubmitting(prevState => ({
             ...prevState,
-            emotion: true
+            feedback: true
         }));
 
         let emotionLabel = "";
         let emotionSymbol = "";
-        if (Number(rangeValue) === 50) {
-            setNeutral(true);
-        } else {
-            if (rangeValue < 25) {
-                emotionLabel="very unhappy"
-                emotionSymbol = "0x1F621"
-            } else if (rangeValue >= 25 && rangeValue < 50) {
-                emotionLabel="unhappy"
-                emotionSymbol = "0x1F641"
-            } else if (rangeValue > 50 && rangeValue < 75) {
-                emotionLabel="happy"
-                emotionSymbol = "0x1F642"
-            } else if (rangeValue >= 75 && rangeValue <= 100) {
-                emotionLabel="very happy"
-                emotionSymbol = "0x1F604"
-            }
-            
-
-            addDoc(collection(firestore, "feedback", feedbackId), {
-                rangeValue: rangeValue,
-                emotionLabel: emotionLabel,
-                emotionSymbol: emotionSymbol,
-                userId: props.user ? props.user.id : "",
-                timestamp: Date.now(),
-            }).then((docRef) => {
-                setSubmitting(prevState => ({
-                    ...prevState,
-                    emotion: false
-                }));
-                setSubmitted(prevState => ({
-                    ...prevState,
-                    emotion: true
-                }));
-                setFeedbackId(docRef.id);
-            }).catch(error => {
-                toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-                console.error("Error submitting feedback: " + error);
-                setSubmitting(prevState => ({
-                    ...prevState,
-                    message: false
-                }));
-            });
+        if (rangeValue < 25) {
+            emotionLabel="very unhappy"
+            emotionSymbol = "0x1F621"
+        } else if (rangeValue >= 25 && rangeValue < 50) {
+            emotionLabel="unhappy"
+            emotionSymbol = "0x1F641"
+        } else if (rangeValue > 50 && rangeValue < 75) {
+            emotionLabel="happy"
+            emotionSymbol = "0x1F642"
+        } else if (rangeValue >= 75 && rangeValue <= 100) {
+            emotionLabel="very happy"
+            emotionSymbol = "0x1F604"
         }
-    }
+        
 
-    const submitMessage = (data) => {   
-        setSubmitting(prevState => ({
-            ...prevState,
-            body: true
-        }));
-
-        updateDoc(doc(firestore, "feedback", feedbackId), {
+        addDoc(collection(firestore, "feedback", feedbackId), {
+            rangeValue: rangeValue,
+            emotionLabel: emotionLabel,
+            emotionSymbol: emotionSymbol,
             body: data.body,
-        }).then(() => {
+            userId: props.user ? props.user.id : "",
+            timestamp: Date.now(),
+        }).then((docRef) => {
             setSubmitting(prevState => ({
                 ...prevState,
-                body: false
+                feedback: false
             }));
             setSubmitted(prevState => ({
                 ...prevState,
-                body: true
+                feedback: true
             }));
-            toast.success("Feedback submitted successfully, thanks!");
-            props.toggleModal(false, "feedback");
+            setFeedbackId(docRef.id);
         }).catch(error => {
-            toast.error(`Error submitting body message. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-            console.error("Error submitting body message: " + error);
+            toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            console.error("Error submitting feedback: " + error);
             setSubmitting(prevState => ({
                 ...prevState,
-                body: false
+                feedback: false
             }));
         });
     }
@@ -116,10 +81,10 @@ export function Feedback(props) {
 
     return (
         <>
-            { !feedbackId && !submitted.message &&  (
+            { !submitted.feedback &&  (
                 <Centered>
-                    <H4>How was your experience? <Body spanned color={theme.colors.red}>(* optional)</Body></H4>
-                    <Body margin="0"><b>(slide the square)</b></Body>
+                    <H4>How was your experience?</H4>
+                    <Body margin="0" color={theme.colors.green} size={SIZES.SM}><b>(slide the square)</b></Body>
                     <Slider color={theme.colors.primary}>
                         <input 
                             type="range" 
@@ -129,40 +94,22 @@ export function Feedback(props) {
                             className="slider" 
                             onChange={(e) => setRangeValue(e.target.value)} 
                         />
-                        {renderEmotion(rangeValue)}
+                        {renderEmotion(rangeValue, "3em")}
                     </Slider>
-                    
-                    {neutral && (
-                        <div>
-                            <ErrorText>Please select a <u>non-neutral</u> response to give <i>optional</i> feedback!</ErrorText>
-                        </div>
-                    )}
-                    
-                    <Button onClick={() => submitEmotion()}>Submit feedback</Button>
-                </Centered>
-            )}
-
-            { feedbackId && submitted.emotion && (
-                <Centered>
-                    <H4>Thanks! Anything else you'd like to add?</H4>
-                    <form onSubmit={ feedbackForm.handleSubmit(submitMessage) }>
+                    <form onSubmit={ feedbackForm.handleSubmit(submitFeedback) }>
                         <Grid fluid>
                             <Row>
-                                <Column sm={12}>
-                                    <Label htmlFor={INPUT.BODY.VALUE} br>{INPUT.BODY.LABEL}:</Label>
+                                <Column sm={12} textalign="center">
+                                    <Label htmlFor={INPUT.BODY.VALUE} br>Anything else you'd like to add?</Label>
                                     <TextAreaInput
+                                        height={100}
                                         placeholder={INPUT.BODY.PLACEHOLDER}  
                                         error={feedbackForm.formState.errors[INPUT.BODY.VALUE]}
                                         {
                                             ...feedbackForm.register(INPUT.BODY.VALUE, {
-                                                required: INPUT.BODY.ERRORS.REQUIRED,
                                                 maxLength: {
                                                     value: INPUT.BODY.ERRORS.MAX.VALUE,
                                                     message: INPUT.BODY.ERRORS.MAX.MESSAGE
-                                                },
-                                                minLength: {
-                                                    value: INPUT.BODY.ERRORS.MIN.VALUE,
-                                                    message: INPUT.BODY.ERRORS.MIN.MESSAGE
                                                 },
                                             })
                                         } 
@@ -174,7 +121,7 @@ export function Feedback(props) {
                                 <Column sm={12} textalign="center">
                                     <Button 
                                         type="submit" 
-                                        disabled={submitting.body}
+                                        disabled={submitting.feedback}
                                     >
                                         Submit
                                     </Button>
@@ -185,7 +132,7 @@ export function Feedback(props) {
                 </Centered>
             )}
 
-            { submitted.message && (
+            { submitted.feedback && (
                 <H4>Thanks for the feedback!</H4>
             )}
         </>
@@ -193,12 +140,12 @@ export function Feedback(props) {
 };
 
 // TODO: convert to useMemo
-const EmojiWithText = React.memo(({ className, label, symbol }) =>
+export const EmojiWithText = React.memo(({ className, label, symbol, size }) =>
     <Body className={className} role="img" aria-label={label}>
         <Emoji
             margin="15px 0 0 0" 
             display="block"
-            size="45px"
+            size={size}
         >
             {String.fromCodePoint(symbol)}
         </Emoji>
@@ -206,26 +153,26 @@ const EmojiWithText = React.memo(({ className, label, symbol }) =>
     </Body>
 );
 
-function renderEmotion (rangeValue){
+export function renderEmotion (rangeValue, size = "1em"){
     if(rangeValue < 25){
         return (
-            <EmojiWithText symbol="0x1F621" label="very unhappy"/>
+            <EmojiWithText size={size} symbol="0x1F621" label="very unhappy"/>
         )
     } else if(rangeValue >= 25 && rangeValue < 50) {
         return (
-            <EmojiWithText symbol="0x1F641" label="unhappy"/>
+            <EmojiWithText size={size} symbol="0x1F641" label="unhappy"/>
         )
     } else if(Number(rangeValue) === 50) {
         return (
-            <EmojiWithText symbol="0x1F610" label="neutral"/>
+            <EmojiWithText size={size} symbol="0x1F610" label="neutral"/>
         )
     } else if(rangeValue > 50 && rangeValue < 75) {
         return (
-            <EmojiWithText symbol="0x1F642" label="happy"/>
+            <EmojiWithText size={size} symbol="0x1F642" label="happy"/>
         )
     } else if(rangeValue >= 75 && rangeValue <= 100) {
         return (
-            <EmojiWithText symbol="0x1F604" label="very happy"/>
+            <EmojiWithText size={size} symbol="0x1F604" label="very happy"/>
         )
     }
 };

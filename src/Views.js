@@ -20,10 +20,11 @@ import Dashboard from './components/pages/user/dashboard/Dashboard';
 import Profile from './components/pages/user/dashboard/Profile';
 // Admin
 import AdminDashboard from './components/pages/user/admin/AdminDashboard';
-import ManageMessages from './components/pages/user/admin/ManageMessages';
-import ManageUsers from './components/pages/user/admin/ManageUsers';
-import { Wrapper } from './utils/styles/misc';
 import ManageSite from './components/pages/user/admin/ManageSite';
+import ManageUsers from './components/pages/user/admin/ManageUsers';
+import ManageMessages from './components/pages/user/admin/ManageMessages';
+import ManageFeedback from './components/pages/user/admin/ManageFeedback';
+import { Wrapper } from './utils/styles/misc';
 import { multiFactor } from 'firebase/auth';
 
 function Views(props) {
@@ -200,10 +201,21 @@ function Views(props) {
                                     />
                                 }
                             />
-                            <Route 
+                            <Route
                                 path="site" 
                                 element={
                                     <ManageSite
+                                        site={props.site} 
+                                        fireUser={props.fireUser} 
+                                        readOnlyFlags={props.readOnlyFlags}
+                                        user={props.user}
+                                    />
+                                }
+                            />
+                            <Route 
+                                path="users" 
+                                element={
+                                    <ManageUsers
                                         site={props.site} 
                                         fireUser={props.fireUser} 
                                         readOnlyFlags={props.readOnlyFlags}
@@ -223,9 +235,9 @@ function Views(props) {
                                 }
                             />
                             <Route 
-                                path="users" 
+                                path="feedback" 
                                 element={
-                                    <ManageUsers
+                                    <ManageFeedback
                                         site={props.site} 
                                         fireUser={props.fireUser} 
                                         readOnlyFlags={props.readOnlyFlags}
@@ -236,9 +248,7 @@ function Views(props) {
                         </Route>
                     </Route>
                 </Route>
-                
             </Route>
-
             <Route path="*" element={<Page404 site={props.site} />} />
         </Routes>
         </>

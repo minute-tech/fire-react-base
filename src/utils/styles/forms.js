@@ -34,7 +34,7 @@ export const TextAreaInput = styled.textarea`
     ${BodyFont};
     color: black !important;
     width: ${props => props.width ? props.width : "100%"};
-    height: 150px;
+    height: ${props => props.height ? props.height : "150px"};
     padding: 10px;
     box-sizing: border-box;
     border: 1px solid black;

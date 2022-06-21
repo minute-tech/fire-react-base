@@ -1,28 +1,28 @@
 import React, { useEffect, useState} from 'react'
-import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, limitToLast, where, addDoc, arrayRemove, arrayUnion, updateDoc, deleteDoc, increment, endBefore } from "firebase/firestore";  
-import { FaChevronLeft, FaChevronRight, FaSearch, FaShieldAlt, FaShieldVirus, FaTrash,  } from 'react-icons/fa';
-import { CgClose, CgMail, CgMailOpen } from 'react-icons/cg';
+import { collection, query, orderBy, startAfter, limit, getDocs, onSnapshot, doc, limitToLast, where, updateDoc, deleteDoc, increment, endBefore } from "firebase/firestore";  
+import { FaChevronLeft, FaChevronRight, FaSearch, FaTrash,  } from 'react-icons/fa';
+import { CgClose } from 'react-icons/cg';
 import { useTheme } from 'styled-components';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import { confirmAlert } from 'react-confirm-alert';
 
-import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Div, Grid, Column, Row } from '../../utils/styles/misc';
+import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Grid, Column, Row } from '../../utils/styles/misc';
 import { Spinner } from '../../utils/styles/images';
-import { ALink, Body, H1, H2, H3, Label, LLink } from '../../utils/styles/text';
+import { Body, H1, H2, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
 import { PageSelectInput, SearchContainer, SelectInput, TextInput, Button} from '../../utils/styles/forms';
 import { ColChevron, FormError } from '../misc/Misc';
 import ConfirmAlert from './ConfirmAlert';
+import { renderEmotion } from './Feedback';
 
 export default function DataManager(props) {
     const theme = useTheme();
     const [loading, setLoading] = useState({ 
         counts: true,
-        sensitive: true,
         items: true,
     }); 
     const [submitting, setSubmitting] = useState({ 
@@ -34,6 +34,7 @@ export default function DataManager(props) {
             column: "id"
         }
     });
+
     const [itemCount, setItemCount] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0].value);
     const [items, setItems] = useState([]);
@@ -45,11 +46,6 @@ export default function DataManager(props) {
         column: "",
         term: "",
     }); 
-
-    // Users specific
-    const [admins, setAdmins] = useState([]);
-    const [superAdmins, setSuperAdmins] = useState([]);
-    const [messengerEmails, setMessengerEmails] = useState([]);
 
     useEffect(() => {
         return onSnapshot(doc(firestore, "site", "counts"), (countsDoc) => {
@@ -69,28 +65,6 @@ export default function DataManager(props) {
             }
         });
     }, [props.dataName]);
-
-    useEffect(() => {
-        return onSnapshot(doc(firestore, "site", "sensitive"), (sensitiveDoc) => {
-            if(sensitiveDoc.exists()){
-                let sensitiveData = sensitiveDoc.data();
-                setAdmins(sensitiveData.admins);
-                setSuperAdmins(sensitiveData.superAdmins);
-                setMessengerEmails(sensitiveData.messengers);
-
-                setLoading(prevState => ({
-                    ...prevState,
-                    sensitive: false
-                }));
-            } else {
-                console.log("No custom site set, can't properly find sensitives.")
-                setLoading(prevState => ({
-                    ...prevState,
-                    sensitive: false
-                }));
-            }
-        });
-    }, []);
 
     useEffect(() => {
         let currentPageQuery = query(
@@ -305,8 +279,8 @@ export default function DataManager(props) {
     }
         
     const toggleModal = (newStatus, index) => {
-        let tempShownModals = [...shownModals]
-        tempShownModals[index] = newStatus
+        let tempShownModals = [...shownModals];
+        tempShownModals[index] = newStatus;
         setShownModals(tempShownModals);
     };
 
@@ -334,225 +308,8 @@ export default function DataManager(props) {
         });
     }
 
-    /// Users specific functions ///
-    const submitNewAdmin = (id, email, name) => {
-        // Write to the current newAdmins collection to be verified on the backend.
-        addDoc(collection(firestore, "users", props.user.id, "newAdmins"), {
-            id: id,
-            email: email,
-            name: name,
-            timestamp: Date.now(),
-        }).then(() => {
-            console.log("Successful add of new admin doc to Firestore.");
-            toast.success("Successful add of new admin!");
-        }).catch((error) => {
-            console.error("Error adding newAdmins doc: ", error);
-            toast.error(`Error setting new admin. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-        });
-    };
 
-    const submitNewSuperAdmin = (id, email, name) => {
-        // Write to the current newAdmins collection to be verified on the backend.
-        addDoc(collection(firestore, "users", props.user.id, "newAdmins"), {
-            id: id,
-            email: email,
-            name: name,
-            superAdmin: true,
-            timestamp: Date.now(),
-        }).then(() => {
-            console.log("Successful add of new super admin doc to Firestore.");
-            toast.success("Successful add of new super admin!");
-        }).catch((error) => {
-            console.error("Error adding newAdmins doc: ", error);
-            toast.error(`Error setting new super admin. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-        });
-    };
-
-    const addMessenger = (email) => {
-        // Write to the current newAdmins collection to be verified on the backend.
-        updateDoc(doc(firestore, "site", "sensitive"), {
-            "messengers": arrayUnion(email)
-        }).then(() => {
-            console.log("Successful add of email to get contact users doc to Firestore.");
-            toast.success("Successful add of a new email to get contact users.");
-        }).catch((error) => {
-            console.error("Error updating sensitive doc: ", error);
-            toast.error(`Error updating sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-        });
-    };
-
-    const removeMessenger = (email) => {
-        // Write to the current newAdmins collection to be verified on the backend.
-        updateDoc(doc(firestore, "site", "sensitive"), {
-            "messengers": arrayRemove(email)
-        }).then(() => {
-            console.log("Successfully removed email from contact users doc to Firestore.");
-            toast.success("Successfully removed email from contact users.");
-        }).catch((error) => {
-            console.error("Error updating sensitive doc: ", error);
-            toast.error(`Error updating sensitive document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-        });
-    };
-
-    const renderAdminBadge = (user) => {
-        if(admins.some(admin => admin.id === user.id)){
-            <Body margin="0" display="inline-block" color={theme.colors.red}><FaShieldAlt /> Admin</Body>
-        } else {
-            return (
-                <Button
-                    type="button"
-                    color={theme.colors.yellow}
-                    btype={BTYPES.INVERTED}
-                    size={SIZES.SM}
-                    onClick={() =>         
-                        confirmAlert({
-                            customUI: ({ onClose }) => {
-                                return (
-                                    <ConfirmAlert
-                                        theme={theme}
-                                        onClose={onClose} 
-                                        headingText={`Add Admin`}
-                                        body={`Are you sure you want to upgrade <${user.email}> to be an Admin?`}
-                                        yesFunc={() => submitNewAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
-                                        yesText={`Yes`} 
-                                        noFunc={function () {}} 
-                                        noText={`No`}   
-                                    />
-                                );
-                            }
-                        })}       
-                >
-                    Set as Admin <FaShieldAlt />
-                </Button> 
-            )
-            
-        }
-    };
-
-    const renderSuperAdminBadge = (user) => {
-        if(
-            !superAdmins.some(superAdmin => superAdmin.id === user.id) && 
-            admins.some(admin => admin.id === user.id)
-        ){
-            // Already admin, but not super admin yet
-            return (
-                <Button
-                    type="button"
-                    color={theme.colors.red}
-                    btype={BTYPES.INVERTED}
-                    size={SIZES.SM}
-                    onClick={() =>         
-                        confirmAlert({
-                            customUI: ({ onClose }) => {
-                                return (
-                                    <ConfirmAlert
-                                        theme={theme}
-                                        onClose={onClose} 
-                                        headingText={`Add Super Admin`}
-                                        body={`Are you sure you want to upgrade <${user.email}> to be a SUPER Admin?`}
-                                        yesFunc={() => submitNewSuperAdmin(user.id, user.email, `${user.firstName} ${user.lastName}`)} 
-                                        yesText={`Yes`}
-                                        noFunc={function () {}} 
-                                        noText={`Cancel`}   
-                                    />
-                                );
-                            }
-                        })}        
-                >
-                    Set as Super Admin <FaShieldVirus />
-                </Button> 
-            )
-            
-        } else if (superAdmins.some(superAdmin => superAdmin.id === user.id)) {
-            // Already superAdmin
-            return (
-                <Body margin="0" display="inline-block" color={theme.colors.red}><FaShieldVirus /> Super Admin</Body>
-            )
-            
-        } else {
-            // Not admin
-            return (
-                ""
-            )
-        }
-    };
-
-    const renderMessengerBadge = (user) => {
-        if(
-            !messengerEmails.some(email => email === user.email) && 
-            admins.some(admin => admin.id === user.id)
-        ){
-            // Is admin but not on email list
-            return (
-                <Button
-                    type="button"
-                    color={theme.colors.green}
-                    btype={BTYPES.INVERTED}
-                    size={SIZES.SM}
-                    onClick={() =>         
-                        confirmAlert({
-                            customUI: ({ onClose }) => {
-                                return (
-                                    <ConfirmAlert
-                                        theme={theme}
-                                        onClose={onClose} 
-                                        headingText={`Add Contact Messenger`}
-                                        body={`Are you sure you want to add <${user.email}> to be a recipient of all incoming contact messages?`}
-                                        yesFunc={() => addMessenger(user.email)} 
-                                        yesText={`Yes`}
-                                        noFunc={function () {}} 
-                                        noText={`Cancel`}   
-                                    />
-                                );
-                            }
-                        })}        
-                >
-                    Set as Messenger <CgMailOpen />
-                </Button> 
-            )
-            
-        } else if (
-            messengerEmails.some(email => email === user.email) && 
-            admins.some(admin => admin.id === user.id)
-        ) {
-            // Is admin and already receiving emails, but prompted to remove
-            return (
-                <Button
-                    type="button"
-                    color={theme.colors.red}
-                    btype={BTYPES.INVERTED}
-                    size={SIZES.SM}
-                    onClick={() =>         
-                        confirmAlert({
-                            customUI: ({ onClose }) => {
-                                return (
-                                    <ConfirmAlert
-                                        theme={theme}
-                                        onClose={onClose} 
-                                        headingText={`Remove Messenger`}
-                                        body={`Are you sure you want to remove <${user.email}> so the user will no longer receive contact messages?`}
-                                        yesFunc={() => removeMessenger(user.email)} 
-                                        yesText={`Yes`}
-                                        noFunc={function () {}} 
-                                        noText={`Cancel`}   
-                                    />
-                                );
-                            }
-                        })}        
-                >
-                    Remove Messenger? <CgMail />
-                </Button> 
-            )
-            
-        } else {
-            // Not admin
-            return (
-                ""
-            )
-        }
-    };
-
-    if(loading.counts || loading.sensitive){
+    if(loading.counts){
         return (
             <>
                 <H2>Loading... <Spinner /> </H2> 
@@ -643,8 +400,7 @@ export default function DataManager(props) {
                         <Table>
                             <Thead>
                                 <Tr>
-                                    {
-                                        props.tableCols.map((column, c) => {
+                                    { props.tableCols.map((column, c) => {
                                             return (
                                                 <Th 
                                                     key={c} 
@@ -677,17 +433,30 @@ export default function DataManager(props) {
                                 { !loading.items && items.length !== 0 && items.map((item, i) => {
                                     return (
                                         <Tr key={i}>
+                                            {/* ** You may need to edit these conditionals below if you want to render something custom in a cell! */}
                                             {
                                                 props.tableCols.map((column, c) => {
                                                     if(column.value === "timestamp"){
                                                         return (
-                                                            <Td key={c}>
+                                                            <Td key={`${c}-${i}`}>
                                                                 {readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}
+                                                            </Td>
+                                                        )
+                                                    } else if(column.value === "emotionSymbol"){
+                                                        return (
+                                                            <Td key={`${c}-${i}`}>
+                                                                {renderEmotion(item.rangeValue)}
+                                                            </Td>
+                                                        )
+                                                    } else if(column.value === "body"){
+                                                        return (
+                                                            <Td key={`${c}-${i}`}>
+                                                                {item.body ? <Body color={theme.colors.green}>Yes!</Body> : <Body color={theme.colors.red}>No.</Body>}
                                                             </Td>
                                                         )
                                                     } else {
                                                         return (
-                                                            <Td key={c}>
+                                                            <Td key={`${c}-${i}`}>
                                                                 {item[column.value]}
                                                             </Td>
                                                         )
@@ -706,25 +475,7 @@ export default function DataManager(props) {
                                                 {shownModals[i] && (
                                                     <ModalContainer onClick={() => toggleModal(false, i)}>
                                                         <ModalCard onClick={(e) => e.stopPropagation()}>
-                                                            {/* ** for now just manually add this conditional for your pages here, not sure right now how to pass these item variables at a higher level for the differing modal views */}
-                                                            {props.dataName === "users" && (
-                                                                <>
-                                                                <H3>{item.firstName} {item.lastName}</H3> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
-                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
-                                                                <Div margin="10px 30px 0 0">
-                                                                    { renderAdminBadge(item) }
-                                                                    { renderSuperAdminBadge(item) }
-                                                                    { renderMessengerBadge(item) }
-                                                                </Div> 
-                                                                </>
-                                                            )}
-                                                            {props.dataName === "messages" && (
-                                                                <>
-                                                                <Label>{item.name}</Label> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
-                                                                <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
-                                                                <Body>{item.body}</Body>
-                                                                </>
-                                                            )}
+                                                            {props.renderDetailModal(item)}
 
                                                             <Button 
                                                                 type="button"

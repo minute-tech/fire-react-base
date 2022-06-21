@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTheme } from 'styled-components'
-import { BiMessageCheck } from "react-icons/bi"
+import { BiMessageAltDetail } from "react-icons/bi"
+import { MdOutlineFeedback } from "react-icons/md"
 import { FaChevronLeft, FaSitemap, FaUserAlt } from 'react-icons/fa'
 import { Helmet } from 'react-helmet-async'
 
@@ -35,7 +36,12 @@ function AdminDashboard(props) {
             </LLink>
             <LLink to={`/dashboard/admin/messages`}> 
                 <Button type="button" color={theme.colors.tertiary}>
-                    Manage Messages <BiMessageCheck />
+                    Manage Messages <BiMessageAltDetail />
+                </Button>
+            </LLink>
+            <LLink to={`/dashboard/admin/feedback`}> 
+                <Button type="button" color={theme.colors.green}>
+                    Manage Feedback <MdOutlineFeedback />
                 </Button>
             </LLink>
             <Hr />

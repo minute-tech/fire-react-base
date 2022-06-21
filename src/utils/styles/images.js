@@ -97,7 +97,7 @@ export const HillSeparators = {
 }
 
 export const Emoji = styled.span`
-    font-size: ${props => props.size || '1 em'};
+    font-size: ${props => props.size || '1em'};
     display: ${props => props.display || 'inline'};
     margin: ${props => props.margin || '0'};
 `;

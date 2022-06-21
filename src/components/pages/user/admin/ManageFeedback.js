@@ -1,62 +1,71 @@
 import React, { useState} from 'react'
+import { useTheme } from 'styled-components';
+
 import { SIZES } from '../../../../utils/constants';
 import { readTimestamp } from '../../../../utils/misc';
-import { ALink, Body, Label } from '../../../../utils/styles/text';
-
+import { Centered } from '../../../../utils/styles/misc';
+import { Body, H3 } from '../../../../utils/styles/text';
 import DataManager from '../../../misc/DataManager';
+import { renderEmotion } from '../../../misc/Feedback';
 
-function ManageMessages(props) {
-
+function ManageFeedback(props) {
+    const theme = useTheme();
     const [tableCols, setTableCols] = useState([
         {
             label: "ID",
             value: "id",
             direction: "",
-            active: false
+            active: false,
         },
         {
             label: "Timestamp",
             value: "timestamp",
             direction: "desc",
-            active: true
+            active: true,
         },
         {
-            label: "Name",
-            value: "name",
+            label: "Emotion",
+            value: "emotionSymbol",
             direction: "",
-            active: false
+            active: false,
         },
         {
-            label: "Email",
-            value: "email",
+            label: "Score out of 100",
+            value: "rangeValue",
             direction: "",
-            active: false
+            active: false,
+        },
+        {
+            label: "Left message?",
+            value: "body",
+            direction: "",
+            active: false,
         },
     ]);
 
     const renderDetailModal = (item) => {
         return (
-            <>
-                <Label>{item.name}</Label> <ALink href={`mailto:${item.email}`}>&lt;{item.email}&gt;</ALink>
+            <Centered>
+                <H3 margin="0">{renderEmotion(item.rangeValue, "3em")}</H3>
                 <Body margin="0" size={SIZES.SM}><i>{readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}</i></Body>
-                <Body>{item.body}</Body>
-            </>
+                {item.body ? <Body>{item.body}</Body> : <Body color={theme.colors.red}><i>No message body</i></Body>}
+            </Centered>
         )
     }
 
     return (
         <DataManager 
-            pageTitle="Contact Messages"
+            pageTitle="Feedback"
             user={props.user}
             fireUser={props.fireUser}
             readOnlyFlags={props.readOnlyFlags}
             site={props.site}
             tableCols={tableCols}
             setTableCols={setTableCols}
-            dataName={"messages"}
+            dataName={"feedback"}
             renderDetailModal={renderDetailModal}
         />
     )
 }
 
-export default ManageMessages;
+export default ManageFeedback;

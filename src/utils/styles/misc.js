@@ -453,7 +453,10 @@ export const VerticalAlign = styled.span`
 `;
 
 export const Div = styled.div`
+    transition: all 1s linear;
     margin: ${props => props.margin ? props.margin : "0"};
+    visibility: ${props => props.hidden ? "hidden" : "visible"};
+    display: ${props => props.hidden ? "none" : "block"};
 `;
 
 export const Hr = styled.div`
