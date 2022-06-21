@@ -5,7 +5,7 @@ import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 
 import { firestore } from "../../Fire.js";
-import { Centered, Column, Grid, Row } from '../../utils/styles/misc';
+import { Centered, Column, Grid, Hr, Row } from '../../utils/styles/misc';
 import { Body, H4, Label } from '../../utils/styles/text';
 import { INPUT, SIZES } from '../../utils/constants.js';
 import { Emoji } from '../../utils/styles/images.js';
@@ -85,15 +85,16 @@ export function Feedback(props) {
                     <Body margin="0" color={theme.colors.green} size={SIZES.SM}><b>(slide the square)</b></Body>
                     <Slider color={theme.colors.primary}>
                         <input 
-                            type="range" 
-                            min={0} 
-                            max={100} 
-                            value={rangeValue} 
-                            className="slider" 
-                            onChange={(e) => setRangeValue(e.target.value)} 
+                            type="range"
+                            min={0}
+                            max={100}
+                            value={rangeValue}
+                            onChange={(e) => setRangeValue(e.target.value)}
                         />
-                        {renderEmotion(rangeValue, "3em")}
                     </Slider>
+                    
+                    {renderEmotion(rangeValue, "3em")}
+                    <Hr/>
                     <form onSubmit={ feedbackForm.handleSubmit(submitFeedback) }>
                         <Grid fluid>
                             <Row>
@@ -141,9 +142,8 @@ export function Feedback(props) {
 
 // TODO: convert to useMemo
 export const EmojiWithText = React.memo(({ className, label, symbol, size }) =>
-    <Body className={className} role="img" aria-label={label}>
+    <Body margin="0" className={className} role="img" aria-label={label}>
         <Emoji
-            margin="15px 0 0 0" 
             display="block"
             size={size}
         >

@@ -36,6 +36,7 @@ export default function DataManager(props) {
     });
 
     const [itemCount, setItemCount] = useState(0);
+    const [feedbackAverage, setFeedbackAverage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0].value);
     const [items, setItems] = useState([]);
     const [beginCursor, setBeginCursor] = useState("");
@@ -56,7 +57,8 @@ export default function DataManager(props) {
                     counts: false
                 }));
                 // Quick check to see if the countsData is an object or a single value
-                setItemCount(countsData[props.dataName]?.value ? countsData[props.dataName].value : countsData[props.dataName]);
+                setItemCount(countsData[props.dataName]?.count ? countsData[props.dataName].count : countsData[props.dataName]);
+                setFeedbackAverage(countsData[props.dataName]?.average ? countsData[props.dataName].average : 0);
             } else {
                 console.log(`No custom site set, can't properly count ${props.dataName}.`);
                 setLoading(prevState => ({
@@ -328,15 +330,18 @@ export default function DataManager(props) {
                         &nbsp; Back to Admin Dashboard
                     </Button>
                 </LLink>
-                <H1 margin="">{props.pageTitle}: {itemCount}</H1>
-                {(props.dataName === "feedback" && itemCount?.average) && (
-                    <>
-                    <H3 margin="0">{renderEmotion(itemCount.average)}</H3>
-                    <Body margin="0">{Math.trunc(itemCount.average)}/100</Body>
-                    </>
-                )}
+                <H1 margin="0">{props.pageTitle}: {itemCount}</H1>
                 <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
                     <Grid fluid>
+                        
+                    {(feedbackAverage) && (
+                            <Row>
+                                <Column xs={12} textalign="center">
+                                    <H3 margin="0">Average rating: {renderEmotion(feedbackAverage, "4em")}</H3>
+                                    <Body margin="0">{Math.trunc(feedbackAverage)}/100</Body>
+                                </Column>
+                            </Row>
+                        )}
                         <Row justify="center" align="center">
                             <Column md={12} lg={8}>
                                 <SearchContainer>
@@ -365,7 +370,7 @@ export default function DataManager(props) {
                             <Column md={12} lg={4}>
                                 <SelectInput {...searchForm.register("column", { required: true })}>
                                     {
-                                        props.tableCols.filter(column => column.value !== "timestamp").map((column) => {
+                                        props.tableCols.filter(column => (column.value !== "timestamp" && column.value !== "body")).map((column) => {
                                             return (
                                                 <option key={column.value} value={column.value}>{column.label}</option>
                                             )
@@ -458,7 +463,7 @@ export default function DataManager(props) {
                                                     } else if(column.value === "body"){
                                                         return (
                                                             <Td key={`${c}-${i}`}>
-                                                                {item.body ? <Body color={theme.colors.green}>Yes!</Body> : <Body color={theme.colors.red}>No.</Body>}
+                                                                {item.body ? <Body color={theme.colors.green}>Yes</Body> : <Body color={theme.colors.red}>No</Body>}
                                                             </Td>
                                                         )
                                                     } else {
@@ -580,6 +585,7 @@ export default function DataManager(props) {
                             
                             </Column>
                         </Row>
+                        
                     </Grid>
                         
                     </>

@@ -114,11 +114,7 @@ export const Slider = styled.div`
     color: black;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    .range-value {
-        font-size: 2rem;
-        margin-top: 25px;
-    }
-    .slider {
+    input {
         -webkit-appearance: none;
         width: 100%;
         height: 18px;
