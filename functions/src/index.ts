@@ -315,6 +315,53 @@ export const onUserCreated = functions.firestore
             return;
         }
 });
+export const onFeedbackCreated = functions.firestore
+    .document("feedback/{feedbackId}")
+    .onCreate(async (snap: DocumentSnapshot, context: functions.EventContext) => {
+        const newValues = snap.data();
+        if (!newValues) {
+            return;
+        } else {
+            console.log("newValues: ");
+            console.log(newValues);
+        }
+
+        try {
+            const allPromises: Array<Promise<any>> = [];
+            let countsDocData: FirebaseFirestore.DocumentData | any = null;
+            await admin.firestore().collection("site").doc("counts").get().then((countsDoc) => {
+                if (countsDoc.exists) {
+                    countsDocData = countsDoc.data();
+                } else {
+                    console.error("Site doc doesn't exists, so setting the default stuff we need for now!");
+                    countsDocData = defaultPublicSiteData;
+                }
+            }).catch((error) => {
+                console.log("Error getting site public document:", error);
+            });
+
+            // Increment feedback
+            const newSum = (countsDocData?.feedback?.sum ?? 0) + parseInt(newValues.rangeValue);
+            const newCount = (countsDocData?.feedback?.count ?? 0) + 1;
+            const newAverage = newSum/newCount;
+            allPromises.push(
+                admin.firestore().collection("site").doc("counts").update({
+                    "feedback.count": FieldValue.increment(1),
+                    "feedback.average": newAverage,
+                    "feedback.sum": newSum,
+                }).then(() => {
+                    console.log("Incremented messages.");
+                }).catch((error) => {
+                    console.error(`Error incrementing messages: ${error}`);
+                })
+            );
+
+            return Promise.all(allPromises);
+        } catch (error) {
+            console.error(error);
+            return;
+        }
+});
 
 export const onAdminCreated = functions.firestore
     .document("users/{userId}/newAdmins/{docId}")

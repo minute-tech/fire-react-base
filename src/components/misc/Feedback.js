@@ -15,7 +15,6 @@ import { FormError } from './Misc.js';
 export function Feedback(props) {
     const theme = useTheme();
     const [rangeValue, setRangeValue] = useState(50);
-    const [feedbackId, setFeedbackId] = useState("");
     const [submitted, setSubmitted] = useState({ 
         feedback: false,
     });
@@ -50,8 +49,7 @@ export function Feedback(props) {
             emotionSymbol = "0x1F604"
         }
         
-
-        addDoc(collection(firestore, "feedback", feedbackId), {
+        addDoc(collection(firestore, "feedback"), {
             rangeValue: rangeValue,
             emotionLabel: emotionLabel,
             emotionSymbol: emotionSymbol,
@@ -67,7 +65,7 @@ export function Feedback(props) {
                 ...prevState,
                 feedback: true
             }));
-            setFeedbackId(docRef.id);
+            toast.success("Feedback submitted")
         }).catch(error => {
             toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             console.error("Error submitting feedback: " + error);
@@ -133,7 +131,9 @@ export function Feedback(props) {
             )}
 
             { submitted.feedback && (
-                <H4>Thanks for the feedback!</H4>
+                <Centered>
+                    <H4 color={theme.colors.green}>Thanks for the feedback!</H4>
+                </Centered>
             )}
         </>
     )

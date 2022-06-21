@@ -23,10 +23,12 @@ function ContactForm(props) {
         }
     });
 
-    const [messageSent, setMessageSent] = useState(false);
     const [submitting, setSubmitting] = useState({ 
         message: false,
     }); 
+    const [submitted, setSubmitted] = useState({ 
+        message: false,
+    });
 
     const submitMessage = (data) => {   
         setSubmitting(prevState => ({
@@ -44,7 +46,10 @@ function ContactForm(props) {
                 ...prevState,
                 message: false
             }));
-            setMessageSent(true);
+            setSubmitted(prevState => ({
+                ...prevState,
+                message: true
+            }));
             toast.success(`Message submitted successfully, thanks!`);
             contactForm.reset();
         }).catch(error => {
@@ -57,7 +62,7 @@ function ContactForm(props) {
         });
     }
 
-    if(messageSent){
+    if(submitted.message){
         return (
             <>
             <H1>Contact Form</H1>

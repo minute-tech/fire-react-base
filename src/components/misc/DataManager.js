@@ -10,7 +10,7 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import { ModalCard, Hr, OverflowXAuto, Table, Tbody, Td, Th, Thead, Tr, ModalContainer, Grid, Column, Row } from '../../utils/styles/misc';
 import { Spinner } from '../../utils/styles/images';
-import { Body, H1, H2, LLink } from '../../utils/styles/text';
+import { Body, H1, H2, H3, LLink } from '../../utils/styles/text';
 import { firestore } from '../../Fire';
 import { readTimestamp } from '../../utils/misc';
 import { BTYPES, SIZES, PAGE_SIZES } from '../../utils/constants.js';
@@ -55,7 +55,8 @@ export default function DataManager(props) {
                     ...prevState,
                     counts: false
                 }));
-                setItemCount(countsData[props.dataName]);
+                // Quick check to see if the countsData is an object or a single value
+                setItemCount(countsData[props.dataName]?.value ? countsData[props.dataName].value : countsData[props.dataName]);
             } else {
                 console.log(`No custom site set, can't properly count ${props.dataName}.`);
                 setLoading(prevState => ({
@@ -327,7 +328,13 @@ export default function DataManager(props) {
                         &nbsp; Back to Admin Dashboard
                     </Button>
                 </LLink>
-                <H1>{props.pageTitle}: {itemCount}</H1>
+                <H1 margin="">{props.pageTitle}: {itemCount}</H1>
+                {(props.dataName === "feedback" && itemCount?.average) && (
+                    <>
+                    <H3 margin="0">{renderEmotion(itemCount.average)}</H3>
+                    <Body margin="0">{Math.trunc(itemCount.average)}/100</Body>
+                    </>
+                )}
                 <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
                     <Grid fluid>
                         <Row justify="center" align="center">
