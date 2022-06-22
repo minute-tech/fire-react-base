@@ -47,15 +47,7 @@ export const ANIMAL_GALLERY = [
     },
 ];
 
-export const PAGE_SIZES = [
-    // { value: 1, label: 1 },
-    // { value: 2, label: 2 },
-    // { value: 5, label: 5 },
-    { value: 10, label: 10 },
-    { value: 25, label: 25 },
-    { value: 50, label: 50 },
-    { value: 100, label: 100 },
-];
+export const PAGE_SIZES = [10, 25, 50, 100,];
 
 export const APHORISMS = [
     "The world is your oyster.",
@@ -94,14 +86,14 @@ export const APHORISMS = [
 /////////////////// Back-end Only //////////////////////
 export const INPUT = {
     EMAIL: {
-        VALUE: "email",
+        KEY: "email",
         LABEL: "Email",
         PLACEHOLDER: "taylor_doe@email.com",
         ERRORS: {
             REQUIRED: "An email is required!",
             PATTERN: {
                 MESSAGE: "This doesn't look like a valid email address.",
-                VALUE: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                KEY: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             },
             TAKEN: {
                 MESSAGE: "Email already registered! Try logging in or use another email address.",
@@ -110,50 +102,50 @@ export const INPUT = {
         },
     },
     PHONE: {
-        VALUE: "phone",
+        KEY: "phone",
         LABEL: "Phone",
         PLACEHOLDER: "+1 (123) 456-7890",
         ERRORS: {
             REQUIRED: "A phone number is required!",
             MAX: {
                 MESSAGE: "The phone number can only be 25 characters long.",
-                VALUE: 25,
+                KEY: 25,
             },
             MIN: {
                 MESSAGE: "The phone number must be at least 4 characters long.",
-                VALUE: 4,
+                KEY: 4,
             },
         },
     },
     PASSWORD: {
-        VALUE: "password",
+        KEY: "password",
         LABEL: "Password",
         PLACEHOLDER: "*********************",
         ERRORS: {
             REQUIRED: "A password is required!",
             MAX: {
                 MESSAGE: "The password can only be 50 characters long.",
-                VALUE: 50,
+                KEY: 50,
             },
             MIN: {
                 MESSAGE: "The password must be at least 6 characters long.",
-                VALUE: 6,
+                KEY: 6,
             },
         },
     },
     CONFIRM_PASSWORD: {
-        VALUE: "confirmPassword",
+        KEY: "confirmPassword",
         LABEL: "Confirm password",
         PLACEHOLDER: "*********************",
         ERRORS: {
             REQUIRED: "The password must be confirmed!",
             MAX: {
                 MESSAGE: "The password can only be 50 characters long.",
-                VALUE: 50,
+                KEY: 50,
             },
             MIN: {
                 MESSAGE: "The password must be at least 6 characters long.",
-                VALUE: 6,
+                KEY: 6,
             },
             NO_MATCH: {
                 TYPE: "no-match",
@@ -162,82 +154,82 @@ export const INPUT = {
         },
     },
     FIRST_NAME: {
-        VALUE: "firstName",
+        KEY: "firstName",
         LABEL: "First name",
         PLACEHOLDER: "Taylor",
         ERRORS: {
             REQUIRED: "A first name is required!",
             MAX: {
                 MESSAGE: "The first name can only be 150 characters long.",
-                VALUE: 150,
+                KEY: 150,
             },
             MIN: {
                 MESSAGE: "The first name must be at least 1 characters long.",
-                VALUE: 1,
+                KEY: 1,
             },
         },
     },
     LAST_NAME: {
-        VALUE: "lastName",
+        KEY: "lastName",
         LABEL: "Last name",
         PLACEHOLDER: "Doe",
         ERRORS: {
             REQUIRED: "A last name is required!",
             MAX: {
                 MESSAGE: "The last name can only be 150 characters long.",
-                VALUE: 150,
+                KEY: 150,
             },
             MIN: {
                 MESSAGE: "The last name must be at least 1 characters long.",
-                VALUE: 1,
+                KEY: 1,
             },
         },
     },
     NAME: {
-        VALUE: "name",
+        KEY: "name",
         LABEL: "Name",
         PLACEHOLDER: "Taylor Doe",
         ERRORS: {
             REQUIRED: "A name is required!",
             MAX: {
                 MESSAGE: "The name can only be 150 characters long.",
-                VALUE: 150,
+                KEY: 150,
             },
             MIN: {
                 MESSAGE: "The name must be at least 1 characters long.",
-                VALUE: 1,
+                KEY: 1,
             },
         },
     },
     BODY: {
-        VALUE: "body",
+        KEY: "body",
         LABEL: "Message body",
         PLACEHOLDER: "Detail what you want to say here.",
         ERRORS: {
             REQUIRED: "A text body is required!",
             MAX: {
                 MESSAGE: "The text body can only be 30,000 characters long.",
-                VALUE: 30000,
+                KEY: 30000,
             },
             MIN: {
                 MESSAGE: "The text body must be at least 10 characters long.",
-                VALUE: 10,
+                KEY: 10,
             },
         },
     },
     COLOR: {
-        VALUE: "color",
+        KEY: "color",
         LABEL: "Color",
         PLACEHOLDER: "#FFFFFF",
         ERRORS: {
             REQUIRED: "A color is required!",
             MAX: {
                 MESSAGE: "The color can only be 15 characters long.",
-                VALUE: 15,
+                KEY: 15,
             },
             MIN: {
                 MESSAGE: "The text body must be at least 2 characters long.",
-                VALUE: 2,
+                KEY: 2,
             },
             VALIDATE: {
                 MESSAGE: "Looks like one of the colors you inputted is not a proper HTML color. Try using a hex color like '#FFFFFF'!",

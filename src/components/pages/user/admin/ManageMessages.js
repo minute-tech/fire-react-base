@@ -10,25 +10,25 @@ function ManageMessages(props) {
     const [tableCols, setTableCols] = useState([
         {
             label: "ID",
-            value: "id",
+            key: "id",
             direction: "",
             active: false
         },
         {
             label: "Timestamp",
-            value: "timestamp",
+            key: "timestamp",
             direction: "desc",
             active: true
         },
         {
             label: "Name",
-            value: "name",
+            key: "name",
             direction: "",
             active: false
         },
         {
             label: "Email",
-            value: "email",
+            key: "email",
             direction: "",
             active: false
         },

@@ -228,55 +228,55 @@ function Profile(props) {
                     <Hr/>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.FIRST_NAME.VALUE} br>First Name:</Label>
+                            <Label htmlFor={INPUT.FIRST_NAME.KEY} br>First Name:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
-                                error={profileForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
+                                error={profileForm.formState.errors[INPUT.FIRST_NAME.KEY]}
                                 {
-                                    ...profileForm.register(INPUT.FIRST_NAME.VALUE, { 
+                                    ...profileForm.register(INPUT.FIRST_NAME.KEY, { 
                                             required: INPUT.FIRST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.FIRST_NAME.ERRORS.MAX.VALUE,
+                                                value: INPUT.FIRST_NAME.ERRORS.MAX.KEY,
                                                 message: INPUT.FIRST_NAME.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.FIRST_NAME.ERRORS.MIN.VALUE,
+                                                value: INPUT.FIRST_NAME.ERRORS.MIN.KEY,
                                                 message: INPUT.FIRST_NAME.ERRORS.MIN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={profileForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.FIRST_NAME.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.LAST_NAME.VALUE} br>Last Name:</Label>
+                            <Label htmlFor={INPUT.LAST_NAME.KEY} br>Last Name:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
-                                error={profileForm.formState.errors[INPUT.LAST_NAME.VALUE]}
+                                error={profileForm.formState.errors[INPUT.LAST_NAME.KEY]}
                                 {
-                                    ...profileForm.register(INPUT.LAST_NAME.VALUE, { 
+                                    ...profileForm.register(INPUT.LAST_NAME.KEY, { 
                                             required: INPUT.LAST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.LAST_NAME.ERRORS.MAX.VALUE,
+                                                value: INPUT.LAST_NAME.ERRORS.MAX.KEY,
                                                 message: INPUT.LAST_NAME.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.LAST_NAME.ERRORS.MIN.VALUE,
+                                                value: INPUT.LAST_NAME.ERRORS.MIN.KEY,
                                                 message: INPUT.LAST_NAME.ERRORS.MIN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={profileForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.LAST_NAME.KEY]} /> 
                         </Column>
                     </Row>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.EMAIL.VALUE}>Email:</Label>
+                            <Label htmlFor={INPUT.EMAIL.KEY}>Email:</Label>
                             &nbsp;
                             {(props.readOnlyFlags.isAdmin) && (
                                 <Body 
@@ -304,23 +304,23 @@ function Profile(props) {
                             <TextInput
                                 type="text" 
                                 disabled
-                                error={profileForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                error={profileForm.formState.errors[INPUT.EMAIL.KEY]}
                                 placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                 {
-                                    ...profileForm.register(INPUT.EMAIL.VALUE, { 
+                                    ...profileForm.register(INPUT.EMAIL.KEY, { 
                                             required: INPUT.EMAIL.ERRORS.REQUIRED,
                                             pattern: {
-                                                value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                 message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={profileForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.PHONE.VALUE}>Phone:</Label>
+                            <Label htmlFor={INPUT.PHONE.KEY}>Phone:</Label>
                             &nbsp;
                             <Body 
                                 margin="0"
@@ -336,23 +336,23 @@ function Profile(props) {
                             <TextInput
                                 type="text"
                                 disabled
-                                error={profileForm.formState.errors[INPUT.PHONE.VALUE]}
+                                error={profileForm.formState.errors[INPUT.PHONE.KEY]}
                                 placeholder={INPUT.PHONE.PLACEHOLDER} 
                                 {
-                                    ...profileForm.register(INPUT.PHONE.VALUE, { 
+                                    ...profileForm.register(INPUT.PHONE.KEY, { 
                                             maxLength: {
-                                                value: INPUT.PHONE.ERRORS.MAX.VALUE,
+                                                value: INPUT.PHONE.ERRORS.MAX.KEY,
                                                 message: INPUT.PHONE.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.PHONE.ERRORS.MIN.VALUE,
+                                                value: INPUT.PHONE.ERRORS.MIN.KEY,
                                                 message: INPUT.PHONE.ERRORS.MIN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={profileForm.formState.errors[INPUT.PHONE.VALUE]} /> 
+                            <FormError error={profileForm.formState.errors[INPUT.PHONE.KEY]} /> 
                         </Column>
                     </Row>               
                     <Row>
@@ -456,23 +456,23 @@ function Profile(props) {
                             <Grid fluid>
                                 <Row justify="center">
                                     <Column md={12} lg={8}>
-                                        <Label htmlFor={INPUT.EMAIL.VALUE} br>New Email Address:</Label>
+                                        <Label htmlFor={INPUT.EMAIL.KEY} br>New Email Address:</Label>
                                         <TextInput
                                             type="text"
-                                            error={emailForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                            error={emailForm.formState.errors[INPUT.EMAIL.KEY]}
                                             placeholder={INPUT.EMAIL.PLACEHOLDER}
                                             {
-                                                ...emailForm.register(INPUT.EMAIL.VALUE, { 
+                                                ...emailForm.register(INPUT.EMAIL.KEY, { 
                                                         required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                         pattern: {
-                                                            value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                            value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                             message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                         },
                                                     }
                                                 )
                                             } 
                                         />
-                                        <FormError error={emailForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                        <FormError error={emailForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                                     </Column>
                                 </Row>
                                 <Row>

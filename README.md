@@ -2,30 +2,32 @@
 Fire React Base is a template for creating web apps with Firebase and React.js.
 
 ## Featured NPM libraries:
-* react 
+* [react](https://www.npmjs.com/package/react)
     * Component organization and front end rendering
-* firebase
+* [firebase](https://www.npmjs.com/package/firebase)
     * Database, authentication, server side functions, file storage, etc
-* react-router-dom
+* [react-router-dom](https://www.npmjs.com/package/react-router-dom)
     * Link and page navigation
-* styled-components
+* [styled-components](https://www.npmjs.com/package/styled-components)
     * JavaScript CSS styling
-* polished 
+* [polished](https://www.npmjs.com/package/polished)
     * Supplementary library to styled-components that provides utility functions to manipulate CSS
-* react-helmet-async
+* [react-helmet-async](https://www.npmjs.com/package/react-helmet-async)
     * Dynamic page meta data, such as page title
-* react-grid-system
+* [react-grid-system](https://www.npmjs.com/package/react-grid-system)
     * Responsive grid system
-* react-image-lightbox
+* [react-image-lightbox](https://www.npmjs.com/package/react-image-lightbox)
     * Enlarging images for easy viewing mobile and desktop
-* react-hook-form
+* [react-hook-form](https://www.npmjs.com/package/react-hook-form)
     * Breezy form building
-* react-toastify
+* [react-toastify](https://www.npmjs.com/package/react-toastify)
     * Notification alerts
-* react-confirm-alert
+* [react-confirm-alert](https://www.npmjs.com/package/react-confirm-alert)
     * Confirmation dialogues
-* react-icons
-    * Popular icon usage like font Awesome
+* [react-icons](https://www.npmjs.com/package/react-icons)
+    * Quickly and easily use popular icons such as Font Awesome
+* [react-csv](https://www.npmjs.com/package/react-csv)
+    * Simple library to export a JS object to CSV
 
 ## Initialization
 

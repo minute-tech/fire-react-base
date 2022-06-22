@@ -36,7 +36,7 @@ function Register(props) {
     const registerUser = (data) => {        
         let termsToastId = "";
         if (data.confirmPassword !== data.password) { 
-            registerForm.setError(INPUT.CONFIRM_PASSWORD.VALUE, { 
+            registerForm.setError(INPUT.CONFIRM_PASSWORD.KEY, { 
                 type: INPUT.CONFIRM_PASSWORD.ERRORS.NO_MATCH.TYPE, 
                 message: INPUT.CONFIRM_PASSWORD.ERRORS.NO_MATCH.MESSAGE
             });   
@@ -92,7 +92,7 @@ function Register(props) {
                         }).catch((error) => {
                             console.log("Error: " + error.message);
                             if(error.code === "auth/email-already-in-use"){
-                                registerForm.setError(INPUT.EMAIL.VALUE, { 
+                                registerForm.setError(INPUT.EMAIL.KEY, { 
                                     type: INPUT.EMAIL.ERRORS.TAKEN.TYPE, 
                                     message: INPUT.EMAIL.ERRORS.TAKEN.MESSAGE
                                 });
@@ -141,117 +141,117 @@ function Register(props) {
                 <Grid fluid>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.FIRST_NAME.VALUE} br>First Name:</Label>
+                            <Label htmlFor={INPUT.FIRST_NAME.KEY} br>First Name:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
-                                error={registerForm.formState.errors[INPUT.FIRST_NAME.VALUE]}
+                                error={registerForm.formState.errors[INPUT.FIRST_NAME.KEY]}
                                 {
-                                    ...registerForm.register(INPUT.FIRST_NAME.VALUE, { 
+                                    ...registerForm.register(INPUT.FIRST_NAME.KEY, { 
                                             required: INPUT.FIRST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.FIRST_NAME.ERRORS.MAX.VALUE,
+                                                value: INPUT.FIRST_NAME.ERRORS.MAX.KEY,
                                                 message: INPUT.FIRST_NAME.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.FIRST_NAME.ERRORS.MIN.VALUE,
+                                                value: INPUT.FIRST_NAME.ERRORS.MIN.KEY,
                                                 message: INPUT.FIRST_NAME.ERRORS.MIN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={registerForm.formState.errors[INPUT.FIRST_NAME.VALUE]} /> 
+                            <FormError error={registerForm.formState.errors[INPUT.FIRST_NAME.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.LAST_NAME.VALUE} br>Last Name:</Label>
+                            <Label htmlFor={INPUT.LAST_NAME.KEY} br>Last Name:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
-                                error={registerForm.formState.errors[INPUT.LAST_NAME.VALUE]}
+                                error={registerForm.formState.errors[INPUT.LAST_NAME.KEY]}
                                 {
-                                    ...registerForm.register(INPUT.LAST_NAME.VALUE, { 
+                                    ...registerForm.register(INPUT.LAST_NAME.KEY, { 
                                             required: INPUT.LAST_NAME.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.LAST_NAME.ERRORS.MAX.VALUE,
+                                                value: INPUT.LAST_NAME.ERRORS.MAX.KEY,
                                                 message: INPUT.LAST_NAME.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.LAST_NAME.ERRORS.MIN.VALUE,
+                                                value: INPUT.LAST_NAME.ERRORS.MIN.KEY,
                                                 message: INPUT.LAST_NAME.ERRORS.MIN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={registerForm.formState.errors[INPUT.LAST_NAME.VALUE]} /> 
+                            <FormError error={registerForm.formState.errors[INPUT.LAST_NAME.KEY]} /> 
                         </Column>
                     </Row>
                     <Row>
                         <Column sm={12}>
-                            <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                            <Label htmlFor={INPUT.EMAIL.KEY} br>Email:</Label>
                             <TextInput
                                 type="text" 
-                                error={registerForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                error={registerForm.formState.errors[INPUT.EMAIL.KEY]}
                                 placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                 {
-                                    ...registerForm.register(INPUT.EMAIL.VALUE, { 
+                                    ...registerForm.register(INPUT.EMAIL.KEY, { 
                                             required: INPUT.EMAIL.ERRORS.REQUIRED,
                                             pattern: {
-                                                value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                 message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                             },
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={registerForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                            <FormError error={registerForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                         </Column>
                     </Row>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.PASSWORD.VALUE} br>Password:</Label>
+                            <Label htmlFor={INPUT.PASSWORD.KEY} br>Password:</Label>
                             <TextInput
                                 type="password"
                                 placeholder={INPUT.PASSWORD.PLACEHOLDER} 
-                                error={registerForm.formState.errors[INPUT.PASSWORD.VALUE]}
+                                error={registerForm.formState.errors[INPUT.PASSWORD.KEY]}
                                 { 
-                                    ...registerForm.register(INPUT.PASSWORD.VALUE, {
+                                    ...registerForm.register(INPUT.PASSWORD.KEY, {
                                         required: INPUT.PASSWORD.ERRORS.REQUIRED,
                                         maxLength: {
-                                            value: INPUT.PASSWORD.ERRORS.MAX.VALUE,
+                                            value: INPUT.PASSWORD.ERRORS.MAX.KEY,
                                             message: INPUT.PASSWORD.ERRORS.MAX.MESSAGE
                                         },
                                         minLength: {
-                                            value: INPUT.PASSWORD.ERRORS.MIN.VALUE,
+                                            value: INPUT.PASSWORD.ERRORS.MIN.KEY,
                                             message: INPUT.PASSWORD.ERRORS.MIN.MESSAGE
                                         },
                                     })
                                 } 
                             />
-                            <FormError error={registerForm.formState.errors[INPUT.PASSWORD.VALUE]} /> 
+                            <FormError error={registerForm.formState.errors[INPUT.PASSWORD.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.CONFIRM_PASSWORD.VALUE} br>Confirm Password:</Label>
+                            <Label htmlFor={INPUT.CONFIRM_PASSWORD.KEY} br>Confirm Password:</Label>
                             <TextInput
                                 type="password"
                                 placeholder={INPUT.CONFIRM_PASSWORD.PLACEHOLDER} 
-                                error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.VALUE]}
+                                error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.KEY]}
                                 { 
-                                    ...registerForm.register(INPUT.CONFIRM_PASSWORD.VALUE, {
+                                    ...registerForm.register(INPUT.CONFIRM_PASSWORD.KEY, {
                                         required: INPUT.CONFIRM_PASSWORD.ERRORS.REQUIRED,
                                         maxLength: {
-                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MAX.VALUE,
+                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MAX.KEY,
                                             message: INPUT.CONFIRM_PASSWORD.ERRORS.MAX.MESSAGE
                                         },
                                         minLength: {
-                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MIN.VALUE,
+                                            value: INPUT.CONFIRM_PASSWORD.ERRORS.MIN.KEY,
                                             message: INPUT.CONFIRM_PASSWORD.ERRORS.MIN.MESSAGE
                                         },
                                     })
                                 } 
                             />
-                            <FormError error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.VALUE]} /> 
+                            <FormError error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.KEY]} /> 
                         </Column>
                     </Row>                        
                     <Row>

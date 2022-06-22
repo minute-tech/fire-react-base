@@ -13,31 +13,31 @@ function ManageFeedback(props) {
     const [tableCols, setTableCols] = useState([
         {
             label: "ID",
-            value: "id",
+            key: "id",
             direction: "",
             active: false,
         },
         {
             label: "Timestamp",
-            value: "timestamp",
+            key: "timestamp",
             direction: "desc",
             active: true,
         },
         {
             label: "Emotion",
-            value: "emotionSymbol",
+            key: "emotionSymbol",
             direction: "",
             active: false,
         },
         {
             label: "Score out of 100",
-            value: "rangeValue",
+            key: "rangeValue",
             direction: "",
             active: false,
         },
         {
-            label: "Left message?",
-            value: "body",
+            label: "Message?",
+            key: "body",
             direction: "",
             active: false,
         },

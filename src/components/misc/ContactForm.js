@@ -79,68 +79,68 @@ function ContactForm(props) {
                     <Grid fluid>
                         <Row>
                             <Column sm={12} md={6}>
-                                <Label htmlFor={INPUT.NAME.VALUE} br>{INPUT.NAME.LABEL}:</Label>
+                                <Label htmlFor={INPUT.NAME.KEY} br>{INPUT.NAME.LABEL}:</Label>
                                 <TextInput 
                                     type="text" 
-                                    error={contactForm.formState.errors[INPUT.NAME.VALUE]}
+                                    error={contactForm.formState.errors[INPUT.NAME.KEY]}
                                     placeholder={`${INPUT.NAME.PLACEHOLDER}`} 
                                     { 
-                                        ...contactForm.register(INPUT.NAME.VALUE, {
+                                        ...contactForm.register(INPUT.NAME.KEY, {
                                             required: INPUT.NAME.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.NAME.ERRORS.MAX.VALUE,
+                                                value: INPUT.NAME.ERRORS.MAX.KEY,
                                                 message: INPUT.NAME.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.NAME.ERRORS.MIN.VALUE,
+                                                value: INPUT.NAME.ERRORS.MIN.KEY,
                                                 message: INPUT.NAME.ERRORS.MIN.MESSAGE
                                             },
                                         })
                                     } 
                                 />
-                                <FormError error={contactForm.formState.errors[INPUT.NAME.VALUE]} /> 
+                                <FormError error={contactForm.formState.errors[INPUT.NAME.KEY]} /> 
                             </Column>
                             <Column sm={12} md={6}>
-                                <Label htmlFor={INPUT.EMAIL.VALUE} br>{INPUT.EMAIL.LABEL}:</Label>
+                                <Label htmlFor={INPUT.EMAIL.KEY} br>{INPUT.EMAIL.LABEL}:</Label>
                                 <TextInput 
                                     type="text" 
-                                    error={contactForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                    error={contactForm.formState.errors[INPUT.EMAIL.KEY]}
                                     placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                     {
-                                        ...contactForm.register(INPUT.EMAIL.VALUE, { 
+                                        ...contactForm.register(INPUT.EMAIL.KEY, { 
                                                 required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                 pattern: {
-                                                    value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                    value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                     message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                 },
                                             }
                                         )
                                     } 
                                 />
-                                <FormError error={contactForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                <FormError error={contactForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                             </Column>
                         </Row>
                         <Row>
                             <Column sm={12}>
-                                <Label htmlFor={INPUT.BODY.VALUE} br>{INPUT.BODY.LABEL}:</Label>
+                                <Label htmlFor={INPUT.BODY.KEY} br>{INPUT.BODY.LABEL}:</Label>
                                 <TextAreaInput 
                                     placeholder={INPUT.BODY.PLACEHOLDER}  
-                                    error={contactForm.formState.errors[INPUT.BODY.VALUE]}
+                                    error={contactForm.formState.errors[INPUT.BODY.KEY]}
                                     {
-                                        ...contactForm.register(INPUT.BODY.VALUE, {
+                                        ...contactForm.register(INPUT.BODY.KEY, {
                                             required: INPUT.BODY.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.BODY.ERRORS.MAX.VALUE,
+                                                value: INPUT.BODY.ERRORS.MAX.KEY,
                                                 message: INPUT.BODY.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.BODY.ERRORS.MIN.VALUE,
+                                                value: INPUT.BODY.ERRORS.MIN.KEY,
                                                 message: INPUT.BODY.ERRORS.MIN.MESSAGE
                                             },
                                         })
                                     } 
                                 />
-                                <FormError error={contactForm.formState.errors[INPUT.BODY.VALUE]} /> 
+                                <FormError error={contactForm.formState.errors[INPUT.BODY.KEY]} /> 
                             </Column>
                         </Row>
                         <Row>

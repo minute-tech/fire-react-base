@@ -142,47 +142,47 @@ export default function Reauth(props) {
                     <Grid fluid>
                         <Row justify="center">
                             <Column md={12} lg={8}>
-                                <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                                <Label htmlFor={INPUT.EMAIL.KEY} br>Email:</Label>
                                 <TextInput
                                     type="text" 
-                                    error={reauthForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                    error={reauthForm.formState.errors[INPUT.EMAIL.KEY]}
                                     placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                     {
-                                        ...reauthForm.register(INPUT.EMAIL.VALUE, { 
+                                        ...reauthForm.register(INPUT.EMAIL.KEY, { 
                                                 required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                 pattern: {
-                                                    value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                    value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                     message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                 },
                                             }
                                         )
                                     } 
                                 />
-                                <FormError error={reauthForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                <FormError error={reauthForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                             </Column>
                         </Row>
                         <Row justify="center">
                             <Column md={12} lg={8}>
-                                <Label htmlFor={INPUT.PASSWORD.VALUE} br>Password:</Label>
+                                <Label htmlFor={INPUT.PASSWORD.KEY} br>Password:</Label>
                                 <TextInput
                                     type="password"
-                                    error={reauthForm.formState.errors[INPUT.PASSWORD.VALUE]}
+                                    error={reauthForm.formState.errors[INPUT.PASSWORD.KEY]}
                                     placeholder={INPUT.PASSWORD.PLACEHOLDER} 
                                     { 
-                                        ...reauthForm.register(INPUT.PASSWORD.VALUE, {
+                                        ...reauthForm.register(INPUT.PASSWORD.KEY, {
                                             required: INPUT.PASSWORD.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.PASSWORD.ERRORS.MAX.VALUE,
+                                                value: INPUT.PASSWORD.ERRORS.MAX.KEY,
                                                 message: INPUT.PASSWORD.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.PASSWORD.ERRORS.MIN.VALUE,
+                                                value: INPUT.PASSWORD.ERRORS.MIN.KEY,
                                                 message: INPUT.PASSWORD.ERRORS.MIN.MESSAGE
                                             },
                                         })
                                     } 
                                 />
-                                <FormError error={reauthForm.formState.errors[INPUT.PASSWORD.VALUE]} /> 
+                                <FormError error={reauthForm.formState.errors[INPUT.PASSWORD.KEY]} /> 
                             </Column>
                             
                         </Row>

@@ -199,47 +199,47 @@ function UserLogin(props) {
                         </Row>
                         <Row justify="center">
                             <Column md={12} lg={8}>
-                                <Label htmlFor={INPUT.EMAIL.VALUE} br>Email:</Label>
+                                <Label htmlFor={INPUT.EMAIL.KEY} br>Email:</Label>
                                 <TextInput
                                     type="text" 
-                                    error={loginForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                    error={loginForm.formState.errors[INPUT.EMAIL.KEY]}
                                     placeholder={INPUT.EMAIL.PLACEHOLDER} 
                                     {
-                                        ...loginForm.register(INPUT.EMAIL.VALUE, { 
+                                        ...loginForm.register(INPUT.EMAIL.KEY, { 
                                                 required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                 pattern: {
-                                                    value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                    value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                     message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                 },
                                             }
                                         )
                                     } 
                                 />
-                                <FormError error={loginForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                <FormError error={loginForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                             </Column>
                         </Row>
                         <Row justify="center">
                             <Column md={12} lg={8}>
-                                <Label htmlFor={INPUT.PASSWORD.VALUE} br>Password:</Label>
+                                <Label htmlFor={INPUT.PASSWORD.KEY} br>Password:</Label>
                                 <TextInput
                                     type="password"
-                                    error={loginForm.formState.errors[INPUT.PASSWORD.VALUE]}
+                                    error={loginForm.formState.errors[INPUT.PASSWORD.KEY]}
                                     placeholder={INPUT.PASSWORD.PLACEHOLDER} 
                                     { 
-                                        ...loginForm.register(INPUT.PASSWORD.VALUE, {
+                                        ...loginForm.register(INPUT.PASSWORD.KEY, {
                                             required: INPUT.PASSWORD.ERRORS.REQUIRED,
                                             maxLength: {
-                                                value: INPUT.PASSWORD.ERRORS.MAX.VALUE,
+                                                value: INPUT.PASSWORD.ERRORS.MAX.KEY,
                                                 message: INPUT.PASSWORD.ERRORS.MAX.MESSAGE
                                             },
                                             minLength: {
-                                                value: INPUT.PASSWORD.ERRORS.MIN.VALUE,
+                                                value: INPUT.PASSWORD.ERRORS.MIN.KEY,
                                                 message: INPUT.PASSWORD.ERRORS.MIN.MESSAGE
                                             },
                                         })
                                     } 
                                 />
-                                <FormError error={loginForm.formState.errors[INPUT.PASSWORD.VALUE]} /> 
+                                <FormError error={loginForm.formState.errors[INPUT.PASSWORD.KEY]} /> 
                             </Column>
                             
                         </Row>
@@ -332,23 +332,23 @@ function UserLogin(props) {
                             <Grid fluid>
                                 <Row justify="center">
                                     <Column md={12} lg={8}>
-                                        <Label htmlFor={INPUT.EMAIL.VALUE} br>Your Email:</Label>
+                                        <Label htmlFor={INPUT.EMAIL.KEY} br>Your Email:</Label>
                                         <TextInput
                                             type="text"
-                                            error={forgotPasswordForm.formState.errors[INPUT.EMAIL.VALUE]}
+                                            error={forgotPasswordForm.formState.errors[INPUT.EMAIL.KEY]}
                                             placeholder={INPUT.EMAIL.PLACEHOLDER}
                                             {
-                                                ...forgotPasswordForm.register(INPUT.EMAIL.VALUE, { 
+                                                ...forgotPasswordForm.register(INPUT.EMAIL.KEY, { 
                                                         required: INPUT.EMAIL.ERRORS.REQUIRED,
                                                         pattern: {
-                                                            value: INPUT.EMAIL.ERRORS.PATTERN.VALUE,
+                                                            value: INPUT.EMAIL.ERRORS.PATTERN.KEY,
                                                             message: INPUT.EMAIL.ERRORS.PATTERN.MESSAGE
                                                         },
                                                     }
                                                 )
                                             } 
                                         />
-                                        <FormError error={forgotPasswordForm.formState.errors[INPUT.EMAIL.VALUE]} /> 
+                                        <FormError error={forgotPasswordForm.formState.errors[INPUT.EMAIL.KEY]} /> 
                                     </Column>
                                 </Row>
                                 <Row>

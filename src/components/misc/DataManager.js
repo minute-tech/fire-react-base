@@ -18,12 +18,15 @@ import { PageSelectInput, SearchContainer, SelectInput, TextInput, Button} from 
 import { ColChevron, FormError } from '../misc/Misc';
 import ConfirmAlert from './ConfirmAlert';
 import { renderEmotion } from './Feedback';
+import { BiDownload, BiExport } from 'react-icons/bi';
+import { CSVLink } from 'react-csv';
 
 export default function DataManager(props) {
     const theme = useTheme();
     const [loading, setLoading] = useState({ 
         counts: true,
         items: true,
+        allData: false,
     }); 
     const [submitting, setSubmitting] = useState({ 
         search: false,
@@ -36,8 +39,9 @@ export default function DataManager(props) {
     });
 
     const [itemCount, setItemCount] = useState(0);
+    const [allData, setAllData] = useState([]);
     const [feedbackAverage, setFeedbackAverage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0].value);
+    const [itemsPerPage, setItemsPerPage] = useState(PAGE_SIZES[0]);
     const [items, setItems] = useState([]);
     const [beginCursor, setBeginCursor] = useState("");
     const [finalCursor, setFinalCursor] = useState("");
@@ -84,7 +88,7 @@ export default function DataManager(props) {
             currentPageQuery = query(
                 currentPageQuery,  
                 orderBy(
-                    props.tableCols.find(column => {return column.active;}).value, 
+                    props.tableCols.find(column => {return column.active;}).key, 
                     props.tableCols.find(column => {return column.active;}).direction
                 ),
                 limit(itemsPerPage)
@@ -118,6 +122,29 @@ export default function DataManager(props) {
         fetchItems();
     }, [itemsPerPage, props.tableCols, search, props.dataName]);
 
+    const getAllData = async () => {
+        setLoading(prevState => ({
+            ...prevState,
+            allData: true
+        }));
+        const q = query(collection(firestore, props.dataName));
+        const querySnapshot = await getDocs(q);
+        console.log("querySnapshot: ")
+        console.log(querySnapshot)
+        const allDataTemp = [];
+        await querySnapshot.forEach((doc) => {
+            const docWithMore = Object.assign({}, doc.data());
+            docWithMore.id = doc.id;
+            docWithMore.dateTime = `${readTimestamp(docWithMore.timestamp).date} @ ${readTimestamp(docWithMore.timestamp).time}`;
+            allDataTemp.push(docWithMore);
+        });
+        setAllData(allDataTemp);
+        setLoading(prevState => ({
+            ...prevState,
+            allData: false
+        }));
+    };
+
     const getPrevPage = async () => {
         if(currentPage !== 1){
             setLoading(prevState => ({
@@ -139,7 +166,7 @@ export default function DataManager(props) {
                 currentPageQuery = query(
                     currentPageQuery,  
                     orderBy(
-                        props.tableCols.find(column => {return column.active;}).value, 
+                        props.tableCols.find(column => {return column.active;}).key, 
                         props.tableCols.find(column => {return column.active;}).direction
                     ),
                     endBefore(beginCursor),
@@ -194,7 +221,7 @@ export default function DataManager(props) {
                 currentPageQuery = query(
                     currentPageQuery,  
                     orderBy(
-                        props.tableCols.find(column => {return column.active;}).value, 
+                        props.tableCols.find(column => {return column.active;}).key, 
                         props.tableCols.find(column => {return column.active;}).direction
                     ),
                     startAfter(finalCursor), 
@@ -257,7 +284,7 @@ export default function DataManager(props) {
     const toggleCol = (column, index) => {
         if(search.term){
             toast.warn("Sorry, but you cannot search a term and sort by a specific column at the same time.")
-        } else if(column.value === "id"){
+        } else if(column.key === "id"){
             toast.warn("Sorry, but you cannot sort by the ID of items.")
         } else {
             let tempCol = column;
@@ -333,10 +360,9 @@ export default function DataManager(props) {
                 <H1 margin="0">{props.pageTitle}: {itemCount}</H1>
                 <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
                     <Grid fluid>
-                        
-                    {(feedbackAverage) && (
+                        {(feedbackAverage) && (
                             <Row>
-                                <Column xs={12} textalign="center">
+                                <Column sm={12} textalign="center">
                                     <H3 margin="0">Average rating: {renderEmotion(feedbackAverage, "4em")}</H3>
                                     <Body margin="0">{Math.trunc(feedbackAverage)}/100</Body>
                                 </Column>
@@ -370,9 +396,9 @@ export default function DataManager(props) {
                             <Column md={12} lg={4}>
                                 <SelectInput {...searchForm.register("column", { required: true })}>
                                     {
-                                        props.tableCols.filter(column => (column.value !== "timestamp" && column.value !== "body")).map((column) => {
+                                        props.tableCols.filter(column => (column.key !== "timestamp" && column.key !== "body")).map((column) => {
                                             return (
-                                                <option key={column.value} value={column.value}>{column.label}</option>
+                                                <option key={column.key} value={column.key}>{column.label}</option>
                                             )
                                         })
                                     }
@@ -448,19 +474,19 @@ export default function DataManager(props) {
                                             {/* ** You may need to edit these conditionals below if you want to render something custom in a cell! */}
                                             {
                                                 props.tableCols.map((column, c) => {
-                                                    if(column.value === "timestamp"){
+                                                    if(column.key === "timestamp"){
                                                         return (
                                                             <Td key={`${c}-${i}`}>
                                                                 {readTimestamp(item.timestamp).date} @ {readTimestamp(item.timestamp).time}
                                                             </Td>
                                                         )
-                                                    } else if(column.value === "emotionSymbol"){
+                                                    } else if(column.key === "emotionSymbol"){
                                                         return (
                                                             <Td key={`${c}-${i}`}>
                                                                 {renderEmotion(item.rangeValue)}
                                                             </Td>
                                                         )
-                                                    } else if(column.value === "body"){
+                                                    } else if(column.key === "body"){
                                                         return (
                                                             <Td key={`${c}-${i}`}>
                                                                 {item.body ? <Body color={theme.colors.green}>Yes</Body> : <Body color={theme.colors.red}>No</Body>}
@@ -469,7 +495,7 @@ export default function DataManager(props) {
                                                     } else {
                                                         return (
                                                             <Td key={`${c}-${i}`}>
-                                                                {item[column.value]}
+                                                                {item[column.key]}
                                                             </Td>
                                                         )
                                                     }
@@ -553,16 +579,16 @@ export default function DataManager(props) {
                                 {!search.term && (<Body margin="0" size={SIZES.SM}>Page {currentPage} of {Math.ceil(itemCount/itemsPerPage)}</Body>)}
                                 <Body margin="10px 0" size={SIZES.SM}>
                                     {/* Don't show page size selector if itemCount is less than the second page size selection */}
-                                    {(!search.term && itemCount > PAGE_SIZES[1].value) && (
+                                    {(!search.term && itemCount > PAGE_SIZES[1]) && (
                                         <>
                                         <PageSelectInput
                                             value={itemsPerPage}
-                                            onChange={(e) => setItemsPerPage(e.target.value)} 
+                                            onChange={(e) => setItemsPerPage(e.target.key)} 
                                         >
                                             { 
                                                 PAGE_SIZES.map((size) => {
                                                     return (
-                                                        <option key={size.value} value={size.value}>{size.label}</option>
+                                                        <option key={size} value={size}>{size}</option>
                                                     )
                                                 })
                                             }
@@ -585,7 +611,23 @@ export default function DataManager(props) {
                             
                             </Column>
                         </Row>
-                        
+                        <Row>
+                            <Column sm={12} textalign="center">
+                                { (allData.length === 0 && !loading.allData) && (<Button type="button" onClick={() => getAllData()}>Export all data <BiExport /></Button>) }
+                                { loading.allData && (<Body>Exporting data... <Spinner /> </Body>) }
+                                { allData.length > 0 && (
+                                    <CSVLink
+                                        data={allData} 
+                                        headers={props.tableCols}
+                                        filename={`${process.env.REACT_APP_FIREBASE_LIVE_PROJECT_ID}_${allData.length}_feedback.csv`}
+                                        onClick={() => toast.success("Downloading your data...")}
+                                    >
+                                        <Button type="button">Download {allData.length} items <BiDownload /></Button>
+                                    </CSVLink>
+                                ) }
+                                
+                            </Column>
+                        </Row>
                     </Grid>
                         
                     </>

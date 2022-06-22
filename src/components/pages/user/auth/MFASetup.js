@@ -141,19 +141,19 @@ export default function MfaSetup(props) {
                 <Grid fluid>
                     <Row justify="center">
                         <Column md={12} lg={8}>
-                            <Label htmlFor={INPUT.PHONE.VALUE} br>Phone:</Label>
+                            <Label htmlFor={INPUT.PHONE.KEY} br>Phone:</Label>
                             <TextInput
                                 type="text" 
-                                error={phoneForm.formState.errors[INPUT.PHONE.VALUE]}
+                                error={phoneForm.formState.errors[INPUT.PHONE.KEY]}
                                 placeholder={INPUT.PHONE.PLACEHOLDER} 
                                 {
-                                    ...phoneForm.register(INPUT.PHONE.VALUE, { 
+                                    ...phoneForm.register(INPUT.PHONE.KEY, { 
                                             required: INPUT.PHONE.ERRORS.REQUIRED,
                                         }
                                     )
                                 } 
                             />
-                            <FormError error={phoneForm.formState.errors[INPUT.PHONE.VALUE]} /> 
+                            <FormError error={phoneForm.formState.errors[INPUT.PHONE.KEY]} /> 
                         </Column>
                     </Row>
                     <Row>

@@ -99,21 +99,21 @@ export function Feedback(props) {
                         <Grid fluid>
                             <Row>
                                 <Column sm={12} textalign="center">
-                                    <Label htmlFor={INPUT.BODY.VALUE} br>Anything else you'd like to add?</Label>
+                                    <Label htmlFor={INPUT.BODY.KEY} br>Anything else you'd like to add?</Label>
                                     <TextAreaInput
                                         height={100}
                                         placeholder={INPUT.BODY.PLACEHOLDER}  
-                                        error={feedbackForm.formState.errors[INPUT.BODY.VALUE]}
+                                        error={feedbackForm.formState.errors[INPUT.BODY.KEY]}
                                         {
-                                            ...feedbackForm.register(INPUT.BODY.VALUE, {
+                                            ...feedbackForm.register(INPUT.BODY.KEY, {
                                                 maxLength: {
-                                                    value: INPUT.BODY.ERRORS.MAX.VALUE,
+                                                    value: INPUT.BODY.ERRORS.MAX.KEY,
                                                     message: INPUT.BODY.ERRORS.MAX.MESSAGE
                                                 },
                                             })
                                         } 
                                     />
-                                    <FormError error={feedbackForm.formState.errors[INPUT.BODY.VALUE]} /> 
+                                    <FormError error={feedbackForm.formState.errors[INPUT.BODY.KEY]} /> 
                                 </Column>
                             </Row>
                             <Row>
