@@ -33,47 +33,57 @@ export function Feedback(props) {
             feedback: true
         }));
 
-        let emotionLabel = "";
-        let emotionSymbol = "";
-        if (rangeValue < 25) {
-            emotionLabel="very unhappy"
-            emotionSymbol = "0x1F621"
-        } else if (rangeValue >= 25 && rangeValue < 50) {
-            emotionLabel="unhappy"
-            emotionSymbol = "0x1F641"
-        } else if (rangeValue > 50 && rangeValue < 75) {
-            emotionLabel="happy"
-            emotionSymbol = "0x1F642"
-        } else if (rangeValue >= 75 && rangeValue <= 100) {
-            emotionLabel="very happy"
-            emotionSymbol = "0x1F604"
+        if (rangeValue === 50 && !data.body) {
+            toast.error("Please submit a non-neutral response by sliding the square to the left/right or entering a message.");
+            setSubmitting(prevState => ({
+                ...prevState,
+                feedback: false
+            }));
+        } else {
+            let emotionLabel = "";
+            let emotionSymbol = "";
+            if (rangeValue < 25) {
+                emotionLabel="very unhappy"
+                emotionSymbol = "0x1F621"
+            } else if (rangeValue >= 25 && rangeValue < 50) {
+                emotionLabel="unhappy"
+                emotionSymbol = "0x1F641"
+            } else if (rangeValue > 50 && rangeValue < 75) {
+                emotionLabel="happy"
+                emotionSymbol = "0x1F642"
+            } else if (rangeValue >= 75 && rangeValue <= 100) {
+                emotionLabel="very happy"
+                emotionSymbol = "0x1F604"
+            }
+            
+            addDoc(collection(firestore, "feedback"), {
+                rangeValue: rangeValue,
+                emotionLabel: emotionLabel,
+                emotionSymbol: emotionSymbol,
+                body: data.body,
+                userId: props.user ? props.user.id : "",
+                timestamp: Date.now(),
+            }).then((docRef) => {
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    feedback: false
+                }));
+                setSubmitted(prevState => ({
+                    ...prevState,
+                    feedback: true
+                }));
+                toast.success("Feedback submitted")
+            }).catch(error => {
+                toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                console.error("Error submitting feedback: " + error);
+                setSubmitting(prevState => ({
+                    ...prevState,
+                    feedback: false
+                }));
+            });
         }
+
         
-        addDoc(collection(firestore, "feedback"), {
-            rangeValue: rangeValue,
-            emotionLabel: emotionLabel,
-            emotionSymbol: emotionSymbol,
-            body: data.body,
-            userId: props.user ? props.user.id : "",
-            timestamp: Date.now(),
-        }).then((docRef) => {
-            setSubmitting(prevState => ({
-                ...prevState,
-                feedback: false
-            }));
-            setSubmitted(prevState => ({
-                ...prevState,
-                feedback: true
-            }));
-            toast.success("Feedback submitted")
-        }).catch(error => {
-            toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-            console.error("Error submitting feedback: " + error);
-            setSubmitting(prevState => ({
-                ...prevState,
-                feedback: false
-            }));
-        });
     }
 
 
