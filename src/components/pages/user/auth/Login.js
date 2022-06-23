@@ -52,7 +52,7 @@ function UserLogin(props) {
     };
 
     const loginUser = (data) => {
-        const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
+        const recaptchaToastId = toast.info("Please complete the reCAPTCHA below to continue.");
         window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
             "size": "normal",
             "callback": (response) => {
@@ -77,6 +77,7 @@ function UserLogin(props) {
 
                         if(errorCode === "auth/user-not-found" || errorCode === "auth/wrong-password"){
                             toast.error("Email or password was not accepted, please try another combination.");
+                            window.recaptchaVerifier.clear();
                         } else if(error.code === "auth/multi-factor-auth-required"){
                             console.log("MFA needed!");
                             let resolver = getMultiFactorResolver(auth, error);
@@ -91,13 +92,15 @@ function UserLogin(props) {
                                 setVerificationId(tempVerificationId);
                                 setMfaResolver(resolver);
                                 toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
+                                window.recaptchaVerifier.clear();
                             }).catch((error) => {
-                                console.error("Error adding phone: " + error);
+                                console.error("Error verifying phone: " + error);
                                 toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
                                 window.recaptchaVerifier.clear();
                             });
                         } else {
-                            toast.error(`Error adding phone. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                            toast.error(`Error logging you in, please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                            window.recaptchaVerifier.clear();
                         }
                         
                         // // Clean up

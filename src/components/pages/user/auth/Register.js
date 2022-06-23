@@ -45,7 +45,7 @@ function Register(props) {
                 register: false
             }));
         } else {
-            const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
+            const recaptchaToastId = toast.info("Please complete the reCAPTCHA below to continue.");
             window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
                 "size": "normal",
                 "callback": async (response) => { 

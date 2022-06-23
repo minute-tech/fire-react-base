@@ -33,13 +33,13 @@ export default function Reauth(props) {
     });
 
     const reauthUser = (data) => {
-        // ** No need to setSubmitting if using recaptcha, submission will only conintue to send below info alert!
+        // ** No need to setSubmitting if using recaptcha, submission will only continue to send below info alert!
         // I tried implementing, but user will get stuck/confused if they:
         // 1. start a recaptcha -> 2. change their field value before finishing recaptcha -> 3. try to press Submit button again and it will be disabled
-        const recaptchaToastId = toast.info('Please complete the reCAPTCHA below to continue.');
+        const recaptchaToastId = toast.info("Please complete the reCAPTCHA below to continue.");
         window.recaptchaVerifier = new RecaptchaVerifier("recaptcha", {
             "size": "normal",
-            "callback": (response, error) => {
+            "callback": (response) => {
                 // reCAPTCHA solved, allow signIn.
                 const user = auth.currentUser;
                 let credentials = EmailAuthProvider.credential(
