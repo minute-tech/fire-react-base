@@ -22,7 +22,6 @@ import { auth, firestore } from './Fire';
 import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
 import { BodyWrapper, Centered, DevAlert, Div, GlobalStyle } from './utils/styles/misc';
 import { Spinner } from './utils/styles/images';
-import { H1, H2 } from './utils/styles/text';
 import DynamicHeadTags from './components/misc/DynamicHeadTags';
 
 setConfiguration({ 
