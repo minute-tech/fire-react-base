@@ -29,7 +29,7 @@ export const GalleryImg = styled(Img)`
 
 export const Spinner = styled(FaSpinner)`
     animation-name: ${spin};
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-iteration-count: infinite;
     transform-origin: center;
     padding: 0 !important;

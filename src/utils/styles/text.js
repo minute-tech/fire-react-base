@@ -15,7 +15,7 @@ export const BodyFont = css`
 // Headings //
 export const H1 = styled.h1`
     font-size: 50px;
-    ${HeadingFont}
+    ${HeadingFont};
     
     ${(props) => (props.color) && `
         color: ${props.color} !important;
@@ -31,7 +31,7 @@ export const H1 = styled.h1`
 
 export const H2 = styled.h2`
     font-size: 40px;
-    ${HeadingFont}
+    ${HeadingFont};
     
     ${(props) => (props.color) && `
         color: ${props.color} !important;
@@ -47,7 +47,7 @@ export const H2 = styled.h2`
 
 export const H3 = styled.h3`
     font-size: 30px;
-    ${HeadingFont}
+    ${HeadingFont};
     
     ${(props) => (props.color) && `
         color: ${props.color} !important;
@@ -62,7 +62,7 @@ export const H3 = styled.h3`
 
 export const H4 = styled.h4`
     font-size: 24px;
-    ${HeadingFont}
+    ${HeadingFont};
     
     ${(props) => (props.color) && `
         color: ${props.color} !important;

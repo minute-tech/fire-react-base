@@ -20,9 +20,9 @@ import Views from "./Views";
 import { FirebaseAnalytics, StartAtTop } from './components/misc/Misc';
 import { auth, firestore } from './Fire';
 import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
-import { BodyWrapper, DevAlert, GlobalStyle, Wrapper } from './utils/styles/misc';
+import { BodyWrapper, Centered, DevAlert, Div, GlobalStyle } from './utils/styles/misc';
 import { Spinner } from './utils/styles/images';
-import { H2 } from './utils/styles/text';
+import { H1, H2 } from './utils/styles/text';
 import DynamicHeadTags from './components/misc/DynamicHeadTags';
 
 setConfiguration({ 
@@ -30,7 +30,7 @@ setConfiguration({
     breakpoints: [576, 768, 992, 1200, 1600, 1920],
     containerWidths: [540, 740, 960, 1140, 1540, 1810],
     defaultScreenClass: 'sm', 
-    gutterWidth: 10 
+    gutterWidth: 10,
 });
 
 function App() {
@@ -213,8 +213,6 @@ function App() {
     
     useEffect(() => {
         onAuthStateChanged(auth, (fireUserData) => {
-            // console.log("fireUserData: ")
-            // console.log(fireUserData)
             if (fireUserData) {
                 setFireUser(fireUserData)
                 setLoading(prevState => ({
@@ -294,9 +292,11 @@ function App() {
 
     if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
         return (
-            <Wrapper>
-                <H2>Loading... <Spinner /> </H2> 
-            </Wrapper>
+            <Div position="relative" height="100vh" bgColor="white" margin="0">
+                <Centered absolute>
+                    <Spinner size={100} />
+                </Centered>
+            </Div>
         )
     } else {
         return (

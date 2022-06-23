@@ -341,9 +341,7 @@ export default function DataManager(props) {
 
     if(loading.counts){
         return (
-            <>
                 <H2>Loading... <Spinner /> </H2> 
-            </>
         )
     } else {
         return (
@@ -357,10 +355,10 @@ export default function DataManager(props) {
                         &nbsp; Back to Admin Dashboard
                     </Button>
                 </LLink>
-                <H1 margin="0">{props.pageTitle}: {itemCount}</H1>
+                <H1 margin="0">{props.pageTitle}: {itemCount || 0}</H1>
                 <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
                     <Grid fluid>
-                        {(feedbackAverage) && (
+                        {(feedbackAverage !== 0) && (
                             <Row>
                                 <Column sm={12} textalign="center">
                                     <H3 margin="0">Average rating: {renderEmotion(feedbackAverage, "4em")}</H3>

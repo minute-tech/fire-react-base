@@ -435,6 +435,16 @@ export const Centered = styled.div`
     width: 100%;
     margin: auto;
     text-align: center;
+
+    
+    ${(props) => (props.absolute) && `
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    `};
+
 `;
 
 export const MiddleDiv = styled.div`
@@ -457,6 +467,9 @@ export const Div = styled.div`
     margin: ${props => props.margin ? props.margin : "0"};
     visibility: ${props => props.hidden ? "hidden" : "visible"};
     display: ${props => props.hidden ? "none" : "block"};
+    position: ${props => props.position ? props.position : "static"};
+    height: ${props => props.height ? props.height : "auto"};
+    background-color: ${props => props.bgColor ? props.bgColor : "none"};
 `;
 
 export const Hr = styled.div`
