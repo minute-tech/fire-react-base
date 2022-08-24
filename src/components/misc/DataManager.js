@@ -355,83 +355,82 @@ export default function DataManager(props) {
                         &nbsp; Back to Admin Dashboard
                     </Button>
                 </LLink>
-                <H1 margin="0">{props.pageTitle}: {itemCount || 0}</H1>
-                <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
-                    <Grid fluid>
-                        {(feedbackAverage !== 0) && (
-                            <Row>
-                                <Column sm={12} textalign="center">
-                                    <H3 margin="0">Average rating: {renderEmotion(feedbackAverage, "4em")}</H3>
-                                    <Body margin="0">{Math.trunc(feedbackAverage)}/100</Body>
-                                </Column>
-                            </Row>
-                        )}
-                        <Row justify="center" align="center">
-                            <Column md={12} lg={8}>
-                                <SearchContainer>
-                                    <FaSearch />
-                                    <TextInput
-                                        type="text"
-                                        error={searchForm.formState.errors.term}
-                                        placeholder={`Search by a column title in the table`}
-                                        {
-                                            ...searchForm.register("term", { 
-                                                    required: "Please enter a search term!",
-                                                    maxLength: {
-                                                        value: 50,
-                                                        message: "The search term can only be 50 characters long."
-                                                    },
-                                                    minLength: {
-                                                        value: 2,
-                                                        message: "The search term must be at least 2 characters long."
-                                                    },
-                                                }
-                                            )
-                                        } 
-                                    />
-                                </SearchContainer>
-                            </Column>
-                            <Column md={12} lg={4}>
-                                <SelectInput {...searchForm.register("column", { required: true })}>
-                                    {
-                                        props.tableCols.filter(column => (column.key !== "timestamp" && column.key !== "body")).map((column) => {
-                                            return (
-                                                <option key={column.key} value={column.key}>{column.label}</option>
-                                            )
-                                        })
-                                    }
-                                </SelectInput>
-                                <Button 
-                                    type="submit" 
-                                    disabled={submitting.search}
-                                >
-                                    Search 
-                                </Button>
-                                {search.term && (
-                                    <Button 
-                                        type="button"
-                                        btype={BTYPES.INVERTED}
-                                        color={theme.colors.yellow}
-                                        onClick={() => clearSearch()}
-                                    >
-                                        Clear
-                                    </Button>
-                                )}
-                            </Column>
-                        </Row>
-                        <Row>
-                            <Column sm={12} textalign="center">
-                                <FormError error={searchForm.formState.errors.term} /> 
-                            </Column>
-                        </Row>
-                    </Grid>
-                </form>
-                
-                {itemCount === 0 && (
+                <H1 margin="10px 0">{props.pageTitle}: {itemCount || 0}</H1>
+                {(!itemCount || itemCount === 0) && (
                     <Body color={theme.colors.red} bold size={SIZES.LG}>No items yet!</Body>
                 )}
-                {itemCount !== 0 && (
+                {(itemCount && itemCount !== 0) && (
                     <>
+                    <form onSubmit={ searchForm.handleSubmit(submitSearch) }>
+                        <Grid fluid>
+                            {(feedbackAverage !== 0) && (
+                                <Row>
+                                    <Column sm={12} textalign="center">
+                                        <H3 margin="0">Average rating: {renderEmotion(feedbackAverage, "4em")}</H3>
+                                        <Body margin="0">{Math.trunc(feedbackAverage)}/100</Body>
+                                    </Column>
+                                </Row>
+                            )}
+                            <Row justify="center" align="center">
+                                <Column md={12} lg={8}>
+                                    <SearchContainer>
+                                        <FaSearch />
+                                        <TextInput
+                                            type="text"
+                                            error={searchForm.formState.errors.term}
+                                            placeholder={`Search by a column title in the table`}
+                                            {
+                                                ...searchForm.register("term", { 
+                                                        required: "Please enter a search term!",
+                                                        maxLength: {
+                                                            value: 50,
+                                                            message: "The search term can only be 50 characters long."
+                                                        },
+                                                        minLength: {
+                                                            value: 2,
+                                                            message: "The search term must be at least 2 characters long."
+                                                        },
+                                                    }
+                                                )
+                                            } 
+                                        />
+                                    </SearchContainer>
+                                </Column>
+                                <Column md={12} lg={4}>
+                                    <SelectInput {...searchForm.register("column", { required: true })}>
+                                        {
+                                            props.tableCols.filter(column => (column.key !== "timestamp" && column.key !== "body")).map((column) => {
+                                                return (
+                                                    <option key={column.key} value={column.key}>{column.label}</option>
+                                                )
+                                            })
+                                        }
+                                    </SelectInput>
+                                    <Button 
+                                        type="submit" 
+                                        disabled={submitting.search}
+                                    >
+                                        Search 
+                                    </Button>
+                                    {search.term && (
+                                        <Button 
+                                            type="button"
+                                            btype={BTYPES.INVERTED}
+                                            color={theme.colors.yellow}
+                                            onClick={() => clearSearch()}
+                                        >
+                                            Clear
+                                        </Button>
+                                    )}
+                                </Column>
+                            </Row>
+                            <Row>
+                                <Column sm={12} textalign="center">
+                                    <FormError error={searchForm.formState.errors.term} /> 
+                                </Column>
+                            </Row>
+                        </Grid>
+                    </form>
                     <OverflowXAuto>
                         <Table>
                             <Thead>

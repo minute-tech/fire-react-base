@@ -31,65 +31,77 @@ Fire React Base is a template for creating web apps with Firebase and React.js.
 
 ## Initialization
 
-**1. Create Github project using this template**
+**0. Create Github project using this template**
    - Name with a dash `-` instead of a dot `.` such as `appname-com` to line up with Firebase project name
 
-**2. Clone this new Github project to desktop for setup**
+**1. Clone this new Github project to desktop for setup**
 
-**3. Create 2 Firebase projects (live and test) for this new site @ https://console.firebase.google.com/**
+**2. Create 2 Firebase projects (live and test) for this new site @ https://console.firebase.google.com/**
    - Names with a dash `-` instead of a dot `.` such as `appname-com` to match GitHub repo name
    - Initialize Analytics, Authentication, Firestore, Storage, Hosting, and Functions in the Firebase project console by clicking through those tabs on the left
    - Add a web app under Gear > Project Settings > Your Apps, then grab the Config snippet to copy past in a `.env` file (copy and rename `template.env` to `.env`)
    - You be prompted for Blaze billing in Functions tab, enable and set an alert to like $25, this won't cost much unless your app blows up!
 
-**4. Install NPM libraries**
+**3. Install NPM libraries**
    - Run `npm install` in the terminal window in main directory
    - Navigate to functions directory with `cd ./functions/` then run `npm install` there as well, then back to main directory `cd ../`
 
-**5. Set new Firebase project aliases**
+**4. Set new Firebase project aliases**
    - Delete file `.firebaserc`
    - $ `firebase use --add` once for each 'live' and 'test'
 
-**6. Set Firebase Function variables (SendGrid)**
+**5. Set Firebase Function variables (SendGrid)**
    - $ `firebase functions:config:set sendgrid_api.key="SG.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" --project test`
    - $ `firebase functions:config:set sendgrid_api.key="SG.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" --project live`
 
-**7. Enable MFA on GCP** 
+**6. Enable MFA on GCP** 
 - Enable multi-factor authentication (MFA) for this new project: https://console.cloud.google.com/marketplace/details/google-cloud-platform/customer-identity?project=test-fire-react-base
 - Add a test phone number with a test code to use for ever login (like +11234567890 and 123123) AND add the authorized domain if custom domain.
 
-**8. Update URLs in `cors.json` to include relevant domains**
-   - This is needed to load fonts from the URL they are stored under. Edit this file in the base directory, then deploy to GCP project using: $ `gsutil cors set cors.json gs://fire-react-base.web.app`, etc
+**7. Update URLs in `cors.json` to include relevant domains**
+   - This is needed to load fonts from the URL they are stored under. Edit this file in the base directory
+   - We will be setting the CORS config on GCP after we deploy the build because the cors.json file needs to be seen by the server (I believe)
    - See https://stackoverflow.com/questions/37760695/firebase-storage-and-access-control-allow-origin for more info!
 
-**9. Search for TODOs around code**
-   - "Fire React Base" / "fire-react-base" usages replaced by your app name in some places
+**8. Change default template placeholders**
    - Update `name` in `package.json` from `fire-react-base` to your appname
    - Update `robots.txt` to be the main domain for this site, with extension path of `/sitemap.xml`. This is used for SEO.
    - Update `sitemap.xml` to be the main domain for this site with current date. Remember to come back to this file and update the paths for SEO!
    - Update `manifest.json` to be this app's name and colors. This file is used for installing the web app on mobile and desktop devices.
    - Update `index.html` in `public` folder such as default `<title>`, `theme-color`, `description`, and more
    - Update `README.md`, at least the title and description to this project. I just copy-paste the same description used in `index.html`.
+   - Create a SendGrid Dynamic Template using the example file in the functions folder. Set the value in the functions index.js file accordingly, but by default in the Contact Message send, there is an ID to replace!
+   - Find (Ctrl + Shift + F in VSCode) any other usages of "Fire React Base" / "fire-react-base" around the app, as well as any `TODO`'s. Think about changing anything out of place, but for many default values, leaving as fire-react-base values might be easiest.
+   - Also search for any usage of "minute.tech" and replace accordingly. Namely some emails used as defaults like `noreply@minute.tech`, etc. Some of these also maybe should be left as default too.
 
-**10. Add in icons to public**
+**9. Add in icons to public**
    - Use this site to generate icon from PNG file (https://favicon.io/), then add that 48x48, 192, apple-touch-icon and 512 icon files to the `public` folder in the project
+<!-- 
+since loaded from firestore, this is no longer really needed
+**10. Update font at `App.css` in src assets**
+   - font `.ttf`/`.otf` font file placed in assets > fonts -->
 
-**11. Update font at `App.css` in src assets**
-   - font `.ttf`/`.otf` font file placed in assets > fonts
-
-**12. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.**
+**10. You may want to adjust the Headers such as the Content Security Policy to match your exact app needs.**
    - Check `firebase.json`
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP#mitigating_cross-site_scripting
    - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
    - https://www.permissionspolicy.com/
 
-**13. Build**
+**11. Build**
    - $ `npm run-script build`
    - $ `npm run-script build:test1` if using another `.env`
 
-**14. Deploy to alias**
+**12. Deploy to alias**
    - $ `firebase deploy --project=live`
-   - Note that any Firebase Hosting accessed will always use the `production` environment, and live (not localhost) links, will always be at the `live` Firebase project! i.e. `test-fire-react-base` is still using the `fire-react-base` project env.
+   - Note that any Firebase Hosting accessed will always use the `production` environment, and live (not localhost) links, will always be at the `live` Firebase project! i.e. `test-appname` is still using the `appname` project env.
+
+**13. Set CORS on GCP**
+    - This can probably be run earlier in this processes.
+    - These commands must be run in the same folder/directory as the cors.json file
+    - Ensure GCP CLI is installed on your PC, you are logged into your GCP account, and set the current working project with the below snippet. Note that you will have to run this twice for test and live environments!
+    = $ `gsutil config set project appname`
+    - Run the below snippet to set the CORS policy on your GCP project, run for each domain used for this site other than localhost
+    - $ `gsutil cors set cors.json gs://appname.appspot.com`
 
 **99. Extra Config**
    - If custom domain, add it to the authorized domain in Firebase console > Authentication > Sign in Method 

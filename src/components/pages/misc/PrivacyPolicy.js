@@ -12,7 +12,7 @@ function PrivacyPolicy(props) {
                 <title>Privacy Policy {props.site.name ? `| ${props.site.name}` : ""}</title>
             </Helmet>
             <H1>Privacy Policy</H1>
-            <Body>At {props.site.name ? `${props.site.name}` : "Fire React Base"}, accessible from https://fire-react-base.web.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by {props.site.name ? `${props.site.name}` : "Fire React Base"} and how we use it.</Body>
+            <Body>At {props.site.name ? `${props.site.name}` : "Fire React Base"}, accessible from https://{props.site.projectId ? `${props.site.projectId}` : "fire-react-base"}.web.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by {props.site.name ? `${props.site.name}` : "Fire React Base"} and how we use it.</Body>
 
             <Body>If you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.</Body>
 

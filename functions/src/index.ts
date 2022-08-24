@@ -122,7 +122,7 @@ export const onMessageCreated = functions.firestore
                 replyTo: `${newValues.email}`,
                 cc: "",
                 bcc: [],
-                // Create a template on SendGrid and put the ID here: https://mc.sendgrid.com/dynamic-templates
+                // TODO: Create a template on SendGrid and put the ID here: https://mc.sendgrid.com/dynamic-templates
                 templateId: "d-3ce711fad081476c91fdad7cf33deb49",
                 dynamicTemplateData: {
                     siteName: publicSiteData.name,
