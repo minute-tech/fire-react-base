@@ -7,10 +7,12 @@ import { useForm } from "react-hook-form";
 import { firestore } from "../../Fire.js";
 import { Centered, Column, Grid, Hr, Row } from '../../utils/styles/misc';
 import { Body, H4, Label } from '../../utils/styles/text';
-import { INPUT, SIZES } from '../../utils/constants.js';
+import { INPUT, ITEMS, SIZES } from '../../utils/constants.js';
 import { Emoji } from '../../utils/styles/images.js';
 import { Button, Slider, TextAreaInput } from '../../utils/styles/forms.js';
 import { FormError } from './Misc.js';
+import { ucFirstLetterEachWord } from '../../utils/misc';
+
 
 export function Feedback(props) {
     const theme = useTheme();
@@ -34,7 +36,7 @@ export function Feedback(props) {
         }));
 
         if (rangeValue === 50 && !data.body) {
-            toast.error("Please submit a non-neutral response by sliding the square to the left/right or entering a message.");
+            toast.error("Please slide the square first to give a response.");
             setSubmitting(prevState => ({
                 ...prevState,
                 feedback: false
@@ -55,14 +57,25 @@ export function Feedback(props) {
                 emotionLabel="very happy"
                 emotionSymbol = "0x1F604"
             }
-            
-            addDoc(collection(firestore, "feedback"), {
+            const currentTime = Date.now();
+            addDoc(collection(firestore, ITEMS.FEEDBACK.COLLECTION), {
                 rangeValue: rangeValue,
                 emotionLabel: emotionLabel,
                 emotionSymbol: emotionSymbol,
                 body: data.body,
-                userId: props.user ? props.user.id : "",
-                timestamp: Date.now(),
+                created: {
+                    timestamp: currentTime,
+                    id: props.fireUser ? props.fireUser.uid : "",
+                    email: props.fireUser ? props.fireUser.email : "",
+                    name: props.fireUser ? props.fireUser.displayName : "",
+                },
+                updated: {
+                    timestamp: currentTime,
+                    id: props.fireUser ? props.fireUser.uid : "",
+                    email: props.fireUser ? props.fireUser.email : "",
+                    name: props.fireUser ? props.fireUser.displayName : "",
+                    summary: "Created feedback.",
+                },
             }).then((docRef) => {
                 setSubmitting(prevState => ({
                     ...prevState,
@@ -74,7 +87,7 @@ export function Feedback(props) {
                 }));
                 toast.success("Feedback submitted")
             }).catch(error => {
-                toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error submitting feedback. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                 console.error("Error submitting feedback: " + error);
                 setSubmitting(prevState => ({
                     ...prevState,
@@ -92,8 +105,8 @@ export function Feedback(props) {
             { !submitted.feedback &&  (
                 <Centered>
                     <H4>How was your experience?</H4>
-                    <Body margin="0" color={theme.colors.green} size={SIZES.SM}><b>(slide the square)</b></Body>
-                    <Slider color={theme.colors.primary}>
+                    <Body margin="0" color={theme.color.green} size={SIZES.SM}><b>(slide the square)</b></Body>
+                    <Slider color={theme.color.primary}>
                         <input 
                             type="range"
                             min={0}
@@ -143,7 +156,7 @@ export function Feedback(props) {
 
             { submitted.feedback && (
                 <Centered>
-                    <H4 color={theme.colors.green}>Thanks for the feedback!</H4>
+                    <H4 color={theme.color.green}>Thanks for the feedback!</H4>
                 </Centered>
             )}
         </>
@@ -159,7 +172,7 @@ export const EmojiWithText = React.memo(({ className, label, symbol, size }) =>
         >
             {String.fromCodePoint(symbol)}
         </Emoji>
-        <b>{label}</b>
+        <b>{ucFirstLetterEachWord(label)}</b>
     </Body>
 );
 

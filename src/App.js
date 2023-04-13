@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { BrowserRouter } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, onSnapshot, query } from 'firebase/firestore';
 import { IconContext } from 'react-icons';
 import { ScreenClassProvider, setConfiguration } from 'react-grid-system';
 
@@ -19,7 +19,7 @@ import Header from './components/misc/Header';
 import Views from "./Views";
 import { FirebaseAnalytics, StartAtTop } from './components/misc/Misc';
 import { auth, firestore } from './Fire';
-import { DEFAULT_SITE, SCHEMES } from './utils/constants.js';
+import { DEFAULT_SITE, SCHEMES, ITEMS } from './utils/constants.js';
 import { BodyWrapper, Centered, DevAlert, Div, GlobalStyle } from './utils/styles/misc';
 import { Spinner } from './utils/styles/images';
 import DynamicHeadTags from './components/misc/DynamicHeadTags';
@@ -37,47 +37,120 @@ function App() {
         user: true,
         fireUser: true,
         site: true,
-        readOnlyFlags: true
     }); 
 
     const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     const [user, setUser] = useState();
-
     const [fireUser, setFireUser] = useState("");
+    const [customClaims, setCustomClaims] = useState("");
+    const [roles, setRoles] = useState([]);
+    const [pages, setPages] = useState([]);
 
     const [theme, setTheme] = useState({
         value: SCHEMES.LIGHT,
-        colors: {
-            primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
-            secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
-            tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
-            red: DEFAULT_SITE.THEME.COLORS.RED,
-            green: DEFAULT_SITE.THEME.COLORS.GREEN,
-            yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
-            blue: DEFAULT_SITE.THEME.COLORS.BLUE,
-            grey: DEFAULT_SITE.THEME.COLORS.GREY,
-            lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-            background: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
+        font: {
+            heading: DEFAULT_SITE.THEME.FONT.HEADING,
+            subheading: DEFAULT_SITE.THEME.FONT.SUBHEADING,
+            body: DEFAULT_SITE.THEME.FONT.BODY,
         },
-        fonts: {
-            heading: DEFAULT_SITE.THEME.FONTS.HEADING,
-            body: DEFAULT_SITE.THEME.FONTS.BODY,
+        color: {
+            primary: DEFAULT_SITE.THEME.COLOR.LIGHT.PRIMARY,
+            secondary: DEFAULT_SITE.THEME.COLOR.LIGHT.SECONDARY,
+            tertiary: DEFAULT_SITE.THEME.COLOR.LIGHT.TERTIARY,
+            red: DEFAULT_SITE.THEME.COLOR.LIGHT.RED,
+            green: DEFAULT_SITE.THEME.COLOR.LIGHT.GREEN,
+            yellow: DEFAULT_SITE.THEME.COLOR.LIGHT.YELLOW,
+            blue: DEFAULT_SITE.THEME.COLOR.LIGHT.BLUE,
+            grey: DEFAULT_SITE.THEME.COLOR.LIGHT.GREY,
+            lightGrey: DEFAULT_SITE.THEME.COLOR.LIGHT.LIGHT_GREY,
+            background: DEFAULT_SITE.THEME.COLOR.LIGHT.BACKGROUND,
+            font: {
+                heading: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.HEADING,
+                body: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.BODY,
+                link: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.LINK,
+                solid: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.SOLID,
+                inverted: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.INVERTED,
+            },
         },
     });
-
-    const [readOnlyFlags, setReadOnlyFlags] = useState("");
 
     // Initially just pull the default site in case custom site not set yet
     const [site, setSite] = useState({
         unset: true,
         name: DEFAULT_SITE.NAME,
+        description: DEFAULT_SITE.DESCRIPTION,
+        emails: {
+            support: DEFAULT_SITE.EMAILS.SUPPORT,
+            noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+        },
         logo: {
             width: DEFAULT_SITE.LOGO.WIDTH,
             height: DEFAULT_SITE.LOGO.HEIGHT,
             lightUrl: DEFAULT_SITE.LOGO.LIGHT_URL,
             darkUrl: DEFAULT_SITE.LOGO.DARK_URL,
+            favicon: DEFAULT_SITE.LOGO.FAVICON,
+            appleTouchIcon: DEFAULT_SITE.LOGO.APPLE_TOUCH_ICON,
             showTitle: DEFAULT_SITE.LOGO.SHOW_TITLE,
+        },
+        theme: {
+            font: {
+                heading: {
+                    name: DEFAULT_SITE.THEME.FONT.HEADING.NAME,
+                    url: DEFAULT_SITE.THEME.FONT.HEADING.URL,
+                },
+                subheading: {
+                    name: DEFAULT_SITE.THEME.FONT.SUBHEADING.NAME,
+                    url: DEFAULT_SITE.THEME.FONT.SUBHEADING.URL,
+                },
+                body: {
+                    name: DEFAULT_SITE.THEME.FONT.BODY.NAME,
+                    url: DEFAULT_SITE.THEME.FONT.BODY.URL,
+                },
+            },
+            color: {
+                light: {
+                    enabled: DEFAULT_SITE.THEME.COLOR.LIGHT.ENABLED,
+                    primary: DEFAULT_SITE.THEME.COLOR.LIGHT.PRIMARY,
+                    secondary: DEFAULT_SITE.THEME.COLOR.LIGHT.SECONDARY,
+                    tertiary: DEFAULT_SITE.THEME.COLOR.LIGHT.TERTIARY,
+                    red: DEFAULT_SITE.THEME.COLOR.LIGHT.RED,
+                    green: DEFAULT_SITE.THEME.COLOR.LIGHT.GREEN,
+                    yellow: DEFAULT_SITE.THEME.COLOR.LIGHT.YELLOW,
+                    blue: DEFAULT_SITE.THEME.COLOR.LIGHT.BLUE,
+                    grey: DEFAULT_SITE.THEME.COLOR.LIGHT.GREY,
+                    lightGrey: DEFAULT_SITE.THEME.COLOR.LIGHT.LIGHT_GREY,
+                    background: DEFAULT_SITE.THEME.COLOR.LIGHT.BACKGROUND,
+                    font: {
+                        heading: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.HEADING,
+                        body: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.BODY,
+                        link: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.LINK,
+                        solid: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.SOLID,
+                        inverted: DEFAULT_SITE.THEME.COLOR.LIGHT.FONT.INVERTED,
+                    },
+                },
+                dark: {
+                    enabled: DEFAULT_SITE.THEME.COLOR.DARK.ENABLED,
+                    primary: DEFAULT_SITE.THEME.COLOR.DARK.PRIMARY,
+                    secondary: DEFAULT_SITE.THEME.COLOR.DARK.SECONDARY,
+                    tertiary: DEFAULT_SITE.THEME.COLOR.DARK.TERTIARY,
+                    red: DEFAULT_SITE.THEME.COLOR.DARK.RED,
+                    green: DEFAULT_SITE.THEME.COLOR.DARK.GREEN,
+                    yellow: DEFAULT_SITE.THEME.COLOR.DARK.YELLOW,
+                    blue: DEFAULT_SITE.THEME.COLOR.DARK.BLUE,
+                    grey: DEFAULT_SITE.THEME.COLOR.DARK.GREY,
+                    lightGrey: DEFAULT_SITE.THEME.COLOR.DARK.LIGHT_GREY,
+                    background: DEFAULT_SITE.THEME.COLOR.DARK.BACKGROUND,
+                    font: {
+                        heading: DEFAULT_SITE.THEME.COLOR.DARK.FONT.HEADING,
+                        body: DEFAULT_SITE.THEME.COLOR.DARK.FONT.BODY,
+                        link: DEFAULT_SITE.THEME.COLOR.DARK.FONT.LINK,
+                        solid: DEFAULT_SITE.THEME.COLOR.DARK.FONT.SOLID,
+                        inverted: DEFAULT_SITE.THEME.COLOR.DARK.FONT.INVERTED,
+                    },
+                },
+                
+            },
         },
         hero: {
             heading: DEFAULT_SITE.HERO.HEADING,
@@ -87,49 +160,19 @@ function App() {
                 text: DEFAULT_SITE.HERO.CTA.TEXT,
                 size: DEFAULT_SITE.HERO.CTA.SIZE,
                 color: DEFAULT_SITE.HERO.CTA.COLOR,
-            },                    
+            },
             banner: DEFAULT_SITE.HERO.BANNER,
         },
-        emails: {
-            support: DEFAULT_SITE.EMAILS.SUPPORT,
-            noreply: DEFAULT_SITE.EMAILS.NOREPLY,
+        alert: {
+            text: DEFAULT_SITE.ALERT.TEXT,
+            background: DEFAULT_SITE.ALERT.BACKGROUND,
+            link: DEFAULT_SITE.ALERT.LINK,
         },
-        theme: { 
-            fonts: {
-                heading: {
-                    name: DEFAULT_SITE.THEME.FONTS.HEADING.NAME,
-                    url: DEFAULT_SITE.THEME.FONTS.HEADING.URL,
-                    light: DEFAULT_SITE.THEME.FONTS.HEADING.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.HEADING.DARK,
-                },
-                body: {
-                    name: DEFAULT_SITE.THEME.FONTS.BODY.NAME,
-                    url: DEFAULT_SITE.THEME.FONTS.BODY.URL,
-                    light: DEFAULT_SITE.THEME.FONTS.BODY.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.BODY.DARK,
-                },
-                link: {
-                    name: DEFAULT_SITE.THEME.FONTS.LINK.NAME,
-                    url: DEFAULT_SITE.THEME.FONTS.LINK.URL,
-                    light: DEFAULT_SITE.THEME.FONTS.LINK.LIGHT,
-                    dark: DEFAULT_SITE.THEME.FONTS.LINK.DARK,
-                },
-            },
-            colors: {
-                primary: DEFAULT_SITE.THEME.COLORS.PRIMARY,
-                secondary: DEFAULT_SITE.THEME.COLORS.SECONDARY,
-                tertiary: DEFAULT_SITE.THEME.COLORS.TERTIARY,
-                red: DEFAULT_SITE.THEME.COLORS.RED,
-                green: DEFAULT_SITE.THEME.COLORS.GREEN,
-                yellow: DEFAULT_SITE.THEME.COLORS.YELLOW,
-                blue: DEFAULT_SITE.THEME.COLORS.BLUE,
-                grey: DEFAULT_SITE.THEME.COLORS.GREY,
-                lightGrey: DEFAULT_SITE.THEME.COLORS.LIGHT_GREY,
-                background: {
-                    light: DEFAULT_SITE.THEME.COLORS.BACKGROUND.LIGHT,
-                    dark: DEFAULT_SITE.THEME.COLORS.BACKGROUND.DARK,
-                },
-            },
+        menus: {
+            header: DEFAULT_SITE.MENUS.HEADER,
+            quickTabs: DEFAULT_SITE.MENUS.QUICK_TABS,
+            quickLinks: DEFAULT_SITE.MENUS.QUICK_LINKS,
+            footer: DEFAULT_SITE.MENUS.FOOTER,
         },
     });
 
@@ -138,60 +181,74 @@ function App() {
         let themeObject = {};
         let isDarkScheme = false;
         
-        if(user){
-            // User signed in, so grab their currently set preference
-            if((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK){
-                isDarkScheme = true
+        if (site.theme.color.dark.enabled && !site.theme.color.light.enabled) {
+            isDarkScheme = true;
+        } else if (site.theme.color.light.enabled && !site.theme.color.dark.enabled) {
+            isDarkScheme = false;
+        } else if(site.theme.color.light.enabled && site.theme.color.dark.enabled) {
+            // Both enabled, so check user preference
+            if (user) {
+                // User signed in, so grab their currently set preference
+                if ((user?.flags?.themeScheme ?? SCHEMES.LIGHT) === SCHEMES.DARK) {
+                    isDarkScheme = true;
+                }
+            } else {
+                // No user signed in yet, so just grab the user's OS preference
+                if ((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK) {
+                    isDarkScheme = true;
+                }
             }
         } else {
-            // No user signed in yet, so just grab the user's OS preference
-            if((window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT) === SCHEMES.DARK){
-                isDarkScheme = true
-            }
+            // Neither enabled, so just use light scheme
+            isDarkScheme = false;
         }
         
         // Note: the extra logic of checking if the .light value of a color is taken is so this can be expanded to potentially accept a light and dark "red" for example.
         themeObject = { 
-            value: isDarkScheme ? SCHEMES.DARK : SCHEMES.LIGHT,
-            colors: {
-                primary: !site.theme.colors.primary.light ? site.theme.colors.primary : (isDarkScheme ? site.theme.colors.primary.dark : site.theme.colors.primary.light),
-                secondary: !site.theme.colors.secondary.light ? site.theme.colors.secondary : (isDarkScheme ? site.theme.colors.secondary.dark : site.theme.colors.secondary.light),
-                tertiary: !site.theme.colors.tertiary.light ? site.theme.colors.tertiary : (isDarkScheme ? site.theme.colors.tertiary.dark : site.theme.colors.tertiary.light),
-                red: !site.theme.colors.red.light ? site.theme.colors.red : (isDarkScheme ? site.theme.colors.red.dark : site.theme.colors.red.light),
-                green: !site.theme.colors.green.light ? site.theme.colors.green : (isDarkScheme ? site.theme.colors.green.dark : site.theme.colors.green.light),
-                yellow: !site.theme.colors.yellow.light ? site.theme.colors.yellow : (isDarkScheme ? site.theme.colors.yellow.dark : site.theme.colors.yellow.light),
-                blue: !site.theme.colors.blue.light ? site.theme.colors.blue : (isDarkScheme ? site.theme.colors.blue.dark : site.theme.colors.blue.light),
-                grey: !site.theme.colors.grey.light ? site.theme.colors.grey : (isDarkScheme ? site.theme.colors.grey.dark : site.theme.colors.grey.light),
-                lightGrey: !site.theme.colors.lightGrey.light ? site.theme.colors.lightGrey : (isDarkScheme ? site.theme.colors.lightGrey.dark : site.theme.colors.lightGrey.light),
-                background: !site.theme.colors.background.light ? site.theme.colors.primary : (isDarkScheme ? site.theme.colors.background.dark : site.theme.colors.background.light),
+            value: (isDarkScheme ? SCHEMES.DARK : SCHEMES.LIGHT),
+            color: {
+                primary: (isDarkScheme ? site.theme.color.dark.primary : site.theme.color.light.primary),
+                secondary: (isDarkScheme ? site.theme.color.dark.secondary : site.theme.color.light.secondary),
+                tertiary: (isDarkScheme ? site.theme.color.dark.tertiary : site.theme.color.light.tertiary),
+                red: (isDarkScheme ? site.theme.color.dark.red : site.theme.color.light.red),
+                green: (isDarkScheme ? site.theme.color.dark.green : site.theme.color.light.green),
+                yellow: (isDarkScheme ? site.theme.color.dark.yellow : site.theme.color.light.yellow),
+                blue: (isDarkScheme ? site.theme.color.dark.blue : site.theme.color.light.blue),
+                grey: (isDarkScheme ? site.theme.color.dark.grey : site.theme.color.light.grey),
+                lightGrey: (isDarkScheme ? site.theme.color.dark.lightGrey : site.theme.color.light.lightGrey),
+                background: (isDarkScheme ? site.theme.color.dark.background : site.theme.color.light.background),
+                font: {
+                    heading: (isDarkScheme ? site.theme.color.dark.font.heading : site.theme.color.light.font.heading),
+                    body: (isDarkScheme ? site.theme.color.dark.font.body : site.theme.color.light.font.body),
+                    link: (isDarkScheme ? site.theme.color.dark.font.link : site.theme.color.light.font.link),
+                    inverted: (isDarkScheme ? site.theme.color.dark.font.inverted : site.theme.color.light.font.inverted),
+                    solid: (isDarkScheme ? site.theme.color.dark.font.solid : site.theme.color.light.font.solid),
+                },
             },
-            fonts: {
+            font: {
                 heading: {
-                    name: site.theme.fonts.heading.name,
-                    url: site.theme.fonts.heading.url,
-                    color: (isDarkScheme ? site.theme.fonts.heading.dark : site.theme.fonts.heading.light),
+                    name: site.theme.font.heading.name,
+                    url: site.theme.font.heading.url,
+                },
+                subheading: {
+                    name: site.theme.font.subheading.name,
+                    url: site.theme.font.subheading.url,
                 },
                 body: {
-                    name: site.theme.fonts.body.name,
-                    url: site.theme.fonts.body.url,
-                    color: (isDarkScheme ? site.theme.fonts.body.dark : site.theme.fonts.body.light),
-                },
-                link: {
-                    name: "",
-                    url: "",
-                    color: (isDarkScheme ? site.theme.fonts.link.dark : site.theme.fonts.link.light),
+                    name: site.theme.font.body.name,
+                    url: site.theme.font.body.url,
                 },
             },
         }
 
-        setTheme(themeObject)
+        setTheme(themeObject);
     }, [user, site])
 
     useEffect(() => {
         return onSnapshot(doc(firestore, "site", "public"), (siteDoc) => {
             if(siteDoc.exists()){
                 let siteData = siteDoc.data();
-                setSite(siteData)
+                setSite(siteData);
 
                 setLoading(prevState => ({
                     ...prevState,
@@ -207,19 +264,61 @@ function App() {
         });
     }, [])
 
+    useEffect(() => {
+        return onSnapshot(query(collection(firestore, ITEMS.ROLES.COLLECTION)), (querySnapshot) => {
+            const tempRoles = [];
+            querySnapshot.forEach((doc) => {
+                tempRoles.push(doc.data());
+            });
+
+            setRoles(tempRoles);
+        });
+    }, []);
+
+    useEffect(() => {
+        return onSnapshot(query(collection(firestore, ITEMS.PAGES.COLLECTION)), (querySnapshot) => {
+            const tempPages = [];
+            querySnapshot.forEach((doc) => {
+                tempPages.push(doc.data());
+            });
+
+            setPages(tempPages);
+        });
+    }, []);
+
+    const unsubAuth = useRef();
     const unsubUser = useRef();
-    const unsubReadOnlyFlags = useRef();
     
     useEffect(() => {
-        onAuthStateChanged(auth, (fireUserData) => {
+        const refreshAuthToken = async () => {
+            if (!fireUser) {
+              return;
+            }
+      
+            try {
+              await fireUser.getIdToken(true);
+              console.log("Refreshed auth token...");
+            } catch (error) {
+              console.error("Error refreshing token:", error);
+            }
+        };
+            
+        unsubAuth.current = onAuthStateChanged(auth, async (fireUserData) => {
             if (fireUserData) {
-                setFireUser(fireUserData)
+                fireUserData.getIdTokenResult().then((idTokenResult) => {
+                    console.log("idTokenResult.claims: ");
+                    console.log(idTokenResult.claims);
+                    setCustomClaims(idTokenResult.claims);
+                });
+                
+                setFireUser(fireUserData);
+                refreshAuthToken();
                 setLoading(prevState => ({
                     ...prevState,
                     fireUser: false
                 }))
 
-                unsubUser.current = onSnapshot(doc(firestore, "users", fireUserData.uid), (userDoc) => {
+                unsubUser.current = onSnapshot(doc(firestore, ITEMS.USERS.COLLECTION, fireUserData.uid), (userDoc) => {
                     if(userDoc.exists()){
                         // User exists
                         const docWithMore = Object.assign({}, userDoc.data());
@@ -237,59 +336,41 @@ function App() {
                         }))
                     }
                 });
-
-                // For seeing if admin
-                unsubReadOnlyFlags.current = onSnapshot(doc(firestore, "users", fireUserData.uid, "readOnly", "flags"), (readOnlyFlagsDoc) => {
-                    if(readOnlyFlagsDoc.exists()){
-                        setReadOnlyFlags(readOnlyFlagsDoc.data());
-                        setLoading(prevState => ({
-                            ...prevState,
-                            readOnlyFlags: false
-                        }));
-                    } else {
-                        console.log("No read only read only flags exists.")
-                        setLoading(prevState => ({
-                            ...prevState,
-                            readOnlyFlags: false
-                        }));
-                    }
-                });
-                
             } else {                
                 // No user signed in
                 setLoading(prevState => ({
                     ...prevState,
                     fireUser: false,
                     user: false,
-                    readOnlyFlags: false
                 }))
             }
         });
 
         return () => {
-            if(unsubUser.current){
+            if (unsubAuth.current) {
+                unsubAuth?.current();
+            }
+
+            if (unsubUser.current) {
                 unsubUser?.current();
             }
-            if(unsubReadOnlyFlags.current){
-                unsubReadOnlyFlags?.current();
-            }
         };
-    }, [site]); // if site is not added here, the pages will continue to render endlessly for some reason
+    }, [site, fireUser]); // if site is not added here, the pages will continue to render endlessly for some reason
 
     const cleanUpLogout = () => {
         if(unsubUser.current){
             unsubUser?.current();
         }
-        if(unsubReadOnlyFlags.current){
-            unsubReadOnlyFlags?.current();
+
+        if(unsubAuth.current){
+            unsubAuth?.current();
         }
 
         setFireUser("");
         setUser("");
-        setReadOnlyFlags("")
     }
 
-    if(loading.fireUser || loading.user || loading.readOnlyFlags || loading.site){
+    if(loading.fireUser || loading.user || loading.site){
         return (
             <Div position="relative" height="100vh" bgColor="white" margin="0">
                 <Centered absolute>
@@ -303,7 +384,7 @@ function App() {
             <HelmetProvider>
                 <DynamicHeadTags theme={theme} site={site} />
                 <ScreenClassProvider>
-                    {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL fonts. Override with inline style for 1 icon! */}
+                    {/* ** Adjust this paddingBottom if icon is unaligned with font, applied to ALL font. Override with inline style for 1 icon! */}
                     <IconContext.Provider value={{ style: { verticalAlign: "middle", display: "inline", paddingBottom: "1%"} }}>
                         <ThemeProvider theme={theme}>
                             <BodyWrapper>
@@ -328,13 +409,14 @@ function App() {
                                     />
                                     <Views 
                                         site={site}
-                                        fireUser={fireUser} 
-                                        user={user} 
-                                        readOnlyFlags={readOnlyFlags}
+                                        fireUser={fireUser}
+                                        customClaims={customClaims}
+                                        user={user}
+                                        roles={roles}
+                                        pages={pages}
                                         setFireUser={setFireUser}
                                         setUser={setUser}
-                                        setReadOnlyFlags={setReadOnlyFlags}
-                                        setIsLoggingIn={setIsLoggingIn} 
+                                        setIsLoggingIn={setIsLoggingIn}
                                         cleanUpLogout={cleanUpLogout}
                                         isLoggingIn={isLoggingIn}
                                     />

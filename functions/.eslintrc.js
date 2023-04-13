@@ -31,5 +31,8 @@ module.exports = {
     "max-len": 0,
     "linebreak-style": "off",
     "padded-blocks": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "valid-jsdoc": 0,
   },
 };

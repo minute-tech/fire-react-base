@@ -9,6 +9,7 @@ export const HeaderContainer = styled.header`
     display: flex;
     align-items: center;
     width: 100%;
+    background-color: ${props => props.theme.color.background};
 `;
 
 // Branding
@@ -33,6 +34,7 @@ export const NavLogo = styled.img`
     margin: 15px 10px;
     
     @media (max-width: 992px) {
+        height: ${props => props.height ? `${props.height * .8}px` : "auto"}; 
         max-width: ${props => props.width ? `${props.width * .8}px` : "100px"}; 
     }
 `;
@@ -40,13 +42,13 @@ export const NavLogo = styled.img`
 export const NavTitle = styled.span`
     ${HeadingFont}
     font-size: ${props => props.size ? props.size : "2.5em"}; 
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.color.primary};
     text-decoration: none;
     transition: color 0.15s linear;
 
     &:hover {
         text-decoration: none;
-        color: ${props => props.theme.colors.secondary};
+        color: ${props => props.theme.color.secondary};
     }
     
     @media (max-width: 992px) {
@@ -73,19 +75,19 @@ export const NavLLink = styled(NavLink)`
     transition: color 0.15s linear, border-bottom 0.15s linear;
     border-bottom: 2px solid transparent;
     text-decoration: none;
-    color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.color.primary};
     font-size: 20px;
     margin: 0 18px;
     padding: 5px 0;
 
     &.${activeClassName} {
-        border-bottom: 2px solid ${props => props.theme.colors.secondary};
+        border-bottom: 2px solid ${props => props.theme.color.secondary};
     }
 
     &:hover {
-        border-bottom: 2px solid ${props => props.theme.colors.secondary};
+        border-bottom: 2px solid ${props => props.theme.color.secondary};
         font-weight: 700;
-        color: ${props => props.theme.colors.secondary};
+        color: ${props => props.theme.color.secondary};
     };
 
     @media (max-width: 992px) {
@@ -102,7 +104,7 @@ export const BgOverlay = styled.div`
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: ${props => rgba(props.theme.colors.grey, 0.7)};
+    background-color: ${props => rgba(props.theme.color.grey, 0.7)};
     transition: opacity 0.8s;
     z-index: 7;
 `;
@@ -139,7 +141,7 @@ export const Burger = styled.button`
         transition: all 0.3s linear;
         position: relative;
         transform-origin: 1px;
-        background-color: ${props => props.color ? props.color : props.theme.colors.primary};
+        background-color: ${props => props.color ? props.color : props.theme.color.primary};
 
         :first-child {
             transform: ${({ open }) => open ? 'rotate(45deg)' : 'rotate(0)'};
@@ -160,7 +162,7 @@ export const BurgerNav = styled.nav`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: ${props => props.color ? props.color : props.theme.colors.background};
+    background-color: ${props => props.color ? props.color : props.theme.color.background};
     transform: ${({ open }) => open ? 'translateX(0)' : 'translateX(100%)'};
     height: 100vh;
     text-align: center;
@@ -184,7 +186,7 @@ export const BurgerNavLink = styled(NavLink)`
     padding: 2rem 0;
     font-weight: bold;
     letter-spacing: 0.5rem;
-    color: ${props => props.color ? props.color : props.theme.fonts.body.color} !important;
+    color: ${props => props.color ? props.color : props.theme.color.font.body} !important;
     text-decoration: none;
     transition: all 0.3s linear;
 
@@ -194,11 +196,11 @@ export const BurgerNavLink = styled(NavLink)`
     }
 
     &:hover {
-        background-color: ${props => props.theme.colors.primary};
+        background-color: ${props => props.theme.color.primary};
     }
 
     &.${activeClassName} {
-        background-color: ${props => props.theme.colors.primary};
+        background-color: ${props => props.theme.color.primary};
     }
 
 `;

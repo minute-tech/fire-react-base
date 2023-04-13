@@ -95,11 +95,11 @@ function UserLogin(props) {
                                 window.recaptchaVerifier.clear();
                             }).catch((error) => {
                                 console.error("Error verifying phone: " + error);
-                                toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                                toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                                 window.recaptchaVerifier.clear();
                             });
                         } else {
-                            toast.error(`Error logging you in, please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                            toast.error(`Error logging you in, please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             window.recaptchaVerifier.clear();
                         }
                         
@@ -153,9 +153,8 @@ function UserLogin(props) {
                 toast.error("The code you entered was not correct, please try again.");
             } else { 
                 console.error(`Error with entered code: ${error}`);
-                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             }
-            
         });
     }
 
@@ -164,20 +163,23 @@ function UserLogin(props) {
             ...prevState,
             forgotPassword: true
         }));
+
+        toast.success("If the email exists on our system, that email will receive a password reset email shortly.");
         sendPasswordResetEmail(auth, data.email).then(() => {
-            toast.success("Check your email for a password reset link!");
             toggleModal(false, "forgot-password");
             setSubmitting(prevState => ({
                 ...prevState,
                 forgotPassword: false
             }));
+            forgotPasswordForm.reset();
         }).catch((error) => {
+            toggleModal(false, "forgot-password");
             console.error(`Error sending password reset: ${error}`);
-            toast.error(`Error sending password reset. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 forgotPassword: false
             }));
+            forgotPasswordForm.reset();
         });
     }
   

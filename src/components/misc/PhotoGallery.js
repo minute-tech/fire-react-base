@@ -1,52 +1,92 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
 import { GalleryImg } from "../../utils/styles/images";
+import { ProductImg } from "../../utils/styles/products";
 
 export default function PhotoGallery(props) {
     const [currentImage, setCurrentImage] = useState(0);
     const [viewerIsOpen, setViewerIsOpen] = useState(false);
-  
+
+    const [photoSet, setPhotoSet] = useState(props.photos ? props.photos : []);
+
+    useEffect(() => {
+        if (props.isProduct && props.productPhotos) {
+            let tempPhotos = [];
+            // Turn into correct photo set
+            props.productPhotos.forEach((photoUrl, p) => {
+                tempPhotos.push(
+                    {
+                        src: photoUrl,
+                        alt: props.productName ? `${props.productName} ${p+1}` : `${p+1}`,
+                    },
+                );
+            })
+            setPhotoSet(tempPhotos);
+        }
+    }, [props.isProduct, props.productPhotos, props.productName])
+
     const openLightbox = useCallback((index) => {
-        setCurrentImage(index);
-        setViewerIsOpen(true);
-    }, []);
+        if (props.isProduct && props.isProductSelected) {
+            // Only allow expansion if selected product
+            setCurrentImage(index);
+            setViewerIsOpen(true);
+        } else if (!props.isProduct) {
+            setCurrentImage(index);
+            setViewerIsOpen(true);
+        } else {
+            console.log("Not ready to maximize image.");
+        }
+    }, [props.isProduct, props.isProductSelected]);
   
     const closeLightbox = () => {
-      setCurrentImage(0);
-      setViewerIsOpen(false);
+        setCurrentImage(0);
+        setViewerIsOpen(false);
     };
 
     return (
       <>
         {
-            props.photos && props.photos.map((photo, i) => {
-                return (
-                    <GalleryImg
-                        margin="5px"
-                        src={photo.src} 
-                        alt={photo.alt}
-                        onClick={() => openLightbox(i)} 
-                        key={i}
-                    />
-                )
-                
+            photoSet && photoSet.map((photo, i) => {
+                if (props.isProduct) {
+                    return (
+                        <ProductImg
+                            key={i}
+                            size={props.isProductSelected ? "350px" : "250px"}
+                            src={photo.src} 
+                            alt={photo.alt}
+                            onClick={(e) => {e.stopPropagation(); openLightbox(i)}}
+                        />
+                    )
+                } else {
+                    return (
+                        <GalleryImg
+                            key={i}
+                            margin="5px"
+                            src={photo.src} 
+                            alt={photo.alt}
+                            onClick={(e) => {e.stopPropagation(); openLightbox(i)}}
+                        />
+                    )
+                }
             })
         }
         {viewerIsOpen ? (
-            <Lightbox
-                mainSrc={props.photos[currentImage].src}
-                nextSrc={props.photos[(currentImage + 1) % props.photos.length].src}
-                prevSrc={props.photos[(currentImage + props.photos.length - 1) % props.photos.length].src}
-                onCloseRequest={closeLightbox}
-                onMovePrevRequest={() =>
-                    setCurrentImage((currentImage + props.photos.length - 1) % props.photos.length)
-                }
-                onMoveNextRequest={() =>
-                    setCurrentImage((currentImage + 1) % props.photos.length)
-                }
-            />
+            <div onClick={(e) => {e.stopPropagation()}}>
+                <Lightbox
+                    mainSrc={photoSet[currentImage].src}
+                    nextSrc={photoSet[(currentImage + 1) % photoSet.length].src}
+                    prevSrc={photoSet[(currentImage + photoSet.length - 1) % photoSet.length].src}
+                    onCloseRequest={closeLightbox}
+                    onMovePrevRequest={() =>
+                        setCurrentImage((currentImage + photoSet.length - 1) % photoSet.length)
+                    }
+                    onMoveNextRequest={() =>
+                        setCurrentImage((currentImage + 1) % photoSet.length)
+                    }
+                />
+            </div>
         ) : null}
       </>
     );

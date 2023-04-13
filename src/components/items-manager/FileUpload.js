@@ -8,11 +8,11 @@ import { toast } from 'react-toastify';
 import { FaTrash } from 'react-icons/fa';
 
 import { storage } from "../../Fire";
-import {  FileInput, FileInputLabel, Button, FileDragBox, FileDragForm } from "../../utils/styles/forms.js";
+import { FileInput, FileInputLabel, Button, FileDragBox, FileDragDiv } from "../../utils/styles/forms.js";
 import { Body, Label } from '../../utils/styles/text';
 import { Div, Hr, Progress } from '../../utils/styles/misc';
 import { Img } from '../../utils/styles/images';
-import { FormError } from './Misc';
+import { FormError } from '../misc/Misc';
 import { BTYPES, SIZES } from '../../utils/constants';
 
 function FileUpload(props) {
@@ -208,7 +208,7 @@ function FileUpload(props) {
                             console.log("Unknown error occurred, inspect error.serverResponse");
                             props.setError(props.name, { 
                                 type: "storage/unknown", 
-                                message: `Unknown error, contact ${props.site.emails.support}`
+                                message: `Unknown error, contact ${props?.site?.emails?.support ?? "help@minute.tech"}`
                             });
                             break;
 
@@ -216,7 +216,7 @@ function FileUpload(props) {
                             console.log("Default case upload snapshot...");
                             props.setError(props.name, { 
                                 type: "storage/unknown", 
-                                message: `Default error, contact ${props.site.emails.support}`
+                                message: `Default error, contact ${props?.site?.emails?.support ?? "help@minute.tech"}`
                             });
                             break;
                         }
@@ -233,6 +233,8 @@ function FileUpload(props) {
                         });
 
                         if (f === filesArr.length - 1){ 
+                            console.log("Pushing URLS: ");
+                            console.log(urls);
                             props.onUploadSuccess(urls, props.name);
                             props.setSubmitting(prevState => ({
                                 ...prevState,
@@ -246,11 +248,11 @@ function FileUpload(props) {
     }
     return (
         <>
-            <FileDragForm 
+            <FileDragDiv
                 dragActive={dragActive} 
                 selected={files.length > 0} 
                 onDragEnter={handleDrag} 
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={(e) => e.preventDefault()} // TODO: this can probably be removed since not a form element anymore (as its nested)
             >
                 <FileInputLabel htmlFor={props.name} selected={files.length > 0}>
                     {
@@ -258,7 +260,7 @@ function FileUpload(props) {
                         ? 
                         <Body textAlign="center"><CgSoftwareUpload size={60} /><br/> Drag and drop your file{props.multiple ? "s" : ""} here, <br/>or simply click to browse and select file{props.multiple ? "s" : ""}.</Body> 
                         : 
-                        <Body textAlign="center" color={theme.colors.red}><CgSoftwareUpload size={60}  /><br/>Change file selection</Body>
+                        <Body textAlign="center" color={theme.color.red}><CgSoftwareUpload size={60}  /><br/>Change file selection</Body>
                     }
                     <FileInput
                         ref={formRef}
@@ -270,7 +272,7 @@ function FileUpload(props) {
                     
                     {files.length > 0 && (
                         <>
-                        <Hr color={theme.colors.green}/>
+                        <Hr color={theme.color.green}/>
                         <Label margin="0">Selected file{props.multiple ? "s" : ""}:</Label> 
                         </>
                     )}
@@ -282,7 +284,7 @@ function FileUpload(props) {
                                 <Body margin="10px 0">{f + 1}. {file.name} <i>({fileSizeMb}Mb)</i></Body>
                                 {file.type.includes("image") && (
                                     <Img
-                                        style={{border: `2px solid ${theme.colors.green}`}}
+                                        style={{border: `2px solid ${theme.color.green}`}}
                                         width="300px"
                                         className={`${props.name}`}
                                         alt="file preview"
@@ -291,7 +293,7 @@ function FileUpload(props) {
                                 )}
                                 {!file.type.includes("image") && (
                                     <embed 
-                                        style={{border: `2px solid ${theme.colors.green}`}}
+                                        style={{border: `2px solid ${theme.color.green}`}}
                                         key={f}
                                         width="100%"
                                         height="auto"
@@ -310,7 +312,7 @@ function FileUpload(props) {
                     })}
                 </FileInputLabel>
                 { dragActive && <FileDragBox onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop} /> }
-            </FileDragForm>
+            </FileDragDiv>
 
             {files.length > 0 && (
                 <Div>
@@ -323,7 +325,7 @@ function FileUpload(props) {
                     </Button>
                     <Button 
                         type="button" 
-                        color={theme.colors.red}
+                        color={theme.color.red}
                         size={SIZES.SM}
                         btype={BTYPES.INVERTED}
                         onClick={() => deleteFileSelection()}
@@ -333,7 +335,7 @@ function FileUpload(props) {
                 </Div>
             )}
             {props.error && (
-                <><Body display="inline" size={SIZES.LG} color={theme.colors.red}><b>Error</b>:</Body>  <FormError error={props.error} /> </>
+                <><Body display="inline" size={SIZES.LG} color={theme.color.red}><b>Error</b>:</Body>  <FormError error={props.error} /> </>
             )}
         </>
     )

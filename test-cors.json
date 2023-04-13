@@ -1,0 +1,12 @@
+[
+    {
+        "origin": [
+            "http://localhost:3000/",
+            "http://localhost:3001/",
+            "https://test-fire-react-base.web.app/", 
+            "https://test-fire-react-base.firebaseapp.com/"
+        ],
+        "method": ["GET"],
+        "maxAgeSeconds": 3600
+    }
+] 

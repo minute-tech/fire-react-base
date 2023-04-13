@@ -27,7 +27,7 @@ function ConfirmAlert(props) {
                 type="button"
                 size={SIZES.SM}
                 theme={props.theme}
-                color={props.theme.colors.green}
+                color={props.theme.color.green}
                 onClick={() => yesClicked()}
             >
                 {props.yesText}
@@ -36,7 +36,7 @@ function ConfirmAlert(props) {
                 type="button"
                 size={SIZES.SM}
                 theme={props.theme}
-                color={props.theme.colors.red}
+                color={props.theme.color.red}
                 btype={BTYPES.INVERTED}
                 onClick={() => noClicked()}
             >

@@ -6,11 +6,11 @@ import { FaCheck } from "react-icons/fa"
 import { useTheme } from 'styled-components';
 
 import { firestore } from "../../Fire";
-import { CheckboxInput, CheckboxLabel, TextAreaInput, TextInput, Button } from '../../utils/styles/forms';
+import { TextAreaInput, TextInput, Button } from '../../utils/styles/forms';
 import { FormError } from '../misc/Misc';
-import { H1, H3, Label, LLink } from '../../utils/styles/text.js';
+import { Body, H1, H3, Label, LLink } from '../../utils/styles/text.js';
 import { Centered, Column, Grid, Row } from '../../utils/styles/misc.js';
-import { INPUT } from '../../utils/constants.js';
+import { INPUT, ITEMS } from '../../utils/constants.js';
 
 function ContactForm(props) {
     const theme = useTheme();
@@ -30,17 +30,46 @@ function ContactForm(props) {
         message: false,
     });
 
-    const submitMessage = (data) => {   
+    const submitMessage = async (data) => {
         setSubmitting(prevState => ({
             ...prevState,
             message: true
         }));
+        
+        const fetchIP = async () => { 
+            let ip = "";
+            let regex = /^(?:ip)=(.*)$/gm;
+            await fetch('https://www.cloudflare.com/cdn-cgi/trace')
+            .then((res) => res.text())
+            .then((data) => {
+                let result = (regex.exec(data))
+                ip = result ? result[1] : "";
+            });
+            return ip;
+        };
 
-        addDoc(collection(firestore, "messages"), {
+        const ip = await fetchIP();
+        const currentTime = Date.now();
+        addDoc(collection(firestore, ITEMS.MESSAGES.COLLECTION), {
             name: data.name,
             email: data.email,
             body: data.body,
-            timestamp: Date.now(),
+            resolved: false,
+            ip: ip,
+            created: {
+                timestamp: currentTime,
+                id: props.fireUser ? props.fireUser.uid : "",
+                email: props.fireUser ? props.fireUser.email : "",
+                name: props.fireUser ? props.fireUser.displayName : "",
+            },
+            updated: {
+                timestamp: currentTime,
+                id: props.fireUser ? props.fireUser.uid : "",
+                email: props.fireUser ? props.fireUser.email : "",
+                name: props.fireUser ? props.fireUser.displayName : "",
+                summary: "Created contact message.",
+            },
+            
         }).then(() => {
             setSubmitting(prevState => ({
                 ...prevState,
@@ -53,7 +82,7 @@ function ContactForm(props) {
             toast.success(`Message submitted successfully, thanks!`);
             contactForm.reset();
         }).catch(error => {
-            toast.error(`Error submitting message. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            toast.error(`Error submitting message. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             console.error("Error submitting message: " + error);
             setSubmitting(prevState => ({
                 ...prevState,
@@ -62,12 +91,15 @@ function ContactForm(props) {
         });
     }
 
+
+
+
     if(submitted.message){
         return (
             <>
             <H1>Contact Form</H1>
             <Centered>
-                <H3 color={theme.colors.green}><FaCheck /> Submitted.</H3>
+                <H3 color={theme.color.green}><FaCheck /> Submitted.</H3>
             </Centered>
             </>
         )
@@ -145,20 +177,11 @@ function ContactForm(props) {
                         </Row>
                         <Row>
                             <Column sm={12} textalign="center">
-                                <CheckboxInput 
-                                    error={contactForm.formState.errors.policyAccept}
-                                    {
-                                        ...contactForm.register("policyAccept", {
-                                            required: "Please accept the policies by checking the box above.",
-                                        })
-                                    } 
-                                />
-                                <CheckboxLabel>
-                                    I accept the&nbsp;
+                                <Body>
+                                    By submitting this form you are accepting the&nbsp;
                                     <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
                                     <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
-                                </CheckboxLabel>
-                                <FormError error={contactForm.formState.errors.policyAccept} /> 
+                                </Body>
                             </Column>
                         </Row>
                         <Row>

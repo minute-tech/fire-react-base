@@ -5,7 +5,24 @@ service firebase.storage {
         allow read, write: if request.auth.uid == userId;
     }
     match /public/{allPaths=**} {
-        allow read, write: if true;
+        function isSuperAdmin() {
+            return request.auth.token.role == "super";
+        }
+
+        allow read: if true;
+        allow write: if isSuperAdmin();
+    }
+    match /items/{itemCollection}/{allPaths=**} {
+        function isSuperAdmin() {
+            return request.auth.token.role == "super";
+        }
+
+        function isPermitted(action) {
+            return request.auth.token.role in firestore.get(/databases/(default)/documents/site/private).data[itemCollection][action];
+        }
+
+        allow read: if true;
+        allow write: if isPermitted("create") || isSuperAdmin();
     }
   }
 }

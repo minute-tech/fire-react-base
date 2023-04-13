@@ -4,5 +4,6 @@
     "test": "test-fire-react-base",
     "live": "fire-react-base"
   },
-  "targets": {}
+  "targets": {},
+  "etags": {}
 }

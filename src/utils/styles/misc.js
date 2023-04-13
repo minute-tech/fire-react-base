@@ -18,7 +18,7 @@ export const BodyWrapper = styled.div`
     position: relative;
     z-index: 1;
     min-height: 100vh;
-    background-color: ${props => props.theme.colors.background};
+    background-color: ${props => props.theme.color.background};
 
     /* Overflow hidden so side nav can stay hidden, but transition-able */
     overflow-x: hidden;
@@ -29,14 +29,14 @@ export const BodyWrapper = styled.div`
         padding-bottom: 15rem; 
     }
 
-    /* Change notification colors */
+    /* Change notification color */
     :root{
-        --toastify-color-dark: ${props => props.theme?.colors?.background ?? "black"};
-        --toastify-color-light: ${props => props.theme?.colors?.background ?? "white"};
-        --toastify-color-info: ${props => props?.theme?.colors?.primary};
-        --toastify-color-success: ${props => props?.theme?.colors?.green};
-        --toastify-color-warning: ${props => props?.theme?.colors?.yellow};
-        --toastify-color-error: ${props => props?.theme?.colors?.red};
+        --toastify-color-dark: ${props => props.theme?.color?.background ?? "black"};
+        --toastify-color-light: ${props => props.theme?.color?.background ?? "white"};
+        --toastify-color-info: ${props => props?.theme?.color?.primary};
+        --toastify-color-success: ${props => props?.theme?.color?.green};
+        --toastify-color-warning: ${props => props?.theme?.color?.yellow};
+        --toastify-color-error: ${props => props?.theme?.color?.red};
         --toastify-color-transparent: rgba(255, 255, 255, 0.7);
         --toastify-icon-color-info: var(--toastify-color-info);
         --toastify-icon-color-success: var(--toastify-color-success);
@@ -48,12 +48,12 @@ export const BodyWrapper = styled.div`
         --toastify-toast-max-height: 800px;
         --toastify-font-family: "Body" !important;
         --toastify-z-index: 9999;
-        --toastify-text-color-dark: ${props => props.theme?.fonts?.body?.color ?? "white"};
-        --toastify-text-color-light: ${props => props.theme?.fonts?.body?.color ?? "black"};
-        --toastify-text-color-info: ${props => props.theme?.fonts?.body?.color ?? "black"};
-        --toastify-text-color-success: ${props => props.theme?.fonts?.body?.color ?? "black"};
-        --toastify-text-color-warning: ${props => props.theme?.fonts?.body?.color ?? "black"};
-        --toastify-text-color-error: ${props => props.theme?.fonts?.body?.color ?? "black"};
+        --toastify-text-color-dark: ${props => props.theme?.color?.font?.body ?? "white"};
+        --toastify-text-color-light: ${props => props.theme?.color?.font?.body ?? "black"};
+        --toastify-text-color-info: ${props => props.theme?.color?.font?.body ?? "black"};
+        --toastify-text-color-success: ${props => props.theme?.color?.font?.body ?? "black"};
+        --toastify-text-color-warning: ${props => props.theme?.color?.font?.body ?? "black"};
+        --toastify-text-color-error: ${props => props.theme?.color?.font?.body ?? "black"};
         --toastify-spinner-color: #616161;
         --toastify-spinner-color-empty-area: #e0e0e0;
         --toastify-color-progress-dark: #bb86fc;
@@ -133,54 +133,82 @@ export const Table = styled.table`
     border-collapse: collapse;
     width: 100%;
     ${BodyFont};
+
+    th:nth-child(${props => props.columnHover}),
+    td:nth-child(${props => props.columnHover}),
+        tbody tr:hover {
+        background: ${props => rgba(props.theme.color.secondary, 0.2)};
+        border-left: 2px solid ${props => props.theme.color.secondary};
+        border-right: 2px solid ${props => props.theme.color.secondary};
+    }
+
+    th:not(:hover) {
+        background: ${props => props.theme.color.primary};
+    }
 `;
 
 export const Thead = styled.thead`
-    background-color: ${props => props.theme.colors.primary};
+    background-color: ${props => props.theme.color.primary};
 `;
 
+// TODO: active is not doing anything?
+// color: ${props => props.active ? props.theme.color.secondary : "white"};
 export const Th = styled.th`
     padding: 8px;
-    border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
-    /* border-right: 1px solid ${props => props.theme.colors.lightGrey}; */
+    border-bottom: 1px solid ${props => props.theme.color.lightGrey};
+    /* border-right: 1px solid ${props => props.theme.color.lightGrey}; */
     text-align: center;
-    color: ${props => props.active ? props.theme.colors.yellow : "white"};
+    color: ${props => props.theme.color.font.solid} !important;
 
     &:hover {
-        cursor: pointer;
-        color: ${props => props.theme.colors.yellow};
+        cursor: ${props => props.sortable ? "pointer" : "normal"};
+        color: ${props => props.sortable ? props.theme.color.secondary : "white"};
+        border-top: 2px solid ${props => props.noTop ? "transparent" : props.theme.color.secondary};
     }
 `;
 
 export const Tr = styled.tr`
-    color: ${props => props.theme.fonts.body.color};
+    color: ${props => props.theme.color.font.body};
+    background-color: ${props => props.color ? props.color : "transparent"};
+
 `;
 
 export const Td = styled.td`
     text-align: center;
     padding: 8px;
-    border-bottom: 1px solid ${props => props.theme.colors.lightGrey};
+    border-bottom: 1px solid ${props => props.theme.color.lightGrey};
+    &.bottom-cell {
+        border-bottom: 2px solid ${props => props.theme.color.primary};
+      }
 `;
 
 export const TColumnHead = styled.td`
-    background-color: ${props => props.theme.colors.primary};
+    background-color: ${props => props.theme.color.primary};
     color: white;
-    border-top: 2px solid ${props => props.theme.colors.primary};
+    border-top: 2px solid ${props => props.theme.color.primary};
     font-weight: bolder;
     padding-left: 15px;
 `;
 
 export const Tbody = styled.tbody`
     ${Td}:hover {
-        background-color: ${props => rgba(props.theme.colors.primary, 0.15)};
-        border-top: 2px solid ${props => props.theme.colors.primary};
-        border-bottom: 2px solid ${props => props.theme.colors.primary};
+        background-color: ${props => rgba(props.theme.color.primary, 0.4)};
     }
 
     ${Tr}:hover {
-        border-top: 2px solid ${props => props.theme.colors.secondary};
-        border-bottom: 2px solid ${props => props.theme.colors.secondary};
+        border-top: 2px solid ${props => props.theme.color.secondary};
+        border-bottom: 2px solid ${props => props.theme.color.secondary} !important;
+        background: ${props => rgba(props.theme.color.secondary, 0.2)};
     }
+
+    ${Tr}:nth-child(n):hover { 
+        border-left: 2px solid ${props => props.theme.color.secondary};
+    }
+
+    ${Tr}:nth-child(n):hover {
+        border-right: 2px solid ${props => props.theme.color.secondary};
+    }
+
 `;
 
 // Grid
@@ -190,6 +218,8 @@ export const Grid = styled(GContainer)`
 
 export const Row = styled(GRow)`
     /* Add custom styles here */
+    padding: ${props => props.padding ? props.padding : "0 0 0 5px"};
+    margin: ${props => props.margin ? props.margin : "0 0 0 0"};
 `;
 
 export const Column = styled(GCol)`
@@ -202,6 +232,8 @@ export const Column = styled(GCol)`
     opacity: ${props => props.hidden ? 0 : 1};
     background: ${props => props.background ? props.background : "none"};
     background-clip: ${props => props.background ? "content-box" : "none"};
+    color: ${props => props.color ? props.color : "inherit"} !important;
+    vertical-align: ${props => props.verticalAlign ? props.verticalAlign : "baseline"} !important;
 `;
 
 // Background with text
@@ -232,7 +264,7 @@ export const BgColor = styled.div`
     z-index: -2;
     width: 100vw;
     height: 70vh;
-    background-color: ${props => props.bgColor ? props.bgColor : props.theme.colors.primary};
+    background-color: ${props => props.bgColor ? props.bgColor : props.theme.color.primary};
     @media (max-width: 992px), (max-height: 992px) {
         height: ${props => props.bodyLength > 900 ? "120vh" : "100vh"};
     }
@@ -283,7 +315,7 @@ export const BgMediaBody = styled.div`
 export const ModalCard = styled.div`
     text-align: left;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: ${props => props.theme?.colors?.background ?? "white"};
+    background-color: ${props => props.theme?.color?.background ?? "white"};
     border-radius: 5px;
     transition: 0.3s;
     padding: 30px 60px;
@@ -294,6 +326,8 @@ export const ModalCard = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    max-height: 85vh;
+    overflow-y: auto;
 
     @media (max-width: 992px) {
         padding: 15px 30px;
@@ -325,7 +359,7 @@ position: fixed;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: ${props => rgba(props.theme.colors.grey, 0.7)};
+    background-color: ${props => rgba(props.theme.color.grey, 0.7)};
 `;
 
 // Progress bar
@@ -335,7 +369,7 @@ export const Progress = styled.div`
     width: 90%;
     height: 30px;
     overflow: hidden;
-    background: ${props => props.theme.colors.lightGrey};
+    background: ${props => props.theme.color.lightGrey};
     border-radius: 4px;
 
     div {
@@ -345,7 +379,7 @@ export const Progress = styled.div`
         min-width: 1%;
         width: ${props => `${props.uploadProgress}%`};
         height: 100%;
-        background: ${props => props.uploadProgress !== 100 ? props.theme.colors.primary : props.theme.colors.green};
+        background: ${props => props.uploadProgress !== 100 ? props.theme.color.primary : props.theme.color.green};
     }
 
     p {
@@ -364,7 +398,6 @@ export const Progress = styled.div`
 export const TooltipContainer = styled.div`
     position: relative;
     display: inline-block;
-    z-index: 5;
     // TODO: would be nice if this tooltip could extend past it's child... might pose an issue in the future.
     div:first-child  {
         font-size: 14px !important;
@@ -385,26 +418,26 @@ export const TooltipContainer = styled.div`
 
     &:hover div:first-child {
         display: block;
+        z-index: 5;
     }
 
-    span {
-        /* Arrow */
-        position: absolute;
-        top: -10px;
-        left: 50%;
-        border-width: 5px;
-        border-style: solid;
-        border-color: transparent transparent rgba(0, 0, 0, 0.7) transparent;
-    }
 `;
 
 // Tabs
+export const TabWrapper = styled.div`
+    border-left: 2px solid ${props => props.theme.color.primary};
+    border-bottom: 2px solid ${props => props.theme.color.primary};
+    border-right: 2px solid ${props => props.theme.color.primary};
+    padding: 20px 10px;
+`;
+
 export const TabList = styled.ol`
-    border-bottom: 2px solid ${props => props.theme.colors.primary};
+    border-bottom: 2px solid ${props => props.theme.color.primary};
     padding-left: 0;
     ${BodyFont};
     font-size: 20px;
     font-weight: 900;
+    margin: 20px 0 0 0;
 `;
 
 export const TabItem = styled.li`
@@ -414,13 +447,12 @@ export const TabItem = styled.li`
     margin-bottom: -1px;
     padding: 0.8rem 3rem;
     cursor: pointer;
-    color: ${props => props.isActiveTab ? "white" : props.theme.fonts.body.color};
-    background-color: ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
-    border: 2px solid ${props =>  props.isActiveTab ? props.theme.colors.primary : "transparent"};
+    color: ${props => props.isActiveTab ? props.theme.color.font.solid : props.theme.color.font.inverted};
+    background-color: ${props =>  props.isActiveTab ? props.theme.color.primary : "transparent"};
+    border: 2px solid ${props =>  props.isActiveTab ? props.theme.color.primary : "transparent"};
     border-width: 1px 1px 0 1px; // Will go transparent when isActive
-
     &:hover {
-        background-color: ${props => props.isActiveTab ? "" : transparentize(0.6, props.theme.colors.primary)};
+        background-color: ${props => props.isActiveTab ? "" : transparentize(0.6, props.theme.color.primary)};
     }
 
 `;
@@ -435,8 +467,8 @@ export const Centered = styled.div`
     width: 100%;
     margin: auto;
     text-align: center;
+    padding: ${props => props.padding ? props.padding : "0"};
 
-    
     ${(props) => (props.absolute) && `
         margin: 0;
         position: absolute;
@@ -473,14 +505,20 @@ export const Div = styled.div`
 `;
 
 export const Hr = styled.div`
-    border-bottom: 2px solid ${props => props.color ? props.color : (props.theme?.colors?.primary || "black")};
+    border-bottom: ${props => props.height ? props.height : "2px"} solid ${props => props.color ? props.color : (props.theme?.color?.primary || "black")};
+    margin: ${props => props.margin ? props.margin : "15px 0"};
+    width: ${props => props.width ? props.width : "100%"};
+    float: ${props => props.selected ? props.selected : "none"};
+`;
+
+export const Spacer = styled.div`
     margin: ${props => props.margin ? props.margin : "15px 0"};
     width: ${props => props.width ? props.width : "100%"};
     float: ${props => props.selected ? props.selected : "none"};
 `;
 
 export const FullWidthLine = styled.div`
-    background-color: ${props => props.color ? props.color : props.theme.colors.primary};
+    background-color: ${props => props.color ? props.color : props.theme.color.primary};
     height: ${props => props.height ? props.height : "5px"};
     padding: ${props => props.padding ? props.padding : "0"};
 `;
@@ -509,7 +547,7 @@ export const DevAlert = styled.div`
     width: 100%;
     z-index: 10;
     top: 0;
-    background-color: ${props => rgba(props.theme?.colors?.red, 0.7) || rgba("darkred", 0.7)};
+    background-color: ${props => rgba(props.theme?.color?.red, 0.7) || rgba("darkred", 0.7)};
     text-align: center;
     padding: 5px 0;
     color: white;
@@ -523,10 +561,10 @@ export const DevAlert = styled.div`
     }
 `
 
-export const MiniColor = styled.div`
+export const ColorBlock = styled.div`
     vertical-align: middle;
     display: inline-block;
-    height: 1em;
-    width: 1em;
+    height: ${props => props.size ? props.size : "1em"};
+    width: ${props => props.size ? props.size : "1em"};
     background-color: ${props => props.color ? props.color : "grey"};
 `;

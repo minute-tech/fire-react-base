@@ -4,6 +4,7 @@ import { SCHEMES } from '../../utils/constants';
 import { BurgerNavLink, NavLLink, NavLogo, NavTitle, HeaderContainer, NavLinks, BurgerNavContainer, NavMenuContainer, BrandContainer, BgOverlay, BrandLink } from '../../utils/styles/header';
 import { Burger, BurgerNav } from '../../utils/styles/header';
 import { FullWidthLine } from '../../utils/styles/misc';
+import { ALink, Body } from '../../utils/styles/text';
 
 function Header(props) {
     const [isBurgerMenuOpen, setBurgerMenuOpen] = useState(false);
@@ -40,11 +41,12 @@ function Header(props) {
         <>
         <HeaderContainer>
             <BrandContainer>
-                <BrandLink to="/" height={props.site.logo.height}>
+                <BrandLink to="/" height={props.site.logo.height} end>
                     <NavLogo 
                         width={props.site.logo.width}
                         height={props.site.logo.height}
-                        margin="0" 
+                        margin="0"
+                        alt="brand logo"
                         src={theme.value === SCHEMES.DARK ? props.site.logo.darkUrl : props.site.logo.lightUrl} 
                         // TODO: if logo is loading slow, just load from local folder instead of URL
                         // src={require("../../assets/images/logos/logo.png")} 
@@ -59,7 +61,7 @@ function Header(props) {
                     {navLinks.map((link, l) => {
                         if(!link.type || (link.type === "visitor" && !props.user) || (link.type === "user" && props.user)){
                             return (
-                                <NavLLink key={l} to={link.path}>{link.label}</NavLLink>
+                                <NavLLink key={l} to={link.path} >{link.label}</NavLLink>
                             )
                         } else {
                             return (null)
@@ -101,7 +103,18 @@ function Header(props) {
             </BurgerNavContainer>
 
         </HeaderContainer>
-        <FullWidthLine height={"5px"}/>
+        { !props.site.alert.isHidden && (
+            <FullWidthLine padding={"2.5px 0"} height={"auto"} color={props.site.alert.background}>
+                <Body textAlign={"center"}>
+                    {props.site.alert.text}
+                    <br/>
+                    <ALink style={{fontSize: "16px", marginTop: "5px"}} href={props.site.alert.link} target="_blank" rel="noopener noreferrer">Learn more</ALink>
+                </Body>
+            </FullWidthLine>
+        )}
+        { props.site.alert.isHidden && (
+            <FullWidthLine height={"4px"}/>
+        )}
         </>
     )
 }

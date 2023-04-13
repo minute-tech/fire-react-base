@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { TabContent, TabItem, TabList } from "../../utils/styles/misc";
+import { TabContent, TabItem, TabList, TabWrapper } from "../../utils/styles/misc";
 
 export function Tabs(props) {
     const [activeTab, setActiveTab] = useState(props.children[0].props.label);
@@ -16,6 +16,7 @@ export function Tabs(props) {
                     );
                 })}
             </TabList>
+        <TabWrapper>
             <TabContent>
                 {props.children.map((child) => {
                     if (child.props.label !== activeTab){
@@ -25,6 +26,7 @@ export function Tabs(props) {
                     } 
                 })}
             </TabContent>
+        </TabWrapper>
         </>
     );
 }

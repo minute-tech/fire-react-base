@@ -1,118 +1,189 @@
 rules_version = '2';
 service cloud.firestore {
     match /databases/{database}/documents {
-        // Sites collection // 
-        // Will contain documents like counts, public, sensitive, etc
+        ///////////////////  Required Default Roles  //////////////////////////
+        // Old way of checking MFA enabled
+        // Removed because admins have to be MFA enabled anyways
+        // Probably can delete this note in the far future lol
+        // function isMfaEnabled() {
+        //     return request.auth.token.firebase.get("sign_in_second_factor", null) == "phone" && "second_factor_identifier" in request.auth.token.firebase;
+        // }
+
+        //// SITE ////
         match /site/{documentId} {
             function isAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true
-                )
+                let currentUserRole = request.auth.token.role;
+                let isRoleAdmin = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.isAdmin;
+                return isRoleAdmin;
             }
 
             function isSuperAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isSuperAdmin == true
-                )
+                return request.auth.token.role == "super";
             }
 
-            function isPublic() {
-                // ** Would be more scalable to test a field in the document if public
-                return (
-                    (documentId != 'sensitive' && documentId != 'counts')
-                )
-            }
-
-            function isMfaEnabled() {
-                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
-            }
-
-            // Anyone can read or list site docs as long as it isn't id of 'sensitive'
-            allow read, list: if isPublic() || (isAdmin() && isMfaEnabled());
+            // Anyone can read or list site docs as long as its the "public" doc for public users OR the "private" document and is a normal admin OR the user is just a Super Admin type
+            allow read, list: if (documentId == "public") || (documentId == "private" && isAdmin()) || (isSuperAdmin());
             // Only admins or super admins can create and update
-            allow create, update: if (isAdmin() && isMfaEnabled());
+            allow create, update: if isSuperAdmin();
             // Only super admins can delete it
-            allow delete: if (isSuperAdmin() && isMfaEnabled());
+            allow delete: if isSuperAdmin();
+
+            match /updates/{document=**} {
+                allow read, list: if isSuperAdmin();
+                allow create, update, delete: if false;
+            }
         }
 
-        // Users collection // 
+        //// PAGES ////
+        match /pages/{pageId} {
+            function isSuperAdmin() {
+                return request.auth.token.role == "super";
+            }
+
+            // function isAdmin() {
+            //     let currentUserRole = request.auth.token.role;
+            //     let isRoleAdmin = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.isAdmin;
+            //     return isRoleAdmin;
+            // }
+
+            // function isExternal() {
+            //     return resource.data.isInternal == false;
+            // }
+
+            // Only show internal pages to internal admins, if not internal anyone can view the page
+            // TODO: add this proper testing back, dont default to true!
+            // allow read, list: if isExternal() || isAdmin() || isSuperAdmin();
+            allow read, list: if true;
+            allow create, update, delete: if isSuperAdmin();
+
+            match /updates/{document=**} {
+                allow read, list: if isSuperAdmin();
+                allow create, update, delete: if false;
+            }
+        }
+
+        //// USERS ////
         match /users/{userId} {
             function isTrueUser() {
                 return userId == request.auth.uid;
             }
 
             function isAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
-                )
+                let currentUserRole = request.auth.token.role;
+                let isRoleAdmin = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.isAdmin;
+                return isRoleAdmin;
             }
 
             function isSuperAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isSuperAdmin == true 
-                )
+                return request.auth.token.role == "super";
             }
 
-            function isMfaEnabled() {
-                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
-            }
-
-            // Anyone can create a user
             allow create: if true;
-            // Only that user or an admin can update, list, or read their profile data
-            allow read, list, update: if isTrueUser() || (isAdmin() && isMfaEnabled());
-            // Super admins can delete a user
-            allow delete: if isSuperAdmin();
+            allow read, list, update: if isTrueUser() || isSuperAdmin();
+            allow delete: if isSuperAdmin(); // Only supers can delete accounts for now
 
             match /uploads/{document=**} {
-                // Only that signed in admin user can create, update, read, delete, or list upload documents
-                allow create, update, read, list, delete: if (isAdmin() && isMfaEnabled());
+                allow create, update, read, list, delete: if isAdmin(); // Only admin users can create uploads for now
             }
 
-            match /readOnly/{document=**} {
-                // Only Super Admins can edit these documents, anyone can read
-                allow create, update, list, delete: if (isSuperAdmin() && isMfaEnabled());
-                allow read: if true;
+            match /superDocs/{document=**} {
+                // Only Super Admins can write and read these documents, must be a sub document so not all users can write to this! We then set on the backend the value
+                allow read, create, update, list, delete: if isSuperAdmin();
             }
 
-            match /newAdmins/{document=**} {
-                // Only Super Admins can write and read these documents
-                allow read, create, update, list, delete: if (isSuperAdmin() && isMfaEnabled());
+            match /updates/{document=**} {
+                allow read, list: if isTrueUser() || isSuperAdmin();
+                allow create, update, delete: if false;
             }
         }
 
-        // Contact Messages //
-        // ** I am torn on whether or not to include this collection as a subcol of "site"
+        //// ROLES ////
+        match /roles/{roleId} {
+            function isSuperAdmin() {
+                return request.auth.token.role == "super";
+            }
+
+            allow read, list: if true;
+            // Only super admins can do anything with roles
+            allow create, update, delete: if isSuperAdmin();
+
+            match /updates/{document=**} {
+                allow read, list: if isSuperAdmin();
+                allow create, update, delete: if false;
+            }
+        }
+
+        ///////////////////  Custom Roles  //////////////////////////
+        //// MESSAGES ////
         match /messages/{messageId} {
-            function isAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
-                )
+            function isSuperAdmin() {
+                return request.auth.token.role == "super";
             }
 
-            function isMfaEnabled() {
-                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            function isPermitted(action) {
+                return request.auth.token.role in get(/databases/$(database)/documents/site/private).data.messages[action];
+            }
+
+            function doesFilterPass() {
+                let currentUserRole = request.auth.token.role;
+                let roleFilter = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.filter;
+                let applyFilter = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.filter.applyFilter;
+                
+                return (
+                    (!applyFilter) ||
+                    ( 
+                        (roleFilter.filterKey == "messages" && resource.data[roleFilter.columnKey] in roleFilter.columnValues) // Main role filter
+                        ||
+                        ("messages" in roleFilter.depKeys && resource.data[roleFilter.depColKey] in roleFilter.columnValues) // Dependent check
+                    )
+                )
             }
             
-            // No one can update, delete, read, or list but everyone can create
-            allow update, delete, read, list: if (isAdmin() && isMfaEnabled());
             allow create: if true;
+            allow read, list: if (isPermitted("read") && doesFilterPass()) || isSuperAdmin();
+            allow update: if isPermitted("update") || isSuperAdmin();
+            allow delete: if isPermitted("delete") || isSuperAdmin();
+
+            match /updates/{document=**} {
+                allow read, list: if isSuperAdmin();
+                allow create, update, delete: if false;
+            }
         }
 
+        //// FEEDBACK ////
         match /feedback/{feedbackId} {
-            function isAdmin() {
-                return (
-                    get(/databases/$(database)/documents/users/$(request.auth.uid)/readOnly/flags).data.isAdmin == true 
-                )
+            function isSuperAdmin() {
+                return request.auth.token.role == "super";
             }
 
-            function isMfaEnabled() {
-                return request.auth.token.firebase.get('sign_in_second_factor', null) == 'phone' && 'second_factor_identifier' in request.auth.token.firebase;
+            function isPermitted(action) {
+                return request.auth.token.role in get(/databases/$(database)/documents/site/private).data.feedback[action];
+            }
+
+            function doesFilterPass() {
+                let currentUserRole = request.auth.token.role;
+                let roleFilter = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.filter;
+                let applyFilter = get(/databases/$(database)/documents/roles/$(currentUserRole)).data.filter.applyFilter;
+
+                return (
+                    (!applyFilter) ||
+                    ( 
+                        (roleFilter.filterKey == "feedback" && resource.data[roleFilter.columnKey] in roleFilter.columnValues) // Main role filter
+                        ||
+                        ("feedback" in roleFilter.depKeys && resource.data[roleFilter.depColKey] in roleFilter.columnValues) // Dependent check
+                    )
+                )
             }
             
-            // No one can update, delete, read, or list but everyone can create
-            allow update, delete, read, list: if (isAdmin() && isMfaEnabled());
             allow create: if true;
+            allow read, list: if (isPermitted("read") && doesFilterPass()) || isSuperAdmin();
+            allow update: if isPermitted("update") || isSuperAdmin();
+            allow delete: if isPermitted("delete") || isSuperAdmin();
+
+            match /updates/{document=**} {
+                allow read, list: if isSuperAdmin();
+                allow create, update, delete: if false;
+            }
         }
     }
 }

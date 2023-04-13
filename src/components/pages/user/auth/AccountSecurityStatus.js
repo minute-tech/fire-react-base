@@ -42,31 +42,31 @@ export default function AccountSecurityStatus(props) {
 
     if (!props.fireUser.emailVerified && !emailVerifySent) {
         return (
-            <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.colors.green}>
+            <Button type="button" onClick={() => sendEmailVerifyLink()} color={theme.color.green}>
                 Verify Email
             </Button>
         )
     } else if (emailVerifySent && !refreshButtonShown) {
         return (
-            <Body color={theme.colors.yellow} display="inline">Email sent, check your email inbox!</Body>
+            <Body color={theme.color.yellow} display="inline">Email sent, check your email inbox!</Body>
         )
     } else if (emailVerifySent && refreshButtonShown) {
         return (
-            <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.colors.green}>
+            <Button type="button" onClick={() => navigate(0)} btype={BTYPES.INVERTED} color={theme.color.green}>
                 <AiOutlineReload /> Reload page
             </Button>
         )
     } else if (props.fireUser.emailVerified && (!mfaUser || ((mfaUser?.enrolledFactors.length ?? 0) === 0))) {
         return (
             <>
-                <Body margin="5px 0" color={theme.colors.green}>
+                <Body margin="5px 0" color={theme.color.green}>
                     <BiCheck /> Email verified!
                 </Body>
                 <Button
                     type="button"
                     onClick={() => props.toggleModal(true, "reauth-mfa")}
                     btype={BTYPES.INVERTED}
-                    color={theme.colors.green}
+                    color={theme.color.green}
                 >
                     Fully secure your account with 2FA <FaUserShield />
                 </Button>
@@ -75,11 +75,11 @@ export default function AccountSecurityStatus(props) {
         )
     } else if (mfaUser.enrolledFactors && mfaUser.enrolledFactors.length !== 0) {
         return (
-            <Body display="inline" color={theme.colors.green}>
+            <Body display="inline" color={theme.color.green}>
                 Account secured with 2FA <FaUserShield />
             </Body>
         )
     } else {
-        return <Body color={theme.colors.red}>Error! Contact {props.site.emails.support} for assistance.</Body>;
+        return <Body color={theme.color.red}>Error! Contact {props?.site?.emails?.support ?? "help@minute.tech"} for assistance.</Body>;
     }
 }

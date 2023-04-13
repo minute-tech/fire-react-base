@@ -20,7 +20,7 @@ function Page404 (props){
                 &nbsp; Go back
             </Button>
             <H1><BiError /> Page Not Found</H1>
-            <Body>Sorry, but it looks like the page you were looking for was not found in our directory. Please check the address, or contact <ALink href={`mailto:${props?.site?.emails?.support || "help@minute.tech"}`}>{props?.site?.emails?.support || "help@minute.tech"}</ALink>.</Body>
+            <Body>Sorry, but it looks like the page you were looking for was not found in our directory. Please check the address, or contact <ALink href={`mailto:${props?.site?.emails?.support ?? "help@minute.tech"}`}>{props?.site?.emails?.support ?? "help@minute.tech"}</ALink>.</Body>
         </Wrapper>
     );
 }

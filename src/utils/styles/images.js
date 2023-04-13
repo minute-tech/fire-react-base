@@ -1,6 +1,5 @@
 import styled  from 'styled-components';
 import { FaSpinner } from 'react-icons/fa';
-
 import { spin } from './animations';
 
 export const Img = styled.img`
@@ -11,6 +10,10 @@ export const Img = styled.img`
     border: ${props => props.border ? props.border : "none"};
     float: ${props => props.float || "none"};
     max-width: ${props => props.width || "100px"};
+    background-color: ${props => props.bgColor ? props.bgColor : "transparent"};
+    &:hover {
+        background-color: ${props => props.hoverBgColor ? props.hoverBgColor : "transparent"};
+    }
 `;
 
 export const InlineIcon = styled.span`

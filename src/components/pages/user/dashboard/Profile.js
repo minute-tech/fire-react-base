@@ -14,13 +14,13 @@ import { Img } from "../../../../utils/styles/images.js";
 import { TextInput, Button } from "../../../../utils/styles/forms.js";
 import { Body, H1, H3, Label, LLink } from "../../../../utils/styles/text.js";
 import { FormError } from "../../../misc/Misc.js";
-import { BTYPES, INPUT, SCHEMES, SIZES } from "../../../../utils/constants.js";
+import { BTYPES, INPUT, ITEMS, SCHEMES, SIZES } from "../../../../utils/constants.js";
 import { auth, firestore } from "../../../../Fire";
-import FileUpload from "../../../misc/FileUpload";
-import { readTimestamp } from "../../../../utils/misc";
+import FileUpload from "../../../items-manager/FileUpload";
+import { checkIfRoleIsAdmin, readTimestamp } from "../../../../utils/misc";
 import Reauth from "../auth/Reauth.js";
 import AccountSecurityStatus from "../auth/AccountSecurityStatus.js";
-import MfaSetup from "../auth/MfaSetup.js";
+import MFASetup from "../auth/MFASetup.js";
 
 function Profile(props) {
     const theme = useTheme();
@@ -70,9 +70,16 @@ function Profile(props) {
             console.error(error);
         });
 
-        updateDoc(doc(firestore, "users", props.fireUser.uid), {
+        updateDoc(doc(firestore, ITEMS.USERS.COLLECTION, props.fireUser.uid), {
             firstName: data.firstName,
             lastName: data.lastName,
+            updated: {
+                timestamp: Date.now(),
+                id: props.fireUser.uid,
+                email: props.fireUser.email,
+                name: props.fireUser.displayName,
+                summary: "Update user first and last name."
+            },
         }).then(() => {
             console.log("Successful update of user doc to Firestore.");
             toast.success("Successfully updated the user profile.");
@@ -82,7 +89,7 @@ function Profile(props) {
             }));
         }).catch((error) => {
             console.error("Error adding document: " + error);
-            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 updateUserProfile: false
@@ -97,9 +104,16 @@ function Profile(props) {
         }));
         updateEmail(auth.currentUser, data.email).then(() => {
             console.log("Successfully updated the user email on firebase");
-
-            updateDoc(doc(firestore, "users", props.fireUser.uid), {
+    
+            updateDoc(doc(firestore, ITEMS.USERS.COLLECTION, props.fireUser.uid), {
                 email: data.email,
+                updated: {
+                    timestamp: Date.now(),
+                    id: props.fireUser.uid,
+                    email: props.fireUser.email,
+                    name: props.fireUser.displayName,
+                    summary: "Updated user email."
+                },
             }).then(() => {
                 console.log("Successful update of user doc to Firestore.");
                 toast.success("Successfully updated your email!");
@@ -111,7 +125,7 @@ function Profile(props) {
                 }));
             }).catch((error) => {
                 console.error("Error adding document: ", error);
-                toast.error(`Error setting your email document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error setting your email document. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                 setSubmitting(prevState => ({
                     ...prevState,
                     email: false
@@ -123,7 +137,7 @@ function Profile(props) {
             } else if(error.code === "auth/email-change-needs-verification") {
                 toast.error("MFA so you need to verify your email.");
             } else {
-                toast.error(`Error updating account. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error updating account. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             }
                 
             setSubmitting(prevState => ({
@@ -134,38 +148,35 @@ function Profile(props) {
     }
 
     const setThemeScheme = (currentScheme, userId) => {
-        if(currentScheme === SCHEMES.DARK){
-            // Currently Dark Theme, change to Light
-            // Update Firestore doc to remember
-            updateDoc(doc(firestore, "users", userId), {
-                flags: {
-                    themeScheme: SCHEMES.LIGHT
-                }
-            }).then(() => {
-                console.log("Successful update of user doc to Firestore.");
-            }).catch((error) => {
-                console.error("Error adding document: ", error);
-                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-            });
-        } else {
-            // Currently Light Theme, change to Dark
-            // Update Firestore doc to remember
-            updateDoc(doc(firestore, "users", userId), {
-                flags: {
-                    themeScheme: SCHEMES.DARK
-                }
-            }).then(() => {
-                console.log("Successful update of user doc to Firestore.");
-            }).catch((error) => {
-                console.error("Error adding document: ", error);
-                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
-            });
-        }
+        updateDoc(doc(firestore, ITEMS.USERS.COLLECTION, userId), {
+            flags: {
+                themeScheme: (currentScheme === SCHEMES.DARK ? SCHEMES.LIGHT : SCHEMES.DARK),
+            },
+            updated: {
+                timestamp: Date.now(),
+                id: props.fireUser.uid,
+                email: props.fireUser.email,
+                name: props.fireUser.displayName,
+                summary: "Updated user theme color."
+            },
+        }).then(() => {
+            console.log("Successful update of user doc for theme color to Firestore.");
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
+        });
     }
 
     const updateAvatar = (urls, valueName) => {
-        updateDoc(doc(firestore, "users", props.fireUser.uid), {
+        updateDoc(doc(firestore, ITEMS.USERS.COLLECTION, props.fireUser.uid), {
             avatar: urls[0],
+            updated: {
+                timestamp: Date.now(),
+                id: props.fireUser.uid,
+                email: props.fireUser.email,
+                name: props.fireUser.displayName,
+                summary: "Updated user avatar."
+            },
         }).then(() => {
             console.log("Successful update of user doc to Firestore for pic.");
             updateProfile(auth.currentUser, {
@@ -183,7 +194,7 @@ function Profile(props) {
             });
         }).catch((error) => {
             console.error("Error adding document: ", error);
-            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 files: false
@@ -219,7 +230,7 @@ function Profile(props) {
                             <Button 
                                 type="button"
                                 btype={BTYPES.TEXTED} 
-                                color={theme.colors.yellow}
+                                color={theme.color.yellow}
                                 onClick={() => toggleModal(true, "avatar")}>
                                     update picture
                             </Button>
@@ -278,23 +289,23 @@ function Profile(props) {
                         <Column sm={12} md={6}>
                             <Label htmlFor={INPUT.EMAIL.KEY}>Email:</Label>
                             &nbsp;
-                            {(props.readOnlyFlags.isAdmin) && (
+                            {checkIfRoleIsAdmin(props.customClaims.role, props.roles) && (
                                 <Body 
                                     margin="0" 
                                     display="inline" 
                                     size={SIZES.SM} 
-                                    color={theme.colors.red}
+                                    color={theme.color.red}
                                 >
                                     cannot change email as admin
                                 </Body>
                             )}
-                            {(!props.readOnlyFlags.isAdmin) && (
+                            {(!checkIfRoleIsAdmin(props.customClaims.role, props.roles)) && (
                                 <Body 
                                     margin="0" 
                                     display="inline" 
                                     size={SIZES.SM} 
-                                    color={theme.colors.green}
-                                    hoverColor={theme.colors.yellow}
+                                    color={theme.color.green}
+                                    hoverColor={theme.color.yellow}
                                     onClick={() => toggleModal(true, "reauth-email")}
                                 >
                                     edit
@@ -326,8 +337,8 @@ function Profile(props) {
                                 margin="0"
                                 display="inline"
                                 size={SIZES.SM}
-                                color={theme.colors.green}
-                                hoverColor={theme.colors.yellow}
+                                color={theme.color.green}
+                                hoverColor={theme.color.yellow}
                                 onClick={() => !props.fireUser.emailVerified ? toast.warn("You need to verify your email before adding a phone number to your account. Send a verification link to your email below first!") : toggleModal(true, "reauth-mfa")}
                             >
                                 edit
@@ -369,24 +380,28 @@ function Profile(props) {
                     </Row>
                     <Hr/>
                     <Row align="center" justify="center">
-                        <Column sm={12} md={4} textalign="center">
-                            <Button 
-                                type="button"
-                                color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.colors.yellow : "black"} 
-                                btype={BTYPES.INVERTED}
-                                onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
-                            >
-                                Switch to&nbsp;
-                                {
-                                    props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
-                                    <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
-                                    <span>{SCHEMES.DARK} mode <FaMoon /></span>
-                                }
-                            </Button>
-                        </Column>
+                            <Column sm={12} md={4} textalign="center">
+                                {(props.site.theme.color.light.enabled && props.site.theme.color.dark.enabled) && (
+                                    // Dont need to show this button if both light and dark mode are disabled
+                                    <Button 
+                                        type="button"
+                                        color={props?.user?.flags?.themeScheme === SCHEMES.DARK ? theme.color.yellow : "black"} 
+                                        btype={BTYPES.INVERTED}
+                                        onClick={() => setThemeScheme(props?.user?.flags?.themeScheme, props?.fireUser?.uid)}
+                                    >
+                                        Switch to&nbsp;
+                                        {
+                                            props?.user?.flags?.themeScheme === SCHEMES.DARK ? 
+                                            <span>{SCHEMES.LIGHT} mode <FaSun /> </span> : 
+                                            <span>{SCHEMES.DARK} mode <FaMoon /></span>
+                                        }
+                                    </Button>
+                                )}
+                            </Column>
+                        
                         <Column sm={12} md={4} textalign="center">
                             <Label>Account created:&nbsp;</Label> 
-                            <Body margin="0" display="inline">{readTimestamp(props.user.timestamp).date} @ {readTimestamp(props.user.timestamp).time}</Body>
+                            <Body margin="0" display="inline">{readTimestamp(props.user.created.timestamp).date} @ {readTimestamp(props.user.created.timestamp).time}</Body>
                         </Column>
                         <Column sm={12} md={4} textalign="center">
                             <AccountSecurityStatus
@@ -521,9 +536,10 @@ function Profile(props) {
                 <ModalContainer onClick={() => toggleModal(false, "update-mfa")}>
                     <ModalCard onClick={(e) => e.stopPropagation()}>
                         <H3>Setup 2FA with phone number</H3>
-                        <MfaSetup 
+                        <MFASetup 
                             fireUser={props.fireUser}
                             user={props.user}
+                            site={props.site}
                             toggleModal={toggleModal}
                             setPhoneField={profileForm.setValue}
                         />

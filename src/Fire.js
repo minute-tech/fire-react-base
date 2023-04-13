@@ -3,6 +3,7 @@ import { getFirestore } from 'firebase/firestore';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 
 // TODO: include the config vars in the .env file
 const liveConfig = {
@@ -36,6 +37,7 @@ const config = (process.env.NODE_ENV === 'production' ? liveConfig : testConfig)
 const fire = initializeApp(config);
 const firestore = getFirestore(fire);
 const storage = getStorage(fire);
+const functions = getFunctions(fire);
 const analytics = getAnalytics(fire);
 const auth = getAuth(fire);
 
@@ -44,5 +46,6 @@ export {
     firestore,
     analytics, 
     auth,
+    functions,
     storage
 };

@@ -1,41 +1,42 @@
-//                              //
-// Some random handy functions! //
-//                              //
+import { DATA_TYPE, SIZES, ADMIN, USER_STRUCTURE, ORDER_PRODUCT_STRUCTURE } from "./constants";
+
+// Turns string into a URL friendly string
+export function urlify(string) {
+    return string.replace(/[^a-z0-9_]+/gi, '-').replace(/^-|-$/g, '').toLowerCase()
+}
+// Function that takes a dash-separated string, replaces the dashes with spaces, and capitalizes the first letter of each word.
+export function reverseUrlify(string) {
+    return string.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+}  
 
 // First letter is uppercase
 export function ucFirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-// Check if string is a URL
-export function checkURL(url) {
-    var urlToString = url.toString().toLowerCase();
-    if(urlToString.match(/\.(jpeg|jpg|png|gif)/g) != null){
-        return 'image'
-    } else if(urlToString.match(/\.(mp4|ogg|webm)/g) != null){
-        return 'video/supported'
-    } else if(urlToString.match(/\.(mov|avi|flv|wmv|mpeg4)/g) != null){
-        return 'video/unsupported'
-    }
-};
+// First Letter Of Every Word In A String Is Uppercase
+export function ucFirstLetterEachWord(string) {
+    return string.split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join(' ');
+}
+
+// UC on first letters, combine words (no space)
+export function PascalCase(string) {
+    return string.split(' ')
+        .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+        .join('');
+}
 
 // Generate random ID
 export function genId(length) {
-    var result           = "";
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = "";
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
+    for (var i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-};
-
-// Test if user is on mobile
-export function mobileCheck() {
-    var check = false;
-    // eslint-disable-next-line
-    (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-    return check;
 };
 
 // Date and Time //
@@ -67,44 +68,457 @@ export function readTimestamp(timestamp) {
         date
     };
 }
-  
-export function renderTimeDiff(current, previous) {
-    var msPerMinute = 60 * 1000;
-    var msPerHour = msPerMinute * 60;
-    var msPerDay = msPerHour * 24;
-    var msPerMonth = msPerDay * 30;
-    var msPerYear = msPerDay * 365;
 
-    var elapsed = current - previous;
+// Fills array with values
+export function fillArrayWithValues(size, value) {
+    let result = [];
+    for (let i = 0; i < size; i++) {
+        result.push(value);
+    }
+    return result;
+}
 
-    if (elapsed < msPerMinute) {
-            return 'less than a minute ago';   
+// Counts unchanged values in an object
+export function countChangedValues(obj, originalObj, exceptionProps = []) {
+    let count = 0;
+    let propKeys = [];
+    for (const prop in obj) {
+        if (
+            !exceptionProps.includes(prop) &&
+            typeof obj[prop] === "object" &&
+            obj[prop] !== null
+        ) {
+            if (Array.isArray(obj[prop])) {
+                let arrayChanged = false;
+                for (let i = 0; i < obj[prop].length; i++) {
+                    if (
+                        originalObj[prop] &&
+                        i < originalObj[prop].length &&
+                        countChangedValues(obj[prop][i], originalObj[prop][i], exceptionProps)
+                            .count > 0
+                    ) {
+                        arrayChanged = true;
+                        break;
+                    } else if (i >= (originalObj[prop]?.length || 0)) {
+                        arrayChanged = true;
+                        break;
+                    }
+                }
+                if (arrayChanged) {
+                    propKeys.push(prop);
+                    count++;
+                }
+            } else {
+                if (originalObj[prop]) {
+                    const result = countChangedValues(
+                        obj[prop],
+                        originalObj[prop],
+                        exceptionProps
+                    );
+                    count += result.count;
+                    result.propKeys.forEach((key) => {
+                        propKeys.push(`${prop}.${key}`);
+                    });
+                } else {
+                    propKeys.push(prop);
+                    count++;
+                }
+            }
+        } else if (
+            !exceptionProps.includes(prop) &&
+            obj[prop] !== originalObj[prop]
+        ) {
+            propKeys.push(prop);
+            count++;
+        }
+    }
+    return { count, propKeys };
+}
+
+export function renderObjectGroup(item, heading, useStructure, structure, setSearchParams, setSearch) {
+    let outputString = "";
+    if (heading !== "") {
+        outputString = `<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(heading)}: </b></p>`;
+    };
+    if (useStructure && (typeof structure === "object") && Array.isArray(item)) {
+        const displayedValues = [];
+        item.forEach((obj) => {
+            Object.values(structure).forEach((structureKey) => {
+                Object.keys(obj).forEach((key) => {
+                    if (!displayedValues.includes(`${key}: ${obj[key]}`)) {
+                        if (key === structureKey) {
+                            displayedValues.push(`${key}: ${obj[key]}`);
+                            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(key)}</b>: ${obj[key]}</p>`);
+                        }
+                    }
+                });
+            });
+            if ((item.length > 1) && (item.indexOf(obj) !== (item.length - 1))) { // prevents adding an extra line break at the end of object list (ex. Internal Contacts)
+                outputString = outputString.concat("<br/>");
+            }
+        });
+    } else if (useStructure && (typeof structure === "object")) {
+        const displayedValues = [];
+        Object.values(structure).forEach((structureKey) => {
+            Object.keys(item).forEach((key) => {
+                if (!displayedValues.includes(`${key}: ${item[key]}`)) {
+                    if (key === structureKey.key) {
+                        displayedValues.push(`${key}: ${item[key]}`);
+                        outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(key)}</b>: ${item[key]}</p>`);
+                    } else if (key === structureKey) {
+                        displayedValues.push(`${key}: ${item[key]}`);
+                        outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(key)}</b>: ${item[key]}</p>`);
+                    };
+                };
+            });
+        });
+    } else if (useStructure) {
+        const displayedValues = [];
+        structure.forEach((subColumn) => {
+            Object.keys(item).forEach((subKey) => {
+                if (!displayedValues.includes(`${subKey}: ${item[subKey]}`)) {
+                    if (subKey === subColumn.key) {
+                        displayedValues.push(`${subKey}: ${item[subKey]}`);
+                        outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${subColumn.label}</b>: ${item[subKey]}</p>`);
+                    };
+                };
+            });
+        });
+    } else {
+        Object.keys(item).forEach((subKey) => {
+            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(subKey)}</b>: ${item[subKey]}</p>`);
+        });
+    };
+    return outputString;
+};
+
+export function renderArrayAsList(array, heading, useStructure, structure, setSearchParams, setSearch) {
+    let list = "";
+    if (heading !== "") {
+        list = `<b style="margin: 0 0 0 10px;">${ucFirstLetterEachWord(heading)}: </b>`;
+    };
+    if (array.length === 0) {
+        list = list.concat(("Not Provided"));
+        return list;
+    } else {
+        list = list.concat("<ul style='margin: 0;'>"); // TODO: I tried to add a style='margin: 0;' to remove that 16px default top/bottom margin, but it isn't showing in the emails.
+        if (useStructure && Array.isArray(structure)) {
+            array.forEach((item) => {
+                if (typeof item === "object") {
+                    structure.forEach((subColumn) => {
+                        Object.keys(item).forEach((subKey) => {
+                            if (subKey === subColumn.key && subKey === "images") {
+                                list = list.concat(`<img style="margin: 0 0 0 10px;" src=${item[subKey]}; width="200">`);
+                            } else if (subKey === subColumn.key) {
+                                list = list.concat(`<li><b>${subColumn.label}</b>: ${item[subKey]}</li>`);
+                            };
+                        });
+                    });
+                    list = list.concat("<br/>");
+                } else {
+                    list = list.concat(`<li>${item}</li>`);
+                };
+            });
+        } else if (useStructure && (typeof structure === "object")) {
+            array.forEach((item) => {
+                Object.values(structure).forEach((structureKey) => {
+                    if (typeof item === "object") {
+                        Object.keys(item).forEach((subKey) => {
+                            if (subKey === structureKey && subKey === "images") {
+                                if (Array.isArray(item[subKey])) {
+                                    item[subKey].forEach((image) => {
+                                        list = list.concat(`<img style="margin: 0 0 0 10px;" src=${image}; height="200">`);
+                                    });
+                                } else {
+                                    list = list.concat(`<img style="margin: 0 0 0 10px;" src=${item[subKey]}; height="200">`);
+                                };
+                            } else if (subKey === structureKey && structureKey === "optionChoices") {
+                                if (item[subKey].length) {
+                                    list = list.concat(`<li><b>Choice</b>: </li>`);
+                                    list = list.concat("<ul>");
+                                    item[subKey].forEach((option) => {
+                                        list = list.concat(`<li><b>Name</b>: ${option.name}</li>`)
+                                        list = list.concat(`<li><b>Choice</b>: ${option.choice}</li>`)
+                                        list = list.concat(`<li><b>SubSku</b>: ${option.subSku}</li>`)
+                                    });
+                                    list = list.concat(`</ul>`)
+                                }
+                            } else if (subKey === structureKey) {
+                                if (item[subKey] === "") {
+                                    list = list.concat(`<li><b>${ucFirstLetterEachWord(structureKey)}</b>: Not Provided</li>`);
+                                } else {
+                                    list = list.concat(`<li><b>${ucFirstLetterEachWord(structureKey)}</b>: ${item[subKey]}</li>`);
+                                }
+                            }
+                        });
+                    } else {
+                        list = list.concat(`<li>${item}</li>`);
+                    };
+                });
+                list = list.concat("<br/>");
+            });
+        } else {
+            array.forEach((item) => {
+                if (typeof item === "object" && item !== null) {
+                    list = list.concat("<li>");
+                    for (const [key, value] of Object.entries(item)) {
+                        // Make the camelCased key human readable by uppercasing it for the label
+                        const replaced = key.replace(/([A-Z])/g, " $1");
+                        const sentenceCaseKey = replaced.charAt(0).toUpperCase() + replaced.slice(1);
+                        list = list.concat(`<b
+                                        >${sentenceCaseKey}:</b> ${value}  <br/>  `);
+                    };
+                    list = list.concat("</li>");
+                } else {
+                    list = list.concat(`<li>${item}</li>`);
+                };
+            });
+        };
+        list = list.concat("</ul>");
+        return list;
+    };
+};
+
+export function renderDetails(item, itemStructure, isFrontEnd, setSearchParams, setSearch) {
+    let outputString = "";
+    let boolDisplay = "";
+    itemStructure.filter(itemColumn => (itemColumn?.hideInModal !== true)).forEach((data) => {
+        outputString = outputString.concat(`<b style="font-size: 16px; display: block; margin-top: 10px;">${ucFirstLetterEachWord(data.label)}:</b>`);
+        if (data.type === DATA_TYPE.RADIO && data.isBool === true) {
+            // Bool check needs to be first because we are storing booleans
+            if (item[data.key]) {
+                boolDisplay = "Yes";
+            } else {
+                boolDisplay = "No";
+            };
+            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;">${boolDisplay}</p>`);
+        } else if (data.type === DATA_TYPE.IMAGES) {
+            if (Array.isArray(item[data.key])) {
+                item[data.key].forEach((image) => {
+                    outputString = outputString.concat(`<img style="margin: 0 0 0 10px;" src=${image}; height="200">`);
+                });
+            } else {
+                outputString = outputString.concat(`<img style="margin: 0 0 0 10px;" src=${item[data.key]}; height="200">`);
+            };
+
+        } else if (item[data.key]) {
+            // Check to see if a subColumn
+            if (data.userLookup) {
+                outputString = outputString.concat(renderObjectGroup(item[data.key], "", true, USER_STRUCTURE, setSearchParams, setSearch));
+            } else if (data.subColumns) {
+                const displayedValues = [];
+                // Loop through Structure for Labels
+                // Render contents
+                data.subColumns.forEach((subColumn) => {
+                    if (subColumn.key !== "quantity") {
+                        if (subColumn.userLookup) {
+                            outputString = outputString.concat(renderObjectGroup(item[data.key], "", true, USER_STRUCTURE, setSearchParams, setSearch));
+                        } else if (subColumn.productLookup) {
+                            outputString = outputString.concat(renderArrayAsList(item[data.key], "", true, ORDER_PRODUCT_STRUCTURE, setSearchParams, setSearch));
+                        } else if (Array.isArray(item[data.key])) {
+                            item[data.key].forEach((obj) => {
+                                Object.keys(obj).forEach((subKey) => {
+                                    if (!displayedValues.includes((obj.itemKey ? obj.itemKey : subKey) + obj[subKey])) {
+                                        displayedValues.push((obj.itemKey ? obj.itemKey : subKey) + obj[subKey]);
+                                        if (Array.isArray(obj[subKey])) {
+                                            outputString = outputString.concat(renderArrayAsList(obj[subKey], (obj.itemKey ? obj.itemKey : subKey), true, data.subColumns, setSearchParams, setSearch));
+                                        } else if ((typeof obj) === "object" && data.key !== "internalContacts") {
+                                            if (subKey !== "itemKey") {
+                                                const objectString = (renderObjectGroup(obj, "", true, data.subColumns, setSearchParams, setSearch));
+                                                if (!displayedValues.includes(objectString)) {
+                                                    displayedValues.push(objectString);
+                                                    outputString = outputString.concat(objectString);
+                                                    outputString = outputString.concat("<br/>");
+                                                };
+                                            };
+                                        } else {
+                                            if (subKey !== "itemKey" && subKey !== "id") {
+                                                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(subKey)}:</b> ${obj[subKey]}</p>`);
+                                            };
+                                        };
+                                    };
+                                });
+                            });
+                        } else {
+                            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;">${subColumn.label}: ${item[data.key]}</p>`);
+                        };
+                    };
+                });
+            } else if (data.type === DATA_TYPE.TEXTAREA) {
+                // Check to see if textarea
+                outputString = outputString.concat(`<p style="margin: 0 0 0 10px; white-space: pre-line; ">${item[data.key]}</p>`);
+            } else if (Array.isArray(item[data.key])) {
+                // Check to see if array
+                outputString = outputString.concat(renderArrayAsList(item[data.key], "", false, itemStructure, setSearchParams, setSearch));
+            } else if (data.type === DATA_TYPE.TIMESTAMP) {
+                // Check to see if timestamp
+                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;">${new Date(item[data.key])}</p>`);
+            } else if ((typeof item[data.key]) === "object") {
+                // Check to see if object 
+                if (data.nestedColumns) {
+                    data.nestedColumns.forEach((nestedColumn) => {
+                        if (nestedColumn.isBool === true) {
+                            if (item[data.key][nestedColumn.key] === true) {
+                                boolDisplay = "Yes";
+                            } else {
+                                boolDisplay = "No";
+                            };
+                            outputString = outputString.concat(`<p style='margin: 0 0 0 10px;'><b>${ucFirstLetterEachWord(nestedColumn.label)}</b>: ${boolDisplay}</p>`);
+                        } else if (nestedColumn.subColumns) {
+                            if (Array.isArray(item[data.key][nestedColumn.key])) {
+                                outputString = outputString.concat(renderArrayAsList(item[data.key][nestedColumn.key], nestedColumn.label, true, nestedColumn.subColumns, setSearchParams, setSearch));
+                                // } else {
+                                //   if ((typeof item[data.key][nestedColumn.key]) === "object") {
+                                //     // TODO: Do we need logic here?
+                                //   }
+                            } else if (item[data.key][nestedColumn.key]) {
+                                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(nestedColumn.label)}</b>: ${item[data.key][nestedColumn.key]}</p>`);
+                            } else {
+                                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(nestedColumn.label)}</b>: Not Provided</p>`);
+                            };
+                        } else if (item[data.key][nestedColumn.key]) {
+                            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(nestedColumn.label)}</b>: ${item[data.key][nestedColumn.key]}</p>`);
+                        } else {
+                            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(nestedColumn.label)}</b>: Not Provided</p>`);
+                        };
+                    });
+                } else {
+                    Object.keys(item[data.key]).forEach((key) => {
+                        if (item[data.key][key]) {
+                            outputString = outputString.concat(`<p style="margin: 0 0 0 10px;"><b>${ucFirstLetterEachWord(key)}</b>: ${item[data.key][key]}</p>`);
+                        } else {
+                            outputString = outputString.concat(("<p style='margin: 0 0 0 10px;'>Not Provided</p>"));
+                        };
+                    });
+                };
+            } else if (data.key === "emotionSymbol") {
+                // feedback emotion
+                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;">&#${item[data.key].substring(1)};</p>`);
+            } else if (data.isUrl) {
+                // display URLs
+                outputString = outputString.concat(`
+                        <p style="margin: 0 0 0 10px;">
+                          <a 
+                            href=${(item[data.key]).startsWith("https://") || (item[data.key]).startsWith("http://")
+                        ?
+                        item[data.key]
+                        :
+                        `https://${item[data.key]}`
+                    }
+                            target="_blank">
+                          ${item[data.key]}<a/>
+                          </p>`);
+            } else {
+                // display normal data string
+                outputString = outputString.concat(`<p style="margin: 0 0 0 10px;">${item[data.key]}</p>`);
+            };
+        } else {
+            // no data
+            outputString = outputString.concat(("<p style='margin: 0 0 0 10px;'>Not Provided</p>"));
+        };
+    });
+    return outputString;
+};
+
+export const splitArrayToArraysOf10 = (arr) => {
+    // Create an empty array to store the split arrays
+    const splitArrays = [[]];
+
+    // Loop through the input array
+    for (let i = 0; i < arr.length; i++) {
+        // Get the last array in the splitArrays array
+        const lastArray = splitArrays[splitArrays.length - 1];
+
+        // Check if the last array has 10 items in it
+        if (lastArray && lastArray.length === 10) {
+            // If it does, create a new array and push the current item into it
+            splitArrays.push([arr[i]]);
+        } else {
+            // If it doesn't, push the current item into the last array
+            lastArray.push(arr[i]);
+        }
     }
 
-    else if (elapsed < msPerHour) {
-            return Math.round(elapsed/msPerMinute) + ' minutes ago';   
+    // Return the split arrays
+    return splitArrays;
+}
+// Default breakpoints to the to lower value if higher value is not set... so if "xxxl" nor "xxl" is set, but "xl" is set, then the functon should default to "xl", and take in the other set values such as "lg", "md", and "sm".
+export function getDefaultBreakpointValue(breakpoints, size) {
+    const sizesOrder = Object.values(SIZES);
+    const sizeIndex = sizesOrder.indexOf(size);
+    for (let i = sizeIndex; i >= 0; i--) {
+        const currentSize = sizesOrder[i];
+        if (breakpoints?.[currentSize] !== undefined) {
+            return breakpoints[currentSize];
+        }
     }
+    return null;
+}
 
-    else if (elapsed < msPerDay ) {
-            return Math.round(elapsed/msPerHour ) + ' hours ago';   
-    }
+// ROLE and USER checking functions //
 
-    else if (elapsed < msPerMonth) {
-        return 'about ' + Math.round(elapsed/msPerDay) + ' days ago';   
-    }
-
-    else if (elapsed < msPerYear) {
-        return 'about ' + Math.round(elapsed/msPerMonth) + ' months ago';   
-    }
-
-    else {
-        return 'about ' + Math.round(elapsed/msPerYear ) + ' years ago';   
+// Returns true or false if the user is permitted to perform the actionType on the itemKey based on their customClaim role
+export const checkUserAdminPermission = (itemKey, actionType, roles, customClaims) => {
+    // console.log("roles: ")
+    // console.log(roles)
+    // console.log("itemKey: ")
+    // console.log(itemKey)
+    if (roles && customClaims.role && (customClaims.role !== ADMIN.SUPER)) {
+        const currentUserRolePermissions = roles.filter(role => role.name === customClaims.role);
+        // console.log("currentUserRolePermissions: ");
+        // console.log(currentUserRolePermissions);
+        const foundPermission = currentUserRolePermissions[0]?.permissions.find(permission => permission.itemKey === itemKey && permission.itemActions.some(action => action === actionType));
+        if (foundPermission) {
+            // console.log("foundPermission: " )
+            // console.log(foundPermission);
+            return foundPermission;
+        } else {
+            // console.log("foundPermission: " + false)
+            return false;
+        }
+    } else if (customClaims.role === ADMIN.SUPER) {
+        // Super admins can do all
+        return true;
+    } else {
+        // console.log("Role not set on database or user.")
+        return false;
     }
 }
 
-export const moreThanXDaysAgo = (date, numDays = 1) => {
-    const days = 60 * 60 * 24 * 1000 * numDays
-    const daysAgo = Date.now() - days;
+// Check to see if the role ID given is flagged as isAdmin
+export const checkIfRoleIsAdmin = (roleId, roles) => {
+    if (roles && roleId) {
+        const roleIsAdmin = roles.some(role => (role.name === roleId && role.isAdmin));
+        if (roleIsAdmin || roleId === ADMIN.SUPER) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+// Searches for a specific string (stringId) in all arrays of strings in an object:
+export function searchRoleArraysForUserRole(object, stringId) {
+    for (let key in object) { // Loop through all keys in the object
+        if (Array.isArray(object[key])) { // Check if the value of the key is an array
+            for (let i = 0; i < object[key].length; i++) { // Loop through the array
+                if (typeof object[key][i] === "object") { // Check if the current element is an object
+                    const values = Object.values(object[key][i]); // Get an array of values from the current object
+                    for (let j = 0; j < values.length; j++) { // Loop through the values
+                        if (values[j].toString().includes(stringId)) { // Check if the value contains the stringId
+                            return key; // Return the key if the string is found
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return null; // Return null if the string is not found
+}
 
-    return date < daysAgo;
-};
+export const isColor = (strColor) => {
+    const s = new Option().style;
+    s.color = strColor;
+    return s.color !== "";
+}

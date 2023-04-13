@@ -13,6 +13,7 @@ import { Button } from '../../../../utils/styles/forms.js';
 import { Hr } from '../../../../utils/styles/misc.js';
 import ConfirmAlert from '../../../misc/ConfirmAlert';
 import { APHORISMS, SCHEMES } from '../../../../utils/constants.js';
+import { checkIfRoleIsAdmin } from '../../../../utils/misc.js';
 
 function Dashboard(props) {
     const theme = useTheme();
@@ -27,7 +28,7 @@ function Dashboard(props) {
             props.cleanUpLogout();
         }).catch((error) => {
             console.error("Error signing out: " + error);
-            toast.error(`Error signing out. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            toast.error(`Error signing out. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
         });
     }
     
@@ -36,15 +37,15 @@ function Dashboard(props) {
             <Helmet>
                 <title>Dashboard {props.site.name ? `| ${props.site.name}` : ""}</title>
             </Helmet>
-            <H1>{props?.user.firstName}'s Dashboard</H1>
-            <Body color={theme.value === SCHEMES.DARK ? theme.colors.lightGrey : theme.colors.grey} margin="5px 0 15px 0">{quote}</Body>
+            <H1>{props?.user?.firstName ?? "User"}'s Dashboard</H1>
+            <Body color={theme.value === SCHEMES.DARK ? theme.color.lightGrey : theme.color.grey} margin="5px 0 15px 0">{quote}</Body>
             <LLink to={`/dashboard/profile`}> 
                 <Button type="button">
                     Edit your profile <FaUserEdit size={20} />
                 </Button>
             </LLink>
             <Hr/>
-            {props.readOnlyFlags?.isAdmin && (
+            {checkIfRoleIsAdmin(props.customClaims.role, props.roles) && (
                 <LLink to={`/dashboard/admin`}> 
                     <Button type="button">
                         Admin Dashboard <FaCog /> 
@@ -53,7 +54,7 @@ function Dashboard(props) {
             )}
             <Button 
                 type="button"
-                color={theme.colors.red}
+                color={theme.color.red}
                 onClick={() =>         
                     confirmAlert({
                         customUI: ({ onClose }) => {

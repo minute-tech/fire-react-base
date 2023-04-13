@@ -4,13 +4,13 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { auth, firestore } from '../../../../Fire';
-import { INPUT, SIZES } from '../../../../utils/constants';
+import { INPUT, ITEMS, SIZES } from '../../../../utils/constants';
 import { Button, TextInput } from '../../../../utils/styles/forms';
 import { Column, Grid, Recaptcha, Row } from '../../../../utils/styles/misc';
 import { ALink, Body, Label } from '../../../../utils/styles/text';
 import { FormError } from '../../../misc/Misc';
 
-export default function MfaSetup(props) {
+export default function MFASetup(props) {
     const [vCodeSent, setVCodeSent] = useState(false);
     const [verificationId, setVerificationId] = useState(null);
     const [enteredPhone, setEnteredPhone] = useState(null);
@@ -63,13 +63,13 @@ export default function MfaSetup(props) {
                             window.recaptchaVerifier.clear();
                         }).catch((error) => {
                             console.error("Error adding phone: " + error);
-                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             toast.dismiss(recaptchaToastId);
                             window.recaptchaVerifier.clear();
                         });
                     }).catch((error) => {
                         console.error("Error adding multi-factor authentication: " + error);
-                        toast.error(`Error adding multi-factor authentication. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                        toast.error(`Error adding multi-factor authentication. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                         toast.dismiss(recaptchaToastId);
                         window.recaptchaVerifier.clear();
                     });
@@ -96,7 +96,7 @@ export default function MfaSetup(props) {
         let multiFactorAssertion = PhoneMultiFactorGenerator.assertion(cred);
         const user = auth.currentUser;
         const mfaUser = multiFactor(user);
-        mfaUser.enroll(multiFactorAssertion, props.fireUser.userName).then(response => {
+        mfaUser.enroll(multiFactorAssertion, props.fireUser.displayName).then(response => {
             if(props.user.phone){
                 // Unenroll old phone number if user has one
                 mfaUser.unenroll(mfaUser.enrolledFactors[0]).then(() => {
@@ -106,13 +106,13 @@ export default function MfaSetup(props) {
                 });
             }
 
-            updateDoc(doc(firestore, "users", props.fireUser.uid), {
+            updateDoc(doc(firestore, ITEMS.USERS.COLLECTION, props.fireUser.uid), {
                 phone: enteredPhone,
             }).then(() => {
                 console.log("Successful updated user on Firestore.");
             }).catch((error) => {
                 console.error("Error updating user document: " + error);
-                toast.error(`Error updating user details. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error updating user details. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             });
             
             toast.success("Successfully updated phone number!");
@@ -126,7 +126,7 @@ export default function MfaSetup(props) {
 
         }).catch(error => {
             console.error(`Error with entered code: ${error.message}`);
-            toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+            toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             setSubmitting(prevState => ({
                 ...prevState,
                 vCode: false,

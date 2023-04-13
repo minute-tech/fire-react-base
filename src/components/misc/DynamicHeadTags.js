@@ -9,7 +9,7 @@ export default function DynamicHeadTags(props) {
             {/* ** These meta tags work half the time. For a more consistent behavior, make these changes in the `public > index.html` file */}
             <meta name="title" content={props.site.name || DEFAULT_SITE.NAME} />
             <meta name="description" content={props.site.description || DEFAULT_SITE.DESCRIPTION} />
-            <meta name="theme-color" content={props.theme.colors.primary || DEFAULT_SITE.THEME.COLORS.PRIMARY }/>
+            <meta name="theme-color" content={props.theme.color.primary || DEFAULT_SITE.THEME.COLOR.PRIMARY }/>
             <link rel="shortcut icon" href={props.site.logo.favicon || DEFAULT_SITE.LOGO.FAVICON} /> {/* ** if you delete public > favicon.ico locally, then this will seem like it loads instantly dynamically! */}
             <link rel="apple-touch-icon" href={props.site.logo.appleTouchIcon || DEFAULT_SITE.LOGO.APPLE_TOUCH_ICON} />
             

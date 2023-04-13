@@ -3,11 +3,14 @@ body {
 }
 
 @font-face {
-    font-family: "Roboto Regular";
-    src: url("../fonts/roboto/Roboto-Regular.ttf") format("truetype");
+    font-family: "Roboto Black";
+    src: url("../fonts/roboto/Roboto-Black.ttf") format("truetype");
 }
-
 @font-face {
     font-family: "Roboto Bold";
     src: url("../fonts/roboto/Roboto-Bold.ttf") format("truetype");
+}
+@font-face {
+    font-family: "Roboto Regular";
+    src: url("../fonts/roboto/Roboto-Regular.ttf") format("truetype");
 }

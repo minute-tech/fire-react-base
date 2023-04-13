@@ -10,10 +10,10 @@ import { useForm } from "react-hook-form";
 
 import { firestore, auth } from "../../../../Fire.js";
 import { Column, Grid, Recaptcha, Row, Wrapper } from '../../../../utils/styles/misc.js';
-import { CheckboxInput, CheckboxLabel, TextInput, Button } from '../../../../utils/styles/forms.js';
+import { TextInput, Button } from '../../../../utils/styles/forms.js';
 import { ALink, Body, H1, Label, LLink } from '../../../../utils/styles/text.js';
 import { FormError } from '../../../misc/Misc.js';
-import { INPUT, SCHEMES, SIZES } from '../../../../utils/constants.js';
+import { INPUT, ITEMS, SCHEMES, SIZES } from '../../../../utils/constants.js';
 
 function Register(props) {
     const navigate = useNavigate();
@@ -64,11 +64,12 @@ function Register(props) {
                                 console.log("Successfully added display name to Firebase.");
                             }).catch((error) => {
                                 console.error("Error adding your display name to database: " + error);
-                                toast.error(`Error adding your display name to database. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                                toast.error(`Error adding your display name to database. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             });
 
+                            const currentTime = Date.now();
                             // Create Firestore doc
-                            await setDoc(doc(firestore, "users", tempUser.uid), {
+                            await setDoc(doc(firestore, ITEMS.USERS.COLLECTION, tempUser.uid), {
                                 firstName: data.firstName,
                                 lastName: data.lastName,
                                 email: data.email,
@@ -76,12 +77,24 @@ function Register(props) {
                                 flags: {
                                     themeScheme: window.matchMedia(`(prefers-color-scheme: ${SCHEMES.DARK})`).matches ? SCHEMES.DARK : SCHEMES.LIGHT
                                 },
-                                timestamp: Date.now(),
+                                created: {
+                                    timestamp: currentTime,
+                                    id: tempUser.uid,
+                                    email: data.email,
+                                    name: (data.firstName + " " + data.lastName),
+                                },
+                                updated: {
+                                    timestamp: currentTime,
+                                    id: tempUser.uid,
+                                    email: data.email,
+                                    name: (data.firstName + " " + data.lastName),
+                                    summary: "Registration of user."
+                                },
                             }).then(() => {
                                 console.log("Successful write of user doc to Firestore.");
                             }).catch((error) => {
                                 console.error("Error adding document: " + error);
-                                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                                toast.error(`Error setting users document. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             });
 
                             // Clean up
@@ -92,13 +105,17 @@ function Register(props) {
                         }).catch((error) => {
                             console.log("Error: " + error.message);
                             if(error.code === "auth/email-already-in-use"){
+                                // registerForm.setError(INPUT.EMAIL.KEY, { 
+                                //     type: INPUT.EMAIL.ERRORS.TAKEN.TYPE, 
+                                //     message: INPUT.EMAIL.ERRORS.TAKEN.MESSAGE
+                                // });
                                 registerForm.setError(INPUT.EMAIL.KEY, { 
-                                    type: INPUT.EMAIL.ERRORS.TAKEN.TYPE, 
-                                    message: INPUT.EMAIL.ERRORS.TAKEN.MESSAGE
+                                    type: "error", 
+                                    message: "Sorry, we encountered an error while registering. Please double check your email, this email could be taken."
                                 });
                             } else {
                                 console.error("Error creating account: " + error.message)
-                                toast.error(`Error creating account. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                                toast.error(`Error creating account. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             }
 
                             setSubmitting(prevState => ({
@@ -141,7 +158,7 @@ function Register(props) {
                 <Grid fluid>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.FIRST_NAME.KEY} br>First Name:</Label>
+                            <Label htmlFor={INPUT.FIRST_NAME.KEY} br>{INPUT.FIRST_NAME.LABEL}:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.FIRST_NAME.PLACEHOLDER} 
@@ -164,7 +181,7 @@ function Register(props) {
                             <FormError error={registerForm.formState.errors[INPUT.FIRST_NAME.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.LAST_NAME.KEY} br>Last Name:</Label>
+                            <Label htmlFor={INPUT.LAST_NAME.KEY} br>{INPUT.LAST_NAME.LABEL}:</Label>
                             <TextInput
                                 type="text" 
                                 placeholder={INPUT.LAST_NAME.PLACEHOLDER} 
@@ -189,7 +206,7 @@ function Register(props) {
                     </Row>
                     <Row>
                         <Column sm={12}>
-                            <Label htmlFor={INPUT.EMAIL.KEY} br>Email:</Label>
+                            <Label htmlFor={INPUT.EMAIL.KEY} br>{INPUT.EMAIL.LABEL}:</Label>
                             <TextInput
                                 type="text" 
                                 error={registerForm.formState.errors[INPUT.EMAIL.KEY]}
@@ -210,7 +227,7 @@ function Register(props) {
                     </Row>
                     <Row>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.PASSWORD.KEY} br>Password:</Label>
+                            <Label htmlFor={INPUT.PASSWORD.KEY} br>{INPUT.PASSWORD.LABEL}:</Label>
                             <TextInput
                                 type="password"
                                 placeholder={INPUT.PASSWORD.PLACEHOLDER} 
@@ -232,7 +249,7 @@ function Register(props) {
                             <FormError error={registerForm.formState.errors[INPUT.PASSWORD.KEY]} /> 
                         </Column>
                         <Column sm={12} md={6}>
-                            <Label htmlFor={INPUT.CONFIRM_PASSWORD.KEY} br>Confirm Password:</Label>
+                            <Label htmlFor={INPUT.CONFIRM_PASSWORD.KEY} br>Confirm {INPUT.PASSWORD.LABEL}:</Label>
                             <TextInput
                                 type="password"
                                 placeholder={INPUT.CONFIRM_PASSWORD.PLACEHOLDER} 
@@ -253,23 +270,14 @@ function Register(props) {
                             />
                             <FormError error={registerForm.formState.errors[INPUT.CONFIRM_PASSWORD.KEY]} /> 
                         </Column>
-                    </Row>                        
+                    </Row>
                     <Row>
                         <Column sm={12} textalign="center">
-                            <CheckboxInput
-                                error={registerForm.formState.errors.policyAccept}
-                                {
-                                    ...registerForm.register("policyAccept", {
-                                        required: "Please accept the policies by checking the box above.",
-                                    })
-                                } 
-                            />
-                            <CheckboxLabel>
-                                I accept the&nbsp;
+                            <Body>
+                                By submitting this form you are accepting the&nbsp;
                                 <LLink to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</LLink> and&nbsp;
                                 <LLink to="/terms-conditions" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</LLink>.
-                            </CheckboxLabel>
-                            <FormError error={registerForm.formState.errors.policyAccept} /> 
+                            </Body>
                         </Column>
                     </Row>
                     <Row>

@@ -70,7 +70,7 @@ export default function Reauth(props) {
                             toast.success("We just sent that phone number a verification code, go grab the code and input it below!");
                         }).catch((error) => {
                             console.error("Error adding phone: " + error);
-                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                            toast.error(`Error verifying phone with provider. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                             window.recaptchaVerifier.clear();
                         });
                     } else if(error.code === "auth/wrong-password"){
@@ -82,7 +82,7 @@ export default function Reauth(props) {
                         console.error("Error logging you in: " + error);
                         window.recaptchaVerifier.clear();
                     } else {
-                        toast.error(`Error logging you in. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                        toast.error(`Error logging you in. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
                         console.error("Error logging you in: " + error);
                         window.recaptchaVerifier.clear();
                     }
@@ -129,7 +129,7 @@ export default function Reauth(props) {
                 toast.error("The code you entered was not correct, please try again.");
             } else { 
                 console.error(`Error with entered code: ${error}`);
-                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props.site.emails.support}.`);
+                toast.error(`Error with entered code. Please try again or if the problem persists, contact ${props?.site?.emails?.support ?? "help@minute.tech"}.`);
             }
             
         });

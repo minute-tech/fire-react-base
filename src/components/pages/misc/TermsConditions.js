@@ -14,7 +14,7 @@ function TermsConditions(props) {
             </Helmet>
             <H1>Terms &amp; Conditions</H1>
 
-            <Body>These terms and conditions outline the rules and regulations for the use of the {props.site.name ? `${props.site.name}` : "Fire React Base"} Website, located at https://{props.site.projectId ? `${props.site.projectId}` : "fire-react-base"}.web.app.</Body>
+            <Body>These terms and conditions outline the rules and regulations for the use of the {props.site.name ? `${props.site.name}` : "Fire React Base"} Website, located at {props.site.customUrl ? props.site.customUrl : (props.site.projectId ? `https://${props.site.projectId}.web.app` : "https://fire-react-base.web.app")}.</Body>
 
             <Body>By accessing this website we assume you accept these terms and conditions. Do not continue to use the {props.site.name ? `${props.site.name}` : "Fire React Base"} if you do not agree to take all of the terms and conditions stated on this page.</Body>
 
@@ -58,7 +58,7 @@ function TermsConditions(props) {
                 on this website.
             </Body>
 
-            <Body>Fire React Base reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.</Body>
+            <Body>{props.site.name ? `${props.site.name}` : "Fire React Base"} reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.</Body>
 
             <Body>You warrant and represent that:</Body>
 
